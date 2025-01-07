@@ -1,0 +1,6 @@
+.common {
+}
+
+.standard__s__full {
+  @apply space-y-2;
+}

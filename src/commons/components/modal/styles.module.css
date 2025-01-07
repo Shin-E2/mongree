@@ -1,0 +1,11 @@
+.container {
+  @apply flex justify-center items-center w-full h-full fixed top-0 left-0 bg-modal-bg-black z-50;
+}
+
+.common {
+  @apply flex flex-col bg-white rounded-lg shadow-lg;
+}
+
+.standard__full__full {
+  @apply w-[450px] flex flex-col items-end py-12 px-4 relative;
+}

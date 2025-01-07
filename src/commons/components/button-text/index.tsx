@@ -42,7 +42,7 @@ export const ButtonTextWithMarginLeftSS = ({
   return (
     <ButtonTextBase
       {...rest}
-      cssprop={`${className} ${styles.margin__left__s__s}`}
+      cssprop={`${className} ${styles.padding__m__m}`}
     />
   );
 };

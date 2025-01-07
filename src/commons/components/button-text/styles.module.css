@@ -1,5 +1,5 @@
 .common {
-  @apply rounded-md;
+  @apply rounded-md whitespace-nowrap;
 }
 
 .standard__s__full {

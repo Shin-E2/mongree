@@ -99,9 +99,8 @@ export default function SignupPage() {
               )}
 
               <ButtonTextWithMarginLeftSS
-                type="button" // 퍼플리싱을 위한 button type 추후 submit으로 변경 가능
-                // 동적으로 스타일을 적용하기 위한 className
-                className={currentStep === 0 ? "ml-auto" : ""}
+                type="button"
+                className={currentStep === 0 ? "ml-auto" : ""} // 동적으로 스타일을 적용하기 위한 className
                 title={isLastStep ? "가입완료" : "다음"}
                 onClick={handleNext}
               />

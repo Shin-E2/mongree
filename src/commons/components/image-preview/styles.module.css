@@ -1,0 +1,6 @@
+.common {
+}
+
+.profile {
+  @apply relative w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-4 cursor-pointer;
+}

@@ -8,3 +8,7 @@
 .delete {
   @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity;
 }
+
+.delete__no__background {
+  @apply absolute top-4;
+}

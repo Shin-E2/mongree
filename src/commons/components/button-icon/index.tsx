@@ -41,12 +41,26 @@ export const ButtonIconSocial = ({
   );
 };
 
+// 배경있는 삭제 버튼
 export const ButtonIconDelete = ({ ...rest }: IButtonIconCommonProps) => {
   return (
     <ButtonIconBase
       {...rest}
       cssprop={styles.delete}
       icon={<X className="w-8 h-8 text-white" />}
+    />
+  );
+};
+
+// 배경 없는 삭제 버튼
+export const ButtonIconDeleteNoBackground = ({
+  ...rest
+}: IButtonIconCommonProps) => {
+  return (
+    <ButtonIconBase
+      {...rest}
+      cssprop={styles.delete__no__background}
+      icon={<X className="w-5 h-5 text-gray-400" />}
     />
   );
 };

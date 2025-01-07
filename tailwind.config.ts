@@ -50,6 +50,11 @@ export default {
           "4": "hsl(var(--chart-4))",
           "5": "hsl(var(--chart-5))",
         },
+        modal: {
+          bg: {
+            black: "rgba(0, 0, 0, 0.40)",
+          },
+        },
       },
       borderRadius: {
         lg: "var(--radius)",

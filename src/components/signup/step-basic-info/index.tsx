@@ -61,7 +61,14 @@ export default function SignupStepBasicInfo() {
       </div>
 
       {/* 주소 입력 */}
-      {/* <AddressField /> */}
+      <InputFieldStandardSFull
+        name="passwordConfirm"
+        title="주소"
+        type="password"
+        placeholder="비밀번호를 다시 입력해주세요"
+        required
+        isAddress
+      />
     </div>
   );
 }

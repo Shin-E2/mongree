@@ -1,0 +1,10 @@
+.common {
+}
+
+.common_isRequired_span {
+  @apply text-red-500;
+}
+
+.standard__s__full {
+  @apply flex gap-1;
+}

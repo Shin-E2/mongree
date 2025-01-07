@@ -5,6 +5,7 @@ export interface IInputFieldBaseProps {
   name: string;
   type?: string;
   title: string;
+  isAddress?: boolean;
 }
 
 export interface IInputFieldStandardSFullProps

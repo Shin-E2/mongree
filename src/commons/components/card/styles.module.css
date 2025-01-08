@@ -1,0 +1,5 @@
+.common {
+}
+.standard__full__full {
+  @apply bg-white rounded-lg shadow-sm p-8;
+}

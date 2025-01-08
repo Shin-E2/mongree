@@ -1,0 +1,11 @@
+.section {
+  @apply space-y-6;
+}
+
+.section_div {
+  @apply grid grid-cols-2 gap-8;
+}
+
+.section_div_div {
+  @apply flex items-end gap-2;
+}

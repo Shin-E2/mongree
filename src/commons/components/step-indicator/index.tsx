@@ -1,26 +1,27 @@
-interface StepIndicatorProps {
-  label: string;
-  step: number;
-  currentStep: number;
-}
+import type {
+  IStepIndicatorBaseProps,
+  IStepIndicatorStandardMMProps,
+} from "./types";
+import styles from "./styles.module.css";
 
-export function StepIndicator({
+export function StepIndicatorBase({
   label,
   step,
   currentStep,
-}: StepIndicatorProps) {
+  cssprop,
+}: IStepIndicatorBaseProps) {
   // 현재 단계이거나 이전 단계인 경우 활성화
   const isActive = currentStep >= step;
 
   return (
     <div
-      className={`flex flex-col items-center ${
+      className={`${styles.common} ${
         isActive ? "text-indigo-600" : "text-gray-400"
       }`}
     >
       {/* 현재 단계 */}
       <div
-        className={`w-8 h-8 rounded-full flex justify-center items-center mb-2 ${
+        className={`${cssprop} ${
           isActive ? "bg-indigo-600 text-white" : "bg-gray-200"
         }`}
       >
@@ -30,3 +31,9 @@ export function StepIndicator({
     </div>
   );
 }
+
+export const StepIndicatorStandardMM = ({
+  ...rest
+}: IStepIndicatorStandardMMProps) => {
+  return <StepIndicatorBase {...rest} cssprop={styles.standard__m__m} />;
+};

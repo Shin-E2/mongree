@@ -1,0 +1,3 @@
+.div {
+  @apply flex justify-between pt-4;
+}

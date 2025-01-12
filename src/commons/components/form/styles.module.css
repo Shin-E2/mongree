@@ -1,0 +1,6 @@
+.common {
+}
+
+.standard__full__full {
+  @apply flex flex-col gap-2;
+}

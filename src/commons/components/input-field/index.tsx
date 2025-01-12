@@ -11,8 +11,9 @@ import type {
   IInputFieldStandardSFullProps,
 } from "./types";
 import { useState } from "react";
+import { useFormContext, type FieldValues, type Path } from "react-hook-form";
 
-export default function InputFieldBase({
+export default function InputFieldBase<T extends FieldValues>({
   cssprop,
   placeholder,
   required = false,
@@ -20,12 +21,19 @@ export default function InputFieldBase({
   type,
   title,
   isAddress = false,
-}: IInputFieldBaseProps) {
+}: IInputFieldBaseProps<T>) {
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext<T>();
+
+  // 모달
   const [isOpen, setIsOpen] = useState(false);
 
   const handleModalClose = () => {
     setIsOpen(false);
   };
+
   return (
     <div className={`${cssprop} ${styles.common}`}>
       <InputTitleStandardSFull
@@ -35,8 +43,12 @@ export default function InputFieldBase({
       {isAddress ? (
         <>
           {/* 우편번호 */}
-          <div className="flex gap-2 w-1/3">
-            <InputStandardSFull placeholder="우편번호" name="zoneCode" />
+          <div className={styles.common_zonecode}>
+            <InputStandardSFull
+              placeholder="우편번호"
+              name={`${name}.zoneCode` as Path<T>}
+              register={register}
+            />
             <ButtonTextWithPaddingMM
               title="검색"
               type="button"
@@ -49,19 +61,35 @@ export default function InputFieldBase({
             )}
           </div>
           {/* 주소 */}
-          <InputStandardSFull placeholder="주소" name="address" />
+          <InputStandardSFull<T>
+            placeholder="주소"
+            name={`${name}.address` as Path<T>}
+            register={register}
+          />
           {/* 상세주소 */}
-          <InputStandardSFull placeholder="상세주소" name="detailAddress" />
+          <InputStandardSFull
+            placeholder="상세주소"
+            name={`${name}.detailAddress` as Path<T>}
+            register={register}
+          />
         </>
       ) : (
-        <InputStandardSFull placeholder={placeholder} name={name} type={type} />
+        // 주소 제외
+        <InputStandardSFull
+          placeholder={placeholder}
+          name={name}
+          type={type}
+          register={register}
+          errors={errors[name]?.message?.toString()}
+          required={required}
+        />
       )}
     </div>
   );
 }
 
-export const InputFieldStandardSFull = ({
+export function InputFieldStandardSFull<T extends FieldValues>({
   ...rest
-}: IInputFieldStandardSFullProps) => {
+}: IInputFieldStandardSFullProps<T>) {
   return <InputFieldBase {...rest} cssprop={styles.standard__s__full} />;
-};
+}

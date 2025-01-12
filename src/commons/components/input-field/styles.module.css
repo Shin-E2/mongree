@@ -1,6 +1,10 @@
 .common {
 }
 
+.common_zonecode {
+  @apply flex gap-2 w-1/3;
+}
+
 .standard__s__full {
-  @apply space-y-2;
+  @apply flex flex-col gap-1;
 }

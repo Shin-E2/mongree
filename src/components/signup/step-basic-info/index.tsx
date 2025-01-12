@@ -1,6 +1,6 @@
-import { ButtonTextWithPaddingMM } from "@/commons/components/button-text";
 import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import styles from "./styles.module.css";
+import SignupNicknameContainer from "../nickname-container";
 
 export default function SignupStepBasicInfo() {
   return (
@@ -16,16 +16,7 @@ export default function SignupStepBasicInfo() {
         />
 
         {/* 닉네임 입력 영역 */}
-        <div className={styles.section_div_div}>
-          <InputFieldStandardSFull
-            name="nickname"
-            title="닉네임"
-            placeholder="닉네임을 입력해주세요"
-            required
-          />
-          {/* 중복 확인 버튼 */}
-          <ButtonTextWithPaddingMM type="button" title="중복확인" />
-        </div>
+        <SignupNicknameContainer />
       </div>
 
       {/* 이메일 */}
@@ -55,11 +46,10 @@ export default function SignupStepBasicInfo() {
 
       {/* 주소 입력 */}
       <InputFieldStandardSFull
-        name="passwordConfirm"
+        name="address"
         title="주소"
         type="password"
         placeholder="비밀번호를 다시 입력해주세요"
-        required
         isAddress
       />
     </section>

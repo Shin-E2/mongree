@@ -3,6 +3,7 @@ export interface IButtonTextBaseProps {
   onClick?: () => void;
   title: string;
   type: "button" | "submit" | "reset";
+  disabled?: boolean;
 }
 
 export interface IButtonTextCommonProps

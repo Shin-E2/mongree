@@ -11,12 +11,14 @@ export default function ButtonTextBase({
   onClick,
   title,
   type,
+  disabled,
 }: IButtonTextBaseProps) {
   return (
     <button
       className={`${cssprop} ${styles.common}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {title}
     </button>

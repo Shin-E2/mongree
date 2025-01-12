@@ -19,10 +19,10 @@ export default function SignupSectionButton({
       )}
 
       <ButtonTextWithMarginLeftSS
-        type="button"
+        type={isLastStep ? "submit" : "button"}
         className={currentStep === 0 ? "ml-auto" : ""} // 동적으로 스타일을 적용하기 위한 className
         title={isLastStep ? "가입완료" : "다음"}
-        onClick={handleNext}
+        onClick={!isLastStep ? handleNext : undefined} // 마지막 단계에서는 onClick을 제거
       />
     </div>
   );

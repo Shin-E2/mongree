@@ -15,9 +15,9 @@ export default function ButtonTextBase({
 }: IButtonTextBaseProps) {
   return (
     <button
+      type={type}
       className={`${cssprop} ${styles.common}`}
       onClick={onClick}
-      type={type}
       disabled={disabled}
     >
       {title}
@@ -41,6 +41,7 @@ export const ButtonTextWithMarginLeftSS = ({
   className, //동적인 스타일을 적용하기 위한 클래스
   ...rest
 }: IButtonTextWithMarginLeftSSProps) => {
+  console.log(rest);
   return (
     <ButtonTextBase
       {...rest}

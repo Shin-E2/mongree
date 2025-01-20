@@ -1,5 +1,5 @@
 .common {
-  @apply rounded-md whitespace-nowrap;
+  @apply rounded-md whitespace-nowrap disabled:bg-gray-400 disabled:text-white disabled:cursor-not-allowed disabled:hover:bg-gray-400;
 }
 
 .standard__s__full {

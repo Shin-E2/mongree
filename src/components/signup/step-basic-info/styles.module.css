@@ -3,7 +3,7 @@
 }
 
 .section_div {
-  @apply grid grid-cols-2 gap-8;
+  @apply sm:grid sm:grid-cols-2 sm:gap-8 xs:flex xs:flex-col xs:gap-0.5;
 }
 
 .section_div_div {

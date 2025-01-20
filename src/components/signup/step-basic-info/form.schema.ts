@@ -31,9 +31,10 @@ export const SignupFormSchema = z
       .string()
       .min(PASSWORD_MIN_LENGTH, "비밀번호는 10자 이상 작성해주세요."),
     address: AddressFormSchema,
-    profileImage: z.string().optional(),
-    // .any()
-    // .optional()
+    profileImage: z.union([
+      z.string(), // S3 URL string
+      z.instanceof(File), // File 객체
+    ]),
     // .refine((file) => {
     //   if (!file) return true; // 파일이 없는 경우 통과
     //   return file instanceof File;

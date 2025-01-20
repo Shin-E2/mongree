@@ -1,6 +1,6 @@
 import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import styles from "./styles.module.css";
-import SignupNicknameContainer from "../nickname-container";
+import SignupStepBasicInfoNicknameContainer from "./nickname-container";
 
 export default function SignupStepBasicInfo() {
   return (
@@ -16,7 +16,7 @@ export default function SignupStepBasicInfo() {
         />
 
         {/* 닉네임 입력 영역 */}
-        <SignupNicknameContainer />
+        <SignupStepBasicInfoNicknameContainer />
       </div>
 
       {/* 이메일 */}

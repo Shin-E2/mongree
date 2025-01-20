@@ -62,6 +62,14 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
     },
+    screens: {
+      xs: "390px", // 모바일
+      sm: "570px", // 태블릿
+      md: "768px", // 작은 데스크탑
+      lg: "1024px", // 일반 데스크탑
+      xl: "1280px", // 큰 데스크탑
+      "2xl": "1536px", // 초대형 디스플레이
+    },
   },
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;

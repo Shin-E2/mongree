@@ -1,24 +1,57 @@
-"use server";
-
 import type { SignupFormType } from "../step-basic-info/form.schema";
+import { signup, uploadImageToS3 } from "./action";
+import type { IuseSignupFormStepsProps } from "./types";
 
-/* 
-// useActionState를 사용할 경우
-export async function signup(prevState: any, formData: FormData) {
-  const data = {
-    name: formData.get("name"),
-    nickname: formData.get("nickname"),
-    email: formData.get("email"),
-    password: formData.get("password"),
-    passwordConfirm: formData.get("passwordConfirm"),
-    zoneCode: formData.get("zoneCode"),
-    address: formData.get("address"),
-    detailAddress: formData.get("detailAddress"),
+export default function useSignupFormSteps({
+  setCurrentStep,
+  currentStepData,
+}: IuseSignupFormStepsProps) {
+  // 다음
+  const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault(); // form onsubmit 동작 방지
+    setCurrentStep((prev) => prev + 1);
   };
 
-  console.log(data);
-} */
+  // 이전
+  const handlePrev = () => {
+    setCurrentStep((prev) => prev - 1);
+  };
 
-export async function signup(data: SignupFormType) {
-  console.log("회원가입 정보", data);
+  // 현재 단계의 컴포넌트
+  const SignupStepComponent = currentStepData.Component;
+
+  // form 제출
+  const onSubmit = async (data: SignupFormType) => {
+    try {
+      let updatedData = { ...data };
+
+      if (data.profileImage instanceof File) {
+        const imageUrl = await uploadImageToS3(data.profileImage);
+        // data.profileImage = imageUrl!;
+
+        if (!imageUrl) {
+          throw new Error("이미지 업로드 실패");
+        }
+        // 새로운 객체에 이미지 URL 설정
+        updatedData = {
+          ...updatedData,
+          profileImage: imageUrl,
+        };
+        // setValue("profileImage", imageUrl);
+      }
+
+      // 업데이트된 데이터로 회원가입 진행
+      const result = await signup(updatedData);
+      console.log("회원가입 성공", result);
+    } catch (error) {
+      console.log("회원가입 실패:", error);
+    }
+  };
+
+  return {
+    handleNext,
+    handlePrev,
+    SignupStepComponent,
+    onSubmit,
+  };
 }

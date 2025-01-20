@@ -1,12 +1,12 @@
 import { FormStandardFullFull } from "@/commons/components/form";
 import SignupSectionButton from "../section-button";
 import type { ISignupFormSteps } from "./types";
-import { signup } from "./hook";
 import {
   SignupFormSchema,
   type SignupFormType,
 } from "../step-basic-info/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import useSignupFormSteps from "./hook";
 
 export default function SignupFormSteps({
   currentStep,
@@ -14,22 +14,15 @@ export default function SignupFormSteps({
   currentStepData,
   isLastStep,
 }: ISignupFormSteps) {
-  // 다음
-  const handleNext = () => {
-    setCurrentStep((prev) => prev + 1);
-  };
-
-  // 이전
-  const handlePrev = () => {
-    setCurrentStep((prev) => prev - 1);
-  };
-
-  // 현재 단계의 컴포넌트
-  const SignupStepComponent = currentStepData.Component;
+  const { handleNext, handlePrev, SignupStepComponent, onSubmit } =
+    useSignupFormSteps({
+      setCurrentStep,
+      currentStepData,
+    });
 
   return (
     <FormStandardFullFull<SignupFormType>
-      onSubmit={signup}
+      onSubmit={onSubmit}
       resolver={zodResolver(SignupFormSchema)}
     >
       {/* 현재 단계의 컴포넌트 렌더링 */}

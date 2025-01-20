@@ -6,3 +6,6 @@ export interface ISignupFormSteps {
   currentStepData: ISignupStepProps;
   isLastStep: boolean;
 }
+
+export interface IuseSignupFormStepsProps
+  extends Omit<ISignupFormSteps, "isLastStep" | "currentStep"> {}

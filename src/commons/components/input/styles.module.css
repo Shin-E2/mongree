@@ -1,12 +1,15 @@
 .div {
-  @apply flex flex-col gap-2;
+  @apply flex flex-col gap-2 xs:w-full;
 }
 
 .common {
-  @apply flex rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm  placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50  focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+  @apply flex rounded-md border border-input bg-transparent px-3 py-1 text-base shadow-sm  placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50  focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent read-only:bg-gray-200;
 }
 .error {
   @apply text-red-500 font-medium text-xs h-4;
+}
+.success {
+  @apply text-green-600 font-medium text-xs h-4;
 }
 
 .standard__s__full {

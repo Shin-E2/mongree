@@ -1,6 +1,7 @@
-import type { FieldValues } from "react-hook-form";
+import { type FieldValues } from "react-hook-form";
 import styles from "./styles.module.css";
 import type { IInputBaseProps, IInputStandardSFullProps } from "./types";
+import { isFieldErrors } from "@/commons/utils/type-guards";
 
 // input 컴포넌트
 export default function InputBase<T extends FieldValues>({
@@ -13,7 +14,15 @@ export default function InputBase<T extends FieldValues>({
   register,
   onChange,
   id,
+  successMessage,
+  readOnly = false,
+  disabled = false,
 }: IInputBaseProps<T>) {
+  // errors가 FieldError 타입일 경우 message를 표시
+  const errorMessage = isFieldErrors<T>(errors)
+    ? (errors[name]?.message as string | undefined)
+    : errors;
+
   return (
     <div className={styles.div}>
       <input
@@ -24,13 +33,14 @@ export default function InputBase<T extends FieldValues>({
         required={required}
         onChange={onChange}
         id={id}
+        readOnly={readOnly}
+        disabled={disabled}
       />
-      {/* {errors?.map((error, i) => (
-        <span key={i} className={styles.error}>
-          {error}
-        </span>
-      ))} */}
-      <span className={styles.error}>{errors}</span>
+      {successMessage ? (
+        <span className={styles.success}>{successMessage}</span>
+      ) : (
+        <span className={styles.error}>{errorMessage}</span>
+      )}
     </div>
   );
 }

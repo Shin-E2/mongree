@@ -1,5 +1,5 @@
 .section {
-  @apply min-h-screen bg-gray-50 py-12;
+  @apply min-h-screen bg-gray-50 py-12 px-3;
 }
 
 .section_div {

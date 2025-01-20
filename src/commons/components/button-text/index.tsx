@@ -41,7 +41,7 @@ export const ButtonTextWithMarginLeftSS = ({
   className, //동적인 스타일을 적용하기 위한 클래스
   ...rest
 }: IButtonTextWithMarginLeftSSProps) => {
-  console.log(rest);
+  // console.log("버튼",rest);
   return (
     <ButtonTextBase
       {...rest}

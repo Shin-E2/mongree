@@ -1,3 +1,5 @@
+"use client";
+
 import Image from "next/image";
 import { ButtonIconDelete } from "../button-icon";
 import styles from "./styles.module.css";

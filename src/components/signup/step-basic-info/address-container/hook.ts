@@ -1,5 +1,3 @@
-"use client";
-
 import { useState } from "react";
 import type { Address } from "react-daum-postcode";
 import { useFormContext } from "react-hook-form";

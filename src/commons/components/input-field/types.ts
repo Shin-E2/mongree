@@ -1,11 +1,5 @@
 import type { FieldValues, Path, UseFormRegister } from "react-hook-form";
 
-export interface IAddressErrors {
-  zoneCode?: string;
-  address?: string;
-  detailAddress?: string;
-}
-
 export interface IInputFieldBaseProps<T extends FieldValues> {
   cssprop: string;
   placeholder: string;

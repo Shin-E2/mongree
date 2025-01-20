@@ -2,6 +2,7 @@ export interface IButtonIconBaseProps {
   cssprop: string;
   icon?: React.ReactNode;
   onClick?: (() => void) | ((e: React.MouseEvent) => void);
+  className?: string;
 }
 
 export interface IButtonIconCommonProps

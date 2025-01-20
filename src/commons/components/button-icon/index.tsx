@@ -12,9 +12,13 @@ export const ButtonIconBase = ({
   cssprop,
   icon,
   onClick,
+  className,
 }: IButtonIconBaseProps) => {
   return (
-    <button className={`${cssprop} ${styles.common}`} onClick={onClick}>
+    <button
+      className={`${cssprop} ${styles.common} ${className}`}
+      onClick={onClick}
+    >
       <>{icon}</>
     </button>
   );
@@ -46,7 +50,7 @@ export const ButtonIconDelete = ({ ...rest }: IButtonIconCommonProps) => {
   return (
     <ButtonIconBase
       {...rest}
-      cssprop={styles.delete}
+      cssprop={`${styles.delete}`}
       icon={<X className="w-8 h-8 text-white" />}
     />
   );

@@ -1,5 +1,6 @@
 import { ButtonIconSocial } from "@/commons/components/button-icon";
 import { ButtonTextStandardSFull } from "@/commons/components/button-text";
+import { FormStandardFullFull } from "@/commons/components/form";
 import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import Link from "next/link";
 
@@ -12,7 +13,8 @@ export default function LoginPage() {
             <h1 className="text-3xl font-bold text-gray-900">토닥토닥</h1>
             <p className="mt-2 text-gray-600">로그인하여 시작하세요</p>
           </div>
-          <form className="space-y-6">
+          {/* 로그인 */}
+          <FormStandardFullFull onSubmit={() => {}}>
             {/* 이메일 입력 필드 */}
             <InputFieldStandardSFull
               name="email"
@@ -39,8 +41,9 @@ export default function LoginPage() {
         </div> */}
 
             {/* 로그인 버튼 */}
-            <ButtonTextStandardSFull title="로그인" />
-          </form>
+            <ButtonTextStandardSFull title="로그인" type="submit" />
+          </FormStandardFullFull>
+
           <div className="space-y-6">
             {/* 구분선과 텍스트 */}
             <div className="relative mt-6">

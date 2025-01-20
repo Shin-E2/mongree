@@ -1,0 +1,3 @@
+.section_zonecode {
+  @apply flex gap-2 sm:w-1/3 xs:w-1/2;
+}

@@ -1,0 +1,6 @@
+.section {
+  @apply flex flex-col gap-1;
+}
+.section_nickname_duplication {
+  @apply flex gap-2;
+}

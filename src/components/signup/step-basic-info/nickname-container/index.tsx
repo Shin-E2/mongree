@@ -3,7 +3,6 @@ import { InputStandardSFull } from "@/commons/components/input";
 import styles from "./styles.module.css";
 import { InputTitleStandardSFull } from "@/commons/components/input-title";
 import useSignupStepBasicInfoNicknameContainer from "./hook";
-import { useFormContext } from "react-hook-form";
 
 export default function SignupStepBasicInfoNicknameContainer() {
   const {
@@ -13,6 +12,7 @@ export default function SignupStepBasicInfoNicknameContainer() {
     nicknameValue,
     handleCheckNickname,
     isSubmitting, // 요청 진행 상태
+    handleNicknameChange,
   } = useSignupStepBasicInfoNicknameContainer();
 
   return (
@@ -25,6 +25,7 @@ export default function SignupStepBasicInfoNicknameContainer() {
           register={register}
           errors={errors}
           successMessage={successMessage}
+          onChange={handleNicknameChange}
         />
         <ButtonTextWithPaddingMM
           title={isSubmitting ? "확인 중..." : "중복 확인"}

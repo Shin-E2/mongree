@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { checkNickname } from "./action";
 import { useFormContext } from "react-hook-form";
+import { undefined } from "zod";
 
 export default function useSignupStepBasicInfoNicknameContainer() {
   const {
@@ -10,24 +11,31 @@ export default function useSignupStepBasicInfoNicknameContainer() {
     setError,
     clearErrors,
     watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useFormContext();
   const [successMessage, setSuccessMessage] = useState("");
 
   // 닉네임 값 추적
-  const nicknameValue = watch("nickname");
+  const nicknameValue = watch("nickname", "");
 
   // 닉네임 값 변경 시 successMessage 초기화
   useEffect(() => {
+    console.log("닉네임 값:", nicknameValue);
     if (!nicknameValue) setSuccessMessage("");
   }, [nicknameValue]);
+
+  const handleNicknameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const value = event.target.value;
+    setValue("nickname", value, { shouldValidate: true });
+  };
 
   const handleCheckNickname = async () => {
     try {
       clearErrors("nickname"); // 이전 에러 초기화
-      setSuccessMessage(""); // 체크 시작할 때 성공 메시지 초기화
+      // setSuccessMessage(""); // 체크 시작할 때 성공 메시지 초기화
 
-      const nickname = nicknameValue;
+      const nickname = nicknameValue.trim();
       const result = await checkNickname(nickname);
 
       if (result.success) {
@@ -52,5 +60,6 @@ export default function useSignupStepBasicInfoNicknameContainer() {
     handleCheckNickname,
     nicknameValue,
     isSubmitting,
+    handleNicknameChange,
   };
 }

@@ -2,5 +2,5 @@ export interface ISignupSectionButtonProps {
   currentStep: number;
   handlePrev: () => void;
   isLastStep: boolean;
-  handleNext: () => void;
+  handleNext: (e: React.MouseEvent<HTMLButtonElement>) => void;
 }

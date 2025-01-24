@@ -1,0 +1,26 @@
+.common {
+}
+
+.common__textBox {
+  @apply flex flex-col text-left;
+}
+
+.common__textBox__title {
+  @apply font-medium text-gray-800;
+}
+
+.common_textBox__description {
+  @apply text-sm text-gray-500;
+}
+
+.profile {
+  @apply flex items-center gap-3 w-full p-4 border-t cursor-pointer hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-200 focus:bg-gray-50;
+}
+
+.profile__div {
+  @apply w-10 h-10 rounded-full overflow-hidden;
+}
+
+.profile__div__image {
+  @apply object-cover rounded-full w-full h-full;
+}

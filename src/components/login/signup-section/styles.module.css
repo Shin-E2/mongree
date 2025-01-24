@@ -1,0 +1,11 @@
+.section {
+  @apply mt-6 text-center;
+}
+
+.section__span {
+  @apply text-sm text-gray-600;
+}
+
+.section__link {
+  @apply ml-2 text-sm text-indigo-600 hover:text-indigo-500;
+}

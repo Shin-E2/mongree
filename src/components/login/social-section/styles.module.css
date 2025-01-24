@@ -1,0 +1,27 @@
+.section {
+  @apply flex flex-col gap-6;
+}
+
+.section__group {
+  @apply relative mt-6;
+}
+
+.section__group__line {
+  @apply absolute inset-0 flex items-center;
+}
+
+.section__group__line__divider {
+  @apply w-full border-t border-gray-300;
+}
+
+.section__group__text {
+  @apply relative flex justify-center text-sm;
+}
+
+.section__group__text__span {
+  @apply px-2 bg-white text-gray-500;
+}
+
+.section__buttons {
+  @apply flex justify-center gap-4;
+}

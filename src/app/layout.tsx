@@ -28,7 +28,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <div id="modal"></div> {/* 모달 */}
+        <div id="modal" /> {/* 모달 */}
       </body>
     </html>
   );

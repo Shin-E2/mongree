@@ -3,7 +3,7 @@
 import db from "@/lib/db";
 import { LoginFormSchema, type LoginFormType } from "./form.schema";
 import bcrypt from "bcrypt";
-import { Login } from "@/lib/login";
+import { login } from "@/lib/login";
 import { redirect } from "next/navigation";
 import { URL } from "@/commons/constants/global-url";
 
@@ -21,7 +21,7 @@ const checkEmailExists = async (email: string) => {
 };
 
 // 로그인
-export const login = async (data: LoginFormType) => {
+export const clickLogin = async (data: LoginFormType) => {
   console.log("로그인 데이터", data);
 
   // 이메일로 사용자 찾기
@@ -50,7 +50,7 @@ export const login = async (data: LoginFormType) => {
     );
 
     if (ok) {
-      await Login(user!.id); // 쿠키 저장
+      await login(user!.id); // 쿠키 저장
       // 로그인 성공 후 데시보드 페이지로 리다이렉트
       redirect(URL().HOME);
     } else {

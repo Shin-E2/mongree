@@ -1,12 +1,12 @@
 import { LoginFormType } from "./form.schema";
 import { useForm } from "react-hook-form";
-import { login } from "./action";
+import { clickLogin } from "./action";
 
 export default function useLoginFormSection() {
   const { setError } = useForm();
 
   const onSubmit = async (data: LoginFormType) => {
-    await login(data);
+    await clickLogin(data);
   };
   return { onSubmit };
 }

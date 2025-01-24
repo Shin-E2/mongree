@@ -1,0 +1,11 @@
+.section {
+  @apply text-center mb-8;
+}
+
+.section__h1 {
+  @apply text-3xl font-bold text-gray-900;
+}
+
+.section__p {
+  @apply mt-2 text-gray-600
+}

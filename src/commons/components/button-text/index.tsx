@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./styles.module.css";
 import type {
   IButtonTextBaseProps,
@@ -12,7 +13,17 @@ export default function ButtonTextBase({
   title,
   type,
   disabled,
+  href,
 }: IButtonTextBaseProps) {
+  // 링크태그
+  if (href) {
+    return (
+      <Link href={href} type={type} className={`${cssprop} ${styles.common}`}>
+        {title}
+      </Link>
+    );
+  }
+
   return (
     <button
       type={type}
@@ -48,4 +59,9 @@ export const ButtonTextWithMarginLeftSS = ({
       cssprop={`${className} ${styles.padding__m__m}`}
     />
   );
+};
+
+// 로고 버튼
+export const ButtonTextLogo = ({ ...rest }: IButtonTextCommonProps) => {
+  return <ButtonTextBase {...rest} cssprop={styles.logo} />;
 };

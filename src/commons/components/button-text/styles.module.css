@@ -3,7 +3,7 @@
 }
 
 .standard__s__full {
-  @apply w-full bg-indigo-600 text-white py-1.5;
+  @apply w-full bg-indigo-600 text-white p-1.5;
 }
 
 .padding__m__m {
@@ -12,4 +12,8 @@
 
 .margin__left__s__s {
   @apply px-3 py-2 h-9 bg-indigo-600 hover:bg-indigo-400 flex items-center text-white;
+}
+
+.logo {
+  @apply px-4 py-6 flex justify-center text-4xl font-extrabold text-indigo-600;
 }

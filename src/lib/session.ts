@@ -5,6 +5,7 @@ interface SessionContent {
   id?: string; //로그인한 사용자만 가지고 있음
 }
 
+// 섹션 객체 생성
 export async function getSession() {
   // console.log("쿠키:", cookies());
 

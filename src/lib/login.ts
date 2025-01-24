@@ -6,7 +6,7 @@ import { getSession } from "./session";
 */
 
 // user정보가 넘어옴
-export const Login = async (id: string) => {
+export const login = async (id: string) => {
   const session = await getSession();
   session.id = id; // 사용자 id를 세션에 저장
   await session.save(); // 세션을 저장

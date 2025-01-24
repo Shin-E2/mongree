@@ -1,3 +1,5 @@
+"use client";
+
 import SignupStepBasicInfoAddressContainer from "../../../components/signup/step-basic-info/address-container";
 import { InputStandardSFull } from "../input";
 import { InputTitleStandardSFull } from "../input-title";

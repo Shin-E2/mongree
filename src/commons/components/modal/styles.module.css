@@ -6,6 +6,14 @@
   @apply flex flex-col bg-white rounded-lg shadow-lg;
 }
 
+.common__buttons {
+  @apply flex gap-2 pt-4 w-full;
+}
+
 .standard__full__full {
   @apply w-[450px] flex flex-col items-end py-12 px-4 relative;
+}
+
+.standard__fit__fit {
+  @apply flex flex-col justify-center items-center p-8 pb-4;
 }

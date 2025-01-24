@@ -1,3 +1,5 @@
+"use client";
+
 import {
   FormProvider,
   useForm,
@@ -16,6 +18,7 @@ export default function FormBase<T extends FieldValues>({
 }: IFormBaseProps<T>) {
   const methods = useForm<T>({
     mode: "onBlur", // 유효성 검사
+    criteriaMode: "all", // 모든 유효성 검사 에러 확인
     resolver,
   });
 

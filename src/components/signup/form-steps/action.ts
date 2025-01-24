@@ -6,7 +6,6 @@ import {
   SignupFormType,
 } from "../step-basic-info/form.schema";
 import * as bcrypt from "bcrypt";
-import { getSession } from "@/lib/session";
 
 /* 
 // useActionState를 사용할 경우
@@ -135,9 +134,9 @@ export async function signup(data: SignupFormType) {
 
     console.log("회원가입 성공", user);
 
-    const session = await getSession();
-    session.id = user.id;
-    await session.save();
+    // const session = await getSession();
+    // session.id = user.id;
+    // await session.save();
 
     return { success: true, user };
   } catch (error) {

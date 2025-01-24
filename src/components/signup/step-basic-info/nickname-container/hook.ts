@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { checkNickname } from "./action";
 import { useFormContext } from "react-hook-form";
-import { undefined } from "zod";
 
 export default function useSignupStepBasicInfoNicknameContainer() {
   const {

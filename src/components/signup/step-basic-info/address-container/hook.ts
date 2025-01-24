@@ -1,20 +1,14 @@
-import { useState } from "react";
 import type { Address } from "react-daum-postcode";
 import { useFormContext } from "react-hook-form";
 import type { ISignupStepBasicInfoAddressContainerProp } from "./types";
+import useModal from "@/commons/hooks/use-modal.hook";
 
 export default function useSignupStepBasicInfoAddressContainer({
   isAddress,
   name,
 }: ISignupStepBasicInfoAddressContainerProp) {
   const { register, setValue } = useFormContext();
-
-  // 모달
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleModalClose = () => {
-    setIsOpen(false);
-  };
+  const { setIsOpen, isOpen, handleModalClose } = useModal(); // 모달
 
   // 우편번호 검색 후 정보
   const handleComplete = (data: Address) => {

@@ -3,7 +3,7 @@
 import { ButtonTextWithPaddingMM } from "@/commons/components/button-text";
 import { InputStandardSFull } from "@/commons/components/input";
 import { ModalStandardFullFUll } from "@/commons/components/modal";
-import DaumPostcodeEmbed from "react-daum-postcode"
+import DaumPostcodeEmbed from "react-daum-postcode";
 import styles from "./styles.module.css";
 import useSignupStepBasicInfoAddressContainer from "./hook";
 import type { ISignupStepBasicInfoAddressContainerProp } from "./types";
@@ -31,7 +31,7 @@ export default function SignupStepBasicInfoAddressContainer({
           onClick={() => setIsOpen(true)}
         />
         {isOpen && (
-          <ModalStandardFullFUll onClose={handleModalClose}>
+          <ModalStandardFullFUll onClose={handleModalClose} isAddress>
             <DaumPostcodeEmbed onComplete={handleComplete} />
           </ModalStandardFullFUll>
         )}

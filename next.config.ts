@@ -28,6 +28,9 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "ssl.pstatic.net", // Naver 프로필 이미지
       },
+      {
+        hostname: "mongree-upload-image.s3.ap-northeast-2.amazonaws.com", // aws s3 이미지
+      },
     ],
   },
 };

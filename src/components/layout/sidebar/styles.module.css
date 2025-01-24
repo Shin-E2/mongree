@@ -1,0 +1,7 @@
+.aside {
+  @apply fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200;
+}
+
+.aside_div {
+  @apply flex flex-col h-full;
+}

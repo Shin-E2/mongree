@@ -1,7 +1,7 @@
 "use client";
 
+import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { useState } from "react";
-import { DEFAULT_PROFILE_IMAGE } from "./constants";
 import { useFormContext } from "react-hook-form";
 
 export default function useImagePreview() {

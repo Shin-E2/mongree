@@ -18,7 +18,11 @@ export interface IInputBaseProps<T extends FieldValues> {
   successMessage?: string; // 성공했을 때 메시지
   readOnly?: boolean;
   disabled?: boolean;
+  multiple?: boolean; // type이 file일 경우 다중선택
 }
 
 export interface IInputStandardSFullProps<T extends FieldValues>
   extends Omit<IInputBaseProps<T>, "cssprop"> {}
+
+export interface IInputWithCsspropProps<T extends FieldValues>
+  extends IInputBaseProps<T> {}

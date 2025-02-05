@@ -1,6 +1,10 @@
 import { type FieldValues } from "react-hook-form";
 import styles from "./styles.module.css";
-import type { IInputBaseProps, IInputStandardSFullProps } from "./types";
+import type {
+  IInputBaseProps,
+  IInputStandardSFullProps,
+  IInputWithCsspropProps,
+} from "./types";
 import { isFieldErrors } from "@/commons/utils/type-guards";
 
 // input 컴포넌트
@@ -17,6 +21,7 @@ export default function InputBase<T extends FieldValues>({
   successMessage,
   readOnly = false,
   disabled = false,
+  multiple = false,
 }: IInputBaseProps<T>) {
   // errors가 FieldError 타입일 경우 message를 표시
   const errorMessage = isFieldErrors<T>(errors)
@@ -49,4 +54,11 @@ export const InputStandardSFull = <T extends FieldValues>({
   ...rest
 }: IInputStandardSFullProps<T>) => {
   return <InputBase {...rest} cssprop={styles.standard__s__full} />;
+};
+
+// 일기 등록
+export const InputWithCssprop = <T extends FieldValues>({
+  ...rest
+}: IInputWithCsspropProps<T>) => {
+  return <InputBase {...rest} />;
 };

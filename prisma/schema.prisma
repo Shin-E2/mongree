@@ -42,6 +42,8 @@ model User {
   // 일반 사용자와 소셜 사용자는 1:1 관계
   account Account[]
   address Address[]
+
+  diaries Diary[]
 }
 
 // 소셜 사용자
@@ -58,7 +60,6 @@ model Account {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
-  // 소셜 사용자와 일반 사용자는 1:1 관계
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
 
@@ -72,7 +73,62 @@ model Address {
   address       String
   detailAddress String
 
-  // 주소와 사용자는 1:N 관계
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String @unique
+}
+
+// 감정
+model Emotion {
+  id      String         @id
+  label   String
+  diaries DiaryEmotion[]
+}
+
+model DiaryEmotion {
+  diary     Diary   @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  diaryId   String
+  emotion   Emotion @relation(fields: [emotionId], references: [id], onDelete: Cascade)
+  emotionId String
+
+  @@id([diaryId, emotionId])
+}
+
+// 일기
+model Diary {
+  id        String       @id @default(cuid())
+  isPrivate Boolean      @default(true)
+  title     String
+  content   String
+  images    DiaryImage[] @relation("DiaryToImage")
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  tags         DiaryTag[]
+  DiaryEmotion DiaryEmotion[]
+}
+
+model DiaryImage {
+  id      String @id @default(cuid())
+  url     String
+  order   Int // 이미지 순서 저장
+  diary   Diary  @relation("DiaryToImage", fields: [diaryId], references: [id], onDelete: Cascade)
+  diaryId String
+}
+
+model Tag {
+  id      String     @id @default(cuid())
+  name    String     @unique
+  diaries DiaryTag[]
+}
+
+model DiaryTag {
+  diary   Diary  @relation(fields: [diaryId], references: [id], onDelete: Cascade)
+  diaryId String
+  tag     Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId   String
+
+  @@id([diaryId, tagId])
 }

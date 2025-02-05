@@ -14,3 +14,5 @@ export interface IButtonTextWithMarginLeftSSProps
   extends Omit<IButtonTextBaseProps, "cssprop"> {
   className?: string;
 }
+
+export interface IButtonTextWithCssprop extends IButtonTextBaseProps {}

@@ -3,6 +3,7 @@ import styles from "./styles.module.css";
 import type {
   IButtonTextBaseProps,
   IButtonTextCommonProps,
+  IButtonTextWithCssprop,
   IButtonTextWithMarginLeftSSProps,
 } from "./types";
 
@@ -64,4 +65,9 @@ export const ButtonTextWithMarginLeftSS = ({
 // 로고 버튼
 export const ButtonTextLogo = ({ ...rest }: IButtonTextCommonProps) => {
   return <ButtonTextBase {...rest} cssprop={styles.logo} />;
+};
+
+// cssprop 받는 버튼
+export const ButtonTextWithCssprop = ({ ...rest }: IButtonTextWithCssprop) => {
+  return <ButtonTextBase {...rest} />;
 };

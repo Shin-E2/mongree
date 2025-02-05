@@ -1,0 +1,14 @@
+.common {
+}
+
+.common__title {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.common__description {
+  @apply mt-2 text-gray-600;
+}
+
+.standard__m__full {
+  @apply py-5 px-8 bg-white border-b;
+}

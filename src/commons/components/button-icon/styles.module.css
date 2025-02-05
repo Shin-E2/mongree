@@ -12,3 +12,8 @@
 .delete__no__background {
   @apply absolute top-4;
 }
+
+.next {
+  @apply px-3 py-2 bg-indigo-600 text-white
+  rounded-lg hover:bg-indigo-700 transition-colors duration-200;
+}

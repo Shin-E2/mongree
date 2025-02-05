@@ -1,17 +1,19 @@
 "use client";
 
-import HomeAIAnalysis from "@/components/home/ai-analysis";
-import HomeEmotionStats from "@/components/home/emotion-stats";
-import HomeEmotionalCalendar from "@/components/home/emotional-calendar";
-import HomePopularDiaryCard from "@/components/home/popular-diary-card";
-import HomeRecentDiary from "@/components/home/recent-diary";
+import HomeAIAnalysis from "@/components/home/(sidebar)/ai-analysis";
+import HomeEmotionStats from "@/components/home/(sidebar)/emotion-stats";
+import HomeEmotionalCalendar from "@/components/home/(sidebar)/emotional-calendar";
+import HomePopularDiaryCard from "@/components/home/(sidebar)/popular-diary-card";
+import HomeRecentDiary from "@/components/home/(sidebar)/recent-diary";
 import { popularDiaries } from "@/mock/popular-diaries";
 
 export default function HomePage() {
   return (
     <div className="pt-16 p-8 bg-gray-50 h-full">
       <div className="grid grid-cols-12 gap-6">
+        {/* 감정 캘린더 */}
         <HomeEmotionalCalendar />
+        {/* 이번달 감정 분포, ai감정분석 */}
         <div className="col-span-4 space-y-6">
           <HomeEmotionStats />
           <HomeAIAnalysis />

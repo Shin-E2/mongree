@@ -80,3 +80,10 @@ export const ButtonOptionStandardSFull = ({
 }: IButtonOptionCommonProps) => {
   return <ButtonOptionBase {...rest} />;
 };
+
+// 일기 등록하기 뒤로가기 버튼
+export const ButtonOptionDiaryNewPrev = ({
+  ...rest
+}: IButtonOptionCommonProps) => {
+  return <ButtonOptionBase {...rest} cssprop={styles.diary_new_prev} />;
+};

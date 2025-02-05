@@ -24,3 +24,18 @@
 .profile__div__image {
   @apply object-cover rounded-full w-full h-full;
 }
+
+.diary_new_prev {
+  @apply flex items-center text-gray-600 hover:text-gray-900 transition-colors;
+}
+
+/* xs ~ sm에서 title 숨기기, sm 이상에서 보이기 */
+.diary_new_prev > span {
+  @apply hidden; /* 기본적으로 숨김 */
+}
+
+@screen sm {
+  .diary_new_prev > span {
+    @apply block; /* sm 이상에서는 보이도록 설정 */
+  }
+}

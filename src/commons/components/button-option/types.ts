@@ -2,7 +2,7 @@ export interface IButtonOptionBaseProps {
   icon?: React.ReactNode;
   title: string;
   description?: string;
-  cssprop: string;
+  cssprop?: string;
   isProfile?: boolean;
   titleColor?: string;
   href?: string; // Link 태그인 경우

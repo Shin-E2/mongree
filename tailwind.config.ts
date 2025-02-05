@@ -6,6 +6,7 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/commons/**/*.{js,ts,jsx,tsx,mdx}",
+    "./src/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
     extend: {
@@ -68,7 +69,6 @@ export default {
       md: "768px", // 작은 데스크탑
       lg: "1024px", // 일반 데스크탑
       xl: "1280px", // 큰 데스크탑
-      "2xl": "1536px", // 초대형 디스플레이
     },
   },
   plugins: [require("tailwindcss-animate")],

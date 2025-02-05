@@ -40,3 +40,9 @@ export const FormStandardFullFull = <T extends FieldValues>({
 }: IFormBaseCommonProps<T>) => {
   return <FormBase<T> {...rest} cssprop={styles.standard__full__full} />;
 };
+
+export const FormDiaryNew = <T extends FieldValues>({
+  ...rest
+}: IFormBaseCommonProps<T>) => {
+  return <FormBase<T> {...rest} cssprop={styles.diary_new} />;
+};

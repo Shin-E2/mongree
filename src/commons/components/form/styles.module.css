@@ -4,3 +4,7 @@
 .standard__full__full {
   @apply flex flex-col gap-2;
 }
+
+.diary_new {
+  @apply bg-gray-50 min-h-screen;
+}

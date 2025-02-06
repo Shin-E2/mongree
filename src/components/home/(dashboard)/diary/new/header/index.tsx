@@ -5,18 +5,28 @@ import {
 import { ButtonTextWithCssprop } from "@/commons/components/button-text";
 import { ChevronLeft, Globe, Lock } from "lucide-react";
 import styles from "./styles.module.css";
+import { useFormContext } from "react-hook-form";
+import type { DiaryNewFormType } from "../form.schema";
 
-interface IDiaryNewHeaderProps {
-  setIsPublic: (isPublic: boolean) => void;
-  isPublic: boolean;
-  selectedEmotions: string[];
-}
+export default function DiaryNewHeader() {
+  const {
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { isValid },
+  } = useFormContext<DiaryNewFormType>();
 
-export default function DiaryNewHeader({
-  setIsPublic,
-  isPublic,
-  selectedEmotions,
-}: IDiaryNewHeaderProps) {
+  const onSubmit = handleSubmit((data) => {
+    console.log("Form submitted:", data);
+  });
+
+  const isPrivate = watch("isPrivate");
+  const emotions = watch("emotions") || [];
+
+  const handleTogglePublic = (value: boolean) => {
+    setValue("isPrivate", value, { shouldValidate: true });
+  };
+
   return (
     <header className={styles.header}>
       <div className={styles.header_margin_padding}>
@@ -26,35 +36,37 @@ export default function DiaryNewHeader({
             icon={<ChevronLeft className={styles.header__back_button} />}
           />
           <div className={styles.header__buttons}>
-            {/*  공개 비공개 선택 */}
             <div className={styles.header__buttons__isPrivate_button}>
               <ButtonOptionStandardSFull
+                type="button"
                 title="공개"
                 icon={<Globe className={styles.header__buttons__icon_size} />}
-                onClick={() => setIsPublic(true)}
-                cssprop={` ${
-                  isPublic
+                onClick={() => handleTogglePublic(true)}
+                cssprop={
+                  isPrivate
                     ? styles.header__buttons_isPrivate_button_public
                     : styles.header__buttons_isPrivate_button_private
-                }`}
+                }
               />
               <ButtonOptionStandardSFull
+                type="button"
                 title="비공개"
                 icon={<Lock className={styles.header__buttons__icon_size} />}
-                onClick={() => setIsPublic(false)}
-                cssprop={`${
-                  !isPublic
+                onClick={() => handleTogglePublic(false)}
+                cssprop={
+                  !isPrivate
                     ? styles.header__buttons_isPrivate_button_public
                     : styles.header__buttons_isPrivate_button_private
-                }`}
+                }
               />
             </div>
-            {/* 등록하기 버튼 */}
             <ButtonTextWithCssprop
+              type="button"
               title="등록하기"
-              disabled={selectedEmotions.length === 0}
-              cssprop={` ${styles.header__buttons__public_submit_button} ${
-                selectedEmotions.length > 0
+              onClick={onSubmit}
+              disabled={!isValid}
+              cssprop={`${styles.header__buttons__public_submit_button} ${
+                emotions.length > 0
                   ? styles.header__buttons__selected
                   : styles.header__buttons__not_selected
               }`}

@@ -1,23 +1,19 @@
 import { ImagePreviewByDiaryNew } from "@/commons/components/image-preview";
 import { InputWithCssprop } from "@/commons/components/input";
-import { useForm } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import DiaryNewStepWriteDiaryEmotionTags from "./emotion-tags";
+import type { DiaryNewFormType } from "../form.schema";
 
 interface IDiaryNewStepWriteDiaryProps {
   selectedEmotions: string[];
 }
 
-interface DiaryFormValues {
-  title: string;
-  content: string;
-  images: File[];
-  tags: string;
-}
-
 export default function DiaryNewStepWriteDiary({
   selectedEmotions,
 }: IDiaryNewStepWriteDiaryProps) {
-  const methods = useForm<DiaryFormValues>();
+  const { register, watch } = useFormContext<DiaryNewFormType>();
+
+  console.log("제목:", watch("title"));
 
   return (
     <section>
@@ -33,7 +29,7 @@ export default function DiaryNewStepWriteDiary({
 
       {/* 내용 */}
       <textarea
-        {...methods.register("content")}
+        {...register("content")}
         placeholder="오늘 하루는 어땠나요?"
         className="w-full h-48 border-0 focus:ring-0 px-0 resize-none"
       />

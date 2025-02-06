@@ -7,6 +7,7 @@ export interface IButtonOptionBaseProps {
   titleColor?: string;
   href?: string; // Link 태그인 경우
   onClick?: () => void | Promise<void>;
+  type?: "submit" | "button" | "reset";
 }
 
 export interface IButtonOptionByProfileButtonProps
@@ -15,3 +16,16 @@ export interface IButtonOptionByProfileButtonProps
 }
 
 export interface IButtonOptionCommonProps extends IButtonOptionBaseProps {}
+
+export interface IButtonOptionEmotionProps
+  extends Omit<IButtonOptionCommonProps, "title"> {
+  emotion: {
+    id: string;
+    label: string;
+    image: string;
+    bgColor: string;
+    borderColor: string;
+    textColor: string;
+  };
+  isSelected: boolean;
+}

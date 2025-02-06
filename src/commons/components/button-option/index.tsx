@@ -4,6 +4,7 @@ import type {
   IButtonOptionBaseProps,
   IButtonOptionByProfileButtonProps,
   IButtonOptionCommonProps,
+  IButtonOptionEmotionProps,
 } from "./types";
 import Link from "next/link";
 
@@ -17,6 +18,7 @@ export default function ButtonOptionBase({
   isProfile,
   titleColor,
   href,
+  type,
 }: IButtonOptionBaseProps) {
   const ButtonContent = () => (
     <>
@@ -44,7 +46,11 @@ export default function ButtonOptionBase({
   }
 
   return (
-    <button className={`${styles.common} ${cssprop}`} onClick={onClick}>
+    <button
+      className={`${styles.common} ${cssprop}`}
+      onClick={onClick}
+      type={type}
+    >
       <ButtonContent />
     </button>
   );
@@ -86,4 +92,39 @@ export const ButtonOptionDiaryNewPrev = ({
   ...rest
 }: IButtonOptionCommonProps) => {
   return <ButtonOptionBase {...rest} cssprop={styles.diary_new_prev} />;
+};
+
+// 감정 선택 버튼
+export const ButtonOptionEmotion = ({
+  emotion,
+  isSelected,
+  onClick,
+  ...rest
+}: IButtonOptionEmotionProps) => {
+  const dynamicClassName = `relative flex flex-col items-center p-4 rounded-xl
+    transition-all duration-200 ease-in-out
+    ${
+      isSelected
+        ? `${emotion.bgColor} ring-2 ${emotion.borderColor}`
+        : "hover:bg-gray-50"
+    }`;
+
+  return (
+    <ButtonOptionBase
+      {...rest}
+      cssprop={dynamicClassName}
+      onClick={onClick}
+      icon={
+        <Image
+          src={emotion.image}
+          alt={emotion.label}
+          width={16}
+          height={16}
+          className="w-16 h-16 mb-3"
+        />
+      }
+      title={emotion.label}
+      titleColor={emotion.textColor}
+    />
+  );
 };

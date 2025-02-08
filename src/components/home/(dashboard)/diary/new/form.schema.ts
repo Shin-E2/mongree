@@ -1,4 +1,3 @@
-// form.schema.ts
 import { z } from "zod";
 import { EMOTIONS } from "@/mock/emotions";
 
@@ -18,17 +17,26 @@ export const DiaryNewFormSchema = z.object({
     .min(1, "필수입력 사항입니다")
     .max(300, "내용은 최대 300자까지 입력 가능합니다"),
   tags: z
-    .string()
+    .union([
+      z.string().transform((val) =>
+        val
+          ? val
+              .split(",")
+              .map((tag) => tag.trim())
+              .filter(Boolean)
+          : []
+      ),
+      z.array(z.string()),
+    ])
     .optional()
-    .transform((val) =>
-      val
-        ? val
-            .split(",")
-            .map((tag) => tag.trim())
-            .filter(Boolean)
-        : []
-    ),
-  images: z.array(z.string()).optional(),
+    .default([]),
+  images: z
+    .union([
+      z.array(z.instanceof(File)), // 클라이언트에서의 File 객체
+      z.array(z.string().url()), // 서버에서의 URL 문자열
+    ])
+    .optional()
+    .default([]),
 });
 
 export type DiaryNewFormType = z.infer<typeof DiaryNewFormSchema>;

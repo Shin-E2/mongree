@@ -6,7 +6,7 @@
 }
 
 .delete {
-  @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity;
+  @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity rounded-full;
 }
 
 .delete__no__background {

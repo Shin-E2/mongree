@@ -1,4 +1,9 @@
-import type { FieldValues, Resolver, SubmitHandler } from "react-hook-form";
+import type {
+  FieldValues,
+  Resolver,
+  SubmitHandler,
+  UseFormProps,
+} from "react-hook-form";
 
 export interface IFormBaseProps<T extends FieldValues> {
   action?: (payload: FormData) => void;
@@ -6,7 +11,8 @@ export interface IFormBaseProps<T extends FieldValues> {
   cssprop: string;
   onSubmit: SubmitHandler<T>;
   resolver?: Resolver<T>;
+  defaultValues?: UseFormProps<T>["defaultValues"];
 }
 
-export interface IFormBaseCommonProps<T extends FieldValues = FieldValues>
+export interface IFormBaseCommonProps<T extends FieldValues>
   extends Omit<IFormBaseProps<T>, "cssprop"> {}

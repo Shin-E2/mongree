@@ -1,16 +1,14 @@
 import Image from "next/image";
 import { EMOTIONS } from "../../../../../../../mock/emotions";
+import { useFormContext } from "react-hook-form";
 
-interface IDiaryNewStepWriteDiaryEmotionTagsProps {
-  selectedEmotions: string[];
-}
+export default function DiaryNewStepWriteDiaryEmotionTags() {
+  const { watch } = useFormContext();
+  const selectedEmotions = watch("emotions");
 
-export default function DiaryNewStepWriteDiaryEmotionTags({
-  selectedEmotions,
-}: IDiaryNewStepWriteDiaryEmotionTagsProps) {
   return (
-    <div className="flex flex-wrap gap-2 mb-4">
-      {selectedEmotions.map((emotionId) => {
+    <div className="flex flex-wrap gap-2">
+      {selectedEmotions.map((emotionId: string) => {
         const emotion = EMOTIONS.find((e) => e.id === emotionId);
         return (
           <span

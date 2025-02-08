@@ -13,13 +13,10 @@ export default function SignupPage() {
   return (
     <section className={styles.section}>
       <div className={styles.section_div}>
-        {/* 진행 단계 표시 영역 */}
         <SignupStepProgressSection
           progress={progress}
           currentStepData={currentStepData}
         />
-
-        {/* 폼 영역 */}
         <CardStandardFullFull>
           <SignupFormSteps
             currentStepData={currentStepData}

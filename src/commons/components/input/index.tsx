@@ -21,7 +21,6 @@ export default function InputBase<T extends FieldValues>({
   successMessage,
   readOnly = false,
   disabled = false,
-  multiple = false,
 }: IInputBaseProps<T>) {
   // errors가 FieldError 타입일 경우 message를 표시
   const errorMessage = isFieldErrors<T>(errors)
@@ -41,11 +40,10 @@ export default function InputBase<T extends FieldValues>({
         readOnly={readOnly}
         disabled={disabled}
       />
-      {successMessage ? (
+      {successMessage && (
         <span className={styles.success}>{successMessage}</span>
-      ) : (
-        <span className={styles.error}>{errorMessage}</span>
       )}
+      {errorMessage && <span className={styles.error}>{errorMessage}</span>}
     </div>
   );
 }

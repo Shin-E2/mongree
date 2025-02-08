@@ -3,51 +3,37 @@ import { InputWithCssprop } from "@/commons/components/input";
 import { useFormContext } from "react-hook-form";
 import DiaryNewStepWriteDiaryEmotionTags from "./emotion-tags";
 import type { DiaryNewFormType } from "../form.schema";
+import { InputFieldStandardSFull } from "@/commons/components/input-field";
 
-interface IDiaryNewStepWriteDiaryProps {
-  selectedEmotions: string[];
-}
-
-export default function DiaryNewStepWriteDiary({
-  selectedEmotions,
-}: IDiaryNewStepWriteDiaryProps) {
-  const { register, watch } = useFormContext<DiaryNewFormType>();
-
-  console.log("제목:", watch("title"));
+export default function DiaryNewStepWriteDiary() {
+  const { register } = useFormContext<DiaryNewFormType>();
 
   return (
-    <section>
+    <section className="flex flex-col gap-8">
       {/* 태그 */}
-      <DiaryNewStepWriteDiaryEmotionTags selectedEmotions={selectedEmotions} />
-
+      <DiaryNewStepWriteDiaryEmotionTags />
       {/* 제목 */}
       <InputWithCssprop
         name="title"
+        register={register}
         placeholder="제목을 입력하세요"
-        cssprop="w-full text-2xl font-semibold border-0 focus:ring-2 focus:ring-indigo-600"
+        cssprop="w-full text-2xl font-semibold border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
       />
-
       {/* 내용 */}
       <textarea
         {...register("content")}
         placeholder="오늘 하루는 어땠나요?"
-        className="w-full h-48 border-0 focus:ring-0 px-0 resize-none"
+        className="w-full h-48 border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
       />
-
-      <div className="mt-8">
-        <ImagePreviewByDiaryNew />
-      </div>
-
-      <div className="mt-8">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          태그 추가
-        </label>
-        <InputWithCssprop
-          name="tags"
-          placeholder="#태그입력 (쉼표로 구분)"
-          cssprop="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
-        />
-      </div>
+      {/* 사진 */}
+      <ImagePreviewByDiaryNew multiple maxImages={3} />
+      {/* 태그 */}
+      <InputFieldStandardSFull
+        title="태그 추가"
+        name="tags"
+        register={register}
+        placeholder="#태그입력 (쉼표로 구분)"
+      />
     </section>
   );
 }

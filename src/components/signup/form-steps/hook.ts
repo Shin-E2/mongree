@@ -4,6 +4,7 @@ import { signup, uploadImageToS3 } from "./action";
 import type { IuseSignupFormStepsProps } from "./types";
 import { useMoveToPage } from "@/commons/hooks/use-move-to-page.hook";
 import useModal from "@/commons/hooks/use-modal.hook";
+import { uploadImage } from "@/commons/utils/upload-images";
 
 export default function useSignupFormSteps({
   setCurrentStep,
@@ -43,7 +44,8 @@ export default function useSignupFormSteps({
       let updatedData = { ...data };
 
       if (data.profileImage instanceof File) {
-        const imageUrl = await uploadImageToS3(data.profileImage);
+        // const imageUrl = await uploadImageToS3(data.profileImage);
+        const imageUrl = await uploadImage(data.profileImage);
         // data.profileImage = imageUrl!;
 
         if (!imageUrl) {
@@ -54,7 +56,6 @@ export default function useSignupFormSteps({
           ...updatedData,
           profileImage: imageUrl,
         };
-        // setValue("profileImage", imageUrl);
       }
 
       // 업데이트된 데이터로 회원가입 진행

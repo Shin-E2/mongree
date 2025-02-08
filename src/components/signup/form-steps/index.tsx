@@ -34,7 +34,6 @@ export default function SignupFormSteps({
         onSubmit={onSubmit}
         resolver={zodResolver(SignupFormSchema)}
       >
-        {/* 현재 단계의 컴포넌트 렌더링 */}
         <SignupStepComponent />
 
         {/* 이전/다음 버튼 */}

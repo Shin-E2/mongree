@@ -30,26 +30,28 @@ export default function ImagePreviewBase<T extends FieldValues>({
 
   if (multiple) {
     return (
-      <div className="overflow-x-auto pb-2">
-        <div className="flex flex-nowrap items-center gap-4 min-w-min">
+      <div className="overflow-x-auto">
+        <div className="flex items-center gap-4 w-fit">
           {images.length < maxImages && (
-            <label
-              htmlFor="photo"
-              className="flex-shrink-0 w-[137px] h-[137px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200 cursor-pointer"
-            >
-              <ImageIcon className="w-6 h-6 text-gray-400" />
-              <span className="text-sm text-gray-500 mt-2">사진 추가</span>
-            </label>
-          )}
+            <>
+              <label
+                htmlFor="photo"
+                className="flex-shrink-0 w-[137px] h-[137px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200 cursor-pointer"
+              >
+                <ImageIcon className="w-6 h-6 text-gray-400" />
+                <span className="text-sm text-gray-500 mt-2">사진 추가</span>
+              </label>
 
-          <InputStandardSFull
-            id="photo"
-            name={"images" as Path<T>}
-            register={register}
-            type="file"
-            onChange={handleFileChange}
-            multiple
-          />
+              <InputStandardSFull
+                id="photo"
+                name={"images" as Path<T>}
+                register={register}
+                type="file"
+                onChange={handleFileChange}
+                multiple
+              />
+            </>
+          )}
 
           {images.map((image, index) => (
             <div key={index} className="relative group flex-shrink-0">
@@ -64,7 +66,7 @@ export default function ImagePreviewBase<T extends FieldValues>({
               </div>
               <ButtonIconDelete
                 onClick={handleDeleteImage(index)}
-                className="absolute top-2 right-2 p-1 bg-black bg-opacity-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                className="!top-2 !right-2 !inset-auto w-5 h-5 opacity-0 group-hover:opacity-100"
               />
             </div>
           ))}

@@ -26,17 +26,20 @@ export default function useImagePreview({ multiple = false, maxImages = 1 }) {
     if (!files) return;
 
     if (multiple) {
+      // 여러 이미지 처리
       const newImages = Array.from(files).map((file) => ({
         file,
         previewURL: URL.createObjectURL(file),
       }));
 
+      // 최대 이미지 개수 체크
       if (images.length + newImages.length > maxImages) {
         alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
         return;
       }
 
       setImages((prev) => [...prev, ...newImages]);
+      // File 객체 배열을 저장 - 나중에 S3 업로드에 사용
       setValue(
         "images",
         [...images, ...newImages].map((img) => img.file)

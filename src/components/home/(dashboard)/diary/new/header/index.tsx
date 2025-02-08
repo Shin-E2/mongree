@@ -9,22 +9,15 @@ import { useFormContext } from "react-hook-form";
 import type { DiaryNewFormType } from "../form.schema";
 
 export default function DiaryNewHeader() {
-  const {
-    watch,
-    setValue,
-    handleSubmit,
-    formState: { isValid },
-  } = useFormContext<DiaryNewFormType>();
+  const { watch, setValue } = useFormContext<DiaryNewFormType>();
 
-  const onSubmit = handleSubmit((data) => {
-    console.log("Form submitted:", data);
-  });
-
+  const title = watch("title");
+  const content = watch("content");
   const isPrivate = watch("isPrivate");
   const emotions = watch("emotions") || [];
 
   const handleTogglePublic = (value: boolean) => {
-    setValue("isPrivate", value, { shouldValidate: true });
+    setValue("isPrivate", !value, { shouldValidate: true });
   };
 
   return (
@@ -43,7 +36,7 @@ export default function DiaryNewHeader() {
                 icon={<Globe className={styles.header__buttons__icon_size} />}
                 onClick={() => handleTogglePublic(true)}
                 cssprop={
-                  isPrivate
+                  !isPrivate
                     ? styles.header__buttons_isPrivate_button_public
                     : styles.header__buttons_isPrivate_button_private
                 }
@@ -54,17 +47,16 @@ export default function DiaryNewHeader() {
                 icon={<Lock className={styles.header__buttons__icon_size} />}
                 onClick={() => handleTogglePublic(false)}
                 cssprop={
-                  !isPrivate
+                  isPrivate
                     ? styles.header__buttons_isPrivate_button_public
                     : styles.header__buttons_isPrivate_button_private
                 }
               />
             </div>
             <ButtonTextWithCssprop
-              type="button"
+              type="submit"
               title="등록하기"
-              onClick={onSubmit}
-              disabled={!isValid}
+              disabled={emotions.length === 0 || !title || !content}
               cssprop={`${styles.header__buttons__public_submit_button} ${
                 emotions.length > 0
                   ? styles.header__buttons__selected

@@ -21,7 +21,7 @@ export default function Layout({ children }: ILayoutProps) {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <SideBar />
-      <div className="flex-1 ml-64">
+      <div className="flex-1 mb:ml-64">
         <TopBar />
         <main className="pt-16">{children}</main>
         <ChatBot />

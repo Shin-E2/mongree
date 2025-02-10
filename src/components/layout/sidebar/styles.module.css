@@ -1,7 +1,36 @@
 .aside {
-  @apply fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200;
+  @apply fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200 hidden md:block;
 }
 
 .aside_div {
   @apply flex flex-col h-full;
+}
+
+/* 모바일 네비게이션 스타일 */
+.mobile_nav {
+  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 block md:hidden;
+}
+
+.mobile_nav_container {
+  @apply flex justify-around items-center h-16 px-4;
+}
+
+.mobile_nav_item {
+  @apply flex flex-col items-center justify-center p-2 rounded-lg;
+}
+
+.mobile_nav_item_active {
+  @apply text-indigo-600;
+}
+
+.mobile_nav_item_inactive {
+  @apply text-gray-500;
+}
+
+.mobile_nav_icon {
+  @apply w-6 h-6;
+}
+
+.mobile_nav_label {
+  @apply text-xs mt-1;
 }

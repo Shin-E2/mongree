@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export default function TopBar() {
   return (
-    <header className="fixed top-0 right-0 left-64 h-16 bg-white border-b border-gray-200 z-10">
+    <header className="fixed top-0 right-0 mb:left-64 h-16 bg-white border-b border-gray-200 z-10 w-full">
       <div className="flex items-center justify-between h-full px-8">
         <div className="flex-1 max-w-2xl">
           <div className="relative">
@@ -25,7 +25,7 @@ export default function TopBar() {
             className="flex items-center px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
           >
             <Plus className="w-5 h-5 mr-2" />
-            <span>새 일기 작성</span>
+            <span>일기 작성</span>
           </Link>
         </div>
       </div>

@@ -1,4 +1,8 @@
-export const URL = () => ({
+interface IURL {
+  id?: string;
+}
+
+export const URL = ({ id }: IURL) => ({
   // 로그인
   LOGIN: `/login`,
 
@@ -10,6 +14,8 @@ export const URL = () => ({
 
   // 일기 작성
   DIARY: `/diary`,
+  // 일기 상세보기
+  DIARY_DETAIL: `/diary/${id}`,
 
   // 마이 페이지
   PROFILE: `/profile`,
@@ -19,6 +25,6 @@ export const URL = () => ({
   STATISTICS: `/statistics`,
 
   COMMUNITY: `/community`,
-  
+
   COUNSELORS: `/counselors`,
 });

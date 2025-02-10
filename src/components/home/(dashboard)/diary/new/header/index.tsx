@@ -27,6 +27,7 @@ export default function DiaryNewHeader() {
           <ButtonOptionDiaryNewPrev
             title="돌아가기"
             icon={<ChevronLeft className={styles.header__back_button} />}
+            onClick={() => window.history.back()}
           />
           <div className={styles.header__buttons}>
             <div className={styles.header__buttons__isPrivate_button}>

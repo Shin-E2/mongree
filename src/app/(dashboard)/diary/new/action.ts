@@ -141,19 +141,31 @@ export async function createDiary(formData: FormData) {
 
       // 6. 태그 처리
       if (validationResult.data.tags.length > 0) {
+        // 중복 태그 제거
+        const uniqueTags = [...new Set(validationResult.data.tags)];
+
         await Promise.all(
-          validationResult.data.tags.map(async (tagName) => {
+          uniqueTags.map(async (tagName) => {
             const tag = await tx.tag.upsert({
               where: { name: tagName },
               create: { name: tagName },
               update: {},
             });
 
-            return tx.diaryTag.create({
-              data: {
+            // create 대신 upsert 사용
+            return tx.diaryTag.upsert({
+              where: {
+                diaryId_tagId: {
+                  // 복합 키 사용
+                  diaryId: newDiary.id,
+                  tagId: tag.id,
+                },
+              },
+              create: {
                 diaryId: newDiary.id,
                 tagId: tag.id,
               },
+              update: {}, // 이미 존재하면 업데이트하지 않음
             });
           })
         );

@@ -1,3 +1,5 @@
+"use client";
+
 import { Heart, MessageCircle, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 

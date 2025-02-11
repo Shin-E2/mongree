@@ -10,7 +10,7 @@ export default function HomeRecentDiary() {
           모두 보기
         </Link>
       </div>
-      <div className="grid grid-cols-3 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         <HomeDiaryCard
           title="졸리다"
           content="침대가 좋아"

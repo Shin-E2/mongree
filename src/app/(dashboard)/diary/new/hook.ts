@@ -2,9 +2,12 @@ import { useState } from "react";
 import { DIARY_NEW_STEPS } from "../../../../components/home/(dashboard)/diary/new/constants";
 import type { DiaryNewFormType } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { createDiary } from "./action";
+import { URL } from "@/commons/constants/global-url";
+import { useRouter } from "next/navigation";
 
 export default function useDiaryNewPage() {
   const [currentStep, setCurrentStep] = useState(0); // 현재 단계
+  const router = useRouter();
 
   const currentStepData = DIARY_NEW_STEPS[currentStep];
   const progress = ((currentStep + 1) / DIARY_NEW_STEPS.length) * 100;
@@ -55,8 +58,9 @@ export default function useDiaryNewPage() {
 
       const result = await createDiary(formData);
 
-      if (result.success) {
+      if (result.success && result.diary) {
         console.log("일기 저장 성공:", result);
+        router.push(URL().DIARY_DETAIL(result.diary.id));
       } else {
         console.error("저장 실패 상세:", result); // 더 자세한 에러 정보
         alert(result.error);

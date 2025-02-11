@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 interface EmotionStatItemProps {
   emotion: string;
   percentage: number;
@@ -10,20 +12,22 @@ export function HomeEmotionStatItem({
   color,
 }: EmotionStatItemProps) {
   return (
-    <div className="flex items-center justify-between">
-      <div className="flex items-center space-x-3">
-        <img
-          src={emotion}
-          alt="감정이모지"
-          width={0}
-          height={0}
-          className="w-8 h-8 rounded-full`"
+    <div className="flex gap-4 items-center justify-between w-full">
+      <Image
+        src={emotion}
+        alt="감정이모지"
+        width={100}
+        height={100}
+        className="w-8 h-8 rounded-full"
+      />
+
+      <div className="relative w-full h-2 bg-gray-300 rounded-full overflow-hidden">
+        <div
+          className={`h-2 bg-${color}-500 rounded-full`}
+          style={{ width: `${percentage}%` }}
         />
       </div>
-      <div className="flex items-center">
-        <div className={`w-24 h-2 bg-${color}-200 rounded-full`}></div>
-        <span className="ml-3 text-sm font-medium">{percentage}%</span>
-      </div>
+      <span className="text-sm font-medium">{percentage}%</span>
     </div>
   );
 }

@@ -3,8 +3,8 @@ import Link from "next/link";
 
 export default function TopBar() {
   return (
-    <header className="fixed top-0 right-0 mb:left-64 h-16 bg-white border-b border-gray-200 z-10 w-full">
-      <div className="flex items-center justify-between h-full px-8">
+    <header className="fixed top-0 left-0 md:left-64 right-0 h-16 bg-white border-b border-gray-200 z-10">
+      <div className="flex items-center justify-between h-full px-4 md:px-8">
         <div className="flex-1 max-w-2xl">
           <div className="relative">
             <input
@@ -16,16 +16,16 @@ export default function TopBar() {
           </div>
         </div>
 
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center space-x-2 md:space-x-4">
           <button className="p-2 text-gray-500 rounded-lg hover:bg-gray-100">
             <Sun className="w-5 h-5" />
           </button>
           <Link
             href="/diary/new"
-            className="flex items-center px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+            className="flex items-center px-3 md:px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
           >
-            <Plus className="w-5 h-5 mr-2" />
-            <span>일기 작성</span>
+            <Plus className="w-5 h-5 md:mr-2" />
+            <span className="hidden md:inline">일기 작성</span>
           </Link>
         </div>
       </div>

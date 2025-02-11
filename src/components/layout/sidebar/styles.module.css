@@ -1,5 +1,5 @@
 .aside {
-  @apply fixed top-0 left-0 w-64 h-full bg-white border-r border-gray-200 hidden md:block;
+  @apply fixed top-0 left-0 w-64 h-full bg-white border-r z-50 border-gray-200 hidden md:block;
 }
 
 .aside_div {
@@ -8,7 +8,7 @@
 
 /* 모바일 네비게이션 스타일 */
 .mobile_nav {
-  @apply fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 block md:hidden;
+  @apply fixed bottom-0 left-0 right-0 bg-white border-t z-50 border-gray-200 block md:hidden;
 }
 
 .mobile_nav_container {

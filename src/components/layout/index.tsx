@@ -5,26 +5,27 @@ import TopBar from "./topbar";
 import ChatBot from "./chatbot";
 import useLayout from "./hook";
 
-interface ILayoutProps {
+interface LayoutProps {
   children: React.ReactNode;
 }
 
-export default function Layout({ children }: ILayoutProps) {
-  const { hideLayout } = useLayout();
+export default function Layout({ children }: LayoutProps) {
+  const { hideFullLayout, hidePartialLayout } = useLayout();
 
-  // 레이아웃이 숨겨져야 하는 경우
-  if (hideLayout) {
+  // 전체 레이아웃 숨김
+  if (hideFullLayout) {
     return children;
   }
 
-  // 기본 레이아웃
   return (
     <div className="flex min-h-screen bg-gray-50">
       <SideBar />
-      <div className="flex-1 mb:ml-64">
-        <TopBar />
-        <main className="pt-16">{children}</main>
-        <ChatBot />
+      <div className="flex-1 md:ml-64">
+        {!hidePartialLayout && <TopBar />}
+        <main className={`${!hidePartialLayout ? "pt-16" : ""}`}>
+          {children}
+        </main>
+        {!hidePartialLayout && <ChatBot />}
       </div>
     </div>
   );

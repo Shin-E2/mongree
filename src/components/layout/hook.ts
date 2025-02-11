@@ -3,21 +3,23 @@
 import { URL } from "@/commons/constants/global-url";
 import { usePathname } from "next/navigation";
 
+// 레이아웃 숨김
+const HIDE_FULL_LAYOUT_PATHS = [URL().LOGIN, URL().SIGNUP, URL().DIARY_NEW];
 
+// topbar, chatbot 숨김
+const HIDE_PARTIAL_LAYOUT_PATTERN = /^\/diary\/[^/]+$/; // /diary/{id}
 
 export default function useLayout() {
   const pathname = usePathname();
-  const { LOGIN, SIGNUP, DIARY } = URL();
 
-  // 레이아웃이 숨겨질 경로
-  const HIDDEN_LAYOUT = [LOGIN, SIGNUP];
+  // 전체 레이아웃 숨김
+  const shouldHideFullLayout = HIDE_FULL_LAYOUT_PATHS.includes(pathname);
 
-  // 다이어리 상세 페이지 체크
-  const isDiaryDetailPage =
-    pathname?.startsWith("/diary/") && pathname !== DIARY;
+  // 부분 레이아웃(TopBar, ChatBot) 숨김
+  const shouldHidePartialLayout = HIDE_PARTIAL_LAYOUT_PATTERN.test(pathname);
 
-  // 레이아웃을 숨길지 결정
-  const hideLayout = HIDDEN_LAYOUT.includes(pathname) || isDiaryDetailPage;
-
-  return { hideLayout };
+  return {
+    hideFullLayout: shouldHideFullLayout,
+    hidePartialLayout: shouldHidePartialLayout,
+  };
 }

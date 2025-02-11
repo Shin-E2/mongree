@@ -1,8 +1,4 @@
-interface IURL {
-  id?: string;
-}
-
-export const URL = ({ id }: IURL) => ({
+export const URL = () => ({
   // 로그인
   LOGIN: `/login`,
 
@@ -13,9 +9,11 @@ export const URL = ({ id }: IURL) => ({
   HOME: `/home`,
 
   // 일기 작성
-  DIARY: `/diary`,
+  DIARY_NEW: `/diary/new`,
   // 일기 상세보기
-  DIARY_DETAIL: `/diary/${id}`,
+  DIARY_DETAIL: (id: string) => `/diary/${id}`,
+  // 일기 목록
+  DIARY: `/diary`,
 
   // 마이 페이지
   PROFILE: `/profile`,

@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { ChevronLeft, Clock, Tag, Share2, Heart } from "lucide-react";
 import type { Diary, DiaryImage, Comment } from "@prisma/client";
+import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
+import Image from "next/image";
 
 interface DiaryWithRelations extends Omit<Diary, "user"> {
   user: {
@@ -57,6 +59,11 @@ interface DiaryWithRelations extends Omit<Diary, "user"> {
 
 interface Props {
   diary: DiaryWithRelations;
+  loginUser: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
 }
 
 // EmpathyButton Component
@@ -66,6 +73,7 @@ interface EmpathyButtonProps {
   onToggle: () => void;
 }
 
+// 공감하기 버튼
 function EmpathyButton({ count, isEmpathized, onToggle }: EmpathyButtonProps) {
   return (
     <button
@@ -109,13 +117,14 @@ interface CommentItemProps {
   };
 }
 
-function CommentItem({ comment }: CommentItemProps) {
+// 댓글 목록
+export const CommentItem = ({ comment }: CommentItemProps) => {
   return (
     <div className="p-4">
       <div className="flex items-start space-x-3 md:space-x-4">
         <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 flex-shrink-0">
           <img
-            src={comment.user.profileImage || "/default-profile.png"}
+            src={comment.user.profileImage || DEFAULT_PROFILE_IMAGE}
             alt={comment.user.name}
             className="w-full h-full rounded-full object-cover"
           />
@@ -159,20 +168,35 @@ function CommentItem({ comment }: CommentItemProps) {
       </div>
     </div>
   );
-}
+};
 
 // CommentSection Component
 interface CommentSectionProps {
   comments: CommentItemProps["comment"][];
+  loginUser: {
+    id: string;
+    name: string;
+    profileImage: string | null;
+  };
 }
 
-function CommentSection({ comments }: CommentSectionProps) {
+function CommentSection({ comments, loginUser }: CommentSectionProps) {
+  console.log("image", loginUser);
   return (
     <div className="divide-y">
       {/* 댓글 작성 폼 */}
       <div className="p-4 md:p-6">
         <div className="flex items-start space-x-3 md:space-x-4">
-          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gray-200 flex-shrink-0" />
+          {/* 사용자 이미지 */}
+          <div className="w-8 h-8 md:w-10 md:h-10 rounded-full flex-shrink-0">
+            <Image
+              src={loginUser.profileImage || DEFAULT_PROFILE_IMAGE}
+              alt={loginUser.name}
+              width={100}
+              height={100}
+              className="w-full h-full rounded-full object-cover"
+            />
+          </div>
           <div className="flex-1">
             <textarea
               placeholder="따뜻한 댓글을 남겨주세요"
@@ -197,7 +221,7 @@ function CommentSection({ comments }: CommentSectionProps) {
 }
 
 // Main DiaryDetailContent Component
-export default function DiaryDetailContent({ diary }: Props) {
+export default function DiaryDetailContent({ diary, loginUser }: Props) {
   const router = useRouter();
   const [isEmpathized, setIsEmpathized] = useState(false);
   const [empathyCount, setEmpathyCount] = useState(diary.empathies.length);
@@ -212,8 +236,8 @@ export default function DiaryDetailContent({ diary }: Props) {
   return (
     <div className="flex-1 bg-gray-50 min-h-screen">
       {/* 상단 네비게이션 */}
-      <div className="bg-white fixed top-0 left-0 right-0 z-10 border-b">
-        <div className="max-w-5xl mx-auto flex items-center justify-between h-14 px-4 md:px-8">
+      <div className="bg-white fixed top-0 left-0 right-0 z-10 border-b md:ml-64">
+        <div className="w-full flex items-center justify-between h-14 px-4 md:px-8">
           <button
             onClick={() => router.back()}
             className="flex items-center text-gray-600 hover:text-gray-900"
@@ -240,7 +264,7 @@ export default function DiaryDetailContent({ diary }: Props) {
       </div>
 
       {/* 메인 콘텐츠 영역 */}
-      <div className="max-w-5xl mx-auto px-4 md:px-8 pt-20 pb-24 md:pb-8">
+      <div className="px-4 md:px-8 pt-20 pb-24">
         {/* 메인 콘텐츠 카드 */}
         <div className="bg-white rounded-2xl shadow-sm overflow-hidden">
           {/* 감정 및 제목 섹션 */}
@@ -306,10 +330,7 @@ export default function DiaryDetailContent({ diary }: Props) {
           {/* 본문 섹션 */}
           <div className="p-4 md:p-8">
             <div className="prose max-w-none text-sm md:text-base">
-              {/* 사용자가 입력한 그대로 보여주기 위해 white-space: pre-wrap 사용 */}
-              <p className="text-gray-700 whitespace-pre-wrap">
-                {diary.content}
-              </p>
+              <pre className="text-gray-700">{diary.content}</pre>
             </div>
 
             {/* 태그 섹션 추가 */}
@@ -373,7 +394,7 @@ export default function DiaryDetailContent({ diary }: Props) {
         {/* 댓글 섹션 */}
         {!diary.isPrivate && (
           <div className="mt-4 md:mt-6 bg-white rounded-2xl shadow-sm mb-16 md:mb-0">
-            <CommentSection comments={diary.comments} />
+            <CommentSection comments={diary.comments} loginUser={loginUser} />
           </div>
         )}
       </div>

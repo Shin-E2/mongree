@@ -1,7 +1,8 @@
 import styles from "./styles.module.css";
-import type { IProgressBarProps, IProgressBarStandardSFullProps } from "./types";
-
-
+import type {
+  IProgressBarProps,
+  IProgressBarStandardSFullProps,
+} from "./types";
 
 export default function ProgressBarBase({
   cssprop,

@@ -1,17 +1,8 @@
 "use server";
 
-import db from "@/lib/db";
 import { getUser } from "@/lib/get-user";
-
-interface GetDiariesParams {
-  page: number;
-  searchTerm?: string;
-  emotions?: string[];
-  dateRange?: {
-    start: Date | null;
-    end: Date | null;
-  };
-}
+import db from "@/lib/db";
+import type { GetDiariesParams, DiaryResponse } from "./types";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -20,12 +11,11 @@ export async function getDiaries({
   searchTerm,
   emotions,
   dateRange,
-}: GetDiariesParams) {
+}: GetDiariesParams): Promise<DiaryResponse> {
   try {
     const user = await getUser();
     const skip = (page - 1) * ITEMS_PER_PAGE;
 
-    // 필터 조건 구성
     const where = {
       userId: user.id,
       ...(searchTerm && {
@@ -78,12 +68,13 @@ export async function getDiaries({
     return {
       success: true,
       diaries,
-      total,
       hasMore: skip + ITEMS_PER_PAGE < total,
     };
   } catch (error) {
     return {
       success: false,
+      diaries: [],
+      hasMore: false,
       error: "일기를 불러오는데 실패했습니다.",
     };
   }

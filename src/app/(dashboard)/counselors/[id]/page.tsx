@@ -7,7 +7,7 @@ export default function CounselorProfilePage() {
   const [showReviewForm, setShowReviewForm] = useState(false);
 
   return (
-    <div className="flex-1 bg-gray-50 min-h-screen md:ml-64 mb-20">
+    <div className="flex-1 bg-gray-50 min-h-screenå mb-20">
       {/* Profile 상담사 */}
       <div className="bg-white border-b">
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-8">
@@ -73,7 +73,7 @@ export default function CounselorProfilePage() {
           </div>
 
           {/* Right: 지도, 예약 - 모바일에서는 소개 아래, 데스크탑에서는 우측에 sticky */}
-          <div className="col-span-1 order-3 md:order-2 space-y-6 md:sticky md:top-4">
+          <div className="col-span-1 order-3 md:order-2 space-y-6 md:sticky md:top-16">
             <div className="bg-white rounded-lg shadow-sm p-4 md:p-6">
               <div className="aspect-w-1 aspect-h-1 bg-yellow-200 rounded-lg mb-4 w-full h-48 md:h-64">
                 map

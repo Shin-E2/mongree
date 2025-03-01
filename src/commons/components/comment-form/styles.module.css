@@ -1,0 +1,15 @@
+.diary_comment {
+  @apply p-4 md:p-6;
+}
+
+.diary_reply {
+  @apply mt-2;
+}
+
+.comment_form {
+  @apply p-4 md:p-6 border-b;
+}
+
+.reply_form {
+  @apply p-4 md:px-6 md:py-4;
+}

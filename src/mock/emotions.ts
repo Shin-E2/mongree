@@ -81,3 +81,12 @@ export const EMOTIONS = [
     image: "/image/emotions/confused.svg",
   },
 ];
+
+export interface Emotion {
+  id: string;
+  label: string;
+  bgColor: string;
+  borderColor: string;
+  textColor: string;
+  image: string;
+}

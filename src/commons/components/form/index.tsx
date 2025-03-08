@@ -3,26 +3,28 @@
 import {
   FormProvider,
   useForm,
-  type DeepPartial,
   type DefaultValues,
   type FieldValues,
   type SubmitHandler,
 } from "react-hook-form";
 import styles from "./styles.module.css";
 import type { IFormBaseCommonProps, IFormBaseProps } from "./types";
-import type { DiaryNewFormType } from "@/components/home/(dashboard)/diary/new/form.schema";
+import { memo } from "react";
 
-export default function FormBase<T extends FieldValues>({
+function FormBase<T extends FieldValues>({
   action,
   children,
   cssprop,
   onSubmit,
   resolver,
   defaultValues,
+  className = "",
+  mode = "onBlur",
+  criteriaMode = "all",
 }: IFormBaseProps<T>) {
   const methods = useForm<T>({
-    mode: "onBlur", // 유효성 검사
-    criteriaMode: "all", // 모든 유효성 검사 에러 확인
+    mode, // 유효성 검사 모드 (onBlur, onChange, onSubmit 등)
+    criteriaMode, // 모든 유효성 검사 에러 확인
     resolver,
     defaultValues,
   });
@@ -32,7 +34,7 @@ export default function FormBase<T extends FieldValues>({
       <form
         action={action}
         onSubmit={methods.handleSubmit(onSubmit as SubmitHandler<FieldValues>)}
-        className={`${cssprop} ${styles.common}`}
+        className={`${cssprop} ${styles.common} ${className}`}
       >
         {children}
       </form>
@@ -40,29 +42,45 @@ export default function FormBase<T extends FieldValues>({
   );
 }
 
+// 메모이제이션된 FormBase 컴포넌트
+const MemoizedFormBase = memo(FormBase) as typeof FormBase;
+
+export default MemoizedFormBase;
+
 export const FormStandardFullFull = <T extends FieldValues>({
+  className = "",
   ...rest
 }: IFormBaseCommonProps<T>) => {
-  return <FormBase<T> {...rest} cssprop={styles.standard__full__full} />;
-};
-
-export const FormDiaryNew = (
-  props: Omit<IFormBaseProps<DiaryNewFormType>, "cssprop">
-) => {
-  const defaultValues: DiaryNewFormType = {
-    isPrivate: true,
-    emotions: [],
-    title: "",
-    content: "",
-    tags: [],
-    images: [],
-  };
-
   return (
-    <FormBase<DiaryNewFormType>
-      {...props}
-      cssprop={styles.diary_new}
-      defaultValues={defaultValues}
+    <MemoizedFormBase<T>
+      {...rest}
+      cssprop={styles.standard__full__full}
+      className={className}
     />
   );
 };
+
+// DiaryNew 폼 최적화
+export const FormDiaryNew = memo(
+  (props: Omit<IFormBaseProps<any>, "cssprop"> & { className?: string }) => {
+    const defaultValues = {
+      isPrivate: true,
+      emotions: [],
+      title: "",
+      content: "",
+      tags: [],
+      images: [],
+    };
+
+    return (
+      <MemoizedFormBase
+        {...props}
+        cssprop={styles.diary_new}
+        defaultValues={defaultValues}
+        className={props.className}
+      />
+    );
+  }
+);
+
+

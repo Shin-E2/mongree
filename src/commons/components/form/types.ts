@@ -12,6 +12,9 @@ export interface IFormBaseProps<T extends FieldValues> {
   onSubmit: SubmitHandler<T>;
   resolver?: Resolver<T>;
   defaultValues?: UseFormProps<T>["defaultValues"];
+  className?: string;
+  mode?: "onBlur" | "onChange" | "onSubmit" | "onTouched" | "all";
+  criteriaMode?: "firstError" | "all";
 }
 
 export interface IFormBaseCommonProps<T extends FieldValues>

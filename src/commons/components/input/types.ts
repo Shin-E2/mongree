@@ -7,7 +7,7 @@ import type {
 
 export interface IInputBaseProps<T extends FieldValues> {
   cssprop: string;
-  name: Path<T>; // react-hook-form의 path타입
+  name?: Path<T>; // react-hook-form의 path타입
   placeholder?: string;
   type?: HTMLInputElement["type"];
   errors?: FieldErrors<T> | string;
@@ -26,3 +26,6 @@ export interface IInputStandardSFullProps<T extends FieldValues>
 
 export interface IInputWithCsspropProps<T extends FieldValues>
   extends IInputBaseProps<T> {}
+
+export interface ISearchBarInputProps<T extends FieldValues>
+  extends Omit<IInputBaseProps<T>, "cssprop" | "name"> {}

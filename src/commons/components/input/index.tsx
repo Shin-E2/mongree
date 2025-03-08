@@ -4,6 +4,7 @@ import type {
   IInputBaseProps,
   IInputStandardSFullProps,
   IInputWithCsspropProps,
+  ISearchBarInputProps,
 } from "./types";
 import { isFieldErrors } from "@/commons/utils/type-guards";
 
@@ -31,7 +32,7 @@ export default function InputBase<T extends FieldValues>({
     <div className={styles.div}>
       <input
         className={type === "file" ? "hidden" : `${cssprop} ${styles.common}`}
-        {...(register ? register(name) : { name })}
+        {...(register ? register(name!) : { name })}
         placeholder={placeholder}
         type={type}
         required={required}
@@ -59,4 +60,10 @@ export const InputWithCssprop = <T extends FieldValues>({
   ...rest
 }: IInputWithCsspropProps<T>) => {
   return <InputBase {...rest} />;
+};
+
+export const SearchBarInput = <T extends FieldValues>({
+  ...rest
+}: ISearchBarInputProps<T>) => {
+  return <InputBase {...rest} cssprop={styles.search} />;
 };

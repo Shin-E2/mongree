@@ -10,14 +10,16 @@ import type {
 } from "./types";
 import { type FieldValues, type Path } from "react-hook-form";
 import { InputStandardSFull } from "../input";
-import useImagePreview from "./hook";
 import { ImageIcon } from "lucide-react";
+import { memo, useCallback } from "react";
+import useImagePreview from "./hook";
 
 // 이미지 미리보기 컴포넌트
-export default function ImagePreviewBase<T extends FieldValues>({
+function ImagePreviewBase<T extends FieldValues>({
   cssprop,
   multiple = false,
   maxImages = 1,
+  className,
 }: IImagePreviewBaseProps<T>) {
   const {
     preview,
@@ -27,6 +29,16 @@ export default function ImagePreviewBase<T extends FieldValues>({
     register,
     handleFileChange,
   } = useImagePreview({ multiple, maxImages });
+
+  // 이미지 삭제 핸들러를 메모이제이션
+  const memoizedHandleDeleteImage = useCallback(
+    (index?: number) => (event: React.MouseEvent) => {
+      event.stopPropagation();
+      event.preventDefault();
+      handleDeleteImage(index)(event);
+    },
+    [handleDeleteImage]
+  );
 
   if (multiple) {
     return (
@@ -65,7 +77,7 @@ export default function ImagePreviewBase<T extends FieldValues>({
                 />
               </div>
               <ButtonIconDelete
-                onClick={handleDeleteImage(index)}
+                onClick={memoizedHandleDeleteImage(index)}
                 className="!top-2 !right-2 !inset-auto w-5 h-5 opacity-0 group-hover:opacity-100"
               />
             </div>
@@ -78,11 +90,14 @@ export default function ImagePreviewBase<T extends FieldValues>({
   return (
     <>
       <div className="group">
-        <label htmlFor="photo" className={`${cssprop} ${styles.common}`}>
+        <label
+          htmlFor="photo"
+          className={`${cssprop} ${styles.common} ${className || ""}`}
+        >
           <Image src={preview} alt="Preview" layout="fill" objectFit="cover" />
           {/* 삭제 아이콘 오버레이 */}
           <ButtonIconDelete
-            onClick={handleDeleteImage}
+            onClick={memoizedHandleDeleteImage()}
             className={`invisible ${selectedImage && `group-hover:visible`}`}
           />
         </label>
@@ -99,11 +114,16 @@ export default function ImagePreviewBase<T extends FieldValues>({
   );
 }
 
+// 메모이제이션된 컴포넌트
+const MemoizedImagePreviewBase = memo(
+  ImagePreviewBase
+) as typeof ImagePreviewBase;
+
 // 프로필 이미지
 export const ImagePreviewByProfile = <T extends FieldValues>({
   ...rest
 }: IImagePreviewByProfileProps<T>) => {
-  return <ImagePreviewBase {...rest} cssprop={styles.profile} />;
+  return <MemoizedImagePreviewBase {...rest} cssprop={styles.profile} />;
 };
 
 // 일기 등록하기
@@ -112,7 +132,7 @@ export const ImagePreviewByDiaryNew = <T extends FieldValues>({
   ...rest
 }: IImagePreviewByDiaryNewProps<T>) => {
   return (
-    <ImagePreviewBase
+    <MemoizedImagePreviewBase
       {...rest}
       cssprop={className ?? ""}
       multiple
@@ -120,3 +140,5 @@ export const ImagePreviewByDiaryNew = <T extends FieldValues>({
     />
   );
 };
+
+export default MemoizedImagePreviewBase;

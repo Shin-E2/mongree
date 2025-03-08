@@ -5,6 +5,7 @@ export interface IImagePreviewBaseProps<T extends FieldValues> {
   register?: UseFormRegister<T>;
   multiple?: boolean;
   maxImages?: number;
+  className?: string;
 }
 
 export interface IImagePreviewByProfileProps<T extends FieldValues>

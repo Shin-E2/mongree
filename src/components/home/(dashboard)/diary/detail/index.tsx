@@ -73,6 +73,19 @@ export default function DiaryDetailContent({
     });
   };
 
+  // 총 댓글 수 계산 (최상위 댓글 + 대댓글)
+  const getTotalCommentCount = () => {
+    let count = diary.comments.length;
+    diary.comments.forEach((comment) => {
+      if (comment.replies) {
+        count += comment.replies.length;
+      }
+    });
+    return count;
+  };
+
+  const commentCount = getTotalCommentCount();
+
   return (
     <div className="flex-1 bg-gray-50 min-h-screen">
       {/* 상단 네비게이션 */}
@@ -271,9 +284,7 @@ export default function DiaryDetailContent({
         {!diary.isPrivate && (
           <div className="mt-4 md:mt-6 bg-white rounded-2xl shadow-sm mb-16 md:mb-0">
             <div className="p-4 md:p-6 border-b">
-              <h2 className="text-lg font-semibold">
-                댓글 {diary.comments.length}개
-              </h2>
+              <h2 className="text-lg font-semibold">댓글 {commentCount}개</h2>
             </div>
 
             {loginUser && <CommentForm user={loginUser} diaryId={diary.id} />}

@@ -26,7 +26,6 @@ export interface DiaryWithRelations extends Omit<Diary, "userId"> {
     tagId: string;
   }[];
   comments: ICommentWithUser[];
-  commentCount: number; // 대댓글을 포함한 총 댓글 수
 }
 
 export interface IDiaryDetailContentProps {

@@ -121,6 +121,7 @@ export const ButtonOptionEmotion = ({
           width={16}
           height={16}
           className="w-16 h-16 mb-3"
+          priority
         />
       }
       title={emotion.label}

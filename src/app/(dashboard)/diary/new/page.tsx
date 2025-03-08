@@ -8,8 +8,16 @@ import DiaryNewHeader from "@/components/home/(dashboard)/diary/new/header";
 import { FormDiaryNew } from "@/commons/components/form";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { memo } from "react";
 
-export default function DiaryNewPage() {
+// 일기 작성 단계 컴포넌트를 매번 재렌더링하지 않도록 메모이제이션
+const MemoizedDiaryNewStepComponent = memo(
+  ({ Component }: { Component: React.ComponentType<any> }) => {
+    return <Component />;
+  }
+);
+
+function DiaryNewPage() {
   const {
     currentStep,
     progress,
@@ -34,7 +42,7 @@ export default function DiaryNewPage() {
 
         {/* 현재 컴포넌트 */}
         <CardStandardFullFull>
-          <DiaryNewStepComponent />
+          <MemoizedDiaryNewStepComponent Component={DiaryNewStepComponent} />
         </CardStandardFullFull>
 
         {/* 버튼 */}
@@ -48,3 +56,5 @@ export default function DiaryNewPage() {
     </FormDiaryNew>
   );
 }
+
+export default memo(DiaryNewPage);

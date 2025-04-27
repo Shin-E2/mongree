@@ -16,7 +16,7 @@ export default function CommunityPage() {
         title="공개 일기"
         description="다른 사람들의 이야기를 읽고 공감해보세요"
       />
-      <div className="p-4 md:p-8">
+      <div className="pflex flex-col gap-6 px-4 py-6 md:mx-32">
         {/* 필터 및 검색 */}
         <div className="bg-white p-4 rounded-xl shadow-sm mb-6">
           <div className="flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between">

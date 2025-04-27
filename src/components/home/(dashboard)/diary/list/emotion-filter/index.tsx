@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, Filter } from "lucide-react";
 import { EMOTIONS } from "@/mock/emotions";
+import Image from "next/image";
 
 interface IDiaryListEmotionFilterProps {
   selectedEmotions: string[];
@@ -56,9 +57,11 @@ export function DiaryListEmotionFilter({
                     : "hover:bg-gray-50"
                 }`}
               >
-                <img
+                <Image
                   src={emotion.image}
                   alt={emotion.label}
+                  width={100}
+                  height={100}
                   className="w-5 h-5 mr-2"
                 />
                 <span className="text-sm">{emotion.label}</span>

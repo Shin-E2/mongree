@@ -2,12 +2,20 @@
 
 import { Search } from "lucide-react";
 import { DiaryListEmotionFilter } from "../emotion-filter";
-import useDiaryList from "@/app/(dashboard)/diary/hook";
 import { SearchBarInput } from "@/commons/components/input";
+import { Dispatch, SetStateAction } from "react";
 
-export default function DiaryListSearchFilter() {
-  const { setSearchTerm, selectedEmotions, handleEmotionToggle } =
-    useDiaryList();
+interface DiaryListSearchFilterProps {
+  setSearchTerm: Dispatch<SetStateAction<string>>;
+  selectedEmotions: string[];
+  handleEmotionToggle: (id: string) => void;
+}
+
+export default function DiaryListSearchFilter({
+  setSearchTerm,
+  selectedEmotions,
+  handleEmotionToggle,
+}: DiaryListSearchFilterProps) {
   return (
     <div className="flex flex-col sm:flex-row sm:items-center gap-4">
       <div className="relative w-full">

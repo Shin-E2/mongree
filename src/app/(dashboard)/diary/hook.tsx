@@ -39,6 +39,8 @@ export default function useDiaryList() {
             setDiaries((prev) => [...prev, ...result.diaries]);
           }
           setHasMore(result.hasMore);
+        } else if (result.error) {
+          console.error(result.error);
         }
       } catch (error) {
         console.error("Failed to load diaries:", error);
@@ -64,36 +66,48 @@ export default function useDiaryList() {
     onLoadMore: loadMoreDiaries,
   });
 
-  // 검색어 디바운스
+  // 검색어 입력 시 디바운스 처리
   useEffect(() => {
     const timer = setTimeout(() => {
-      if (searchTerm !== "") {
-        setPage(1);
-        loadDiaries(1, true);
-      }
+      setPage(1);
+      loadDiaries(1, true);
     }, 300);
 
     return () => clearTimeout(timer);
   }, [searchTerm, loadDiaries]);
 
-  // 감정 필터 변경
+  // 감정 필터 변경 함수
   const handleEmotionToggle = useCallback(
     (emotionId: string) => {
-      setSelectedEmotions((prev) =>
-        prev.includes(emotionId)
+      setSelectedEmotions((prev) => {
+        const newSelected = prev.includes(emotionId)
           ? prev.filter((id) => id !== emotionId)
-          : [...prev, emotionId]
-      );
-      setPage(1);
-      loadDiaries(1, true);
+          : [...prev, emotionId];
+
+        // 여기서 바로 데이터 리로드를 트리거하기 위해 setTimeout 사용
+        setTimeout(() => {
+          setPage(1);
+          loadDiaries(1, true);
+        }, 0);
+
+        return newSelected;
+      });
     },
     [loadDiaries]
   );
 
+  // 날짜 범위 변경 시 데이터 리로드
+  useEffect(() => {
+    if (dateRange.start && dateRange.end) {
+      setPage(1);
+      loadDiaries(1, true);
+    }
+  }, [dateRange, loadDiaries]);
+
   // 초기 데이터 로드
   useEffect(() => {
     loadDiaries(1, true);
-  }, [loadDiaries]);
+  }, []);
 
   return {
     diaries,

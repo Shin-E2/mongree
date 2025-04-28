@@ -6,7 +6,15 @@ import DiaryListDiarySection from "@/components/home/(dashboard)/diary/list/diar
 import DiaryListSearchFilter from "@/components/home/(dashboard)/diary/list/search-filter";
 
 export default function DiaryListPage() {
-  const { observerRef, isLoading } = useDiaryList();
+  const {
+    setSearchTerm,
+    selectedEmotions,
+    handleEmotionToggle,
+    diaries,
+    router,
+    observerRef,
+    isLoading,
+  } = useDiaryList();
 
   return (
     <div className="flex flex-col min-h-screen bg-gray-50">
@@ -17,10 +25,14 @@ export default function DiaryListPage() {
 
       <div className="flex flex-col gap-6 px-4 py-6 md:mx-32">
         {/* 검색 및 필터 영역 */}
-        <DiaryListSearchFilter />
+        <DiaryListSearchFilter
+          setSearchTerm={setSearchTerm}
+          selectedEmotions={selectedEmotions}
+          handleEmotionToggle={handleEmotionToggle}
+        />
 
-        {/* 일기 목록 */}
-        <DiaryListDiarySection />
+        {/* 일기 목록*/}
+        <DiaryListDiarySection diaries={diaries} router={router} />
 
         {/* 무한 스크롤 */}
         <div

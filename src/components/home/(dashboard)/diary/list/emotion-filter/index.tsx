@@ -30,7 +30,7 @@ export function DiaryListEmotionFilter({
             </>
           ) : (
             <span className="text-sm text-indigo-600 font-medium">
-              {selectedEmotions.length}개 선택됨
+              {selectedEmotions.length}개 선택
             </span>
           )}
         </span>
@@ -42,7 +42,7 @@ export function DiaryListEmotionFilter({
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 w-72 bg-white border rounded-lg shadow-lg p-4 z-10">
+        <div className="absolute top-full right-0 mt-2 w-72 bg-white border rounded-lg shadow-lg p-4 z-10">
           <div className="grid grid-cols-2 gap-2">
             {EMOTIONS.map((emotion) => (
               <button

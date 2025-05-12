@@ -1,0 +1,11 @@
+.tagList {
+  @apply flex flex-wrap gap-1.5;
+}
+
+.tagItem {
+  @apply px-2 py-1 text-xs text-gray-500 flex items-center rounded-full bg-gray-100;
+}
+
+.tagIcon {
+  @apply w-3 h-3 mr-1;
+}

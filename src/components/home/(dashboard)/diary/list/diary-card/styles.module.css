@@ -1,0 +1,48 @@
+.container {
+  @apply bg-white border rounded-xl hover:shadow-md transition-all cursor-pointer h-full flex flex-col overflow-hidden;
+}
+.image {
+  @apply relative aspect-[4/3] rounded-t-xl overflow-hidden;
+}
+.imageMore {
+  @apply absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full;
+}
+.emotionList {
+  @apply px-4 py-3 border-b h-[57px];
+}
+.emotionBadge {
+  @apply w-8 h-8 rounded-full flex items-center justify-center border-2 border-white;
+}
+.emotionMore {
+  @apply ml-2 text-sm text-gray-500;
+}
+.body {
+  @apply p-4 flex-1 flex flex-col;
+}
+.title {
+  @apply font-medium text-base line-clamp-1 group-hover:text-indigo-600;
+}
+.content {
+  @apply text-gray-600 text-sm line-clamp-2 mb-3;
+}
+.date {
+  @apply text-xs text-gray-500 flex-shrink-0;
+}
+.tagList {
+  @apply flex flex-wrap gap-1.5 mt-auto mb-3;
+}
+.tagItem {
+  @apply px-2 py-1 text-xs text-gray-500 flex items-center rounded-full bg-gray-100;
+}
+.tagIcon {
+  @apply w-3 h-3 mr-1;
+}
+.footer {
+  @apply flex items-center justify-between pt-3 border-t mt-auto;
+}
+.privacy {
+  @apply flex items-center text-xs text-gray-500;
+}
+.privacyDot {
+  @apply w-2 h-2 mr-1.5 rounded-full;
+}

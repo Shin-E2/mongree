@@ -5,6 +5,7 @@ import { formatToTimeAgo } from "@/lib/utils";
 import { EMOTIONS, type Emotion } from "@/mock/emotions";
 import { Tag } from "lucide-react";
 import Image from "next/image";
+import styles from "./styles.module.css";
 
 interface EmotionWithStyle extends Emotion {
   id: string;
@@ -29,35 +30,30 @@ export function DiaryListDiaryCard({
   });
 
   return (
-    <div
-      onClick={onClick}
-      className="bg-white border rounded-xl hover:shadow-md transition-all cursor-pointer group h-full flex flex-col overflow-hidden"
-    >
+    <div onClick={onClick} className={`${styles.container} group`}>
       {/* 이미지 영역 */}
       {diary.images.length > 0 && (
-        <div className="relative aspect-[4/3] rounded-t-xl overflow-hidden">
+        <div className={styles.image}>
           <img
             src={diary.images[0].url}
             alt="일기 이미지"
             className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
           />
           {diary.images.length > 1 && (
-            <div className="absolute bottom-3 right-3 bg-black/50 backdrop-blur-sm text-white text-xs px-2 py-1 rounded-full">
-              +{diary.images.length - 1}
-            </div>
+            <div className={styles.imageMore}>+{diary.images.length - 1}</div>
           )}
         </div>
       )}
 
       {/* 감정 뱃지 */}
-      <div className="px-4 py-3 border-b h-[57px]">
+      <div className={styles.emotionList}>
         {emotions.length > 3 ? (
           <div className="flex items-center">
             <div className="flex -space-x-2">
               {emotions.slice(0, 3).map((emotion) => (
                 <div
                   key={emotion.id}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white ${emotion.bgColor}`}
+                  className={`${styles.emotionBadge} ${emotion.bgColor}`}
                 >
                   <img
                     src={emotion.image}
@@ -67,7 +63,7 @@ export function DiaryListDiaryCard({
                 </div>
               ))}
             </div>
-            <span className="ml-2 text-sm text-gray-500">
+            <span className={styles.emotionMore}>
               외 {emotions.length - 3}개
             </span>
           </div>
@@ -93,38 +89,28 @@ export function DiaryListDiaryCard({
       </div>
 
       {/* 컨텐츠 영역 */}
-      <div className="p-4 flex-1 flex flex-col">
+      <div className={styles.body}>
         <div className="flex items-center justify-between mb-2">
-          <h3 className="font-medium text-base line-clamp-1 group-hover:text-indigo-600">
-            {diary.title}
-          </h3>
-          <time className="text-xs text-gray-500 flex-shrink-0">
+          <h3 className={styles.title}>{diary.title}</h3>
+          <time className={styles.date}>
             {formatToTimeAgo(diary.createdAt.toISOString())}
           </time>
         </div>
-
-        <p className="text-gray-600 text-sm line-clamp-2 mb-3">
-          {diary.content}
-        </p>
-
+        <p className={styles.content}>{diary.content}</p>
         {diary.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-auto mb-3">
+          <div className={styles.tagList}>
             {diary.tags.map(({ tag }) => (
-              <span
-                key={tag.id}
-                className="px-2 py-1 text-xs text-gray-500 flex items-center rounded-full bg-gray-100"
-              >
-                <Tag className="w-3 h-3 mr-1" />
+              <span key={tag.id} className={styles.tagItem}>
+                <Tag className={styles.tagIcon} />
                 {tag.name}
               </span>
             ))}
           </div>
         )}
-
-        <div className="flex items-center justify-between pt-3 border-t mt-auto">
-          <div className="flex items-center text-xs text-gray-500">
+        <div className={styles.footer}>
+          <div className={styles.privacy}>
             <span
-              className={`w-2 h-2 mr-1.5 rounded-full ${
+              className={`${styles.privacyDot} ${
                 diary.isPrivate ? "bg-red-500" : "bg-green-500"
               }`}
             />

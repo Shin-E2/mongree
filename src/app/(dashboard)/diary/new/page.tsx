@@ -36,7 +36,7 @@ function DiaryNewPage() {
       {/* Header */}
       <DiaryNewHeader />
 
-      <div className="pt-20 pb-12 px-6 max-w-5xl mx-auto">
+      <div className="pt-16 pb-12 px-6 max-w-5xl mx-auto">
         {/* Progress Bar */}
         <ProgressBarStandardSFull progress={progress} />
 

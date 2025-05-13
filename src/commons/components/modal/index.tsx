@@ -2,7 +2,10 @@ import ModalPortal from "@/commons/portal/modal-portal";
 import styles from "./styles.module.css";
 import type { IModalBaseProps, IModalCommonProps } from "./types";
 import { ButtonIconDeleteNoBackground } from "../button-icon";
-import { ButtonTextStandardSFull } from "../button-text";
+import {
+  ButtonTextStandardSFull,
+  ButtonTextSecondarySFull,
+} from "../button-text";
 
 export default function ModalBase({
   cssprop,
@@ -40,7 +43,7 @@ export default function ModalBase({
           {(okButton ?? cancelButton) && (
             <div className={styles.common__buttons}>
               {cancelButton?.text && (
-                <ButtonTextStandardSFull
+                <ButtonTextSecondarySFull
                   title={cancelButton?.text}
                   type="button"
                   onClick={cancelButton.onClick}

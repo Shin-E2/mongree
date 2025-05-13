@@ -6,7 +6,8 @@ import type { IDiaryDetailContentProps } from "./types";
 export default function useDiaryDetail({
   diary,
   loginUser,
-}: IDiaryDetailContentProps) {
+  onDeleted,
+}: IDiaryDetailContentProps & { onDeleted?: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isOwner = diary.user.id === loginUser?.id;
@@ -50,17 +51,12 @@ export default function useDiaryDetail({
 
   const handleDelete = async () => {
     if (!isOwner) return;
-
-    if (!confirm("일기를 삭제하시겠습니까?")) return;
-
-    startTransition(async () => {
-      const result = await deleteDiary(diary.id);
-      if (result.success) {
-        router.push("/diary");
-      } else {
-        alert(result.error || "삭제에 실패했습니다");
-      }
-    });
+    const result = await deleteDiary(diary.id);
+    if (result.success) {
+      if (onDeleted) onDeleted();
+      window.location.href = "/diary";
+    }
+    // 실패 시 에러 메시지는 상위에서 처리
   };
 
   // 총 댓글 수 계산 (최상위 댓글 + 대댓글)

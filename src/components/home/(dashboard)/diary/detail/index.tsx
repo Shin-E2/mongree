@@ -10,11 +10,14 @@ import { ChevronLeft, Heart, Share2, Tag, Trash2 } from "lucide-react";
 import Image from "next/image";
 import type { IDiaryDetailContentProps } from "./types";
 import useDiaryDetail from "./hook";
+import { useState } from "react";
 
 export default function DiaryDetailContent({
   diary,
   loginUser,
 }: IDiaryDetailContentProps) {
+  const [deleteError, setDeleteError] = useState("");
+  const [isDeleted, setIsDeleted] = useState(false);
   const {
     router,
     isOwner,
@@ -28,7 +31,30 @@ export default function DiaryDetailContent({
     showReplyForm,
     showDeleteModal,
     handleDelete,
-  } = useDiaryDetail({ diary, loginUser });
+  } = useDiaryDetail({
+    diary,
+    loginUser,
+    onDeleted: () => setIsDeleted(true),
+  });
+
+  // 삭제된 경우 아무것도 렌더링하지 않음(혹은 메시지)
+  if (isDeleted) {
+    return (
+      <div className="flex items-center justify-center h-96 text-gray-500">
+        일기가 삭제되었습니다.
+      </div>
+    );
+  }
+
+  // 삭제 핸들러 래핑: 실패 시 에러 메시지 표시
+  const handleDeleteWithError = async () => {
+    setDeleteError("");
+    try {
+      await handleDelete();
+    } catch (e: any) {
+      setDeleteError(e?.message || "삭제에 실패했습니다");
+    }
+  };
 
   return (
     <div className="flex-1 bg-gray-50 min-h-screen">
@@ -77,6 +103,7 @@ export default function DiaryDetailContent({
                   alt={diary.user.name}
                   width={40}
                   height={40}
+                  priority={true}
                   className="rounded-full object-cover"
                 />
                 <div>
@@ -111,6 +138,7 @@ export default function DiaryDetailContent({
                       width={100}
                       height={100}
                       className="w-4 h-4 mr-1.5"
+                      priority={true} // 이미지 우선 로딩
                     />
                     {emotion.label}
                   </span>
@@ -286,14 +314,20 @@ export default function DiaryDetailContent({
       {showDeleteModal && (
         <ModalStandardFitFit
           title="일기 삭제"
-          discription={`일기를 삭제하시겠습니까?\n삭제된 일기는 복구할 수 없습니다.`}
+          discription={
+            `일기를 삭제하시겠습니까?\n삭제된 일기는 복구할 수 없습니다.` +
+            (deleteError ? `\n\n${deleteError}` : "")
+          }
           okButton={{
             text: "삭제",
-            onClick: handleDelete,
+            onClick: handleDeleteWithError,
           }}
           cancelButton={{
             text: "취소",
-            onClick: () => setShowDeleteModal(false),
+            onClick: () => {
+              setShowDeleteModal(false);
+              setDeleteError("");
+            },
           }}
         />
       )}

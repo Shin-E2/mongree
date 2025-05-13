@@ -5,8 +5,11 @@ import { EMOTIONS } from "@/mock/emotions";
 import { formatToTimeAgo } from "@/lib/utils";
 import TagList from "@/commons/components/tag";
 import styles from "./styles.module.css";
+import { useRouter } from "next/navigation";
+import { URL } from "@/commons/constants/global-url";
 
 export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
+  const router = useRouter();
   const emotions = diary.diaryEmotion.map(({ emotion }) => {
     const emotionConfig = EMOTIONS.find((e) => e.id === emotion.id);
     return {
@@ -18,7 +21,11 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
   });
 
   return (
-    <div className={styles.container}>
+    <div
+      className={styles.container}
+      style={{ cursor: "pointer" }}
+      onClick={() => router.push(URL().DIARY_DETAIL(diary.id))}
+    >
       {/* 작성자 정보 */}
       <div className={styles.author}>
         <div className="flex items-center space-x-3">
@@ -70,11 +77,9 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
 
       {/* 일기 내용 미리보기 */}
       <div className={styles.body}>
+        {/* 여기 나중에 수정하기 */}
         <div className="flex items-center justify-between mb-2">
           <h3 className={styles.title}>{diary.title}</h3>
-          <time className={styles.time}>
-            {formatToTimeAgo(diary.createdAt.toString())}
-          </time>
         </div>
         <p className={styles.content}>{diary.content}</p>
         <TagList

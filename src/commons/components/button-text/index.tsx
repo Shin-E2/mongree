@@ -43,6 +43,12 @@ export const ButtonTextStandardSFull = ({
   return <ButtonTextBase {...rest} cssprop={styles.standard__s__full} />;
 };
 
+export const ButtonTextSecondarySFull = ({
+  ...rest
+}: IButtonTextCommonProps) => {
+  return <ButtonTextBase {...rest} cssprop={styles.secondary__s__full} />;
+};
+
 export const ButtonTextWithPaddingMM = ({
   ...rest
 }: IButtonTextCommonProps) => {

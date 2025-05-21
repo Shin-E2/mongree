@@ -3,6 +3,7 @@
 import db from "@/lib/db";
 import { getUser } from "@/lib/get-user";
 import { revalidateTag } from "next/cache";
+import { redirect } from "next/navigation";
 
 export async function deleteDiary(diaryId: string) {
   try {
@@ -21,7 +22,7 @@ export async function deleteDiary(diaryId: string) {
     });
 
     revalidateTag(`diary-${diaryId}`);
-    return { success: true };
+    redirect("/diary"); // 서버 액션에서 직접 리다이렉트
   } catch (error) {
     return { error: "일기 삭제에 실패했습니다" };
   }

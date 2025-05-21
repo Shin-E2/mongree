@@ -6,13 +6,13 @@ import type { IDiaryDetailContentProps } from "./types";
 export default function useDiaryDetail({
   diary,
   loginUser,
-  onDeleted,
 }: IDiaryDetailContentProps & { onDeleted?: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isOwner = diary.user.id === loginUser?.id;
   const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
 
   // 공감 관련 상태 관리
   const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic(
@@ -51,12 +51,10 @@ export default function useDiaryDetail({
 
   const handleDelete = async () => {
     if (!isOwner) return;
-    const result = await deleteDiary(diary.id);
-    if (result.success) {
-      if (onDeleted) onDeleted();
-      window.location.href = "/diary";
-    }
-    // 실패 시 에러 메시지는 상위에서 처리
+    // 서버 액션에서 redirect
+    // 서버 액션에서 redirect가 실행되기 전에 UI가 다시 렌더링되는 것을 방지
+    setIsDeleted(true); // 미리 삭제된 상태
+    await deleteDiary(diary.id);
   };
 
   // 총 댓글 수 계산 (최상위 댓글 + 대댓글)
@@ -80,6 +78,7 @@ export default function useDiaryDetail({
     isPending,
     optimisticEmpathies,
     commentCount,
+    isDeleted,
     setShowReplyForm,
     setShowDeleteModal,
     handleEmpathyToggle,

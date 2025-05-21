@@ -52,3 +52,6 @@
 .empathyText {
   @apply text-xs text-gray-500;
 }
+.buttonActive {
+  @apply text-indigo-700;
+}

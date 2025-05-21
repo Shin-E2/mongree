@@ -1,4 +1,5 @@
-import type { PublicDiary } from "@/app/(dashboard)/community/types";
+"use client";
+
 import Image from "next/image";
 import { Heart, MessageCircle } from "lucide-react";
 import { EMOTIONS } from "@/mock/emotions";
@@ -7,9 +8,21 @@ import TagList from "@/commons/components/tag";
 import styles from "./styles.module.css";
 import { useRouter } from "next/navigation";
 import { URL } from "@/commons/constants/global-url";
+import usePublicDiaryCard from "./hook";
+import type { PublicDiaryCardProps } from "./types";
 
-export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
+export default function CommunityDiaryCard({
+  diary,
+  loginUser,
+}: PublicDiaryCardProps) {
   const router = useRouter();
+  const { optimisticData, isPending, handleEmpathyToggle } = usePublicDiaryCard(
+    {
+      diary,
+      loginUser,
+    }
+  );
+
   const emotions = diary.diaryEmotion.map(({ emotion }) => {
     const emotionConfig = EMOTIONS.find((e) => e.id === emotion.id);
     return {
@@ -77,7 +90,6 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
 
       {/* 일기 내용 미리보기 */}
       <div className={styles.body}>
-        {/* 여기 나중에 수정하기 */}
         <div className="flex items-center justify-between mb-2">
           <h3 className={styles.title}>{diary.title}</h3>
         </div>
@@ -91,10 +103,23 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
       {/* 상호작용(공감, 댓글, 공감한 사용자) */}
       <div className={styles.footer}>
         <div className="flex items-center space-x-4">
-          <button className={styles.button}>
-            <Heart className="w-4 h-4" />
-            <span className={styles.buttonCount}>{diary._count.empathies}</span>
+          <button
+            className={`${styles.button} ${
+              optimisticData.isEmpathized ? styles.buttonActive : ""
+            }`}
+            onClick={handleEmpathyToggle}
+            disabled={isPending}
+          >
+            <Heart
+              className={`w-4 h-4 ${
+                optimisticData.isEmpathized ? "text-indigo-700" : ""
+              }`}
+              fill={optimisticData.isEmpathized ? "currentColor" : "none"}
+            />
+
+            <span className={styles.buttonCount}>{optimisticData.count}</span>
           </button>
+
           <button className={styles.button}>
             <MessageCircle className="w-4 h-4" />
             <span className={styles.buttonCount}>{diary._count.comments}</span>
@@ -102,7 +127,7 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
         </div>
         <div className={styles.empathyList}>
           <div className="flex -space-x-2">
-            {diary.empathies.slice(0, 3).map((empathy) => (
+            {optimisticData.empathies.slice(0, 3).map((empathy) => (
               <div key={empathy.id} className={styles.empathyProfile}>
                 {empathy.user.profileImage && (
                   <Image
@@ -117,7 +142,7 @@ export default function CommunityDiaryCard({ diary }: { diary: PublicDiary }) {
             ))}
           </div>
           <span className={styles.empathyText}>
-            +{diary._count.empathies}명이 공감
+            +{optimisticData.count}명이 공감
           </span>
         </div>
       </div>

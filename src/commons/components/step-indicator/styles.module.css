@@ -3,5 +3,25 @@
 }
 
 .standard__m__m {
-  @apply w-8 h-8 rounded-full flex justify-center items-center mb-2
+  @apply w-8 h-8 rounded-full flex justify-center items-center mb-2;
+}
+
+.label {
+  @apply text-sm font-medium;
+}
+
+.activeText {
+  @apply text-indigo-600;
+}
+
+.inactiveText {
+  @apply text-gray-400;
+}
+
+.activeCircle {
+  @apply bg-indigo-600 text-white;
+}
+
+.inactiveCircle {
+  @apply bg-gray-200;
 }

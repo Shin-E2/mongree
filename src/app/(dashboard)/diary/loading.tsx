@@ -1,37 +1,36 @@
+import styles from "./loading.module.css";
+
 export default function DiaryListLoading() {
   return (
-    <div className="flex flex-col h-full mb-20">
+    <div className={styles.mainContainer}>
       {/* 헤더 */}
-      <div className="p-8 animate-pulse">
-        <div className="h-8 w-48 bg-gray-200 rounded-lg mb-2" />
-        <div className="h-4 w-64 bg-gray-200 rounded-lg" />
+      <div className={styles.headerSection}>
+        <div className={styles.headerTitlePlaceholder} />
+        <div className={styles.headerSubtitlePlaceholder} />
       </div>
 
-      <div className="p-4 md:p-8">
+      <div className={styles.contentSection}>
         {/* 필터 */}
-        <div className="flex flex-col sm:flex-row justify-between mb-6 animate-pulse">
-          <div className="w-64 h-10 bg-gray-200 rounded-lg mb-4 sm:mb-0" />
-          <div className="flex space-x-2">
-            <div className="w-24 h-10 bg-gray-200 rounded-lg" />
-            <div className="w-24 h-10 bg-gray-200 rounded-lg" />
+        <div className={styles.filterSection}>
+          <div className={styles.filterPlaceholder} />
+          <div className={styles.filterButtonsWrapper}>
+            <div className={styles.filterButtonPlaceholder} />
+            <div className={styles.filterButtonPlaceholder} />
           </div>
         </div>
 
         {/* 카드 */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
+        <div className={styles.cardsGrid}>
           {[1, 2, 3, 4, 5, 6].map((index) => (
-            <div
-              key={index}
-              className="bg-white border rounded-xl p-4 animate-pulse"
-            >
-              <div className="flex space-x-2 mb-4">
-                <div className="w-16 h-6 bg-gray-200 rounded-full" />
-                <div className="w-16 h-6 bg-gray-200 rounded-full" />
+            <div key={index} className={styles.cardContainer}>
+              <div className={styles.cardHeader}>
+                <div className={styles.cardBadgePlaceholder} />
+                <div className={styles.cardBadgePlaceholder} />
               </div>
-              <div className="h-40 bg-gray-200 rounded-lg mb-4" />
-              <div className="h-6 w-3/4 bg-gray-200 rounded mb-2" />
-              <div className="h-4 bg-gray-200 rounded mb-2" />
-              <div className="h-4 bg-gray-200 rounded w-1/2" />
+              <div className={styles.cardImagePlaceholder} />
+              <div className={styles.cardTitlePlaceholder} />
+              <div className={styles.cardContentPlaceholder1} />
+              <div className={styles.cardContentPlaceholder2} />
             </div>
           ))}
         </div>

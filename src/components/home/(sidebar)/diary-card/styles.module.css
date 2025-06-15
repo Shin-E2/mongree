@@ -1,0 +1,31 @@
+.container {
+  @apply p-4 border rounded-lg hover:shadow-md transition-shadow;
+}
+
+.header {
+  @apply flex items-center space-x-2 mb-3;
+}
+
+.emotionBadge {
+  @apply w-6 h-6;
+}
+
+.title {
+  @apply font-medium;
+}
+
+.content {
+  @apply text-gray-600 text-sm line-clamp-3;
+}
+
+.footer {
+  @apply flex justify-between items-center mt-4;
+}
+
+.date {
+  @apply text-sm text-gray-500;
+}
+
+.detailButton {
+  @apply text-sm text-indigo-600;
+}

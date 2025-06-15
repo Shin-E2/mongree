@@ -1,3 +1,5 @@
+import { Database } from "@/lib/supabase.types"; // Database 타입 임포트 추가
+
 export interface IButtonOptionBaseProps {
   icon?: React.ReactNode;
   title: string;
@@ -12,7 +14,7 @@ export interface IButtonOptionBaseProps {
 
 export interface IButtonOptionByProfileButtonProps
   extends Omit<IButtonOptionBaseProps, "cssprop"> {
-  imageUrl: string;
+  profile_image: string | null; // profiles 테이블 스키마에 맞게 변경
 }
 
 export interface IButtonOptionCommonProps extends IButtonOptionBaseProps {}

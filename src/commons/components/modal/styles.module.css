@@ -17,3 +17,32 @@
 .standard__fit__fit {
   @apply flex flex-col justify-center items-center p-8 pb-4;
 }
+
+/* Variant */
+.variant__error__critical {
+  @apply border-l-4 border-red-500 bg-red-50;
+}
+
+.variant__error__warning {
+  @apply border-l-4 border-orange-500 bg-orange-50;
+}
+
+.variant__success {
+  @apply border-l-4 border-green-500 bg-green-50;
+}
+
+.variant__info {
+  @apply border-l-4 border-blue-500 bg-blue-50;
+}
+
+.variant__confirm {
+  @apply border-l-4 border-purple-500 bg-purple-50;
+}
+
+.titleText {
+  @apply text-2xl font-bold;
+}
+
+.descriptionText {
+  @apply text-gray-500 text-sm whitespace-pre-line text-center pt-2;
+}

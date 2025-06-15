@@ -1,4 +1,6 @@
 import Image from "next/image";
+import { ProgressBarBase } from "@/commons/components/progress-bar";
+import styles from "./styles.module.css";
 
 interface EmotionStatItemProps {
   emotion: string;
@@ -12,22 +14,17 @@ export function HomeEmotionStatItem({
   color,
 }: EmotionStatItemProps) {
   return (
-    <div className="flex gap-4 items-center justify-between w-full">
+    <div className={styles.container}>
       <Image
         src={emotion}
         alt="감정이모지"
         width={100}
         height={100}
-        className="w-8 h-8 rounded-full"
+        className={styles.emotionImage}
       />
 
-      <div className="relative w-full h-2 bg-gray-300 rounded-full overflow-hidden">
-        <div
-          className={`h-2 bg-${color}-500 rounded-full`}
-          style={{ width: `${percentage}%` }}
-        />
-      </div>
-      <span className="text-sm font-medium">{percentage}%</span>
+      <ProgressBarBase progress={percentage} cssprop={`bg-${color}-500`} />
+      <span className={styles.percentageText}>{percentage}%</span>
     </div>
   );
 }

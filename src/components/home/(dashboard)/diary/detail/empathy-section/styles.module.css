@@ -1,0 +1,15 @@
+.container {
+  @apply px-4 md:px-6 py-4 bg-gray-50 border-t;
+}
+
+.contentWrapper {
+  @apply flex items-center justify-between;
+}
+
+.heartIconEmpathized {
+  @apply fill-current text-indigo-700;
+}
+
+.heartIconDefault {
+  @apply text-gray-700;
+}

@@ -6,14 +6,26 @@ import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import useLoginFormSection from "./hook";
 import { LoginFormSchema, type LoginFormType } from "./form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useFormContext } from "react-hook-form";
 
 export default function LoginFormSection() {
-  const { onSubmit } = useLoginFormSection();
+  // const onSubmit = useLoginFormSection(); => 여기서 계속 context null 에러 발생
   return (
     <FormStandardFullFull<LoginFormType>
-      onSubmit={onSubmit}
       resolver={zodResolver(LoginFormSchema)}
+      onSubmit={() => {}} // 실질적 onSubmit은 children에서 handleSubmit로 처리
     >
+      <LoginFormFields />
+    </FormStandardFullFull>
+  );
+}
+
+function LoginFormFields() {
+  const { handleSubmit, setError } = useFormContext<LoginFormType>();
+  const { onSubmit } = useLoginFormSection();
+
+  return (
+    <>
       {/* 이메일 입력 필드 */}
       <InputFieldStandardSFull
         name="email"
@@ -40,7 +52,11 @@ export default function LoginFormSection() {
 </div> */}
 
       {/* 로그인 버튼 */}
-      <ButtonTextStandardSFull title="로그인" type="submit" />
-    </FormStandardFullFull>
+      <ButtonTextStandardSFull
+        title="로그인"
+        type="submit"
+        onClick={handleSubmit((data) => onSubmit(data, setError))}
+      />
+    </>
   );
 }

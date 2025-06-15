@@ -1,3 +1,4 @@
+import type { SignupTempFormData } from "@/commons/constants/signup";
 import type { ISignupStepProps } from "../step-progress-section/types";
 
 export interface ISignupFormSteps {
@@ -5,7 +6,14 @@ export interface ISignupFormSteps {
   setCurrentStep: (value: React.SetStateAction<number>) => void;
   currentStepData: ISignupStepProps;
   isLastStep: boolean;
+  initialFormData: SignupTempFormData;
+  saveTempFormData: (data: any) => void;
+  clearTempFormData: () => void;
+  isEmailConfirmed: boolean;
 }
 
-export interface IuseSignupFormStepsProps
-  extends Omit<ISignupFormSteps, "isLastStep" | "currentStep"> {}
+export interface IuseSignupFormStepsProps {
+  setCurrentStep: (value: React.SetStateAction<number>) => void;
+  currentStepData: ISignupStepProps;
+  initialFormData: SignupTempFormData;
+}

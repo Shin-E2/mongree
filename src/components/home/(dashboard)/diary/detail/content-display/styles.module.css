@@ -1,0 +1,47 @@
+.container {
+  @apply bg-white rounded-2xl shadow-sm overflow-hidden;
+}
+
+.authorEmotionSection {
+  @apply p-4 md:p-6 border-b;
+}
+
+.profileHeaderWrapper {
+  @apply flex items-center justify-between mb-4;
+}
+
+.publicBadge {
+  @apply px-2.5 py-1 bg-green-100 text-green-800 text-sm rounded-full;
+}
+
+.emotionBadgeList {
+  @apply mb-4;
+}
+
+.title {
+  @apply text-xl md:text-2xl font-bold text-gray-900;
+}
+
+.imageSection {
+  @apply border-b;
+}
+
+.imageThumbnailList {
+  @apply grid-cols-2 md:grid-cols-3 gap-2 p-4 md:p-6;
+}
+
+.contentSection {
+  @apply p-4 md:p-6;
+}
+
+.proseWrapper {
+  @apply prose max-w-none;
+}
+
+.diaryContent {
+  @apply text-gray-700 whitespace-pre-line leading-relaxed;
+}
+
+.tagSection {
+  @apply mt-6;
+}

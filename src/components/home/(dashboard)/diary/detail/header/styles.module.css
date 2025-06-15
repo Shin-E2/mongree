@@ -1,0 +1,32 @@
+.headerContainer {
+  @apply sticky top-0 bg-white z-10 py-4 border-b border-gray-200;
+}
+
+.headerContent {
+  @apply max-w-screen-md mx-auto flex items-center justify-between;
+}
+
+.backButton {
+  @apply flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200;
+}
+
+.backButtonText {
+  @apply text-base font-medium;
+}
+
+.actionButtons {
+  @apply flex items-center space-x-2;
+}
+
+.shareButton,
+.deleteButton {
+  @apply p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors duration-200;
+}
+
+.iconBase {
+  @apply w-5 h-5;
+}
+
+.backIcon {
+  @apply mr-1;
+}

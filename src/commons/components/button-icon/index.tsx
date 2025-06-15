@@ -53,7 +53,7 @@ export const ButtonIconDelete = ({ ...rest }: IButtonIconCommonProps) => {
     <ButtonIconBase
       {...rest}
       cssprop={`${styles.delete}`}
-      icon={<X className="w-8 h-8 text-white" />}
+      icon={<X className={styles.deleteIcon} />}
     />
   );
 };
@@ -66,7 +66,7 @@ export const ButtonIconDeleteNoBackground = ({
     <ButtonIconBase
       {...rest}
       cssprop={styles.delete__no__background}
-      icon={<X className="w-5 h-5 text-gray-400" />}
+      icon={<X className={styles.deleteNoBackgroundIcon} />}
     />
   );
 };
@@ -77,7 +77,7 @@ export const ButtonIconNext = ({ ...rest }: IButtonIconCommonProps) => {
     <ButtonIconBase
       {...rest}
       cssprop={styles.next}
-      icon={<ArrowRight className="w-4 h-4" />}
+      icon={<ArrowRight className={styles.arrowIcon} />}
     />
   );
 };
@@ -88,7 +88,7 @@ export const ButtonIconPrev = ({ ...rest }: IButtonIconCommonProps) => {
     <ButtonIconBase
       {...rest}
       cssprop={styles.next}
-      icon={<ArrowLeft className="w-4 h-4" />}
+      icon={<ArrowLeft className={styles.arrowIcon} />}
     />
   );
 };

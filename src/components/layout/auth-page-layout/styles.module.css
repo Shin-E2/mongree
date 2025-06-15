@@ -1,0 +1,7 @@
+.container {
+  @apply min-h-screen bg-gray-50 flex items-center justify-center;
+}
+
+.contentWrapper {
+  @apply max-w-md w-full mx-4;
+}

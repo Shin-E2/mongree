@@ -13,3 +13,27 @@
 .reply_form {
   @apply p-4 md:px-6 md:py-4;
 }
+
+.container {
+  @apply p-4;
+}
+
+.flexContainer {
+  @apply flex gap-3;
+}
+
+.imageWrapper {
+  @apply flex-shrink-0;
+}
+
+.userImage {
+  @apply rounded-full object-cover;
+}
+
+.formContainer {
+  @apply flex flex-1 flex-col;
+}
+
+.buttonContainer {
+  @apply mt-2 flex justify-end;
+}

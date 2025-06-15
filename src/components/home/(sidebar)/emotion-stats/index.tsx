@@ -1,10 +1,11 @@
 import { HomeEmotionStatItem } from "../emotion-statItem";
+import styles from "./styles.module.css";
 
 export default function HomeEmotionStats() {
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <h3 className="text-lg font-semibold mb-4">이번 달 감정 분포</h3>
-      <div className="flex flex-col gap-4">
+    <div className={styles.container}>
+      <h3 className={styles.title}>이번 달 감정 분포</h3>
+      <div className={styles.listContainer}>
         <HomeEmotionStatItem
           emotion="/image/emotions/sad.svg"
           percentage={25}

@@ -1,18 +1,10 @@
-import { DeleteObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand } from "@aws-sdk/client-s3";
+import { s3Client } from "@/lib/aws/s3-client"; // 새로 생성된 s3Client 임포트
 
 interface UploadImageOptions {
   maxSize?: number; // 5mb
   allowedTypes?: string[]; // jpeg, png
 }
-
-// S3 클라이언트 설정
-const s3Client = new S3Client({
-  region: process.env.AWS_REGIN,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
-  },
-});
 
 // URL에서 S3 키를 추출
 function getKeyFromUrl(url: string) {

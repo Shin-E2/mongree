@@ -1,0 +1,11 @@
+.container {
+  @apply flex flex-wrap gap-2;
+}
+
+.tagItem {
+  @apply inline-flex items-center px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-700;
+}
+
+.tagIcon {
+  @apply w-3 h-3 mr-1.5;
+}

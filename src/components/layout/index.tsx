@@ -4,6 +4,7 @@ import SideBar from "./sidebar";
 import TopBar from "./topbar";
 import ChatBot from "./chatbot";
 import useLayout from "./hook";
+import styles from "./styles.module.css";
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -18,11 +19,15 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className={styles.mainLayout}>
       <SideBar />
-      <div className="flex-1 md:ml-64">
+      <div className={styles.contentWrapper}>
         {!hidePartialLayout && <TopBar />}
-        <main className={`${!hidePartialLayout ? "pt-16" : ""}`}>
+        <main
+          className={`${
+            !hidePartialLayout ? styles.mainContentWithPadding : ""
+          }`}
+        >
           {children}
         </main>
         {!hidePartialLayout && <ChatBot />}

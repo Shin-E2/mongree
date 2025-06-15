@@ -1,0 +1,15 @@
+.container {
+  @apply h-full bg-white rounded-xl shadow-sm;
+}
+
+.contentWrapper {
+  @apply p-6;
+}
+
+.title {
+  @apply text-xl font-semibold mb-6;
+}
+
+.calendarPlaceholder {
+  @apply aspect-w-16 aspect-h-9 bg-gray-50 rounded-lg p-4;
+}

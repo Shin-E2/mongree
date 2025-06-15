@@ -1,31 +1,28 @@
 import { Search, Sun, Plus } from "lucide-react";
 import Link from "next/link";
+import { SearchBarInput } from "@/commons/components/input";
+import styles from "./styles.module.css";
 
 export default function TopBar() {
   return (
-    <header className="fixed top-0 left-0 md:left-64 right-0 h-16 bg-white border-b border-gray-200 z-10">
-      <div className="flex items-center justify-between h-full px-4 md:px-8">
-        <div className="flex-1 max-w-2xl">
-          <div className="relative">
-            <input
-              type="text"
+    <header className={styles.headerContainer}>
+      <div className={styles.headerContentWrapper}>
+        <div className={styles.searchAreaWrapper}>
+          <div className={styles.searchBarContainer}>
+            <SearchBarInput
               placeholder="일기 검색하기..."
-              className="w-full px-4 py-2 pl-10 bg-gray-100 border-0 rounded-lg focus:ring-2 focus:ring-indigo-500"
+              iconLeft={<Search />}
             />
-            <Search className="absolute top-2.5 left-3 w-5 h-5 text-gray-400" />
           </div>
         </div>
 
-        <div className="flex items-center space-x-2 md:space-x-4">
-          <button className="p-2 text-gray-500 rounded-lg hover:bg-gray-100">
-            <Sun className="w-5 h-5" />
+        <div className={styles.buttonsWrapper}>
+          <button className={styles.themeToggleButton}>
+            <Sun className={styles.iconBase} />
           </button>
-          <Link
-            href="/diary/new"
-            className="flex items-center px-3 md:px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
-          >
-            <Plus className="w-5 h-5 md:mr-2" />
-            <span className="hidden md:inline">일기 작성</span>
+          <Link href="/diary/new" className={styles.diaryWriteButton}>
+            <Plus className={styles.plusIcon} />
+            <span className={styles.diaryWriteButtonText}>일기 작성</span>
           </Link>
         </div>
       </div>

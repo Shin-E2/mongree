@@ -1,0 +1,11 @@
+.container {
+  @apply flex flex-col items-center space-y-6;
+}
+
+.title {
+  @apply text-xl font-semibold;
+}
+
+.imagePreviewWrapper {
+  @apply flex flex-col items-center;
+}

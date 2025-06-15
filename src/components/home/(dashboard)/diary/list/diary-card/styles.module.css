@@ -46,3 +46,19 @@
 .privacyDot {
   @apply w-2 h-2 mr-1.5 rounded-full;
 }
+
+.imageClass {
+  @apply object-cover w-full h-full group-hover:scale-105 transition-transform duration-300;
+}
+
+.contentHeader {
+  @apply flex items-center justify-between mb-2;
+}
+
+.privacyDotRed {
+  @apply bg-red-500;
+}
+
+.privacyDotGreen {
+  @apply bg-green-500;
+}

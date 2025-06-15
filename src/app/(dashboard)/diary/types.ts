@@ -5,29 +5,35 @@ export interface Diary {
   createdAt: Date;
   updatedAt: Date;
   isPrivate: boolean;
-  diaryEmotion: Array<{
-    emotion: {
-      id: string;
-      label: string;
-    };
-    diaryId: string;
-    emotionId: string;
-  }>;
-  images: Array<{
-    id: string;
-    url: string;
-    order: number;
-    diaryId: string;
-  }>;
-  tags: Array<{
-    tag: {
-      id: string;
-      name: string;
-    };
-    diaryId: string;
-    tagId: string;
-  }>;
+  diaryEmotion: DiaryEmotionItem[];
+  images: DiaryImageItem[];
+  tags: DiaryTagItem[];
   userId: string;
+}
+
+export interface DiaryEmotionItem {
+  emotion: {
+    id: string;
+    label: string;
+  };
+  diaryId: string;
+  emotionId: string;
+}
+
+export interface DiaryImageItem {
+  id: string;
+  url: string;
+  order: number;
+  diaryId: string;
+}
+
+export interface DiaryTagItem {
+  tag: {
+    id: string;
+    name: string;
+  };
+  diaryId: string;
+  tagId: string;
 }
 
 export interface DiaryResponse {

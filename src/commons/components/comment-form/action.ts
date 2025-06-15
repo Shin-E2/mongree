@@ -1,6 +1,6 @@
 "use server";
 
-import db from "@/lib/db";
+import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
 import { revalidateTag } from "next/cache";
 
@@ -10,37 +10,54 @@ export async function addComment(formData: FormData) {
   const diaryId = formData.get("diaryId") as string;
   const parentId = formData.get("parentId") as string | null;
 
+  const supabase = await createClient();
+
   if (!content?.trim()) {
     return { error: "내용을 입력해주세요" };
   }
 
   try {
-    const comment = await db.comment.create({
-      data: {
+    const { data: comment, error: createCommentError } = await supabase
+      .from("Comment")
+      .insert({
         content,
         userId: user.id,
         diaryId,
         parentId,
-      },
-      include: {
-        user: {
-          select: {
-            id: true,
-            name: true,
-            profileImage: true,
-          },
-        },
-        likes: true,
-      },
-    });
+      })
+      .select(
+        `
+        *,
+        user (
+          id,
+          name,
+          profileImage
+        ),
+        CommentLike (
+          id,
+          userId
+        )
+        `
+      )
+      .single();
 
-    // 댓글 목록만 재검증
+    if (createCommentError) {
+      console.error("Supabase 댓글 생성 오류:", createCommentError);
+      throw new Error(createCommentError.message || "댓글 작성에 실패했습니다.");
+    }
+
     revalidateTag(`comments-${diaryId}`);
     if (parentId) {
       revalidateTag(`replies-${parentId}`);
     }
 
-    return { success: true, comment };
+    const formattedComment = {
+      ...comment,
+      user: comment.user,
+      likes: comment.CommentLike || [],
+    };
+
+    return { success: true, comment: formattedComment };
   } catch (error) {
     return { error: "댓글 작성에 실패했습니다" };
   }

@@ -1,0 +1,27 @@
+.triggerButton {
+  @apply flex items-center px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-[46px];
+}
+
+.triggerTextWrapper {
+  @apply flex items-center;
+}
+
+.filterIcon {
+  @apply w-4 h-4 mr-2;
+}
+
+.filterText {
+  @apply text-sm text-nowrap;
+}
+
+.selectedCountText {
+  @apply text-sm text-indigo-600 font-medium;
+}
+
+.chevronIcon {
+  @apply w-4 h-4 ml-2 transition-transform;
+}
+
+.contentGrid {
+  @apply grid grid-cols-2 gap-2;
+}

@@ -16,18 +16,18 @@ export function StepIndicatorBase({
   return (
     <div
       className={`${styles.common} ${
-        isActive ? "text-indigo-600" : "text-gray-400"
+        isActive ? styles.activeText : styles.inactiveText
       }`}
     >
       {/* 현재 단계 */}
       <div
         className={`${cssprop} ${
-          isActive ? "bg-indigo-600 text-white" : "bg-gray-200"
+          isActive ? styles.activeCircle : styles.inactiveCircle
         }`}
       >
         {step}
       </div>
-      <span className="text-sm font-medium">{label}</span>
+      <span className={styles.label}>{label}</span>
     </div>
   );
 }

@@ -3,8 +3,8 @@ import styles from "./styles.module.css";
 import type {
   IInputBaseProps,
   IInputStandardSFullProps,
-  IInputWithCsspropProps,
   ISearchBarInputProps,
+  IInputWithCsspropProps,
 } from "./types";
 import { isFieldErrors } from "@/commons/utils/type-guards";
 
@@ -22,7 +22,9 @@ export default function InputBase<T extends FieldValues>({
   successMessage,
   readOnly = false,
   disabled = false,
-}: IInputBaseProps<T>) {
+  className,
+  iconLeft,
+}: IInputBaseProps<T> & { className?: string }) {
   // errors가 FieldError 타입일 경우 message를 표시
   const errorMessage = isFieldErrors<T>(errors)
     ? (errors[name]?.message as string | undefined)
@@ -30,17 +32,32 @@ export default function InputBase<T extends FieldValues>({
 
   return (
     <div className={styles.div}>
-      <input
-        className={type === "file" ? "hidden" : `${cssprop} ${styles.common}`}
-        {...(register ? register(name!) : { name })}
-        placeholder={placeholder}
-        type={type}
-        required={required}
-        onChange={onChange}
-        id={id}
-        readOnly={readOnly}
-        disabled={disabled}
-      />
+      <div className={styles.inputWrapper}>
+        {iconLeft && (
+          <div className={styles.iconWrapper}>
+            {React.cloneElement(iconLeft as React.ReactElement, {
+              className: styles.iconBase,
+            })}
+          </div>
+        )}
+        <input
+          className={
+            type === "file"
+              ? "hidden"
+              : `${cssprop} ${styles.common} ${iconLeft ? "pl-10" : "pl-3"} ${
+                  className || ""
+                }`
+          }
+          {...(register ? register(name!) : { name })}
+          placeholder={placeholder}
+          type={type}
+          required={required}
+          onChange={onChange}
+          id={id}
+          readOnly={readOnly}
+          disabled={disabled}
+        />
+      </div>
       {successMessage && (
         <span className={styles.success}>{successMessage}</span>
       )}
@@ -50,20 +67,29 @@ export default function InputBase<T extends FieldValues>({
 }
 
 export const InputStandardSFull = <T extends FieldValues>({
+  className,
   ...rest
-}: IInputStandardSFullProps<T>) => {
-  return <InputBase {...rest} cssprop={styles.standard__s__full} />;
+}: IInputStandardSFullProps<T> & { className?: string }) => {
+  return (
+    <InputBase
+      {...rest}
+      cssprop={styles.standard__s__full}
+      className={className}
+    />
+  );
 };
 
 // 일기 등록
 export const InputWithCssprop = <T extends FieldValues>({
+  className,
   ...rest
-}: IInputWithCsspropProps<T>) => {
-  return <InputBase {...rest} />;
+}: IInputWithCsspropProps<T> & { className?: string }) => {
+  return <InputBase {...rest} className={className} />;
 };
 
 export const SearchBarInput = <T extends FieldValues>({
+  className,
   ...rest
-}: ISearchBarInputProps<T>) => {
-  return <InputBase {...rest} cssprop={styles.search} />;
+}: ISearchBarInputProps<T> & { className?: string }) => {
+  return <InputBase {...rest} cssprop={styles.search} className={className} />;
 };

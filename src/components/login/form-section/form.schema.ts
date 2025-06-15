@@ -6,7 +6,7 @@ import {
 } from "@/components/signup/step-basic-info/constants";
 
 export const LoginFormSchema = z.object({
-  email: z.string().email().toLowerCase().min(1, "이메일을 입력해주세요"),
+  email: z.string().min(1, "이메일을 입력해주세요").email("올바른 이메일 형식이 아닙니다").toLowerCase(),
   // .refine(checkEmailExists, "이메일이 존재하지 않습니다"),
 
   password: z

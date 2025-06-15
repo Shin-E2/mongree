@@ -1,0 +1,11 @@
+.container {
+  @apply flex items-center justify-center h-96 text-gray-500 flex-col gap-4;
+}
+
+.backButton {
+  @apply px-4 py-2 bg-gray-200 rounded-md text-gray-700 transition-colors duration-150;
+}
+
+.backButton:hover {
+  @apply hover:bg-gray-300;
+}

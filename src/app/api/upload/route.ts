@@ -1,16 +1,10 @@
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextResponse } from "next/server";
+import { s3Client } from "@/lib/aws/s3-client"; // 새로 생성된 s3Client 임포트
 
 // aws에서 이미지 업로드 하기
-const s3Client = new S3Client({
-  //s3 클라이언트 연결
-  region: process.env.AWS_REGION,
-  credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!, // ACCESS키
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!, // ACCESS 비밀 키
-  },
-});
+// S3 클라이언트 설정 (제거됨)
 
 export async function POST(request: Request) {
   try {

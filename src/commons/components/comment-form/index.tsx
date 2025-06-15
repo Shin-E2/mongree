@@ -5,7 +5,12 @@ import Image from "next/image";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { addComment } from "./action";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { useForm, type FieldValues } from "react-hook-form";
+import ButtonTextBase from "../button-text";
+import { InputWithCssprop } from "../input";
+import { Database } from "@/lib/supabase.types";
+import { ICommentFormProps } from "./types";
+import styles from "./styles.module.css";
 
 const commentSchema = z.object({
   content: z
@@ -16,17 +21,10 @@ const commentSchema = z.object({
 
 type CommentFormData = z.infer<typeof commentSchema>;
 
-interface CommentFormProps {
-  user: {
-    id: string;
-    name: string;
-    profileImage: string | null;
-  };
-  diaryId: string;
-  parentId?: string;
-  isReply?: boolean;
-  onSuccess?: () => void;
-}
+type UserProfileForCommentForm = Pick<
+  Database["public"]["Tables"]["profiles"]["Row"],
+  "id" | "username" | "profile_image"
+>;
 
 export function CommentForm({
   user,
@@ -34,7 +32,10 @@ export function CommentForm({
   parentId,
   isReply = false,
   onSuccess,
-}: CommentFormProps) {
+  placeholder,
+  onReply: onReplyProp,
+  onCommentSubmitted,
+}: ICommentFormProps) {
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -54,6 +55,13 @@ export function CommentForm({
       formData.append("parentId", parentId);
     }
 
+    if (user?.id) {
+      formData.append("userId", user.id);
+    } else {
+      console.error("사용자 ID를 찾을 수 없습니다.");
+      return;
+    }
+
     startTransition(async () => {
       const result = await addComment(formData);
       if (result.success) {
@@ -64,51 +72,41 @@ export function CommentForm({
   };
 
   return (
-    <div className="p-4">
-      <div className="flex gap-3">
-        <div className="flex-shrink-0">
+    <div className={styles.container}>
+      <div className={styles.flexContainer}>
+        <div className={styles.imageWrapper}>
           <Image
-            src={user.profileImage || DEFAULT_PROFILE_IMAGE}
-            alt={user.name}
+            src={user?.profile_image || DEFAULT_PROFILE_IMAGE}
+            alt={user?.username || "사용자"}
             width={40}
             height={40}
-            className="rounded-full object-cover"
+            className={styles.userImage}
           />
         </div>
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="flex flex-col gap-4 w-full items-end relative"
+          className={styles.formContainer}
         >
-          <textarea
-            {...register("content", {
-              required: "내용을 입력해주세요",
-              maxLength: {
-                value: 300,
-                message: "300자 이내로 입력해주세요",
-              },
-            })}
+          <InputWithCssprop
+            cssprop="w-full"
             placeholder={
-              isReply ? "답글을 작성하세요..." : "따뜻한 댓글을 남겨주세요"
+              isReply
+                ? "답글을 작성해주세요."
+                : placeholder || "댓글을 작성해주세요."
             }
-            className="w-full px-4 py-3 text-base border rounded-lg focus:ring-2 focus:ring-indigo-500 resize-none min-h-[100px] focus:outline-none"
-            disabled={isPending}
+            name="content"
+            register={register}
+            errors={errors.content?.message}
+            required
           />
-          {errors.content && (
-            <span className="text-sm text-red-500 absolute left-0 top-[103px]">
-              {errors.content.message}
-            </span>
-          )}
-          <button
-            type="submit"
-            disabled={isPending || !isValid}
-            className={`px-4 py-2 rounded-lg transition-colors ${
-              !isPending && isValid
-                ? "bg-indigo-600 text-white hover:bg-indigo-700"
-                : "bg-gray-100 text-gray-400 cursor-not-allowed"
-            }`}
-          >
-            {isPending ? "작성 중..." : isReply ? "답글 작성" : "댓글 작성"}
-          </button>
+          <div className={styles.buttonContainer}>
+            <ButtonTextBase
+              title={isReply ? "답글 작성" : "댓글 작성"}
+              cssprop={styles.commentButton}
+              type="submit"
+              disabled={isPending || !isValid}
+            />
+          </div>
         </form>
       </div>
     </div>

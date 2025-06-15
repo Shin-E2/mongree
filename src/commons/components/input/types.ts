@@ -4,9 +4,10 @@ import type {
   Path,
   UseFormRegister,
 } from "react-hook-form";
+import { ReactNode } from "react";
 
 export interface IInputBaseProps<T extends FieldValues> {
-  cssprop: string;
+  cssprop?: string;
   name?: Path<T>; // react-hook-form의 path타입
   placeholder?: string;
   type?: HTMLInputElement["type"];
@@ -19,6 +20,7 @@ export interface IInputBaseProps<T extends FieldValues> {
   readOnly?: boolean;
   disabled?: boolean;
   multiple?: boolean; // type이 file일 경우 다중선택
+  iconLeft?: ReactNode;
 }
 
 export interface IInputStandardSFullProps<T extends FieldValues>

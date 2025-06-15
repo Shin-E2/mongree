@@ -1,0 +1,11 @@
+.sectionContainer {
+  @apply flex flex-col gap-8;
+}
+
+.titleInput {
+  @apply w-full text-2xl font-semibold border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+}
+
+.contentTextArea {
+  @apply w-full h-48 border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+}

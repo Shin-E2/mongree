@@ -1,0 +1,15 @@
+.container {
+  @apply flex items-center;
+}
+
+.badgeList {
+  @apply flex -space-x-2;
+}
+
+.badgeItem {
+  /* 개별 뱃지에 필요한 추가 스타일 */
+}
+
+.moreText {
+  @apply ml-2 text-sm text-gray-500;
+}

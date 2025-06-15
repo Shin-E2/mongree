@@ -8,12 +8,18 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import useSignupFormSteps from "./hook";
 import { ModalStandardFitFit } from "@/commons/components/modal";
+import { useState, useEffect } from "react";
+import SignupStepBasicInfo from "../step-basic-info";
 
 export default function SignupFormSteps({
   currentStep,
   setCurrentStep,
   currentStepData,
   isLastStep,
+  initialFormData,
+  saveTempFormData,
+  clearTempFormData,
+  isEmailConfirmed,
 }: ISignupFormSteps) {
   const {
     handleNext,
@@ -26,15 +32,41 @@ export default function SignupFormSteps({
   } = useSignupFormSteps({
     setCurrentStep,
     currentStepData,
+    initialFormData,
   });
+
+  // 기본정보 스텝에서 이메일/닉네임 인증 상태 관리
+  const [isNicknameChecked, setIsNicknameChecked] = useState(false);
+
+  // 다음 버튼 활성화 조건: 기본정보 스텝(0)일 때만 체크
+  const isNextButtonEnabled =
+    currentStep === 0 ? isEmailConfirmed && isNicknameChecked : true;
+
+  // 회원가입 완료 시 sessionStorage 데이터 삭제
+  useEffect(() => {
+    if (isLastStep && isOpen) {
+      clearTempFormData();
+    }
+  }, [currentStep, isLastStep, isOpen, clearTempFormData]);
 
   return (
     <>
       <FormStandardFullFull<SignupFormType>
         onSubmit={onSubmit}
         resolver={zodResolver(SignupFormSchema)}
+        defaultValues={initialFormData}
       >
-        <SignupStepComponent />
+        {/* 기본정보 스텝에만 인증 상태 콜백 전달 */}
+        {currentStep === 0 ? (
+          <SignupStepBasicInfo
+            onNicknameChecked={setIsNicknameChecked}
+            initialFormData={initialFormData}
+            saveTempFormData={saveTempFormData}
+            isEmailVerified={isEmailConfirmed}
+          />
+        ) : (
+          <SignupStepComponent />
+        )}
 
         {/* 이전/다음 버튼 */}
         <SignupSectionButton
@@ -42,7 +74,7 @@ export default function SignupFormSteps({
           handleNext={handleNext}
           isLastStep={isLastStep}
           handlePrev={handlePrev}
-          // isNextButtonEnabled={isNextButtonEnabled}
+          isNextButtonEnabled={isNextButtonEnabled}
         />
       </FormStandardFullFull>
       {isOpen && (

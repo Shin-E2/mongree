@@ -1,0 +1,23 @@
+.cardContent {
+  @apply text-center p-8;
+}
+
+.pendingText {
+  @apply text-lg text-gray-700;
+}
+
+.successText {
+  @apply text-lg text-green-600;
+}
+
+.successDescription {
+  @apply text-md text-gray-600 mt-2;
+}
+
+.errorText {
+  @apply text-lg text-red-600;
+}
+
+.errorDescription {
+  @apply text-md text-gray-600 mt-2;
+}

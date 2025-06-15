@@ -1,0 +1,83 @@
+.mainContainer {
+  @apply flex gap-3;
+}
+
+.imageWrapper {
+  @apply flex-shrink-0;
+}
+
+.userImage {
+  @apply rounded-full object-cover;
+}
+
+.contentContainer {
+  @apply flex flex-col w-full;
+}
+
+.headerContainer {
+  @apply flex items-center justify-between;
+}
+
+.userInfoContainer {
+  @apply flex items-center;
+}
+
+.username {
+  @apply font-semibold text-gray-900;
+}
+
+.divider {
+  @apply mx-2 text-gray-400;
+}
+
+.timestamp {
+  @apply text-gray-500 text-sm;
+}
+
+.actionButtonsContainer {
+  @apply flex items-center gap-3;
+}
+
+.likeButtonBase {
+  @apply flex items-center;
+}
+
+.likeButtonLiked {
+  @apply text-red-500;
+}
+
+.likeButtonUnliked {
+  @apply text-gray-500;
+}
+
+.likeButtonHover {
+  @apply hover:text-red-700;
+}
+
+.heartIcon {
+  @apply w-4 h-4 min-w-4 min-h-4;
+}
+
+.heartIconFilled {
+  @apply fill-current;
+}
+
+.likesCount {
+  @apply ml-1 text-sm;
+}
+
+.replyButton {
+  @apply text-gray-500 hover:text-gray-700 text-sm;
+}
+
+.deleteButton {
+  @apply text-gray-400 hover:text-red-500 transition-colors;
+}
+
+.deleteIcon {
+  @apply w-4 h-4;
+}
+
+.commentContent {
+  @apply break-words whitespace-pre-line text-gray-700 text-base max-w-full mt-2;
+}

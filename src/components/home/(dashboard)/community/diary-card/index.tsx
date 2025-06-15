@@ -5,25 +5,33 @@ import { Heart, MessageCircle } from "lucide-react";
 import { EMOTIONS } from "@/mock/emotions";
 import { formatToTimeAgo } from "@/lib/utils";
 import TagList from "@/commons/components/tag";
-import styles from "./styles.module.css";
 import { useRouter } from "next/navigation";
 import { URL } from "@/commons/constants/global-url";
 import usePublicDiaryCard from "./hook";
-import type { PublicDiaryCardProps } from "./types";
+import type { PublicDiaryCardProps, PublicEmpathyActionResult } from "./types";
+import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
+import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
+import { InteractionButton } from "@/commons/components/interaction-button";
+import { Database } from "@/lib/supabase.types";
+import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
+import UserProfileHeader from "@/commons/components/user-profile-header";
+import EmpathyUserList from "@/commons/components/empathy-user-list";
+import Link from "next/link";
+import styles from "./styles.module.css";
 
 export default function CommunityDiaryCard({
   diary,
   loginUser,
 }: PublicDiaryCardProps) {
   const router = useRouter();
-  const { optimisticData, isPending, handleEmpathyToggle } = usePublicDiaryCard(
+  const { optimisticData, handleEmpathyToggle, isPending } = usePublicDiaryCard(
     {
       diary,
       loginUser,
     }
   );
 
-  const emotions = diary.diaryEmotion.map(({ emotion }) => {
+  const emotions = (diary.diaryEmotion ?? []).map(({ emotion }) => {
     const emotionConfig = EMOTIONS.find((e) => e.id === emotion.id);
     return {
       ...emotion,
@@ -33,119 +41,86 @@ export default function CommunityDiaryCard({
     };
   });
 
+  // EmotionBadgeList에 전달할 감정 데이터 형식으로 변환
+  const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(({ emotion }) => {
+    const emotionStyle =
+      EMOTION_STYLES[emotion.id as keyof typeof EMOTION_STYLES];
+    return {
+      id: emotion.id,
+      label: emotion.label,
+      image: EMOTIONS.find((e) => e.id === emotion.id)?.image || "",
+      bgColor: emotionStyle?.bgColor || "bg-gray-100",
+    };
+  });
+
   return (
-    <div
-      className={styles.container}
-      style={{ cursor: "pointer" }}
-      onClick={() => router.push(URL().DIARY_DETAIL(diary.id))}
-    >
-      {/* 작성자 정보 */}
-      <div className={styles.author}>
-        <div className="flex items-center space-x-3">
-          <div className={styles.profile}>
-            {diary.user.profileImage && (
-              <Image
-                src={diary.user.profileImage}
-                alt={diary.user.nickname}
-                width={40}
-                height={40}
-                className="w-full h-full object-cover rounded-full"
-              />
-            )}
-          </div>
-          <div>
-            <div className={styles.nickname}>{diary.user.nickname}</div>
-            <div className={styles.time}>
-              {formatToTimeAgo(diary.createdAt.toString())}
-            </div>
-          </div>
-        </div>
-        {/* 감정 뱃지 */}
-        {emotions.length > 0 && (
-          <div className={styles.emotionList}>
-            <div className="flex -space-x-2">
-              {emotions.slice(0, 3).map((emotion) => (
-                <div
-                  key={emotion.id}
-                  className={`${styles.emotionBadge} ${emotion.bgColor}`}
-                >
-                  <Image
-                    src={emotion.image}
-                    alt={emotion.label}
-                    width={24}
-                    height={24}
-                    className="w-5 h-5"
-                  />
-                </div>
-              ))}
-            </div>
-            {emotions.length > 3 && (
-              <span className={styles.emotionMore}>
-                외 {emotions.length - 3}개
-              </span>
-            )}
-          </div>
+    <article className={styles.articleContainer}>
+      <Link
+        href={URL().DIARY_DETAIL(diary.id)}
+        className={styles.linkOverlay}
+        aria-label="일기 상세 보기"
+      ></Link>
+
+      <div className={styles.headerSection}>
+        <UserProfileHeader
+          profileImage={diary.user?.profile_image}
+          username={diary.user?.username}
+          createdAt={diary.createdAt}
+        />
+        {emotionsForBadgeList.length > 0 && (
+          <EmotionBadgeList
+            emotions={emotionsForBadgeList}
+            className={styles.emotionBadgeListWrapper}
+          />
         )}
       </div>
 
-      {/* 일기 내용 미리보기 */}
-      <div className={styles.body}>
-        <div className="flex items-center justify-between mb-2">
+      <div className={styles.contentSection}>
+        <div className={styles.titleWrapper}>
           <h3 className={styles.title}>{diary.title}</h3>
         </div>
-        <p className={styles.content}>{diary.content}</p>
-        <TagList
-          tags={diary.tags.map((t) => t.tag)}
-          className={styles.tagList}
-        />
+        <p className={styles.description}>{diary.content}</p>
+        {(diary.tags ?? []).length > 0 && (
+          <TagList
+            tags={(diary.tags ?? []).map((t) => t.tag)}
+            className={styles.tagListWrapper}
+          />
+        )}
       </div>
 
-      {/* 상호작용(공감, 댓글, 공감한 사용자) */}
-      <div className={styles.footer}>
-        <div className="flex items-center space-x-4">
-          <button
-            className={`${styles.button} ${
-              optimisticData.isEmpathized ? styles.buttonActive : ""
-            }`}
+      <div className={styles.footerSection}>
+        <div className={styles.interactionButtonsWrapper}>
+          <InteractionButton
+            icon={
+              <Heart
+                className={`${styles.heartIconBase} ${
+                  optimisticData.isEmpathized ? styles.heartIconEmpathized : ""
+                }`}
+                fill={optimisticData.isEmpathized ? "currentColor" : "none"}
+              />
+            }
+            count={optimisticData.count}
             onClick={handleEmpathyToggle}
-            disabled={isPending}
-          >
-            <Heart
-              className={`w-4 h-4 ${
-                optimisticData.isEmpathized ? "text-indigo-700" : ""
-              }`}
-              fill={optimisticData.isEmpathized ? "currentColor" : "none"}
-            />
+            disabled={isPending || !loginUser}
+            className={`${styles.commentButton} ${
+              optimisticData.isEmpathized ? styles.heartIconEmpathized : ""
+            }`}
+          />
 
-            <span className={styles.buttonCount}>{optimisticData.count}</span>
-          </button>
-
-          <button className={styles.button}>
-            <MessageCircle className="w-4 h-4" />
-            <span className={styles.buttonCount}>{diary._count.comments}</span>
-          </button>
+          <InteractionButton
+            icon={<MessageCircle className={styles.heartIconBase} />}
+            count={diary._count?.comments ?? 0}
+            onClick={() => router.push(URL().DIARY_DETAIL(diary.id))}
+            className={styles.commentButton}
+          />
         </div>
-        <div className={styles.empathyList}>
-          <div className="flex -space-x-2">
-            {optimisticData.empathies.slice(0, 3).map((empathy) => (
-              <div key={empathy.id} className={styles.empathyProfile}>
-                {empathy.user.profileImage && (
-                  <Image
-                    src={empathy.user.profileImage}
-                    alt="empathy-user"
-                    width={24}
-                    height={24}
-                    className="object-cover w-full h-full rounded-full"
-                  />
-                )}
-              </div>
-            ))}
-          </div>
-          <span className={styles.empathyText}>
-            +{optimisticData.count}명이 공감
-          </span>
-        </div>
+        {optimisticData.empathies && optimisticData.empathies.length > 0 && (
+          <EmpathyUserList
+            empathies={optimisticData.empathies}
+            className={styles.empathyUserListWrapper}
+          />
+        )}
       </div>
-    </div>
+    </article>
   );
 }

@@ -1,0 +1,25 @@
+.section {
+  @apply min-h-screen bg-gradient-to-b from-indigo-50 to-white;
+}
+
+.container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.content {
+  @apply flex flex-col items-center pt-20 pb-16;
+}
+
+.title {
+  @apply text-4xl font-bold text-gray-900 sm:text-6xl;
+  text-align: center;
+}
+
+.description {
+  @apply mt-6 text-lg text-gray-600;
+  text-align: center;
+}
+
+.buttonWrapper {
+  @apply mt-8;
+}

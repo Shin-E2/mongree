@@ -1,0 +1,67 @@
+.mainContainer {
+  @apply flex flex-col h-full mb-20;
+}
+
+.headerSection {
+  @apply p-8 animate-pulse;
+}
+
+.headerTitlePlaceholder {
+  @apply h-8 w-48 bg-gray-200 rounded-lg mb-2;
+}
+
+.headerSubtitlePlaceholder {
+  @apply h-4 w-64 bg-gray-200 rounded-lg;
+}
+
+.contentSection {
+  @apply p-4 md:p-8;
+}
+
+.filterSection {
+  @apply flex flex-col sm:flex-row justify-between mb-6 animate-pulse;
+}
+
+.filterPlaceholder {
+  @apply w-64 h-10 bg-gray-200 rounded-lg mb-4 sm:mb-0;
+}
+
+.filterButtonsWrapper {
+  @apply flex space-x-2;
+}
+
+.filterButtonPlaceholder {
+  @apply w-24 h-10 bg-gray-200 rounded-lg;
+}
+
+.cardsGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6;
+}
+
+.cardContainer {
+  @apply bg-white border rounded-xl p-4 animate-pulse;
+}
+
+.cardHeader {
+  @apply flex space-x-2 mb-4;
+}
+
+.cardBadgePlaceholder {
+  @apply w-16 h-6 bg-gray-200 rounded-full;
+}
+
+.cardImagePlaceholder {
+  @apply h-40 bg-gray-200 rounded-lg mb-4;
+}
+
+.cardTitlePlaceholder {
+  @apply h-6 w-3/4 bg-gray-200 rounded mb-2;
+}
+
+.cardContentPlaceholder1 {
+  @apply h-4 bg-gray-200 rounded mb-2;
+}
+
+.cardContentPlaceholder2 {
+  @apply h-4 bg-gray-200 rounded w-1/2;
+}

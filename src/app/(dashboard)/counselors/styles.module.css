@@ -1,0 +1,123 @@
+.mainContainer {
+  @apply flex-1 bg-gray-50 min-h-screen;
+}
+
+.contentWrapper {
+  @apply flex flex-col gap-6 px-4 py-6 md:mx-32;
+}
+
+.searchFilterSection {
+  @apply px-8 py-6;
+}
+
+.searchFilterFlexWrap {
+  @apply flex flex-wrap gap-4;
+}
+
+.searchBarWrapper {
+  @apply flex-1;
+}
+
+.searchBarRelative {
+  @apply relative;
+}
+
+.searchInput {
+  @apply w-full pl-10 pr-4 py-2 rounded-lg border bg-white focus:ring-2 focus:ring-indigo-500;
+}
+
+.searchIcon {
+  @apply absolute left-3 top-2.5 h-5 w-5 text-gray-400;
+}
+
+.locationFilterWrapper {
+  @apply w-48;
+}
+
+.locationFilterRelative {
+  @apply relative;
+}
+
+.locationSelect {
+  @apply w-full pl-10 pr-4 py-2 rounded-lg border bg-white focus:ring-2 focus:ring-indigo-500 appearance-none;
+}
+
+.mapPinIcon {
+  @apply absolute left-3 top-2.5 h-5 w-5 text-gray-400;
+}
+
+.counselorListSection {
+  @apply px-8 pb-12;
+}
+
+.counselorListGrid {
+  @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6;
+}
+
+.counselorCard {
+  @apply bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow;
+}
+
+.cardImageRelative {
+  @apply relative;
+}
+
+.cardImage {
+  @apply w-full h-full object-cover;
+}
+
+.statusBadgeWrapper {
+  @apply absolute top-3 right-3;
+}
+
+.statusBadge {
+  @apply px-2 py-1 bg-green-500 text-white text-xs rounded-full;
+}
+
+.cardContent {
+  @apply p-6;
+}
+
+.cardHeader {
+  @apply flex items-center justify-between mb-3;
+}
+
+.counselorName {
+  @apply text-lg font-semibold;
+}
+
+.starRatingWrapper {
+  @apply flex items-center;
+}
+
+.starIcon {
+  @apply text-yellow-400;
+}
+
+.ratingNumber {
+  @apply ml-1 text-sm font-medium;
+}
+
+.description {
+  @apply text-gray-600 text-sm mb-4 line-clamp-2;
+}
+
+.tagsWrapper {
+  @apply flex flex-wrap gap-2 mb-4;
+}
+
+.tag {
+  @apply px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full;
+}
+
+.cardFooter {
+  @apply flex items-center justify-between pt-4 border-t;
+}
+
+.locationText {
+  @apply text-sm text-gray-500;
+}
+
+.detailButton {
+  @apply px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors;
+} 

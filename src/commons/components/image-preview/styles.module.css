@@ -5,3 +5,47 @@
 .profile {
   @apply relative w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-4 cursor-pointer;
 }
+
+.scrollContainer {
+  @apply overflow-x-auto;
+}
+
+.imageGrid {
+  @apply flex items-center gap-4 w-fit;
+}
+
+.addPhotoLabel {
+  @apply flex-shrink-0 w-[137px] h-[137px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200 cursor-pointer;
+}
+
+.addPhotoIcon {
+  @apply w-6 h-6 text-gray-400;
+}
+
+.addPhotoText {
+  @apply text-sm text-gray-500 mt-2;
+}
+
+.imageItemWrapper {
+  @apply relative group flex-shrink-0;
+}
+
+.imageItemThumbnailContainer {
+  @apply w-[137px] h-[137px] rounded-lg overflow-hidden;
+}
+
+.imageItemThumbnail {
+  @apply w-full h-full object-cover;
+}
+
+.deleteButtonOverlay {
+  @apply !top-2 !right-2 !inset-auto w-5 h-5 opacity-0 group-hover:opacity-100;
+}
+
+.singleImageGroup {
+  @apply group;
+}
+
+.singleImageDeleteButton {
+  @apply invisible group-hover:visible;
+}

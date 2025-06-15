@@ -1,0 +1,11 @@
+.mainLayout {
+  @apply flex min-h-screen bg-gray-50;
+}
+
+.contentWrapper {
+  @apply flex-1 md:ml-64;
+}
+
+.mainContentWithPadding {
+  @apply pt-16;
+}

@@ -7,16 +7,15 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "prisma db seed"
-  },
-  "prisma": {
-    "seed": "ts-node --compiler-options {\"module\":\"CommonJS\"} prisma/seed.ts"
+    "update-types": "npx supabase gen types typescript --project-id \"cimffxixwjjaxrswrtes\" --schema public > src/lib/supabase.types.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.726.1",
     "@aws-sdk/s3-request-presigner": "^3.726.1",
     "@hookform/resolvers": "^3.10.0",
-    "@prisma/client": "6.1.0",
+    "@supabase/auth-helpers-nextjs": "^0.10.0",
+    "@supabase/ssr": "^0.6.1",
+    "@supabase/supabase-js": "^2.49.8",
     "bcrypt": "^5.1.1",
     "iron-session": "^8.0.4",
     "lodash": "^4.17.21",
@@ -32,6 +31,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@eslint/js": "^9.17.0",
+    "@playwright/test": "^1.52.0",
     "@types/bcrypt": "^5.0.2",
     "@types/lodash": "^4.17.15",
     "@types/node": "^20",
@@ -44,7 +44,6 @@
     "eslint-plugin-react": "^7.37.3",
     "globals": "^15.14.0",
     "postcss": "^8",
-    "prisma": "^6.1.0",
     "tailwindcss": "^3.4.1",
     "ts-node": "^10.9.2",
     "typescript": "^5",

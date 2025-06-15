@@ -1,0 +1,23 @@
+.headerContainer {
+  @apply flex flex-col sm:flex-row sm:items-center gap-4;
+}
+
+.filterButton {
+  @apply flex items-center px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-[46px] text-sm font-medium text-gray-700;
+}
+
+.chevronIcon {
+  @apply w-4 h-4 ml-2 transition-transform;
+}
+
+.dropdownContent {
+  @apply flex flex-col;
+}
+
+.dropdownButton {
+  @apply px-3 py-2 hover:bg-gray-50 text-left text-sm;
+}
+
+.filterDropdownWrapper {
+  @apply relative w-40;
+}

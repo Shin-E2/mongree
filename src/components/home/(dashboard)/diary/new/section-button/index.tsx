@@ -4,12 +4,14 @@ import {
 } from "@/commons/components/button-icon";
 import { useFormContext } from "react-hook-form";
 import type { DiaryNewFormType } from "../form.schema";
+import styles from "./styles.module.css";
 
 export interface IDiaryNewSectionButton {
   currentStep: number;
   handleNext: () => void;
   handlePrev: () => void;
   isLastStep: boolean;
+  isSubmitting: boolean;
 }
 
 export default function DiaryNewSectionButton({
@@ -17,16 +19,21 @@ export default function DiaryNewSectionButton({
   handleNext,
   handlePrev,
   isLastStep,
+  isSubmitting,
 }: IDiaryNewSectionButton) {
   const { watch } = useFormContext<DiaryNewFormType>();
   const emotions = watch("emotions") || [];
   console.log("emotions", emotions);
 
   return (
-    <div className="flex justify-center mt-8 space-x-4">
+    <div className={styles.buttonContainer}>
       {currentStep > 0 && <ButtonIconPrev onClick={handlePrev} type="button" />}
       {!isLastStep && emotions.length > 0 && (
-        <ButtonIconNext onClick={handleNext} type="button" />
+        <ButtonIconNext
+          onClick={handleNext}
+          type="button"
+          disabled={isSubmitting}
+        />
       )}
     </div>
   );

@@ -1,8 +1,7 @@
 "use server";
 
-import db from "@/lib/db";
 import type { IcheckPasswordsProps } from "./types";
-import { z } from "zod";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 // 비밀번호 확인 함수
 export const checkPasswords = async ({
@@ -11,23 +10,22 @@ export const checkPasswords = async ({
 }: IcheckPasswordsProps) => password === passwordConfirm;
 
 // 이메일 중복 검사
-export const checkEmail = async (
-  { email }: { email: string },
-  ctx: z.RefinementCtx
-) => {
-  const user = await db.user.findUnique({
-    where: { email },
-    select: { id: true },
-  });
+export const checkEmail = async ({
+  email }: { email: string }) => {
+  const supabaseAdmin = createAdminClient();
+  const { data, error } = await supabaseAdmin.auth.admin.listUsers({ perPage: 100 });
+
+  if (error) {
+    console.error("Supabase 이메일 중복 확인 에러:", error);
+    return { success: false, message: "이메일 확인 중 오류가 발생했습니다." };
+  }
+
+  const user = data?.users.find(user => user.email === email);
+
   if (user) {
-    ctx.addIssue({
-      code: "custom",
-      message: "이 이메일은 이미 사용중 입니다.",
-      path: ["email"],
-      fatal: true,
-    });
-    return z.NEVER;
+    return { success: false, message: "이미 사용 중인 이메일입니다." };
   } else {
     console.log("이메일 사용 가능");
+    return { success: true };
   }
 };

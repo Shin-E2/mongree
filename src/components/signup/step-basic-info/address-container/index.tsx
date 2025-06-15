@@ -16,7 +16,7 @@ export default function SignupStepBasicInfoAddressContainer({
     useSignupStepBasicInfoAddressContainer({ isAddress, name });
 
   return (
-    <section>
+    <section className={styles.section}>
       {/* 우편번호 */}
       <div className={styles.section_zonecode}>
         <InputStandardSFull

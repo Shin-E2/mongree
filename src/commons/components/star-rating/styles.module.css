@@ -1,0 +1,19 @@
+.container {
+  @apply flex items-center;
+}
+
+.star {
+  @apply text-yellow-400;
+}
+
+.filled {
+  @apply fill-current;
+}
+
+.empty {
+  @apply fill-transparent;
+}
+
+.clickable {
+  @apply cursor-pointer;
+}

@@ -4,11 +4,13 @@ import {
   deleteImagesFromS3,
   uploadMultipleImages,
 } from "@/commons/utils/upload-images";
-import db from "@/lib/db";
-import { getUser } from "@/lib/get-user";
-import type { CreateDiaryRelationsParams } from "./types";
+import { createClient } from "@/lib/supabase-server";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
+import { getUser } from "@/lib/get-user";
+import { revalidatePath } from "next/cache";
+import { formatZodError } from "@/commons/utils/errorFormatters";
 
+// 폼 데이터 추출 함수
 function extractFormData(formData: FormData) {
   const title = formData.get("title");
   const content = formData.get("content");
@@ -21,7 +23,6 @@ function extractFormData(formData: FormData) {
     throw new Error("제목과 내용은 필수 입력사항입니다.");
   }
 
-  // 이미지 파일 유효성 검사 추가
   const validImageFiles = imageFiles.filter((file): file is File => {
     return (
       file instanceof File &&
@@ -39,157 +40,185 @@ function extractFormData(formData: FormData) {
   };
 }
 
-// 관계 데이터를 저장하는 함수
-async function createDiaryRelations({
-  tx,
-  diaryId,
-  data,
-}: CreateDiaryRelationsParams) {
-  // 이미지 정보 저장
-  const imagePromises =
-    data.images?.map((url, index) =>
-      tx.diaryImage.create({
-        data: { url, order: index, diaryId },
-      })
-    ) ?? [];
+// 태그 처리 함수 (개선됨)
+async function processTagsAndGetIds(supabase: any, tagNames: string[]): Promise<string[]> {
+  if (tagNames.length === 0) return [];
 
-  // 감정 연결
-  const emotionPromises = data.emotions.map((emotionId) =>
-    tx.diaryEmotion.create({
-      data: { diaryId, emotionId },
-    })
-  );
+  const tagIds: string[] = [];
 
-  // 태그 처리
-  const tagPromises = data.tags.map(async (tagName) => {
-    const tag = await tx.tag.upsert({
-      where: { name: tagName },
-      create: { name: tagName },
-      update: {},
-    });
+  for (const tagName of tagNames) {
+    const trimmedName = tagName.trim();
+    if (!trimmedName) continue; // 빈 태그 스킵
+    
+    // 기존 태그 확인
+    const { data: existingTag } = await supabase
+      .from('tags')
+      .select('id')
+      .eq('name', trimmedName)
+      .single();
 
-    return tx.diaryTag.create({
-      data: { diaryId, tagId: tag.id },
-    });
-  });
+    if (existingTag) {
+      tagIds.push(existingTag.id);
+    } else {
+      // 새 태그 생성
+      const { data: newTag, error } = await supabase
+        .from('tags')
+        .insert({ name: trimmedName })
+        .select('id')
+        .single();
 
-  await Promise.all([...imagePromises, ...emotionPromises, ...tagPromises]);
+      if (error) {
+        throw new Error(`태그 "${trimmedName}" 생성 실패: ${error.message}`);
+      }
+      tagIds.push(newTag.id);
+    }
+  }
+
+  return tagIds;
 }
 
-// 일기 생성을 처리하는 메인 함수
+// 데이터베이스 정리 함수 (간소화됨)
+async function cleanupDiaryData(supabase: any, diaryId: string, imageUrls: string[]): Promise<void> {
+  try {
+    // 이미지 파일 삭제 (S3)
+    if (imageUrls.length > 0) {
+      await deleteImagesFromS3(imageUrls);
+    }
+
+    // 일기 삭제 (CASCADE로 관련 데이터 자동 삭제)
+    await supabase.from('diaries').delete().eq('id', diaryId);
+    
+  } catch (cleanupError) {
+    console.error("데이터 정리 중 오류:", cleanupError);
+  }
+}
+
+// 메인 일기 생성 함수 (이미지 우선 처리 방식)
 export async function createDiary(formData: FormData) {
-  let uploadedImageUrls: string[] = [];
+  const supabase = await createClient();
 
   try {
     const user = await getUser();
-    const extractedData = extractFormData(formData);
-
-    const diary = await db.$transaction(async (tx) => {
-      // 1. 이미지 업로드
-      if (extractedData.imageFiles.length > 0) {
-        uploadedImageUrls = await uploadMultipleImages(
-          extractedData.imageFiles
-        );
-      }
-
-      // 2. 데이터 검증
-      const validationResult = await DiaryNewFormSchema.safeParseAsync({
-        ...extractedData,
-        images: uploadedImageUrls,
-      });
-
-      if (!validationResult.success) {
-        throw new Error("데이터 검증 실패");
-      }
-
-      // 3. 먼저 일기 기본 정보 생성
-      const newDiary = await tx.diary.create({
-        data: {
-          title: validationResult.data.title,
-          content: validationResult.data.content,
-          isPrivate: validationResult.data.isPrivate,
-          userId: user.id,
-        },
-      });
-
-      // 4. 일기가 생성된 후에 이미지 정보 저장
-      if (uploadedImageUrls.length > 0) {
-        await Promise.all(
-          uploadedImageUrls.map((url, index) =>
-            tx.diaryImage.create({
-              data: {
-                url,
-                order: index,
-                diaryId: newDiary.id, // 생성된 일기의 ID 사용
-              },
-            })
-          )
-        );
-      }
-
-      // 5. 감정 연결
-      await Promise.all(
-        validationResult.data.emotions.map((emotionId) =>
-          tx.diaryEmotion.create({
-            data: {
-              diaryId: newDiary.id,
-              emotionId,
-            },
-          })
-        )
-      );
-
-      // 6. 태그 처리
-      if (validationResult.data.tags.length > 0) {
-        // 중복 태그 제거
-        const uniqueTags = [...new Set(validationResult.data.tags)];
-
-        await Promise.all(
-          uniqueTags.map(async (tagName) => {
-            const tag = await tx.tag.upsert({
-              where: { name: tagName },
-              create: { name: tagName },
-              update: {},
-            });
-
-            // create 대신 upsert 사용
-            return tx.diaryTag.upsert({
-              where: {
-                diaryId_tagId: {
-                  // 복합 키 사용
-                  diaryId: newDiary.id,
-                  tagId: tag.id,
-                },
-              },
-              create: {
-                diaryId: newDiary.id,
-                tagId: tag.id,
-              },
-              update: {}, // 이미 존재하면 업데이트하지 않음
-            });
-          })
-        );
-      }
-
-      // 7. 생성된 일기 반환
-      return newDiary;
-    });
-
-    console.log("일기 저장 성공");
-    return { success: true, diary };
-  } catch (error) {
-    // 에러 발생 시 이미지 정리
-    if (uploadedImageUrls.length > 0) {
-      await deleteImagesFromS3(uploadedImageUrls);
+    if (!user) {
+      throw new Error("로그인이 필요합니다.");
     }
 
-    const errorMessage =
-      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
-    console.error("일기 저장 중 오류:", { message: errorMessage });
+    const extractedData = extractFormData(formData);
+
+    // 🚀 1단계: 이미지 업로드 먼저 처리 (실패 확률 높음)
+    let uploadedImageUrls: string[] = [];
+    if (extractedData.imageFiles.length > 0) {
+      uploadedImageUrls = await uploadMultipleImages(extractedData.imageFiles);
+    }
+
+    // 🔍 2단계: 데이터 검증
+    const validationResult = await DiaryNewFormSchema.safeParseAsync({
+      ...extractedData,
+      images: uploadedImageUrls,
+    });
+
+    if (!validationResult.success) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls);
+      }
+      return {
+        success: false,
+        error: "데이터 검증 실패",
+        details: formatZodError(validationResult.error.format()),
+      };
+    }
+
+    // 📝 3단계: 데이터베이스 작업 (순차 처리)
+    const { data: newDiary, error: diaryError } = await supabase
+      .from('diaries')
+      .insert({
+        title: validationResult.data.title,
+        content: validationResult.data.content,
+        is_private: validationResult.data.isPrivate,
+        user_id: user.id,
+      })
+      .select()
+      .single();
+
+    if (diaryError) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls);
+      }
+      throw new Error(`일기 생성 실패: ${diaryError.message}`);
+    }
+
+    // 감정 연결
+    if (validationResult.data.emotions.length > 0) {
+      const { error: emotionError } = await supabase
+        .from('diary_emotions')
+        .insert(
+          validationResult.data.emotions.map((emotionId) => ({
+            diary_id: newDiary.id,
+            emotion_id: emotionId,
+          }))
+        );
+
+      if (emotionError) {
+        await cleanupDiaryData(supabase, newDiary.id, uploadedImageUrls);
+        throw new Error(`감정 연결 실패: ${emotionError.message}`);
+      }
+    }
+
+    // 태그 처리 및 연결
+    if (validationResult.data.tags.length > 0) {
+      const tagIds = await processTagsAndGetIds(supabase, validationResult.data.tags);
+      
+      if (tagIds.length > 0) {
+        const { error: tagError } = await supabase
+          .from('diary_tags')
+          .insert(
+            tagIds.map((tagId) => ({
+              diary_id: newDiary.id,
+              tag_id: tagId,
+            }))
+          );
+
+        if (tagError) {
+          await cleanupDiaryData(supabase, newDiary.id, uploadedImageUrls);
+          throw new Error(`태그 연결 실패: ${tagError.message}`);
+        }
+      }
+    }
+
+    // 이미지 정보 저장
+    if (uploadedImageUrls.length > 0) {
+      const { error: imageError } = await supabase
+        .from('diary_images')
+        .insert(
+          uploadedImageUrls.map((url, index) => ({
+            diary_id: newDiary.id,
+            image_url: url,
+            sort_order: index + 1,
+            file_name: extractedData.imageFiles[index]?.name || `image_${index + 1}`,
+            mime_type: extractedData.imageFiles[index]?.type || 'image/jpeg',
+            file_size: extractedData.imageFiles[index]?.size || null,
+          }))
+        );
+
+      if (imageError) {
+        await cleanupDiaryData(supabase, newDiary.id, uploadedImageUrls);
+        throw new Error(`이미지 정보 저장 실패: ${imageError.message}`);
+      }
+    }
+
+    // 성공 시 캐시 갱신
+    revalidatePath('/diaries');
+    revalidatePath('/dashboard');
+
+    return { success: true, diary: newDiary };
+
+  } catch (error) {
+    const errorMessage = error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
+    console.error("일기 저장 중 오류:", errorMessage);
 
     return {
       success: false,
-      error: "일기 저장에 실패했습니다",
+      error: errorMessage,
       details: errorMessage,
     };
   }

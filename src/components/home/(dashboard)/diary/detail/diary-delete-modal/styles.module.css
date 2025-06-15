@@ -1,0 +1,23 @@
+.modalContent {
+  @apply p-4;
+}
+
+.message {
+  @apply mb-4;
+}
+
+.errorMessage {
+  @apply text-red-500 text-sm mb-4;
+}
+
+.buttonContainer {
+  @apply flex justify-end gap-2;
+}
+
+.cancelButton {
+  @apply px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300;
+}
+
+.deleteButton {
+  @apply px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50;
+}

@@ -1,0 +1,14 @@
+.container {
+  @apply flex flex-nowrap overflow-x-auto gap-2 py-1;
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  &::-webkit-scrollbar {
+    display: none;
+  }
+  /* Hide scrollbar for IE, Edge and Firefox */
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.imageThumbnail {
+  @apply w-16 h-16 rounded-lg flex-shrink-0;
+}

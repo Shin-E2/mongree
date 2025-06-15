@@ -39,3 +39,7 @@
     @apply block; /* sm 이상에서는 보이도록 설정 */
   }
 }
+
+.emotionImage {
+  @apply w-16 h-16 mb-3;
+}

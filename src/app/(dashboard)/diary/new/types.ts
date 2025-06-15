@@ -1,9 +1,6 @@
-import { PrismaClient } from "@prisma/client";
+import { Database } from "@/lib/supabase.types";
 
-export type TransactionClient = Omit<
-  PrismaClient,
-  "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends"
->;
+export type TransactionClient = Database['public']['Tables'];
 
 // 관계 데이터 타입 정의
 export interface DiaryRelationsData {

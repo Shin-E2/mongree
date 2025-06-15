@@ -1,0 +1,15 @@
+.emptyMessage {
+  @apply py-12 text-center text-gray-500;
+}
+
+.container {
+  @apply divide-y;
+}
+
+.replyContainer {
+  @apply ml-6 md:ml-12;
+}
+
+.replyItem {
+  @apply ml-5 md:ml-12 border-gray-100 p-4 pt-0;
+}

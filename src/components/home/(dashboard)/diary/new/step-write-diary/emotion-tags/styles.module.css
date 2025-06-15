@@ -1,0 +1,11 @@
+.container {
+  @apply flex flex-wrap gap-2;
+}
+
+.emotionTag {
+  @apply inline-flex items-center px-3 py-1 rounded-full transition-all duration-200;
+}
+
+.emotionImage {
+  @apply w-4 h-4 mr-1;
+}

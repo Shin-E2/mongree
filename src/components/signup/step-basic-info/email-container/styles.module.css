@@ -1,0 +1,27 @@
+.container {
+  @apply flex items-end gap-2;
+}
+
+.inputWrapper {
+  @apply flex-1;
+}
+
+.successMessage {
+  @apply text-green-600 text-xs ml-2 mt-1;
+}
+
+.errorMessage {
+  @apply text-red-600 text-xs ml-2 mt-1;
+}
+
+.verifyButton {
+  @apply transition-all duration-200;
+}
+
+.verifyButton:disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
+
+.verifyButton:hover:not(:disabled) {
+  @apply opacity-80;
+}

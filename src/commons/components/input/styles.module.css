@@ -16,5 +16,17 @@
 }
 
 .search {
-  @apply w-full px-4 py-2.5 pl-10 bg-white border rounded-lg focus:ring-2 focus:ring-indigo-600;
+  @apply w-full px-4 py-2.5 bg-white border rounded-lg focus:ring-2 focus:ring-indigo-600;
+}
+
+.inputWrapper {
+  @apply relative w-full;
+}
+
+.iconWrapper {
+  @apply absolute top-1/2 left-3 -translate-y-1/2 text-gray-400 z-10;
+}
+
+.iconBase {
+  @apply w-5 h-5;
 }

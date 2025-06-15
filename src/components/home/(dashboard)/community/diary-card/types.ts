@@ -1,9 +1,12 @@
-import type { User, DiaryEmpathy } from "@prisma/client";
+import type {
+  Database,
+  Tables
+} from "@/lib/supabase.types";
 import type { PublicDiary } from "@/app/(dashboard)/community/types";
 
 export interface PublicDiaryCardProps {
   diary: PublicDiary;
-  loginUser: Pick<User, "id" | "name" | "profileImage"> | null;
+  loginUser: Pick<Database['public']['Tables']['profiles']['Row'], 'user_id' | 'nickname' | 'profile_image'> | null;
 }
 
 export interface PublicEmpathyActionResult {
@@ -11,7 +14,7 @@ export interface PublicEmpathyActionResult {
   error?: string;
   empathies?: {
     id: string;
-    user: Pick<User, "id" | "name" | "profileImage">;
+    user: Pick<Database['public']['Tables']['profiles']['Row'], 'user_id' | 'profile_image'> | null;
     createdAt: Date;
   }[];
   count?: number;

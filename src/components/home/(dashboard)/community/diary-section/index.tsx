@@ -4,6 +4,9 @@ import { useState } from "react";
 import DiaryListSearchFilter from "@/components/home/(dashboard)/diary/list/search-filter";
 import type { PublicDiary } from "@/app/(dashboard)/community/types";
 import CommunityDiaryList from "../diary-list";
+import { FilterDropdown } from "@/commons/components/filter-dropdown";
+import { ChevronDown } from "lucide-react";
+import styles from "./styles.module.css";
 
 export default function CommunityDiarySection({
   initialDiaries,
@@ -25,22 +28,37 @@ export default function CommunityDiarySection({
 
   return (
     <>
-      <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className={styles.headerContainer}>
         <DiaryListSearchFilter
           setSearchTerm={setSearchTerm}
           selectedEmotions={selectedEmotions}
           handleEmotionToggle={handleEmotionToggle}
         />
-        <div className="relative w-40">
-          <select
-            className="pl-3 pr-6 py-2 rounded-lg border bg-white text-sm appearance-none focus:ring-2 focus:ring-indigo-600 w-full"
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-          >
-            <option value="latest">최신순</option>
-            <option value="popular">인기순</option>
-          </select>
-        </div>
+        <FilterDropdown
+          trigger={
+            <button className={styles.filterButton}>
+              {sortBy === "latest" ? "최신순" : "인기순"}
+              <ChevronDown className={styles.chevronIcon} />
+            </button>
+          }
+          content={
+            <div className={styles.dropdownContent}>
+              <button
+                className={styles.dropdownButton}
+                onClick={() => setSortBy("latest")}
+              >
+                최신순
+              </button>
+              <button
+                className={styles.dropdownButton}
+                onClick={() => setSortBy("popular")}
+              >
+                인기순
+              </button>
+            </div>
+          }
+          className={styles.filterDropdownWrapper}
+        />
       </div>
       {/* 일기 리스트 */}
       <CommunityDiaryList diaries={diaries} />

@@ -1,44 +1,55 @@
 import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 import { deleteDiary, toggleEmpathy } from "./action";
-import type { IDiaryDetailContentProps } from "./types";
+import { IDiaryDetailProps, EmpathyRow, EmpathyWithUser } from "./types";
+import { Database } from "@/lib/supabase.types";
 
 export default function useDiaryDetail({
   diary,
   loginUser,
-}: IDiaryDetailContentProps & { onDeleted?: () => void }) {
+}: IDiaryDetailProps & { onDeleted?: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const isOwner = diary.user.id === loginUser?.id;
+  const isOwner = diary.user?.user_id === loginUser?.user_id;
   const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
 
   // 공감 관련 상태 관리
-  const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic(
-    diary.empathies,
-    (state, newEmpathy: (typeof diary.empathies)[0]) => {
-      if (state.some((e) => e.user.id === newEmpathy.user.id)) {
-        return state.filter((e) => e.user.id !== newEmpathy.user.id);
+  const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic<
+    EmpathyWithUser[]
+  >(
+    (diary.empathies || []).map((e) => ({
+      ...e,
+      user: diary.user?.user_id === e.user_id ? diary.user : null, // 로그인 사용자 정보 연결 (임시)
+    })) as EmpathyWithUser[], // 초기 diary.empathies도 타입에 맞게 매핑
+    (state, newEmpathy: EmpathyWithUser) => {
+      if (state.some((e) => e.user?.id === newEmpathy.user?.id)) {
+        return state.filter((e) => e.user?.id !== newEmpathy.user?.id);
       }
       return [newEmpathy, ...state.slice(0, 2)]; // 최대 3개만 표시
     }
   );
 
-  const isEmpathized = diary.empathies.some(
-    (empathy) => empathy.user.id === loginUser?.id
+  const isEmpathized = optimisticEmpathies.some(
+    (empathy) => empathy.user?.id === loginUser?.user_id
   );
 
   const handleEmpathyToggle = async () => {
     if (!loginUser) return;
 
     startTransition(async () => {
-      // 낙관적 업데이트
-      const optimisticEmpathy = {
+      const optimisticEmpathy: EmpathyWithUser = {
         id: "temp-id",
-        user: loginUser,
-        createdAt: new Date(),
+        diary_id: diary.id, // diary_id 추가
+        user_id: loginUser.user_id, // user_id 추가
+        created_at: new Date().toISOString(),
+        user: {
+          id: loginUser.user_id, // user_id를 id로 매핑
+          profile_image: loginUser.profile_image,
+        },
       };
+
       addOptimisticEmpathy(optimisticEmpathy);
 
       const result = await toggleEmpathy(diary.id);
@@ -51,18 +62,16 @@ export default function useDiaryDetail({
 
   const handleDelete = async () => {
     if (!isOwner) return;
-    // 서버 액션에서 redirect
-    // 서버 액션에서 redirect가 실행되기 전에 UI가 다시 렌더링되는 것을 방지
-    setIsDeleted(true); // 미리 삭제된 상태
+    setIsDeleted(true);
     await deleteDiary(diary.id);
   };
 
-  // 총 댓글 수 계산 (최상위 댓글 + 대댓글)
+  // 총 댓글 수 계산 (최상위 댓글 + 대댓글) - nullish coalescing 적용
   const getTotalCommentCount = () => {
-    let count = diary.comments.length;
-    diary.comments.forEach((comment) => {
+    let count = (diary.comments ?? []).length;
+    (diary.comments ?? []).forEach((comment) => {
       if (comment.replies) {
-        count += comment.replies.length;
+        count += (comment.replies ?? []).length;
       }
     });
     return count;

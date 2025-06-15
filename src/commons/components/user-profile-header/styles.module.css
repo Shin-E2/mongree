@@ -1,0 +1,19 @@
+.container {
+  @apply flex items-center space-x-3;
+}
+
+.imageWrapper {
+  @apply relative w-10 h-10;
+}
+
+.imageClass {
+  @apply w-full h-full object-cover rounded-full;
+}
+
+.userInfo {
+  @apply text-sm font-semibold text-gray-800;
+}
+
+.createdAt {
+  @apply text-xs text-gray-500;
+}

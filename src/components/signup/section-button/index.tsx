@@ -7,8 +7,8 @@ export default function SignupSectionButton({
   handlePrev,
   isLastStep,
   handleNext,
-}: // isNextButtonEnabled,
-ISignupSectionButtonProps) {
+  isNextButtonEnabled = true,
+}: ISignupSectionButtonProps) {
   return (
     <div className={styles.div}>
       {currentStep > 0 && (
@@ -24,7 +24,7 @@ ISignupSectionButtonProps) {
         className={currentStep === 0 ? "ml-auto" : ""} // 동적으로 스타일을 적용하기 위한 className
         title={isLastStep ? "가입완료" : "다음"}
         onClick={!isLastStep ? handleNext : undefined} // 마지막 단계에서는 onClick을 제거
-        // disabled={!isNextButtonEnabled}
+        disabled={!isNextButtonEnabled}
       />
     </div>
   );

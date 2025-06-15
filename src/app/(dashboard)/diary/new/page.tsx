@@ -8,53 +8,51 @@ import DiaryNewHeader from "@/components/home/(dashboard)/diary/new/header";
 import { FormDiaryNew } from "@/commons/components/form";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { memo } from "react";
-
-// 일기 작성 단계 컴포넌트를 매번 재렌더링하지 않도록 메모이제이션
-const MemoizedDiaryNewStepComponent = memo(
-  ({ Component }: { Component: React.ComponentType<any> }) => {
-    return <Component />;
-  }
-);
+import { SmartModal } from "@/commons/components/modal";
+import styles from "./styles.module.css";
 
 function DiaryNewPage() {
   const {
     currentStep,
     progress,
     isLastStep,
+    isSubmitting,
+    modalState,
     handleNext,
     handlePrev,
     DiaryNewStepComponent,
     onSubmit,
+    closeModal,
   } = useDiaryNewPage();
 
   return (
-    <FormDiaryNew
-      onSubmit={onSubmit}
-      resolver={zodResolver(DiaryNewFormSchema)}
-    >
-      {/* Header */}
-      <DiaryNewHeader />
+    <>
+      <FormDiaryNew
+        onSubmit={onSubmit}
+        resolver={zodResolver(DiaryNewFormSchema)}
+      >
+        <DiaryNewHeader />
 
-      <div className="pt-16 pb-12 px-6 max-w-5xl mx-auto">
-        {/* Progress Bar */}
-        <ProgressBarStandardSFull progress={progress} />
+        <div className={styles.container}>
+          <ProgressBarStandardSFull progress={progress} />
 
-        {/* 현재 컴포넌트 */}
-        <CardStandardFullFull>
-          <MemoizedDiaryNewStepComponent Component={DiaryNewStepComponent} />
-        </CardStandardFullFull>
+          <CardStandardFullFull>
+            <DiaryNewStepComponent />
+          </CardStandardFullFull>
 
-        {/* 버튼 */}
-        <DiaryNewSectionButton
-          currentStep={currentStep}
-          handleNext={handleNext}
-          handlePrev={handlePrev}
-          isLastStep={isLastStep}
-        />
-      </div>
-    </FormDiaryNew>
+          <DiaryNewSectionButton
+            currentStep={currentStep}
+            handleNext={handleNext}
+            handlePrev={handlePrev}
+            isLastStep={isLastStep}
+            isSubmitting={isSubmitting}
+          />
+        </div>
+      </FormDiaryNew>
+
+      <SmartModal {...modalState} onClose={closeModal} />
+    </>
   );
 }
 
-export default memo(DiaryNewPage);
+export default DiaryNewPage;

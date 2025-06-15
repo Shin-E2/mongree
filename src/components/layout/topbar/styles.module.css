@@ -1,0 +1,39 @@
+.headerContainer {
+  @apply fixed top-0 left-0 md:left-64 right-0 h-16 bg-white border-b border-gray-200 z-10;
+}
+
+.headerContentWrapper {
+  @apply flex items-center justify-between h-full px-4 md:px-8;
+}
+
+.searchAreaWrapper {
+  @apply flex-1 max-w-2xl;
+}
+
+.searchBarContainer {
+  @apply relative;
+}
+
+.buttonsWrapper {
+  @apply flex items-center space-x-2 md:space-x-4;
+}
+
+.themeToggleButton {
+  @apply p-2 text-gray-500 rounded-lg hover:bg-gray-100;
+}
+
+.iconBase {
+  @apply w-5 h-5;
+}
+
+.diaryWriteButton {
+  @apply flex items-center px-3 md:px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700;
+}
+
+.plusIcon {
+  @apply w-5 h-5 md:mr-2;
+}
+
+.diaryWriteButtonText {
+  @apply hidden md:inline;
+}

@@ -1,0 +1,167 @@
+.mainContainer {
+  @apply flex-1 bg-gray-50 min-h-screen mb-20;
+}
+
+.profileSection {
+  @apply bg-white border-b;
+}
+
+.profileContentWrapper {
+  @apply max-w-7xl mx-auto px-4 md:px-8 py-4 md:py-8;
+}
+
+.profileLayout {
+  @apply flex flex-col md:flex-row items-start gap-4 md:gap-8;
+}
+
+.profileImageContainer {
+  @apply w-32 h-32 md:w-48 md:h-48 rounded-lg overflow-hidden mx-auto md:mx-0;
+}
+
+.profileImage {
+  @apply w-full h-full object-cover;
+}
+
+.profileInfoWrapper {
+  @apply flex-1 w-full;
+}
+
+.profileHeader {
+  @apply flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-4;
+}
+
+.counselorName {
+  @apply text-xl md:text-2xl font-bold;
+}
+
+.starRatingWrapper {
+  @apply flex items-center;
+}
+
+.ratingText {
+  @apply ml-1 font-medium;
+}
+
+.reviewCountText {
+  @apply ml-1 text-gray-500;
+}
+
+.description {
+  @apply text-sm md:text-base text-gray-600 mb-6;
+}
+
+.infoGrid {
+  @apply grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm md:text-base;
+}
+
+.iconBase {
+  @apply w-5 h-5 mr-2;
+}
+
+.mainContentSection {
+  @apply max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-12;
+}
+
+.mainContentGrid {
+  @apply grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8;
+}
+
+.introSectionColumn {
+  @apply col-span-1 md:col-span-2 order-1;
+}
+
+.introCard {
+  @apply bg-white rounded-lg shadow-sm p-4 md:p-6;
+}
+
+.introTitle {
+  @apply text-lg font-semibold mb-4;
+}
+
+.introContent {
+  @apply text-sm md:text-base text-gray-600;
+}
+
+.sidebarColumn {
+  @apply col-span-1 order-3 md:order-2 space-y-6 md:sticky md:top-16;
+}
+
+.mapReservationCard {
+  @apply bg-white rounded-lg shadow-sm p-4 md:p-6;
+}
+
+.mapPlaceholder {
+  @apply aspect-w-1 aspect-h-1 bg-yellow-200 rounded-lg mb-4 w-full h-48 md:h-64;
+}
+
+.reserveButton {
+  @apply w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors;
+}
+
+.reviewSectionColumn {
+  @apply col-span-1 md:col-span-2 order-3 md:order-2;
+}
+
+.reviewCard {
+  @apply bg-white rounded-lg shadow-sm p-4 md:p-6;
+}
+
+.reviewTitle {
+  @apply text-lg font-semibold;
+}
+
+.reviewListContainer {
+  @apply space-y-6;
+}
+
+.reviewItem {
+  @apply border-b pb-6 last:border-b-0;
+}
+
+.reviewHeader {
+  @apply flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2;
+}
+
+.reviewContent {
+  @apply text-sm md:text-base text-gray-600;
+}
+
+.reviewButtonContainer {
+  @apply flex flex-col gap-4 md:items-end;
+}
+
+.writeReviewButton {
+  @apply md:w-24 sm:w-auto px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors;
+}
+
+.reviewFormContainer {
+  @apply mb-8 border rounded-lg p-4 md:p-6 w-full;
+}
+
+.reviewFormTitle {
+  @apply text-lg font-medium mb-4;
+}
+
+.formSpaceY {
+  @apply space-y-4;
+}
+
+.formLabel {
+  @apply block text-sm font-medium text-gray-700 mb-1;
+}
+
+.textAreaInput {
+  @apply w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-500;
+}
+
+.formButtons {
+  @apply flex flex-row justify-end gap-2 space-x-3;
+}
+
+.cancelFormButton {
+  @apply w-full sm:w-auto px-4 py-2 text-sm text-gray-600 bg-gray-100 rounded-lg transition-colors;
+}
+
+.submitReviewButton {
+  @apply w-full sm:w-auto px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors;
+}

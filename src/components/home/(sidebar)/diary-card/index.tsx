@@ -1,8 +1,12 @@
+import { EmotionBadge } from "@/commons/components/emotion-badge";
+import { Emotion } from "@/mock/emotions";
+import styles from "./styles.module.css";
+
 interface IHomeDiaryCardProps {
   title: string;
   content: string;
   date: string;
-  emotion: string;
+  emotion: Emotion;
 }
 
 export default function HomeDiaryCard({
@@ -12,15 +16,15 @@ export default function HomeDiaryCard({
   emotion,
 }: IHomeDiaryCardProps) {
   return (
-    <div className="p-4 border rounded-lg hover:shadow-md transition-shadow">
-      <div className="flex items-center space-x-2 mb-3">
-        <div className="w-6 h-6 rounded-full">{emotion}</div>
-        <span className="font-medium">{title}</span>
+    <div className={styles.container}>
+      <div className={styles.header}>
+        <EmotionBadge emotion={emotion} className={styles.emotionBadge} />
+        <span className={styles.title}>{title}</span>
       </div>
-      <p className="text-gray-600 text-sm line-clamp-3">{content}</p>
-      <div className="flex justify-between items-center mt-4">
-        <span className="text-sm text-gray-500">{date}</span>
-        <button className="text-sm text-indigo-600">자세히</button>
+      <p className={styles.content}>{content}</p>
+      <div className={styles.footer}>
+        <span className={styles.date}>{date}</span>
+        <button className={styles.detailButton}>자세히</button>
       </div>
     </div>
   );

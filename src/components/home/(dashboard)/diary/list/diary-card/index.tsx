@@ -1,43 +1,54 @@
 "use client";
 
-import type { Diary } from "@/app/(dashboard)/diary/types";
 import { formatToTimeAgo } from "@/lib/utils";
-import { EMOTIONS, type Emotion } from "@/mock/emotions";
-import { Tag } from "lucide-react";
-import Image from "next/image";
+import { EMOTIONS } from "@/mock/emotions";
 import styles from "./styles.module.css";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
+import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
+import Image from "next/image";
+import type { DiaryWithRelations } from "@/components/home/(dashboard)/diary/detail/types";
+import { TagList } from "@/commons/components/tag-list";
+import { Database } from "@/lib/supabase.types";
 
-interface EmotionWithStyle extends Emotion {
-  id: string;
-  label: string;
-}
+type EmotionTable = Database["public"]["Tables"]["emotions"]["Row"];
 
-interface IDiaryListDiaryCardProps {
-  diary: Diary;
+interface DiaryListDiaryCardProps {
+  diary: DiaryWithRelations;
+  router: AppRouterInstance;
   onClick: () => void;
 }
 
 export function DiaryListDiaryCard({
   diary,
   onClick,
-}: IDiaryListDiaryCardProps) {
-  const emotions = diary.diaryEmotion.map(({ emotion }) => {
-    const emotionConfig = EMOTIONS.find((e) => e.id === emotion.id);
-    return {
-      ...emotion,
-      ...emotionConfig,
-    } as EmotionWithStyle;
-  });
+}: DiaryListDiaryCardProps) {
+  const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(
+    ({ emotion }: { emotion: EmotionTable }) => {
+      const emotionStyle =
+        EMOTION_STYLES[emotion.id as keyof typeof EMOTION_STYLES];
+      return {
+        id: emotion.id,
+        label: emotion.label,
+        image: EMOTIONS.find((e) => e.id === emotion.id)?.image || "",
+        bgColor: emotionStyle?.bgColor || "bg-gray-100",
+        borderColor: emotionStyle?.borderColor || "border-gray-400",
+        textColor: emotionStyle?.textColor || "text-gray-800",
+      };
+    }
+  );
 
   return (
     <div onClick={onClick} className={`${styles.container} group`}>
       {/* 이미지 영역 */}
-      {diary.images.length > 0 && (
+      {diary.images && diary.images.length > 0 && (
         <div className={styles.image}>
-          <img
-            src={diary.images[0].url}
+          <Image
+            src={diary.images[0].image_url}
             alt="일기 이미지"
-            className="object-cover w-full h-full group-hover:scale-105 transition-transform duration-300"
+            className={styles.imageClass}
+            width={300}
+            height={200}
           />
           {diary.images.length > 1 && (
             <div className={styles.imageMore}>+{diary.images.length - 1}</div>
@@ -46,75 +57,37 @@ export function DiaryListDiaryCard({
       )}
 
       {/* 감정 뱃지 */}
-      <div className={styles.emotionList}>
-        {emotions.length > 3 ? (
-          <div className="flex items-center">
-            <div className="flex -space-x-2">
-              {emotions.slice(0, 3).map((emotion) => (
-                <div
-                  key={emotion.id}
-                  className={`${styles.emotionBadge} ${emotion.bgColor}`}
-                >
-                  <img
-                    src={emotion.image}
-                    alt={emotion.label}
-                    className="w-5 h-5"
-                  />
-                </div>
-              ))}
-            </div>
-            <span className={styles.emotionMore}>
-              외 {emotions.length - 3}개
-            </span>
-          </div>
-        ) : (
-          <div className="flex flex-wrap gap-1.5 h-full items-center">
-            {emotions.map((emotion) => (
-              <span
-                key={emotion.id}
-                className={`flex items-center px-2.5 py-1 rounded-full text-xs ${emotion.bgColor} ${emotion.textColor}`}
-              >
-                <Image
-                  src={emotion.image}
-                  alt={emotion.label}
-                  width={100}
-                  height={100}
-                  className="w-4 h-4 mr-1"
-                />
-                {emotion.label}
-              </span>
-            ))}
-          </div>
-        )}
-      </div>
+      {emotionsForBadgeList.length > 0 && (
+        <EmotionBadgeList
+          emotions={emotionsForBadgeList}
+          className={styles.emotionList}
+        />
+      )}
 
       {/* 컨텐츠 영역 */}
       <div className={styles.body}>
-        <div className="flex items-center justify-between mb-2">
+        <div className={styles.contentHeader}>
           <h3 className={styles.title}>{diary.title}</h3>
           <time className={styles.date}>
-            {formatToTimeAgo(diary.createdAt.toISOString())}
+            {diary.created_at
+              ? formatToTimeAgo(new Date(diary.created_at).toISOString())
+              : "-"}
           </time>
         </div>
         <p className={styles.content}>{diary.content}</p>
-        {diary.tags.length > 0 && (
+        {(diary.tags ?? []).length > 0 && (
           <div className={styles.tagList}>
-            {diary.tags.map(({ tag }) => (
-              <span key={tag.id} className={styles.tagItem}>
-                <Tag className={styles.tagIcon} />
-                {tag.name}
-              </span>
-            ))}
+            <TagList tags={(diary.tags ?? []).map((t) => ({ tag: t.tag }))} />
           </div>
         )}
         <div className={styles.footer}>
           <div className={styles.privacy}>
             <span
               className={`${styles.privacyDot} ${
-                diary.isPrivate ? "bg-red-500" : "bg-green-500"
+                diary.is_private ? styles.privacyDotRed : styles.privacyDotGreen
               }`}
             />
-            {diary.isPrivate ? "비공개" : "공개"}
+            {diary.is_private ? "비공개" : "공개"}
           </div>
         </div>
       </div>

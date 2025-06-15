@@ -1,0 +1,19 @@
+.container {
+  @apply col-span-12 bg-white rounded-xl shadow-sm p-6;
+}
+
+.header {
+  @apply flex items-center justify-between mb-6;
+}
+
+.title {
+  @apply text-xl font-semibold;
+}
+
+.link {
+  @apply text-indigo-600 hover:text-indigo-700;
+}
+
+.grid {
+  @apply grid md:grid-cols-3 gap-6;
+}

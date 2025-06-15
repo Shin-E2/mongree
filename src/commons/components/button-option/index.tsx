@@ -7,6 +7,8 @@ import type {
   IButtonOptionEmotionProps,
 } from "./types";
 import Link from "next/link";
+import { ImageThumbnail } from "@/commons/components/image-thumbnail";
+import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 
 // 아이콘과 제목이 붙어있는 버튼 컴포넌트
 export default function ButtonOptionBase({
@@ -58,7 +60,7 @@ export default function ButtonOptionBase({
 
 // 홈에서 보이는 sidebar안에 있는 profileButton
 export const ButtonOptionByProfileButton = ({
-  imageUrl,
+  profile_image,
   ...rest
 }: IButtonOptionByProfileButtonProps) => {
   return (
@@ -67,11 +69,12 @@ export const ButtonOptionByProfileButton = ({
       cssprop={styles.profile}
       icon={
         <div className={styles.profile__div}>
-          <Image
-            src={imageUrl}
+          <ImageThumbnail
+            src={profile_image ?? DEFAULT_PROFILE_IMAGE}
             alt="profile-image"
             width={40}
             height={40}
+            shape="circle"
             className={styles.profile__div__image}
           />
         </div>
@@ -120,7 +123,7 @@ export const ButtonOptionEmotion = ({
           alt={emotion.label}
           width={16}
           height={16}
-          className="w-16 h-16 mb-3"
+          className={styles.emotionImage}
           priority
         />
       }

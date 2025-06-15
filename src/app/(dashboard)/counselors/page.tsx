@@ -4,96 +4,84 @@ import React from "react";
 
 import { HeaderStandardMFull } from "@/commons/components/header";
 import { MapPin, Search } from "lucide-react";
+import styles from "./styles.module.css";
 
 export default function CounselorListPage() {
   return (
-    <div className="flex-1 bg-gray-50 min-h-screen">
+    <div className={styles.mainContainer}>
       <HeaderStandardMFull
         title="상담사 찾기"
         description="신뢰할 수 있는 전문 상담사를 만나보세요"
       />
-      <div className="flex flex-col gap-6 px-4 py-6 md:mx-32">
+      <div className={styles.contentWrapper}>
         {/* search and Filter */}
-        <div className="px-8 py-6">
-          <div className="flex flex-wrap gap-4">
+        <div className={styles.searchFilterSection}>
+          <div className={styles.searchFilterFlexWrap}>
             {/* Search Bar */}
-            <div className="flex-1">
-              <div className="relative">
+            <div className={styles.searchBarWrapper}>
+              <div className={styles.searchBarRelative}>
                 <input
                   type="text"
                   placeholder="상담사 이름 또는 키워드로 검색"
-                  className="w-full pl-10 pr-4 py-2 rounded-lg border bg-white focus:ring-2 focus:ring-indigo-500"
+                  className={styles.searchInput}
                 />
-                <Search className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <Search className={styles.searchIcon} />
               </div>
             </div>
 
             {/* Location Filter */}
-            <div className="w-48">
-              <div className="relative">
-                <select className="w-full pl-10 pr-4 py-2 rounded-lg border bg-white focus:ring-2 focus:ring-indigo-500 appearance-none">
+            <div className={styles.locationFilterWrapper}>
+              <div className={styles.locationFilterRelative}>
+                <select className={styles.locationSelect}>
                   <option value="">지역 선택</option>
                   <option value="서울">서울</option>
                   <option value="경기">경기</option>
                   <option value="인천">인천</option>
                 </select>
-                <MapPin className="absolute left-3 top-2.5 h-5 w-5 text-gray-400" />
+                <MapPin className={styles.mapPinIcon} />
               </div>
             </div>
           </div>
         </div>
         {/* 상담사 리스트 */}
-        <div className="px-8 pb-12">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className={styles.counselorListSection}>
+          <div className={styles.counselorListGrid}>
             {[1, 2, 3, 4, 5, 6].map((index) => (
-              <div
-                className="bg-white rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow"
-                key={index}
-              >
-                <div className="relative">
+              <div className={styles.counselorCard} key={index}>
+                <div className={styles.cardImageRelative}>
                   <img
                     src="/image/emotions/happy.svg"
                     alt="상담사 프로필"
-                    className="w-full h-full object-cover"
+                    className={styles.cardImage}
                   />
-                  <div className="absolute top-3 right-3">
-                    <span className="px-2 py-1 bg-green-500 text-white text-xs rounded-full">
-                      상담 가능
-                    </span>
+                  <div className={styles.statusBadgeWrapper}>
+                    <span className={styles.statusBadge}>상담 가능</span>
                   </div>
                 </div>
 
-                <div className="p-6">
-                  <div className="flex items-center justify-between mb-3">
-                    <h3 className="text-lg font-semibold">김상담 상담사</h3>
-                    <div className="flex items-center">
-                      <span className="text-yellow-400">★</span>
-                      <span className="ml-1 text-sm font-medium">4.8</span>
+                <div className={styles.cardContent}>
+                  <div className={styles.cardHeader}>
+                    <h3 className={styles.counselorName}>김상담 상담사</h3>
+                    <div className={styles.starRatingWrapper}>
+                      <span className={styles.starIcon}>★</span>
+                      <span className={styles.ratingNumber}>4.8</span>
                     </div>
                   </div>
 
-                  <p className="text-gray-600 text-sm mb-4 line-clamp-2">
+                  <p className={styles.description}>
                     10년 경력의 전문 상담사입니다. 우울증, 불안장애, 대인관계 등
                     전문적인 상담을 제공합니다.
                   </p>
 
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    <span className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
-                      #우울증
-                    </span>
-                    <span className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
-                      #불안장애
-                    </span>
-                    <span className="px-2 py-1 text-xs bg-indigo-100 text-indigo-700 rounded-full">
-                      #대인관계
-                    </span>
+                  <div className={styles.tagsWrapper}>
+                    <span className={styles.tag}>#우울증</span>
+                    <span className={styles.tag}>#불안장애</span>
+                    <span className={styles.tag}>#대인관계</span>
                   </div>
 
-                  <div className="flex items-center justify-between pt-4 border-t">
-                    <div className="text-sm text-gray-500">서울시 강남구</div>
-                    <button className="px-4 py-2 text-sm text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">
-                      자세히 보기
-                    </button>
+                  <div className={styles.cardFooter}>
+                    <div className={styles.locationText}>서울시 강남구</div>
+                    <button className={styles.detailButton}>자세히 보기</button>
                   </div>
                 </div>
               </div>

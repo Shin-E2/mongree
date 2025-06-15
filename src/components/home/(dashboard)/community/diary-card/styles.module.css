@@ -1,57 +1,59 @@
-.container {
-  @apply bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full;
+.articleContainer {
+  @apply bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full relative;
 }
-.author {
-  @apply p-4 border-b flex items-center justify-between;
+
+.linkOverlay {
+  @apply absolute inset-0 z-0;
 }
-.profile {
-  @apply w-8 h-8 rounded-full bg-gray-200 overflow-hidden;
+
+.headerSection {
+  @apply p-4 border-b flex items-center justify-between relative z-10;
 }
-.nickname {
-  @apply font-medium text-sm;
-}
-.time {
-  @apply text-xs text-gray-500;
-}
-.emotionList {
+
+.emotionBadgeListWrapper {
   @apply flex items-center;
 }
-.emotionBadge {
-  @apply w-8 h-8 rounded-full flex items-center justify-center border-2 border-white;
+
+.contentSection {
+  @apply p-4 flex-1 flex flex-col relative z-10;
 }
-.emotionMore {
-  @apply ml-2 text-sm text-gray-500;
+
+.titleWrapper {
+  @apply flex items-center justify-between mb-2;
 }
-.body {
-  @apply p-4 flex-1 cursor-pointer flex flex-col;
-}
+
 .title {
   @apply font-medium text-base line-clamp-1;
 }
-.content {
+
+.description {
   @apply text-gray-600 text-sm line-clamp-2 mb-3;
 }
-.tagList {
+
+.tagListWrapper {
   @apply mt-auto mb-3;
 }
-.footer {
-  @apply px-4 py-3 bg-gray-50 border-t flex items-center justify-between;
+
+.footerSection {
+  @apply px-4 py-3 bg-gray-50 border-t flex items-center justify-between relative z-10;
 }
-.button {
+
+.interactionButtonsWrapper {
+  @apply flex items-center space-x-4;
+}
+
+.heartIconBase {
+  @apply w-4 h-4;
+}
+
+.heartIconEmpathized {
+  @apply text-indigo-700;
+}
+
+.commentButton {
   @apply flex items-center space-x-1 text-gray-500 hover:text-gray-700;
 }
-.buttonCount {
-  @apply text-xs;
-}
-.empathyList {
+
+.empathyUserListWrapper {
   @apply flex items-center space-x-2;
-}
-.empathyProfile {
-  @apply w-5 h-5 rounded-full border-2 border-white bg-gray-200 overflow-hidden;
-}
-.empathyText {
-  @apply text-xs text-gray-500;
-}
-.buttonActive {
-  @apply text-indigo-700;
 }

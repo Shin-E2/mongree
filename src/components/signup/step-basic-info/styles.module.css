@@ -1,5 +1,5 @@
 .section {
-  @apply flex flex-col gap-1.5;
+  @apply flex flex-col gap-3;
 }
 
 .section_div {

@@ -3,20 +3,38 @@
 import { useEffect, useState } from "react";
 import { checkNickname } from "./action";
 import { useFormContext } from "react-hook-form";
+import { SignupFormType } from "../form.schema";
+import { SignupTempFormData } from "@/app/(auth)/signup/hook";
 
-export default function useSignupStepBasicInfoNicknameContainer() {
+interface UseSignupStepBasicInfoNicknameContainerProps {
+  initialFormData: SignupTempFormData;
+  saveTempFormData: (data: Partial<SignupFormType>) => void;
+}
+
+export default function useSignupStepBasicInfoNicknameContainer({
+  initialFormData,
+  saveTempFormData,
+}: UseSignupStepBasicInfoNicknameContainerProps) {
   const {
     register,
     setError,
     clearErrors,
     watch,
     setValue,
+    getValues,
     formState: { errors, isSubmitting },
-  } = useFormContext();
+  } = useFormContext<SignupFormType>();
   const [successMessage, setSuccessMessage] = useState("");
 
   // 닉네임 값 추적
   const nicknameValue = watch("nickname", "");
+
+  // initialFormData로 닉네임 필드 초기화
+  useEffect(() => {
+    if (initialFormData.nickname) {
+      setValue("nickname", initialFormData.nickname);
+    }
+  }, [initialFormData.nickname, setValue]);
 
   // 닉네임 값 변경 시 successMessage 초기화
   useEffect(() => {
@@ -33,6 +51,8 @@ export default function useSignupStepBasicInfoNicknameContainer() {
     try {
       clearErrors("nickname"); // 이전 에러 초기화
       // setSuccessMessage(""); // 체크 시작할 때 성공 메시지 초기화
+
+      saveTempFormData(getValues()); // 중복 확인 전에 현재 폼 데이터 저장
 
       const nickname = nicknameValue.trim();
       const result = await checkNickname(nickname);

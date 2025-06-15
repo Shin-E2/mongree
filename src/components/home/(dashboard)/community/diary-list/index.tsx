@@ -1,5 +1,6 @@
 import type { PublicDiary } from "@/app/(dashboard)/community/types";
 import CommunityDiaryCard from "../diary-card";
+import styles from "./styles.module.css";
 
 export default function CommunityDiaryList({
   diaries,
@@ -7,7 +8,7 @@ export default function CommunityDiaryList({
   diaries: PublicDiary[];
 }) {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+    <div className={styles.diaryListGrid}>
       {diaries.map((diary, idx) => (
         <CommunityDiaryCard key={diary.id ?? idx} diary={diary} />
       ))}

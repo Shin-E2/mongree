@@ -2,6 +2,7 @@ import SidebarDropdown from "../dropdown";
 import { ButtonOptionByProfileButton } from "@/commons/components/button-option";
 import useSidebarUserProfileSection from "./hook";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
+import styles from "./styles.module.css";
 
 export default function SidebarUserProfileSection() {
   const {
@@ -13,10 +14,14 @@ export default function SidebarUserProfileSection() {
   } = useSidebarUserProfileSection();
 
   return (
-    <section className="relative" ref={dropdownRef} onKeyDown={handleKeyDown}>
+    <section
+      className={styles.profileSection}
+      ref={dropdownRef}
+      onKeyDown={handleKeyDown}
+    >
       <ButtonOptionByProfileButton
-        imageUrl={user?.profileImage ?? DEFAULT_PROFILE_IMAGE}
-        title={user?.name!}
+        profile_image={user?.profile_image ?? DEFAULT_PROFILE_IMAGE}
+        title={user?.username ?? "사용자"}
         description="내 프로필"
         isProfile
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}

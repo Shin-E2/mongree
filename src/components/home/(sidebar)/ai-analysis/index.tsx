@@ -1,13 +1,17 @@
+import { Sparkles } from "lucide-react";
 import styles from "./styles.module.css";
 
 export default function HomeAIAnalysis() {
   return (
     <div className={styles.container}>
       <h3 className={styles.title}>AI 감정 분석</h3>
-      <p className={styles.description}>
-        이번 달은 굉장히 엄청낙게 집에 가고 싶으셨네요. 저도 그렇게 생각합니다.
-        하루 빨리 집에 갈 수 있는 날을 응원해요^^...
-      </p>
+      <div className={styles.comingSoon}>
+        <Sparkles className={styles.icon} />
+        <p className={styles.description}>
+          일기를 더 쌓으면 AI가 나의 감정 패턴을 분석해드려요.
+          곧 만나볼 수 있습니다.
+        </p>
+      </div>
     </div>
   );
 }

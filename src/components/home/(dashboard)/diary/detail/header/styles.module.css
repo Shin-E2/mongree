@@ -19,8 +19,17 @@
 }
 
 .shareButton,
+.editButton,
 .deleteButton {
   @apply p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors duration-200;
+}
+
+.editButton {
+  @apply hover:text-indigo-600;
+}
+
+.deleteButton {
+  @apply hover:text-red-600;
 }
 
 .iconBase {

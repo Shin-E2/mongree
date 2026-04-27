@@ -1,0 +1,91 @@
+.page {
+  @apply min-h-screen bg-gray-50 px-4 py-8;
+}
+
+.form {
+  @apply mx-auto flex w-full max-w-screen-md flex-col gap-6;
+}
+
+.header {
+  @apply flex items-start gap-4;
+}
+
+.backButton {
+  @apply rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:border-gray-300 hover:text-gray-900;
+}
+
+.kicker {
+  @apply mb-1 text-sm font-semibold text-indigo-600;
+}
+
+.title {
+  @apply text-2xl font-bold text-gray-900;
+}
+
+.card {
+  @apply flex flex-col gap-6 rounded-xl bg-white p-6 shadow-sm;
+}
+
+.fieldGroup {
+  @apply flex flex-col gap-3;
+}
+
+.label {
+  @apply text-sm font-semibold text-gray-800;
+}
+
+.segmented {
+  @apply grid grid-cols-2 rounded-lg bg-gray-100 p-1;
+}
+
+.segmentButton {
+  @apply rounded-md px-4 py-2 text-sm font-semibold text-gray-500 transition-colors;
+}
+
+.segmentButtonActive {
+  @apply bg-white text-indigo-700 shadow-sm;
+}
+
+.emotionGrid {
+  @apply grid grid-cols-2 gap-3 sm:grid-cols-5;
+}
+
+.titleInput,
+.textInput,
+.contentTextarea {
+  @apply w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100;
+}
+
+.titleInput,
+.textInput {
+  @apply h-11;
+}
+
+.contentTextarea {
+  @apply min-h-56 resize-y py-4 leading-7;
+}
+
+.errorText {
+  @apply text-sm font-medium text-red-500;
+}
+
+.imageNotice {
+  @apply rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-500;
+}
+
+.actions {
+  @apply flex justify-end gap-3;
+}
+
+.cancelButton,
+.submitButton {
+  @apply rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-white;
+}
+
+.cancelButton {
+  @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+}
+
+.submitButton {
+  @apply bg-indigo-600 text-white hover:bg-indigo-500;
+}

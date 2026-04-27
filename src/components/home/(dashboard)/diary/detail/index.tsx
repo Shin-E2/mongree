@@ -64,6 +64,7 @@ export default function DiaryDetailContent({
       {/* 상단 네비게이션 */}
       <DiaryDetailHeader
         isOwner={isOwner}
+        diaryId={diary.id}
         isPrivate={diary.is_private ?? false}
         setShowDeleteModal={setShowDeleteModal}
       />

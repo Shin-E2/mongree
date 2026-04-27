@@ -8,6 +8,7 @@ export default function CommentSection({
   loginUser,
   comments,
   commentCount,
+  showReplyForm,
   setShowReplyForm,
 }: CommentSectionProps) {
   return (
@@ -19,14 +20,14 @@ export default function CommentSection({
         diaryId={diaryId}
         user={loginUser}
         placeholder="댓글을 입력하세요..."
-        onReply={(commentId: string | null) => setShowReplyForm(commentId)}
-        onCommentSubmitted={() => {}}
       />
       {comments && (
         <CommentList
           comments={comments}
+          loginUser={loginUser}
           currentUserId={loginUser?.id}
           diaryId={diaryId}
+          showReplyForm={showReplyForm}
           onReply={(commentId: string | null) => setShowReplyForm(commentId)}
         />
       )}

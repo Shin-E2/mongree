@@ -7,6 +7,7 @@ import styles from "./styles.module.css";
 
 export function CommentList({
   comments,
+  loginUser,
   diaryId,
   currentUserId,
   onReply,
@@ -33,13 +34,11 @@ export function CommentList({
           {showReplyForm === comment.id && currentUserId && (
             <div className={styles.replyContainer}>
               <CommentForm
-                user={comment.user} // 댓글 작성자는 현재 댓글 작성자와 동일
+                user={loginUser ?? null}
                 diaryId={diaryId}
                 parentId={comment.id}
                 isReply
-                onSuccess={() => {
-                  onReply(null); // 답글 작성 성공 시 답글 폼 닫기
-                }}
+                onSuccess={() => onReply(null)}
               />
             </div>
           )}

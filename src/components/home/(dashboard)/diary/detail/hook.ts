@@ -12,7 +12,6 @@ export default function useDiaryDetail({
   const isOwner = diary.user?.id === loginUser?.id;
   const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [isDeleted, setIsDeleted] = useState(false);
 
   // 공감 관련 상태 관리
   const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic<
@@ -62,7 +61,6 @@ export default function useDiaryDetail({
 
   const handleDelete = async () => {
     if (!isOwner) return;
-    setIsDeleted(true);
     await deleteDiary(diary.id);
   };
 
@@ -87,11 +85,9 @@ export default function useDiaryDetail({
     isPending,
     optimisticEmpathies,
     commentCount,
-    isDeleted,
     setShowReplyForm,
     setShowDeleteModal,
     handleEmpathyToggle,
     handleDelete,
-    router,
   };
 }

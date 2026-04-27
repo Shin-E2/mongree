@@ -6,5 +6,6 @@ export interface CommentSectionProps {
   loginUser: UserBasicInfo | null;
   comments: ICommentWithUser[] | null;
   commentCount: number;
+  showReplyForm: string | null;
   setShowReplyForm: (commentId: string | null) => void;
 } 

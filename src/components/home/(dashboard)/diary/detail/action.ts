@@ -6,38 +6,32 @@ import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 
 export async function deleteDiary(diaryId: string) {
-  try {
-    const user = await getUser();
-    if (!user) return { error: "로그인이 필요합니다." };
-    const supabase = await createClient();
+  const user = await getUser();
+  if (!user) return { error: "로그인이 필요합니다." };
 
-    const { data: diary, error: findError } = await supabase
-      .from("diaries")
-      .select("user_id")
-      .eq("id", diaryId)
-      .single();
+  const supabase = await createClient();
 
-    if (findError || !diary || diary.user_id !== user.id) {
-      console.error("Error finding diary or unauthorized:", findError);
-      return { error: "You do not have permission to delete this diary." };
-    }
+  const { data: diary, error: findError } = await supabase
+    .from("diaries")
+    .select("user_id")
+    .eq("id", diaryId)
+    .single();
 
-    const { error: deleteError } = await supabase
-      .from("diaries")
-      .delete()
-      .eq("id", diaryId);
-
-    if (deleteError) {
-      console.error("Error deleting diary:", deleteError);
-      return { error: "Failed to delete diary." };
-    }
-
-    revalidateTag(`diary-${diaryId}`);
-    redirect("/diary");
-  } catch (error) {
-    console.error("Unexpected error in deleteDiary:", error);
-    return { error: "Failed to delete diary." };
+  if (findError || !diary || diary.user_id !== user.id) {
+    return { error: "삭제 권한이 없습니다." };
   }
+
+  const { error: deleteError } = await supabase
+    .from("diaries")
+    .delete()
+    .eq("id", diaryId);
+
+  if (deleteError) {
+    return { error: "일기 삭제에 실패했습니다." };
+  }
+
+  revalidateTag(`diary-${diaryId}`);
+  redirect("/diary");
 }
 
 export async function toggleEmpathy(diaryId: string) {

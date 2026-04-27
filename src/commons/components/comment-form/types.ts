@@ -7,6 +7,4 @@ export interface ICommentFormProps {
   isReply?: boolean;
   parentId?: string;
   onSuccess?: () => void;
-  onReply?: (commentId: string | null) => void;
-  onCommentSubmitted?: () => void;
 }

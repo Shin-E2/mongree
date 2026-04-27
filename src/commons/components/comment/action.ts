@@ -4,41 +4,54 @@ import { revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
 
+function formatComment(comment: any) {
+  return {
+    ...comment,
+    userId: comment.user_id,
+    diaryId: comment.diary_id,
+    parentId: comment.parent_id,
+    createdAt: comment.created_at,
+    updatedAt: comment.updated_at,
+    user: comment.profiles,
+    likes: comment.comment_likes ?? [],
+  };
+}
+
 export async function toggleCommentLike(commentId: string, diaryId: string) {
   try {
     const user = await getUser();
     const supabase = await createClient();
 
     const { data: existingLike, error: checkError } = await supabase
-      .from('CommentLike')
-      .select('id')
-      .eq('userId', user.id)
-      .eq('commentId', commentId)
-      .single();
+      .from("comment_likes")
+      .select("id")
+      .eq("user_id", user.id)
+      .eq("comment_id", commentId)
+      .maybeSingle();
 
-    if (checkError && checkError.code !== 'PGRST116') {
-      console.error('Supabase 댓글 좋아요 확인 오류:', checkError);
-      throw new Error('좋아요 상태 확인 중 오류가 발생했습니다.');
+    if (checkError) {
+      console.error("Supabase comment like check error:", checkError);
+      throw new Error(checkError.message);
     }
 
     if (existingLike) {
       const { error: deleteError } = await supabase
-        .from('CommentLike')
+        .from("comment_likes")
         .delete()
-        .eq('id', existingLike.id);
+        .eq("id", existingLike.id);
 
       if (deleteError) {
-        console.error('Supabase 댓글 좋아요 삭제 오류:', deleteError);
-        throw new Error('좋아요 취소 중 오류가 발생했습니다.');
+        console.error("Supabase comment like delete error:", deleteError);
+        throw new Error(deleteError.message);
       }
     } else {
       const { error: createError } = await supabase
-        .from('CommentLike')
-        .insert([{ userId: user.id, commentId }]);
+        .from("comment_likes")
+        .insert([{ user_id: user.id, comment_id: commentId }]);
 
       if (createError) {
-        console.error('Supabase 댓글 좋아요 생성 오류:', createError);
-        throw new Error('좋아요 처리 중 오류가 발생했습니다.');
+        console.error("Supabase comment like create error:", createError);
+        throw new Error(createError.message);
       }
     }
 
@@ -46,7 +59,7 @@ export async function toggleCommentLike(commentId: string, diaryId: string) {
     revalidateTag(`diary-comments-${diaryId}`);
     return { success: true };
   } catch (error) {
-    return { error: "좋아요 처리에 실패했습니다" };
+    return { error: "Failed to update comment like." };
   }
 }
 
@@ -58,58 +71,59 @@ export async function addComment(formData: FormData) {
   const supabase = await createClient();
 
   if (!content?.trim()) {
-    return { error: "내용을 입력해주세요" };
+    return { error: "Content is required." };
   }
 
   try {
     if (parentId) {
       const { data: parentComment, error: parentCheckError } = await supabase
-        .from('Comment')
-        .select('id, parentId')
-        .eq('id', parentId)
+        .from("comments")
+        .select("id, parent_id")
+        .eq("id", parentId)
         .single();
 
-      if (parentCheckError && parentCheckError.code !== 'PGRST116') {
-        console.error('Supabase 부모 댓글 확인 오류:', parentCheckError);
-        throw new Error('부모 댓글 확인 중 오류가 발생했습니다.');
+      if (parentCheckError && parentCheckError.code !== "PGRST116") {
+        console.error("Supabase parent comment check error:", parentCheckError);
+        throw new Error(parentCheckError.message);
       }
 
       if (!parentComment) {
-        return { error: "원본 댓글을 찾을 수 없습니다" };
+        return { error: "Parent comment was not found." };
       }
 
-      if (parentComment.parentId) {
-        return { error: "대댓글에는 답글을 달 수 없습니다" };
+      if (parentComment.parent_id) {
+        return { error: "Replies cannot have nested replies." };
       }
     }
 
     const { data: comment, error: createCommentError } = await supabase
-      .from('Comment')
+      .from("comments")
       .insert({
         content,
-        userId: user.id,
-        diaryId,
-        parentId,
+        user_id: user.id,
+        diary_id: diaryId,
+        parent_id: parentId || null,
       })
       .select(
         `
         *,
-        user (
+        profiles (
           id,
-          name,
-          profileImage
+          user_id,
+          username,
+          profile_image
         ),
-        CommentLike (
+        comment_likes (
           id,
-          userId
+          user_id
         )
         `
       )
       .single();
 
     if (createCommentError) {
-      console.error('Supabase 댓글 생성 오류:', createCommentError);
-      throw new Error(createCommentError.message || "댓글 작성에 실패했습니다.");
+      console.error("Supabase comment create error:", createCommentError);
+      throw new Error(createCommentError.message);
     }
 
     revalidateTag(`comments-${diaryId}`);
@@ -117,16 +131,10 @@ export async function addComment(formData: FormData) {
       revalidateTag(`replies-${parentId}`);
     }
 
-    const formattedComment = {
-      ...comment,
-      user: comment.user,
-      likes: comment.CommentLike || [],
-    };
-
-    return { success: true, comment: formattedComment };
+    return { success: true, comment: formatComment(comment) };
   } catch (error) {
-    console.error("댓글 작성 실패:", error);
-    return { error: "댓글 작성에 실패했습니다" };
+    console.error("addComment error:", error);
+    return { error: "Failed to create comment." };
   }
 }
 
@@ -136,37 +144,37 @@ export async function deleteComment(commentId: string, diaryId: string) {
 
   try {
     const { data: commentToDelete, error: checkDeleteError } = await supabase
-      .from('Comment')
-      .select('userId, parentId')
-      .eq('id', commentId)
+      .from("comments")
+      .select("user_id, parent_id")
+      .eq("id", commentId)
       .single();
 
-    if (checkDeleteError && checkDeleteError.code !== 'PGRST116') {
-      console.error('Supabase 댓글 확인 오류:', checkDeleteError);
-      throw new Error('댓글 확인 중 오류가 발생했습니다.');
+    if (checkDeleteError && checkDeleteError.code !== "PGRST116") {
+      console.error("Supabase comment check error:", checkDeleteError);
+      throw new Error(checkDeleteError.message);
     }
 
-    if (!commentToDelete || commentToDelete.userId !== user.id) {
-      return { error: "삭제 권한이 없습니다" };
+    if (!commentToDelete || commentToDelete.user_id !== user.id) {
+      return { error: "You do not have permission to delete this comment." };
     }
 
     const { error: deleteCommentError } = await supabase
-      .from('Comment')
+      .from("comments")
       .delete()
-      .eq('id', commentId);
+      .eq("id", commentId);
 
     if (deleteCommentError) {
-      console.error('Supabase 댓글 삭제 오류:', deleteCommentError);
-      throw new Error('댓글 삭제에 실패했습니다.');
+      console.error("Supabase comment delete error:", deleteCommentError);
+      throw new Error(deleteCommentError.message);
     }
 
     revalidateTag(`comments-${diaryId}`);
-    if (commentToDelete.parentId) {
-      revalidateTag(`replies-${commentToDelete.parentId}`);
+    if (commentToDelete.parent_id) {
+      revalidateTag(`replies-${commentToDelete.parent_id}`);
     }
 
     return { success: true };
   } catch (error) {
-    return { error: "댓글 삭제에 실패했습니다" };
+    return { error: "Failed to delete comment." };
   }
 }

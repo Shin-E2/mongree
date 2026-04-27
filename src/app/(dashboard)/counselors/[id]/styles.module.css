@@ -91,7 +91,8 @@
 }
 
 .mapPlaceholder {
-  @apply aspect-w-1 aspect-h-1 bg-yellow-200 rounded-lg mb-4 w-full h-48 md:h-64;
+  @apply bg-yellow-200 rounded-lg mb-4 w-full h-48 md:h-64;
+  aspect-ratio: 1 / 1;
 }
 
 .reserveButton {

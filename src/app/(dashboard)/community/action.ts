@@ -1,6 +1,5 @@
 "use server";
 
-import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import type { GetPublicDiariesParams, PublicDiaryResponse } from "./types";
 
@@ -17,7 +16,7 @@ export async function getPublicDiaries({
     const skip = (page - 1) * ITEMS_PER_PAGE;
 
     let query = supabase
-      .from('diaries')
+      .from("diaries")
       .select(
         `
         id,
@@ -26,24 +25,31 @@ export async function getPublicDiaries({
         created_at,
         updated_at,
         is_private,
+        user_id,
         profiles (
           id,
+          user_id,
+          username,
           nickname,
           profile_image
         ),
         diary_emotions (
+          diary_id,
           emotion_id,
           emotions (
             id,
-            label
+            label,
+            image
           )
         ),
         diary_images (
           id,
+          diary_id,
           image_url,
           sort_order
         ),
         diary_tags (
+          diary_id,
           tag_id,
           tags (
             id,
@@ -55,6 +61,7 @@ export async function getPublicDiaries({
           created_at,
           profiles (
             id,
+            user_id,
             profile_image
           )
         ),
@@ -62,84 +69,99 @@ export async function getPublicDiaries({
           id
         )
         `,
-        { count: 'exact' }
+        { count: "exact" }
       )
-      .eq('is_private', false);
+      .eq("is_private", false);
 
     if (searchTerm) {
       query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
     }
 
     if (emotions?.length) {
-      query = query.filter(
-        'diary_emotions.emotion_id',
-        'in',
-        `(${emotions.join(',')})`
-      );
+      query = query.in("diary_emotions.emotion_id", emotions);
     }
 
-    query = query.order('created_at', { ascending: false });
+    if (sortBy === "popular") {
+      query = query.order("created_at", { ascending: false });
+    } else {
+      query = query.order("created_at", { ascending: false });
+    }
 
-    const [diariesResponse, totalResponse] = await Promise.all([
-      query.limit(ITEMS_PER_PAGE).offset(skip),
-      supabase.from('diaries').select('id', { count: 'exact' }).eq('is_private', false)
-        .or(searchTerm ? [`.or(\`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%\`)`] : [])
-        .or(emotions?.length ? [`.filter(\'diary_emotions.emotion_id\', \'in\', \`(${emotions.join(',')})\`)`] : [])
-    ]);
+    const { data, error, count } = await query.range(skip, skip + ITEMS_PER_PAGE - 1);
 
-    if (diariesResponse.error) {
-      console.error('Supabase 공개 일기 목록 조회 오류:', diariesResponse.error);
+    if (error) {
+      console.error("Supabase public diary list error:", error);
       return {
         success: false,
         diaries: [],
         hasMore: false,
         total: 0,
-        error: diariesResponse.error.message || "일기를 불러오는데 실패했습니다.",
+        error: error.message,
       };
     }
 
-    if (totalResponse.error) {
-      console.error('Supabase 공개 일기 개수 계산 오류:', totalResponse.error);
-    }
-
-    const formattedDiaries = diariesResponse.data?.map((diary: any) => ({
-      ...diary,
+    const formattedDiaries = (data ?? []).map((diary: any) => ({
+      id: diary.id,
+      title: diary.title,
+      content: diary.content,
+      createdAt: diary.created_at ? new Date(diary.created_at) : new Date(),
+      updatedAt: diary.updated_at ? new Date(diary.updated_at) : new Date(),
+      isPrivate: diary.is_private ?? false,
+      userId: diary.user_id,
       user: diary.profiles,
-      diaryEmotion: diary.diary_emotions?.map((de: any) => de.emotions).filter((e: any) => e !== null) || [],
-      images: diary.diary_images
-        ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-        .map((image: any) => image.image_url) || [],
-      tags: diary.diary_tags?.map((dt: any) => dt.tags).filter((t: any) => t !== null) || [],
-      empathies: diary.diary_likes?.map((e: any) => ({
-         ...e,
-         user: e.profiles
-      })) || [],
+      diaryEmotion:
+        diary.diary_emotions
+          ?.map((item: any) => ({
+            emotion: item.emotions,
+            diaryId: item.diary_id,
+            emotionId: item.emotion_id,
+          }))
+          .filter((item: any) => item.emotion) ?? [],
+      images:
+        diary.diary_images
+          ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
+          .map((image: any) => ({
+            id: image.id,
+            image_url: image.image_url,
+            sort_order: image.sort_order,
+            diary_id: image.diary_id,
+          })) ?? [],
+      tags:
+        diary.diary_tags
+          ?.map((item: any) => ({
+            tag: item.tags,
+            diaryId: item.diary_id,
+            tagId: item.tag_id,
+          }))
+          .filter((item: any) => item.tag) ?? [],
+      empathies:
+        diary.diary_likes?.map((like: any) => ({
+          id: like.id,
+          createdAt: like.created_at ? new Date(like.created_at) : new Date(),
+          user: like.profiles,
+        })) ?? [],
       _count: {
-        empathies: diary.diary_likes?.length || 0,
-        comments: diary.comments?.length || 0,
-      }
-    })) || [];
+        empathies: diary.diary_likes?.length ?? 0,
+        comments: diary.comments?.length ?? 0,
+      },
+    }));
 
-    const total = totalResponse.count || 0;
+    const total = count ?? 0;
 
     return {
       success: true,
-      diaries: formattedDiaries as PublicDiary[],
+      diaries: formattedDiaries,
       hasMore: skip + ITEMS_PER_PAGE < total,
       total,
     };
   } catch (error) {
-    const errorMessage =
-      error instanceof Error ? error.message : "알 수 없는 오류가 발생했습니다";
-    console.error("공개 일기 목록 조회 중 오류 발생:", { message: errorMessage });
-
+    console.error("getPublicDiaries error:", error);
     return {
       success: false,
       diaries: [],
       hasMore: false,
       total: 0,
-      error: "일기를 불러오는데 실패했습니다.",
+      error: "Failed to load public diaries.",
     };
   }
 }
-// 덜덜..

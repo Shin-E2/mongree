@@ -29,6 +29,10 @@ const nextConfig: NextConfig = {
         hostname: "img1.kakaocdn.net",
       },
       {
+        protocol: "http",
+        hostname: "img1.kakaocdn.net",
+      },
+      {
         protocol: "https",
         hostname: "ssl.pstatic.net", // Naver 프로필 이미지
       },

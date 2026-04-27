@@ -28,7 +28,7 @@ export default function SignupFormSteps({
     onSubmit,
     handleOk,
     isOpen,
-    // isNextButtonEnabled,
+    submitError,
   } = useSignupFormSteps({
     setCurrentStep,
     currentStepData,
@@ -66,6 +66,12 @@ export default function SignupFormSteps({
           />
         ) : (
           <SignupStepComponent />
+        )}
+
+        {submitError && (
+          <p style={{ color: "red", fontSize: "0.875rem", marginTop: "0.5rem" }}>
+            {submitError}
+          </p>
         )}
 
         {/* 이전/다음 버튼 */}

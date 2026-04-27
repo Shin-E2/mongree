@@ -15,5 +15,5 @@ export interface ISignupFormSteps {
 export interface IuseSignupFormStepsProps {
   setCurrentStep: (value: React.SetStateAction<number>) => void;
   currentStepData: ISignupStepProps;
-  initialFormData: SignupTempFormData;
+  initialFormData?: SignupTempFormData;
 }

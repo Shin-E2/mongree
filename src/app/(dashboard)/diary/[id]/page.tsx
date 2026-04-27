@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getDiaryDetail } from "./action";
 import { getUser } from "@/lib/get-user";
 
+export const dynamic = "force-dynamic";
+
 interface Props {
   params: Promise<{
     id: string;

@@ -12,7 +12,7 @@ export interface PublicDiary {
   userId: string;
   user: Pick<
     Profile,
-    "id" | "user_id" | "username" | "nickname" | "profile_image"
+    "id" | "nickname" | "profile_image"
   > | null;
   diaryEmotion: Array<{
     emotion: {
@@ -41,7 +41,7 @@ export interface PublicDiary {
     id: string;
     user: Pick<
       Profile,
-      "id" | "user_id" | "username" | "nickname" | "profile_image"
+      "id" | "nickname" | "profile_image"
     > | null;
     createdAt: Date;
   }> | null;
@@ -68,5 +68,5 @@ export interface GetPublicDiariesParams {
 
 export type CommunityLoginUser = Pick<
   Profile,
-  "id" | "user_id" | "username" | "nickname" | "profile_image"
+  "id" | "nickname" | "profile_image"
 > | null;

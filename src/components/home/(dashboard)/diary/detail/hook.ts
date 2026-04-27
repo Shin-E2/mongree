@@ -1,8 +1,7 @@
 import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 import { deleteDiary, toggleEmpathy } from "./action";
-import { IDiaryDetailProps, EmpathyRow, EmpathyWithUser } from "./types";
-import { Database } from "@/lib/supabase.types";
+import { IDiaryDetailProps, EmpathyWithUser } from "./types";
 
 export default function useDiaryDetail({
   diary,
@@ -10,7 +9,7 @@ export default function useDiaryDetail({
 }: IDiaryDetailProps & { onDeleted?: () => void }) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const isOwner = diary.user?.user_id === loginUser?.user_id;
+  const isOwner = diary.user?.id === loginUser?.id;
   const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -22,7 +21,7 @@ export default function useDiaryDetail({
   >(
     (diary.empathies || []).map((e) => ({
       ...e,
-      user: diary.user?.user_id === e.user_id ? diary.user : null, // 로그인 사용자 정보 연결 (임시)
+      user: diary.user?.id === e.user_id ? diary.user : null,
     })) as EmpathyWithUser[], // 초기 diary.empathies도 타입에 맞게 매핑
     (state, newEmpathy: EmpathyWithUser) => {
       if (state.some((e) => e.user?.id === newEmpathy.user?.id)) {
@@ -33,7 +32,7 @@ export default function useDiaryDetail({
   );
 
   const isEmpathized = optimisticEmpathies.some(
-    (empathy) => empathy.user?.id === loginUser?.user_id
+    (empathy) => empathy.user?.id === loginUser?.id
   );
 
   const handleEmpathyToggle = async () => {
@@ -43,10 +42,10 @@ export default function useDiaryDetail({
       const optimisticEmpathy: EmpathyWithUser = {
         id: "temp-id",
         diary_id: diary.id, // diary_id 추가
-        user_id: loginUser.user_id, // user_id 추가
+        user_id: loginUser.id,
         created_at: new Date().toISOString(),
         user: {
-          id: loginUser.user_id, // user_id를 id로 매핑
+          id: loginUser.id,
           profile_image: loginUser.profile_image,
         },
       };

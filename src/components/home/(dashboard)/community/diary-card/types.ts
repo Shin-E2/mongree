@@ -7,7 +7,7 @@ export interface PublicDiaryCardProps {
   diary: PublicDiary;
   loginUser?: Pick<
     Profile,
-    "id" | "user_id" | "username" | "nickname" | "profile_image"
+    "id" | "nickname" | "profile_image"
   > | null;
 }
 
@@ -18,7 +18,7 @@ export interface PublicEmpathyActionResult {
     id: string;
     user: Pick<
       Profile,
-      "id" | "user_id" | "username" | "nickname" | "profile_image"
+      "id" | "nickname" | "profile_image"
     > | null;
     createdAt: Date;
   }[];

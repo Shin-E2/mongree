@@ -19,8 +19,6 @@ interface PublicDiaryRow {
   user_id: string;
   profiles: {
     id: string;
-    user_id: string;
-    username: string | null;
     nickname: string;
     profile_image: string | null;
   } | null;
@@ -59,8 +57,6 @@ interface PublicDiaryRow {
         created_at: string | null;
         profiles: {
           id: string;
-          user_id: string;
-          username: string | null;
           nickname: string;
           profile_image: string | null;
         } | null;
@@ -93,8 +89,6 @@ export async function getPublicDiaries({
         user_id,
         profiles (
           id,
-          user_id,
-          username,
           nickname,
           profile_image
         ),
@@ -126,8 +120,6 @@ export async function getPublicDiaries({
           created_at,
           profiles (
             id,
-            user_id,
-            username,
             nickname,
             profile_image
           )

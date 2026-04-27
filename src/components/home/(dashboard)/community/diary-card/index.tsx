@@ -51,7 +51,7 @@ export default function CommunityDiaryCard({
       <div className={styles.headerSection}>
         <UserProfileHeader
           profileImage={diary.user?.profile_image ?? null}
-          username={diary.user?.nickname ?? diary.user?.username ?? null}
+          displayName={diary.user?.nickname ?? null}
           createdAt={
             diary.createdAt ? new Date(diary.createdAt).toISOString() : null
           }

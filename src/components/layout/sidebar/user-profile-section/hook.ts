@@ -1,12 +1,13 @@
 "use client";
 
-import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { getUser } from "@/lib/get-user";
 import React, { useState, useRef, useEffect } from "react";
-import { Database } from "@/lib/supabase.types"; // Database 타입 임포트
 
-// profiles 테이블의 필요한 필드 타입 정의
-type UserProfileForSidebar = Pick<Database['public']['Tables']['profiles']['Row'], 'user_id' | 'username' | 'profile_image'>;
+interface UserProfileForSidebar {
+  id: string;
+  nickname: string;
+  profile_image: string | null;
+}
 
 export default function useSidebarUserProfileSection() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 드롭다운
@@ -44,12 +45,11 @@ export default function useSidebarUserProfileSection() {
       try {
         const userData = await getUser();
         if (userData) {
-          // profiles 테이블 스키마에 맞게 필드 매핑
-        setUser({
-            user_id: userData.user_id!, // user_id 필드 사용
-            username: userData.username!, // name 대신 username 사용
-            profile_image: userData.profile_image!, // profileImage 대신 profile_image 사용
-        });
+          setUser({
+            id: userData.id,
+            nickname: userData.nickname,
+            profile_image: userData.profile_image,
+          });
         } else {
           // 사용자 데이터가 없을 경우 기본값 설정
           setUser(null); // 사용자 데이터가 없을 경우 null로 설정

@@ -19,7 +19,7 @@ export default function DiaryContentDisplay({
         <div className={styles.profileHeaderWrapper}>
           <UserProfileHeader
             profileImage={diary.user?.profile_image || DEFAULT_PROFILE_IMAGE}
-            username={diary.user?.username || "사용자"}
+            displayName={diary.user?.nickname || "사용자"}
             createdAt={
               diary.created_at
                 ? formatToTimeAgo(new Date(diary.created_at).toISOString())

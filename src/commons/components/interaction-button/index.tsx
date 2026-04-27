@@ -7,11 +7,14 @@ export function InteractionButton({
   count,
   onClick,
   className,
+  disabled,
 }: InteractionButtonProps) {
   return (
     <button
       className={`${styles.container} ${className || ""}`}
       onClick={onClick}
+      disabled={disabled}
+      type="button"
     >
       {icon}
       {count !== undefined && <span className={styles.count}>{count}</span>}

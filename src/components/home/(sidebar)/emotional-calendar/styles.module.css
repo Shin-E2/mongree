@@ -10,7 +10,35 @@
   @apply text-xl font-semibold mb-6;
 }
 
-.calendarPlaceholder {
-  @apply bg-gray-50 rounded-lg p-4;
-  aspect-ratio: 16 / 9;
+.weekGrid {
+  @apply grid grid-cols-7 gap-2 mb-2;
+}
+
+.weekday {
+  @apply text-center text-xs font-medium text-gray-500;
+}
+
+.calendarGrid {
+  @apply grid grid-cols-7 gap-2;
+}
+
+.emptyCell,
+.dayCell {
+  @apply min-h-16 rounded-lg bg-gray-50 p-2;
+}
+
+.dayCell {
+  @apply flex flex-col justify-between;
+}
+
+.dayNumber {
+  @apply text-xs font-medium text-gray-500;
+}
+
+.emotionMarker {
+  @apply flex items-center gap-1 self-end;
+}
+
+.countText {
+  @apply flex h-4 min-w-4 items-center justify-center rounded-full bg-indigo-600 px-1 text-[10px] font-semibold text-white;
 }

@@ -79,6 +79,7 @@ export default function SignupFormSteps({
       </FormStandardFullFull>
       {isOpen && (
         <ModalStandardFitFit
+          isOpen={isOpen}
           title="회원가입 완료 ✅"
           discription={`지금 바로 로그인을 하여 \n 나만의 일기를 작성해보세요!`}
           okButton={{ text: "확인", onClick: handleOk }}

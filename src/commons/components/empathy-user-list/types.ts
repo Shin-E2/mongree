@@ -1,12 +1,11 @@
-import { Database } from "@/lib/supabase.types";
-
-type User = Database["public"]["Tables"]["profiles"]["Row"];
-
 export interface IEmpathyUserListProps {
-  users: {
+  empathies: {
     id: string;
-    profileImage: string | null;
+    user: {
+      profile_image: string | null;
+      username?: string | null;
+    } | null;
   }[];
   maxCount?: number;
   className?: string;
-} 
+}

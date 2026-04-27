@@ -25,7 +25,7 @@ export default function CommentSection({
       {comments && (
         <CommentList
           comments={comments}
-          loginUserId={loginUser?.id}
+          currentUserId={loginUser?.id}
           diaryId={diaryId}
           onReply={(commentId: string | null) => setShowReplyForm(commentId)}
         />

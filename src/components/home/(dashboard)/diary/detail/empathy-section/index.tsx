@@ -15,7 +15,10 @@ export default function EmpathySection({
 }: EmpathySectionProps) {
   const empathyUsers = optimisticEmpathies.map((empathy) => ({
     id: empathy.id,
-    profileImage: empathy.user?.profile_image || DEFAULT_PROFILE_IMAGE,
+    user: {
+      profile_image: empathy.user?.profile_image || DEFAULT_PROFILE_IMAGE,
+      username: null,
+    },
   }));
 
   if (isPrivate) {
@@ -25,7 +28,7 @@ export default function EmpathySection({
   return (
     <div className={styles.container}>
       <div className={styles.contentWrapper}>
-        <EmpathyUserList users={empathyUsers} />
+        <EmpathyUserList empathies={empathyUsers} />
         <InteractionButton
           icon={
             <Heart

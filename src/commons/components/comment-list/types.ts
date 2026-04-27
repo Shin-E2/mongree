@@ -1,8 +1,9 @@
-import { ICommentWithUser } from "@/commons/components/comment/types";
+import { ICommentWithUser } from "@/commons/components/comment-item/types";
 
 export interface ICommentListProps {
   comments: ICommentWithUser[];
-  loginUserId?: string | null;
+  currentUserId?: string | null;
   diaryId: string;
-  onReply?: () => void;
-} 
+  showReplyForm?: string | null;
+  onReply: (commentId: string | null) => void;
+}

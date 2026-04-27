@@ -1,3 +1,4 @@
+import React from "react";
 import { type FieldValues } from "react-hook-form";
 import styles from "./styles.module.css";
 import type {
@@ -35,7 +36,7 @@ export default function InputBase<T extends FieldValues>({
       <div className={styles.inputWrapper}>
         {iconLeft && (
           <div className={styles.iconWrapper}>
-            {React.cloneElement(iconLeft as React.ReactElement, {
+            {React.cloneElement(iconLeft as React.ReactElement<{ className?: string }>, {
               className: styles.iconBase,
             })}
           </div>

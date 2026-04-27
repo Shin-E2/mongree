@@ -12,6 +12,10 @@ export async function addComment(formData: FormData) {
 
   const supabase = await createClient();
 
+  if (!user) {
+    return { error: "로그인이 필요합니다." };
+  }
+
   if (!content?.trim()) {
     return { error: "Content is required." };
   }

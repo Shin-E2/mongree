@@ -1,4 +1,4 @@
-import { SignupTempFormData } from "@/app/(auth)/signup/hook";
+import { SignupTempFormData } from "@/commons/constants/signup";
 import { SignupFormType } from "../form.schema";
 
 export interface SignupStepBasicInfoNicknameContainerProps {

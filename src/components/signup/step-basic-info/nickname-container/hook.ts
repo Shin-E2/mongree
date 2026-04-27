@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { checkNickname } from "./action";
 import { useFormContext } from "react-hook-form";
 import { SignupFormType } from "../form.schema";
-import { SignupTempFormData } from "@/app/(auth)/signup/hook";
+import { SignupTempFormData } from "@/commons/constants/signup";
 
 interface UseSignupStepBasicInfoNicknameContainerProps {
   initialFormData: SignupTempFormData;

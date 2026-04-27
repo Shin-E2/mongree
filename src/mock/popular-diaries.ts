@@ -10,7 +10,7 @@ export const popularDiaries = [
     authorName: "토닥이123",
     likes: 245,
     comments: 45,
-    createdAt: "1일 전",
+    createdAt: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
     images: ["/images/happy.png"],
   },
   {
@@ -24,7 +24,7 @@ export const popularDiaries = [
     authorName: "마음지기",
     likes: 189,
     comments: 28,
-    createdAt: "2일 전",
+    createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString(),
   },
   {
     id: 3,
@@ -37,7 +37,7 @@ export const popularDiaries = [
     authorName: "꿈꾸는사람",
     likes: 156,
     comments: 32,
-    createdAt: "3일 전",
+    createdAt: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString(),
     images: ["/images/shocked.png"],
   },
 ];

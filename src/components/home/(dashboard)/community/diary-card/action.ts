@@ -7,6 +7,7 @@ import { createClient } from "@/lib/supabase-server";
 export async function togglePublicEmpathy(diaryId: string) {
   try {
     const user = await getUser();
+    if (!user) return { error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingEmpathy, error: checkError } = await supabase

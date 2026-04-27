@@ -50,6 +50,8 @@ export default function CommunityDiaryCard({
       label: emotion.label,
       image: EMOTIONS.find((e) => e.id === emotion.id)?.image || "",
       bgColor: emotionStyle?.bgColor || "bg-gray-100",
+      borderColor: emotionStyle?.borderColor || "border-gray-400",
+      textColor: emotionStyle?.textColor || "text-gray-800",
     };
   });
 
@@ -63,9 +65,9 @@ export default function CommunityDiaryCard({
 
       <div className={styles.headerSection}>
         <UserProfileHeader
-          profileImage={diary.user?.profile_image}
-          username={diary.user?.username}
-          createdAt={diary.createdAt}
+          profileImage={diary.user?.profile_image ?? null}
+          username={diary.user?.username ?? null}
+          createdAt={diary.createdAt ? new Date(diary.createdAt).toISOString() : null}
         />
         {emotionsForBadgeList.length > 0 && (
           <EmotionBadgeList
@@ -99,6 +101,7 @@ export default function CommunityDiaryCard({
                 fill={optimisticData.isEmpathized ? "currentColor" : "none"}
               />
             }
+            label="공감"
             count={optimisticData.count}
             onClick={handleEmpathyToggle}
             disabled={isPending || !loginUser}
@@ -109,6 +112,7 @@ export default function CommunityDiaryCard({
 
           <InteractionButton
             icon={<MessageCircle className={styles.heartIconBase} />}
+            label="댓글"
             count={diary._count?.comments ?? 0}
             onClick={() => router.push(URL().DIARY_DETAIL(diary.id))}
             className={styles.commentButton}

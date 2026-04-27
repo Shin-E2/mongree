@@ -1,5 +1,5 @@
 .cardContainer {
-  @apply bg-white border rounded-xl overflow-hidden hover:shadow-md transition-all cursor-pointer group h-full flex flex-col;
+  @apply bg-white border rounded-xl overflow-hidden hover:shadow-md transition-all cursor-pointer h-full flex flex-col;
 }
 
 .header {

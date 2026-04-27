@@ -2,108 +2,133 @@
 
 import { createClient } from "@/lib/supabase-server";
 
+function formatComment(comment: any): any {
+  return {
+    ...comment,
+    parentId: comment.parent_id,
+    userId: comment.user_id,
+    diaryId: comment.diary_id,
+    createdAt: comment.created_at,
+    updatedAt: comment.updated_at,
+    user: comment.profiles,
+    likes: comment.comment_likes ?? [],
+    replies: comment.replies?.map((reply: any) => formatComment(reply)) ?? [],
+  };
+}
+
 export async function getDiaryDetail(diaryId: string) {
   try {
     const supabase = await createClient();
 
     const { data: diary, error } = await supabase
-      .from('Diary')
+      .from("diaries")
       .select(
         `
         *,
-        user (
+        profiles (
           id,
-          name,
+          user_id,
+          username,
           nickname,
-          profileImage
+          profile_image
         ),
-        DiaryImage (
+        diary_images (
           id,
-          url,
-          order
+          diary_id,
+          image_url,
+          sort_order
         ),
-        DiaryEmotion (
-          emotionId,
-          Emotion (
+        diary_emotions (
+          diary_id,
+          emotion_id,
+          emotions (
             id,
             label,
             image
           )
         ),
-        DiaryEmpathy (
+        diary_likes (
           id,
-          createdAt,
-          user (
+          user_id,
+          created_at,
+          profiles (
             id,
-            name,
-            profileImage
+            user_id,
+            profile_image
           )
         ),
-        DiaryTag (
-          tagId,
-          Tag (
+        diary_tags (
+          diary_id,
+          tag_id,
+          tags (
             id,
             name
           )
         ),
-        comments: Comment (
+        comments (
           *,
-          user (
+          profiles (
             id,
-            name,
-            profileImage
+            user_id,
+            username,
+            profile_image
           ),
-          CommentLike (
+          comment_likes (
             id,
-            userId
-          ),
-          replies: Comment (
-            *,
-            user (
-              id,
-              name,
-              profileImage
-            ),
-            CommentLike (
-              id,
-              userId
-            )
+            user_id
           )
         )
         `
       )
-      .eq('id', diaryId)
+      .eq("id", diaryId)
       .single();
 
-    if (error && error.code !== 'PGRST116') {
-      console.error('Supabase 일기 상세 조회 오류:', error);
-      throw new Error(error.message || "일기 상세 정보를 불러오는데 실패했습니다.");
+    if (error && error.code !== "PGRST116") {
+      console.error("Supabase diary detail error:", error);
+      throw new Error(error.message);
     }
 
     if (!diary) {
-      throw new Error("일기를 찾을 수 없습니다.");
+      throw new Error("Diary not found.");
     }
 
-    const formatComment = (comment: any): any => ({
-      ...comment,
-      user: comment.user,
-      likes: comment.CommentLike || [],
-      replies: comment.replies?.map((reply: any) => formatComment(reply)) || [],
-    });
+    const comments = diary.comments ?? [];
+    const topLevelComments = comments
+      .filter((comment: any) => comment.parent_id === null)
+      .map((comment: any) => ({
+        ...comment,
+        replies: comments.filter((reply: any) => reply.parent_id === comment.id),
+      }))
+      .map((comment: any) => formatComment(comment));
 
-    const formattedDiary = {
+    return {
       ...diary,
-      user: diary.user,
-      images: diary.DiaryImage || [],
-      diaryEmotion: diary.DiaryEmotion?.map((de: any) => de.Emotion).filter((e: any) => e !== null) || [],
-      empathies: diary.DiaryEmpathy || [],
-      tags: diary.DiaryTag?.map((dt: any) => dt.Tag).filter((t: any) => t !== null) || [],
-      comments: diary.comments?.map((comment: any) => formatComment(comment)).filter((comment: any) => comment.parentId === null) || [],
+      user: diary.profiles,
+      images:
+        diary.diary_images?.sort(
+          (a: any, b: any) => a.sort_order - b.sort_order
+        ) ?? [],
+      diaryEmotion:
+        diary.diary_emotions
+          ?.map((item: any) => ({
+            emotion: item.emotions,
+            diaryId: item.diary_id,
+            emotionId: item.emotion_id,
+          }))
+          .filter((item: any) => item.emotion) ?? [],
+      empathies: diary.diary_likes ?? [],
+      tags:
+        diary.diary_tags
+          ?.map((item: any) => ({
+            tag: item.tags,
+            diaryId: item.diary_id,
+            tagId: item.tag_id,
+          }))
+          .filter((item: any) => item.tag) ?? [],
+      comments: topLevelComments,
     };
-
-    return formattedDiary;
   } catch (error) {
-    console.error("일기 조회 중 오류:", error);
+    console.error("getDiaryDetail error:", error);
     throw error;
   }
 }

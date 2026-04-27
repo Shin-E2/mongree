@@ -336,6 +336,7 @@ export type Database = {
           category: string | null
           created_at: string | null
           id: string
+          image: string | null
           is_active: boolean | null
           label: string
           sort_order: number | null
@@ -344,6 +345,7 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           id: string
+          image?: string | null
           is_active?: boolean | null
           label: string
           sort_order?: number | null
@@ -352,6 +354,7 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           id?: string
+          image?: string | null
           is_active?: boolean | null
           label?: string
           sort_order?: number | null
@@ -370,6 +373,7 @@ export type Database = {
           nickname: string
           profile_image: string | null
           updated_at: string | null
+          user_id: string
           username: string | null
           zone_code: string | null
         }

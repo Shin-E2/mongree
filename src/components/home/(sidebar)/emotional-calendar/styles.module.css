@@ -11,5 +11,6 @@
 }
 
 .calendarPlaceholder {
-  @apply aspect-w-16 aspect-h-9 bg-gray-50 rounded-lg p-4;
+  @apply bg-gray-50 rounded-lg p-4;
+  aspect-ratio: 16 / 9;
 }

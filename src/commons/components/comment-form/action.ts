@@ -13,37 +13,38 @@ export async function addComment(formData: FormData) {
   const supabase = await createClient();
 
   if (!content?.trim()) {
-    return { error: "내용을 입력해주세요" };
+    return { error: "Content is required." };
   }
 
   try {
-    const { data: comment, error: createCommentError } = await supabase
-      .from("Comment")
+    const { data: comment, error } = await supabase
+      .from("comments")
       .insert({
         content,
-        userId: user.id,
-        diaryId,
-        parentId,
+        user_id: user.id,
+        diary_id: diaryId,
+        parent_id: parentId || null,
       })
       .select(
         `
         *,
-        user (
+        profiles (
           id,
-          name,
-          profileImage
+          user_id,
+          username,
+          profile_image
         ),
-        CommentLike (
+        comment_likes (
           id,
-          userId
+          user_id
         )
         `
       )
       .single();
 
-    if (createCommentError) {
-      console.error("Supabase 댓글 생성 오류:", createCommentError);
-      throw new Error(createCommentError.message || "댓글 작성에 실패했습니다.");
+    if (error) {
+      console.error("Supabase comment create error:", error);
+      throw new Error(error.message);
     }
 
     revalidateTag(`comments-${diaryId}`);
@@ -51,14 +52,20 @@ export async function addComment(formData: FormData) {
       revalidateTag(`replies-${parentId}`);
     }
 
-    const formattedComment = {
-      ...comment,
-      user: comment.user,
-      likes: comment.CommentLike || [],
+    return {
+      success: true,
+      comment: {
+        ...comment,
+        userId: comment.user_id,
+        diaryId: comment.diary_id,
+        parentId: comment.parent_id,
+        createdAt: comment.created_at,
+        updatedAt: comment.updated_at,
+        user: comment.profiles,
+        likes: comment.comment_likes ?? [],
+      },
     };
-
-    return { success: true, comment: formattedComment };
   } catch (error) {
-    return { error: "댓글 작성에 실패했습니다" };
+    return { error: "Failed to create comment." };
   }
 }

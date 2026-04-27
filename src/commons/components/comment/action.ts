@@ -114,8 +114,7 @@ export async function addComment(formData: FormData) {
         *,
         profiles (
           id,
-          user_id,
-          username,
+          nickname,
           profile_image
         ),
         comment_likes (

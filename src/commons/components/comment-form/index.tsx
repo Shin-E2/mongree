@@ -5,10 +5,9 @@ import Image from "next/image";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { addComment } from "./action";
 import { z } from "zod";
-import { useForm, type FieldValues } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import ButtonTextBase from "../button-text";
 import { InputWithCssprop } from "../input";
-import { Database } from "@/lib/supabase.types";
 import { ICommentFormProps } from "./types";
 import styles from "./styles.module.css";
 
@@ -20,11 +19,6 @@ const commentSchema = z.object({
 });
 
 type CommentFormData = z.infer<typeof commentSchema>;
-
-type UserProfileForCommentForm = Pick<
-  Database["public"]["Tables"]["profiles"]["Row"],
-  "id" | "username" | "profile_image"
->;
 
 export function CommentForm({
   user,
@@ -77,7 +71,7 @@ export function CommentForm({
         <div className={styles.imageWrapper}>
           <Image
             src={user?.profile_image || DEFAULT_PROFILE_IMAGE}
-            alt={user?.username || "사용자"}
+            alt={user?.nickname || "사용자"}
             width={40}
             height={40}
             className={styles.userImage}

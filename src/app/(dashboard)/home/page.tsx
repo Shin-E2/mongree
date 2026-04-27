@@ -4,20 +4,26 @@ import HomeEmotionalCalendar from "@/components/home/(sidebar)/emotional-calenda
 import HomePopularDiaryCard from "@/components/home/(sidebar)/popular-diary-card";
 import HomeRecentDiary from "@/components/home/(sidebar)/recent-diary";
 import { popularDiaries } from "@/mock/popular-diaries";
+import { getHomeDashboardData } from "./action";
 import styles from "./styles.module.css";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const dashboardData = await getHomeDashboardData();
+
   return (
     <div className={styles.mainContainer}>
       <div className={styles.gridContainer}>
         {/* 감정 캘린더 */}
         <div className={styles.calendarColumn}>
-          <HomeEmotionalCalendar />
+          <HomeEmotionalCalendar
+            monthLabel={dashboardData.monthLabel}
+            entries={dashboardData.calendarEntries}
+          />
         </div>
 
         {/* 이번달 감정 분포, ai감정분석 */}
         <div className={styles.sidebarColumn}>
-          <HomeEmotionStats />
+          <HomeEmotionStats stats={dashboardData.emotionStats} />
           <HomeAIAnalysis />
         </div>
 
@@ -35,7 +41,7 @@ export default function HomePage() {
               ))}
             </div>
           </div>
-          <HomeRecentDiary />
+          <HomeRecentDiary diaries={dashboardData.recentDiaries} />
         </div>
       </div>
     </div>

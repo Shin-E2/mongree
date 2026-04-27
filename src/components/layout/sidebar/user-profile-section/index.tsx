@@ -21,7 +21,7 @@ export default function SidebarUserProfileSection() {
     >
       <ButtonOptionByProfileButton
         profile_image={user?.profile_image ?? DEFAULT_PROFILE_IMAGE}
-        title={user?.username ?? "사용자"}
+        title={user?.nickname ?? "사용자"}
         description="내 프로필"
         isProfile
         onClick={() => setIsDropdownOpen(!isDropdownOpen)}

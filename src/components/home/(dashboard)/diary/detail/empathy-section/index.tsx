@@ -17,7 +17,7 @@ export default function EmpathySection({
     id: empathy.id,
     user: {
       profile_image: empathy.user?.profile_image || DEFAULT_PROFILE_IMAGE,
-      username: null,
+      nickname: null,
     },
   }));
 

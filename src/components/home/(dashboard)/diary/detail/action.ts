@@ -89,7 +89,7 @@ export async function toggleEmpathy(diaryId: string) {
           *,
           profiles (
             id,
-            user_id,
+            nickname,
             profile_image
           )
           `

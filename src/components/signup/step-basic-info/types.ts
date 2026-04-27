@@ -1,3 +1,6 @@
+import { SignupTempFormData } from "@/commons/constants/signup";
+import { SignupFormType } from "./form.schema";
+
 export interface ISignupStepBasicInfoProps {
   //useActionState의 state 타입
   state?: any;

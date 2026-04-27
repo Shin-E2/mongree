@@ -1,11 +1,13 @@
 import Link from "next/link";
+import type { HomeRecentDiary as HomeRecentDiaryItem } from "@/app/(dashboard)/home/action";
 import HomeDiaryCard from "../diary-card";
-import { EMOTIONS } from "@/mock/emotions";
 import styles from "./styles.module.css";
 
-export default function HomeRecentDiary() {
-  const sadEmotion = EMOTIONS.find((e) => e.id === "sad");
+interface HomeRecentDiaryProps {
+  diaries: HomeRecentDiaryItem[];
+}
 
+export default function HomeRecentDiary({ diaries }: HomeRecentDiaryProps) {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
@@ -15,13 +17,24 @@ export default function HomeRecentDiary() {
         </Link>
       </div>
       <div className={styles.diaryGrid}>
-        <HomeDiaryCard
-          title="졸리다"
-          content="침대가 좋아"
-          date="24.10.30"
-          emotion={sadEmotion!}
-        />
-        {/* 기타 등등의 일기들 */}
+        {diaries.length > 0 ? (
+          diaries.map((diary) => (
+            <HomeDiaryCard
+              key={diary.id}
+              id={diary.id}
+              title={diary.title}
+              content={diary.content}
+              date={new Date(diary.createdAt).toLocaleDateString("ko-KR", {
+                year: "2-digit",
+                month: "2-digit",
+                day: "2-digit",
+              })}
+              emotion={diary.emotion}
+            />
+          ))
+        ) : (
+          <p className={styles.emptyText}>최근 작성한 일기가 없습니다.</p>
+        )}
       </div>
     </div>
   );

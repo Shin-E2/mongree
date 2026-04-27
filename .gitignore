@@ -47,3 +47,7 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+
+# Claude Code
+.claude/
+.mcp.json

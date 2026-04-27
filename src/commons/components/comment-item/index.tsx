@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { deleteComment, toggleCommentLike } from "../comment/action";
 import type { DiaryCommentProps, ICommentWithUser } from "./types";
 import { CommentBase } from "@/commons/components/comment-base";
@@ -13,6 +14,7 @@ export function DiaryComment({
   onReply,
   isOwner = false,
 }: DiaryCommentProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isLiked =
     comment.likes?.some((like) => like.user_id === currentUserId) || false;
@@ -22,6 +24,7 @@ export function DiaryComment({
 
     startTransition(async () => {
       await toggleCommentLike(comment.id, diaryId);
+      router.refresh();
     });
   };
 
@@ -36,6 +39,7 @@ export function DiaryComment({
 
     startTransition(async () => {
       await deleteComment(comment.id, diaryId);
+      router.refresh();
     });
   };
 
@@ -64,6 +68,7 @@ export function DiaryReply({
   diaryId: string;
   currentUserId?: string;
 }) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isLiked =
     reply.likes?.some((like) => like.user_id === currentUserId) || false;
@@ -74,6 +79,7 @@ export function DiaryReply({
 
     startTransition(async () => {
       await toggleCommentLike(reply.id, diaryId);
+      router.refresh();
     });
   };
 
@@ -88,6 +94,7 @@ export function DiaryReply({
 
     startTransition(async () => {
       await deleteComment(reply.id, diaryId);
+      router.refresh();
     });
   };
 

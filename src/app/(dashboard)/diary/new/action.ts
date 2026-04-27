@@ -207,8 +207,8 @@ export async function createDiary(formData: FormData) {
     }
 
     // 성공 시 캐시 갱신
-    revalidatePath('/diaries');
-    revalidatePath('/dashboard');
+    revalidatePath('/diary');
+    revalidatePath('/home');
 
     return { success: true, diary: newDiary };
 

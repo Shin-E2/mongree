@@ -1,23 +1,14 @@
 "use client";
 
-import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
-import { formatToTimeAgo } from "@/lib/utils";
 import type { IDiaryDetailProps } from "./types";
 import useDiaryDetail from "./hook";
 import { useState } from "react";
-import { TagList } from "@/commons/components/tag-list";
-import { Database, Tables } from "@/lib/supabase.types";
-import UserProfileHeader from "@/commons/components/user-profile-header";
-import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
-import ImageThumbnailList from "@/commons/components/image-thumbnail-list";
 import DiaryDetailHeader from "./header";
 import EmpathySection from "./empathy-section";
 import CommentSection from "./comment-section";
 import DiaryDeleteModal from "./diary-delete-modal";
 import DiaryContentDisplay from "./content-display";
 import { mapDiaryEmotionsToBadgeList } from "./utils";
-import DiaryDeletedMessage from "./deleted-message";
-import { useRouter } from "next/navigation";
 import styles from "./styles.module.css";
 
 export default function DiaryDetailContent({
@@ -25,8 +16,6 @@ export default function DiaryDetailContent({
   loginUser,
 }: IDiaryDetailProps) {
   const [deleteError, setDeleteError] = useState("");
-  const [isDeleted, setIsDeleted] = useState(false);
-  const router = useRouter();
   const {
     isOwner,
     setShowDeleteModal,
@@ -36,17 +25,10 @@ export default function DiaryDetailContent({
     isEmpathized,
     commentCount,
     setShowReplyForm,
+    showReplyForm,
     showDeleteModal,
     handleDelete,
-  } = useDiaryDetail({
-    diary,
-    loginUser,
-    onDeleted: () => setIsDeleted(true),
-  });
-
-  if (isDeleted) {
-    return <DiaryDeletedMessage onBack={() => router.back()} />;
-  }
+  } = useDiaryDetail({ diary, loginUser });
 
   const handleDeleteWithError = async () => {
     setDeleteError("");
@@ -93,6 +75,7 @@ export default function DiaryDetailContent({
           loginUser={loginUser}
           comments={diary.comments}
           commentCount={commentCount}
+          showReplyForm={showReplyForm}
           setShowReplyForm={setShowReplyForm}
         />
       </div>

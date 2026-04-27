@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { addComment } from "./action";
@@ -27,9 +28,8 @@ export function CommentForm({
   isReply = false,
   onSuccess,
   placeholder,
-  onReply: onReplyProp,
-  onCommentSubmitted,
 }: ICommentFormProps) {
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const {
@@ -60,6 +60,7 @@ export function CommentForm({
       const result = await addComment(formData);
       if (result.success) {
         reset();
+        router.refresh();
         onSuccess?.();
       }
     });

@@ -9,50 +9,6 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      accounts: {
-        Row: {
-          access_token: string | null
-          created_at: string | null
-          expires_at: string | null
-          id: string
-          provider: string
-          provider_account_id: string
-          refresh_token: string | null
-          updated_at: string | null
-          user_id: string
-        }
-        Insert: {
-          access_token?: string | null
-          created_at?: string | null
-          expires_at?: string | null
-          id?: string
-          provider: string
-          provider_account_id: string
-          refresh_token?: string | null
-          updated_at?: string | null
-          user_id: string
-        }
-        Update: {
-          access_token?: string | null
-          created_at?: string | null
-          expires_at?: string | null
-          id?: string
-          provider?: string
-          provider_account_id?: string
-          refresh_token?: string | null
-          updated_at?: string | null
-          user_id?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "accounts_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          },
-        ]
-      }
       comment_likes: {
         Row: {
           comment_id: string

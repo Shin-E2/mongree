@@ -5,6 +5,7 @@ export interface IButtonIconBaseProps {
   className?: string;
   type?: "submit" | "reset" | "button";
   disabled?: boolean;
+  title?: string;
 }
 
 export interface IButtonIconCommonProps

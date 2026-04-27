@@ -38,7 +38,6 @@ export default function useSignupStepBasicInfoNicknameContainer({
 
   // 닉네임 값 변경 시 successMessage 초기화
   useEffect(() => {
-    console.log("닉네임 값:", nicknameValue);
     if (!nicknameValue) setSuccessMessage("");
   }, [nicknameValue]);
 

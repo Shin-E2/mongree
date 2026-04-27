@@ -64,8 +64,6 @@ export async function signup(data: SignupFormType) {
       };
     }
 
-    console.log("회원가입 성공:", authData);
-
     return {
       success: true,
       user: authData.user,

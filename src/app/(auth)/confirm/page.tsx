@@ -35,7 +35,6 @@ function ConfirmContent() {
         console.error("Supabase Verify OTP Error:", verifyError);
         setVerificationStatus("error");
       } else {
-        console.log("Email verified successfully!");
         setVerificationStatus("success");
 
         const source = searchParams.get("source");

@@ -25,7 +25,6 @@ export const checkEmail = async ({
   if (user) {
     return { success: false, message: "이미 사용 중인 이메일입니다." };
   } else {
-    console.log("이메일 사용 가능");
     return { success: true };
   }
 };

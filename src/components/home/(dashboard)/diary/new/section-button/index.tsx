@@ -2,6 +2,7 @@ import {
   ButtonIconNext,
   ButtonIconPrev,
 } from "@/commons/components/button-icon";
+import { ButtonTextWithMarginLeftSS } from "@/commons/components/button-text";
 import { useFormContext } from "react-hook-form";
 import type { DiaryNewFormType } from "../form.schema";
 import styles from "./styles.module.css";
@@ -23,7 +24,6 @@ export default function DiaryNewSectionButton({
 }: IDiaryNewSectionButton) {
   const { watch } = useFormContext<DiaryNewFormType>();
   const emotions = watch("emotions") || [];
-  console.log("emotions", emotions);
 
   return (
     <div className={styles.buttonContainer}>
@@ -32,6 +32,13 @@ export default function DiaryNewSectionButton({
         <ButtonIconNext
           onClick={handleNext}
           type="button"
+          disabled={isSubmitting}
+        />
+      )}
+      {isLastStep && (
+        <ButtonTextWithMarginLeftSS
+          type="submit"
+          title={isSubmitting ? "저장 중..." : "저장하기"}
           disabled={isSubmitting}
         />
       )}

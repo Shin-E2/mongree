@@ -2,7 +2,7 @@ import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import styles from "./styles.module.css";
 import SignupStepBasicInfoNicknameContainer from "./nickname-container";
 import SignupStepBasicInfoEmailContainer from "./email-container";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { SignupFormType } from "./form.schema";
 import { SignupTempFormData } from "@/commons/constants/signup";
@@ -24,21 +24,9 @@ export default function SignupStepBasicInfo({
 
   useEffect(() => {
     if (initialFormData) {
-      for (const key in initialFormData) {
-        if (Object.prototype.hasOwnProperty.call(initialFormData, key)) {
-          const value = initialFormData[key as keyof SignupTempFormData];
-          if (typeof value === "object" && value !== null) {
-            for (const subKey in value) {
-              if (Object.prototype.hasOwnProperty.call(value, subKey)) {
-                setValue(
-                  `${key}.${subKey}` as any,
-                  value[subKey as keyof typeof value]
-                );
-              }
-            }
-          } else if (value !== undefined) {
-            setValue(key as any, value);
-          }
+      for (const [key, value] of Object.entries(initialFormData)) {
+        if (value !== undefined) {
+          setValue(key as keyof SignupTempFormData, value);
         }
       }
     }
@@ -91,9 +79,6 @@ export default function SignupStepBasicInfo({
         placeholder="비밀번호를 다시 입력해주세요"
         required
       />
-
-      {/* 주소 입력 */}
-      <InputFieldStandardSFull name="address" title="주소" placeholder="주소를 입력해주세요" isAddress />
     </section>
   );
 }

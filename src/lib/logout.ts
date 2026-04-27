@@ -1,11 +1,10 @@
 "use server";
 
 import { redirect } from "next/navigation";
-import { getSession } from "./session";
+import { createClient } from "./supabase-server";
 
-// 로그아웃 기능
 export const logOut = async () => {
-  const session = await getSession(); //쿠키 가져오기
-  session.destroy(); //쿠키 삭제
-  return redirect(`/`);
+  const supabase = await createClient();
+  await supabase.auth.signOut();
+  redirect("/");
 };

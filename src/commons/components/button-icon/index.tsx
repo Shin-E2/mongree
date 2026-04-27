@@ -14,12 +14,16 @@ export const ButtonIconBase = ({
   onClick,
   className,
   type,
+  disabled,
+  title,
 }: IButtonIconBaseProps) => {
   return (
     <button
       className={`${cssprop} ${styles.common} ${className}`}
       onClick={onClick}
       type={type}
+      disabled={disabled}
+      title={title}
     >
       <>{icon}</>
     </button>

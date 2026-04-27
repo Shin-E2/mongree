@@ -42,7 +42,7 @@ export default function HomePopularDiaryCard({
       <div className={styles.header}>
         <UserProfileHeader
           profileImage={diaryData?.profileImage || DEFAULT_PROFILE_IMAGE}
-          username={diaryData?.authorName ?? null}
+          displayName={diaryData?.authorName ?? null}
           createdAt={diaryData?.createdAt ?? null}
         />
         <span className={styles.emotionBadge}>{diaryData?.emotion.label}</span>
@@ -84,7 +84,7 @@ export default function HomePopularDiaryCard({
                 id: `mock-user-${idx}`,
                 user: {
                   id: `user-${idx}`,
-                  username: `User ${idx + 1}`,
+                  nickname: `User ${idx + 1}`,
                   profile_image: DEFAULT_PROFILE_IMAGE,
                 },
               })

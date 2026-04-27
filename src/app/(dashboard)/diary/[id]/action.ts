@@ -27,8 +27,6 @@ export async function getDiaryDetail(diaryId: string) {
         *,
         profiles (
           id,
-          user_id,
-          username,
           nickname,
           profile_image
         ),
@@ -46,7 +44,7 @@ export async function getDiaryDetail(diaryId: string) {
           *,
           profiles (
             id,
-            user_id,
+            nickname,
             profile_image
           )
         ),
@@ -61,8 +59,7 @@ export async function getDiaryDetail(diaryId: string) {
           *,
           profiles (
             id,
-            user_id,
-            username,
+            nickname,
             profile_image
           ),
           comment_likes (

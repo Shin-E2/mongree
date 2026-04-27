@@ -1,9 +1,21 @@
 "use server";
 
+import {
+  deleteImagesFromS3,
+  uploadMultipleImages,
+} from "@/commons/utils/upload-images";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
+
+const MAX_DIARY_IMAGES = 3;
+
+export interface DiaryEditImage {
+  id: string;
+  url: string;
+  sortOrder: number;
+}
 
 export interface DiaryEditData {
   id: string;
@@ -12,6 +24,7 @@ export interface DiaryEditData {
   isPrivate: boolean;
   emotions: string[];
   tags: string[];
+  images: DiaryEditImage[];
 }
 
 interface DiaryEditRow {
@@ -26,10 +39,23 @@ interface DiaryEditRow {
         tags: { name: string } | null;
       }[]
     | null;
+  diary_images:
+    | {
+        id: string;
+        image_url: string;
+        sort_order: number;
+      }[]
+    | null;
 }
 
 const parseEditFormData = (formData: FormData) => {
   const tags = formData.get("tags");
+  const imageFiles = formData.getAll("images").filter((file): file is File => {
+    return (
+      file instanceof File &&
+      (file.type === "image/jpeg" || file.type === "image/png")
+    );
+  });
 
   return {
     title: formData.get("title")?.toString() ?? "",
@@ -43,7 +69,13 @@ const parseEditFormData = (formData: FormData) => {
           .map((tag) => tag.trim())
           .filter(Boolean)
       : [],
-    images: [],
+    images: imageFiles,
+    keptImageIds: formData
+      .getAll("keptImageIds")
+      .map((imageId) => imageId.toString()),
+    removedImageIds: formData
+      .getAll("removedImageIds")
+      .map((imageId) => imageId.toString()),
   };
 };
 
@@ -108,6 +140,11 @@ export async function getDiaryEditData(
         tags (
           name
         )
+      ),
+      diary_images (
+        id,
+        image_url,
+        sort_order
       )
       `
     )
@@ -130,6 +167,14 @@ export async function getDiaryEditData(
       data.diary_tags
         ?.map((item) => item.tags?.name)
         .filter((tag): tag is string => Boolean(tag)) ?? [],
+    images:
+      data.diary_images
+        ?.sort((a, b) => a.sort_order - b.sort_order)
+        .map((image) => ({
+          id: image.id,
+          url: image.image_url,
+          sortOrder: image.sort_order,
+        })) ?? [],
   };
 }
 
@@ -165,6 +210,48 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     return { success: false, error: "수정 권한이 없습니다." };
   }
 
+  const { data: currentImages, error: imageFindError } = await supabase
+    .from("diary_images")
+    .select("id, image_url, sort_order")
+    .eq("diary_id", diaryId)
+    .order("sort_order", { ascending: true });
+
+  if (imageFindError) {
+    return {
+      success: false,
+      error: `이미지 조회 실패: ${imageFindError.message}`,
+    };
+  }
+
+  const currentImageMap = new Map(
+    (currentImages ?? []).map((image) => [image.id, image])
+  );
+  const keptImages = parsedData.keptImageIds
+    .map((imageId) => currentImageMap.get(imageId))
+    .filter((image): image is NonNullable<typeof image> => Boolean(image));
+  const removedImages = parsedData.removedImageIds
+    .map((imageId) => currentImageMap.get(imageId))
+    .filter((image): image is NonNullable<typeof image> => Boolean(image));
+
+  if (keptImages.length + parsedData.images.length > MAX_DIARY_IMAGES) {
+    return {
+      success: false,
+      error: `이미지는 최대 ${MAX_DIARY_IMAGES}장까지 등록할 수 있습니다.`,
+    };
+  }
+
+  let uploadedImageUrls: string[] = [];
+
+  try {
+    if (parsedData.images.length > 0) {
+      uploadedImageUrls = await uploadMultipleImages(parsedData.images);
+    }
+  } catch (error) {
+    const message =
+      error instanceof Error ? error.message : "이미지 업로드에 실패했습니다.";
+    return { success: false, error: message };
+  }
+
   const { error: diaryError } = await supabase
     .from("diaries")
     .update({
@@ -175,6 +262,9 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     .eq("id", diaryId);
 
   if (diaryError) {
+    if (uploadedImageUrls.length > 0) {
+      await deleteImagesFromS3(uploadedImageUrls);
+    }
     return { success: false, error: `일기 수정 실패: ${diaryError.message}` };
   }
 
@@ -184,6 +274,9 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     .eq("diary_id", diaryId);
 
   if (deleteEmotionError) {
+    if (uploadedImageUrls.length > 0) {
+      await deleteImagesFromS3(uploadedImageUrls);
+    }
     return {
       success: false,
       error: `감정 초기화 실패: ${deleteEmotionError.message}`,
@@ -198,6 +291,9 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   );
 
   if (emotionError) {
+    if (uploadedImageUrls.length > 0) {
+      await deleteImagesFromS3(uploadedImageUrls);
+    }
     return { success: false, error: `감정 수정 실패: ${emotionError.message}` };
   }
 
@@ -207,6 +303,9 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     .eq("diary_id", diaryId);
 
   if (deleteTagError) {
+    if (uploadedImageUrls.length > 0) {
+      await deleteImagesFromS3(uploadedImageUrls);
+    }
     return {
       success: false,
       error: `태그 초기화 실패: ${deleteTagError.message}`,
@@ -227,7 +326,79 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     );
 
     if (tagError) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls);
+      }
       return { success: false, error: `태그 수정 실패: ${tagError.message}` };
+    }
+  }
+
+  if (removedImages.length > 0) {
+    const { error: deleteImageRowError } = await supabase
+      .from("diary_images")
+      .delete()
+      .in(
+        "id",
+        removedImages.map((image) => image.id)
+      );
+
+    if (deleteImageRowError) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls);
+      }
+      return {
+        success: false,
+        error: `이미지 삭제 실패: ${deleteImageRowError.message}`,
+      };
+    }
+  }
+
+  for (const [index, image] of keptImages.entries()) {
+    const { error: sortError } = await supabase
+      .from("diary_images")
+      .update({ sort_order: index + 1 })
+      .eq("id", image.id)
+      .eq("diary_id", diaryId);
+
+    if (sortError) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls);
+      }
+      return {
+        success: false,
+        error: `이미지 순서 저장 실패: ${sortError.message}`,
+      };
+    }
+  }
+
+  if (uploadedImageUrls.length > 0) {
+    const { error: insertImageError } = await supabase
+      .from("diary_images")
+      .insert(
+        uploadedImageUrls.map((url, index) => ({
+          diary_id: diaryId,
+          image_url: url,
+          sort_order: keptImages.length + index + 1,
+          file_name: parsedData.images[index]?.name ?? `image_${index + 1}`,
+          mime_type: parsedData.images[index]?.type ?? "image/jpeg",
+          file_size: parsedData.images[index]?.size ?? null,
+        }))
+      );
+
+    if (insertImageError) {
+      await deleteImagesFromS3(uploadedImageUrls);
+      return {
+        success: false,
+        error: `이미지 정보 저장 실패: ${insertImageError.message}`,
+      };
+    }
+  }
+
+  if (removedImages.length > 0) {
+    try {
+      await deleteImagesFromS3(removedImages.map((image) => image.image_url));
+    } catch (error) {
+      console.error("삭제된 이미지 파일 정리 실패:", error);
     }
   }
 

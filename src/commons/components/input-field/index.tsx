@@ -1,7 +1,6 @@
 "use client";
 
-import SignupStepBasicInfoAddressContainer from "../../../components/signup/step-basic-info/address-container";
-import InputBase, { InputStandardSFull } from "../input";
+import { InputStandardSFull } from "../input";
 import { InputTitleStandardSFull } from "../input-title";
 import styles from "./styles.module.css";
 import type {
@@ -17,7 +16,6 @@ export default function InputFieldBase<T extends FieldValues>({
   name,
   type,
   title,
-  isAddress = false,
 }: IInputFieldBaseProps<T>) {
   const {
     register,
@@ -26,26 +24,15 @@ export default function InputFieldBase<T extends FieldValues>({
 
   return (
     <div className={`${cssprop} ${styles.common}`}>
-      <InputTitleStandardSFull
-        title={title}
-        required={!isAddress && required}
+      <InputTitleStandardSFull title={title} required={required} />
+      <InputStandardSFull
+        placeholder={placeholder}
+        name={name}
+        type={type}
+        register={register}
+        errors={errors[name]?.message?.toString()}
+        required={required}
       />
-      {/* 주소인 경우 */}
-      {isAddress ? (
-        <SignupStepBasicInfoAddressContainer
-          isAddress={isAddress}
-          name={name}
-        />
-      ) : (
-        <InputStandardSFull
-          placeholder={placeholder}
-          name={name}
-          type={type}
-          register={register}
-          errors={errors[name]?.message?.toString()}
-          required={required}
-        />
-      )}
     </div>
   );
 }

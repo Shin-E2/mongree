@@ -12,7 +12,6 @@ export interface IModalBaseProps {
   children?: React.ReactNode;
   isOpen?: boolean;
   onClose?: () => void;
-  isAddress?: boolean;
   title?: string;
   discription?: string;
   okButton?: {

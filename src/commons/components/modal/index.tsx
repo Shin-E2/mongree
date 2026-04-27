@@ -60,7 +60,6 @@ export default function ModalBase({
   variant,
   children,
   onClose,
-  isAddress,
   title,
   discription,
   okButton,
@@ -72,9 +71,9 @@ export default function ModalBase({
     <ModalPortal>
       <div className={styles.container}>
         <div className={`${cssprop} ${styles.common} ${variantClass}`}>
-          {isAddress && (
+          {children && (
             <>
-              <ButtonIconDeleteNoBackground onClick={onClose} />
+              {onClose && <ButtonIconDeleteNoBackground onClick={onClose} />}
               {children}
             </>
           )}

@@ -1,33 +1,26 @@
 "use server";
 
-import { notFound } from "next/navigation";
-import { getSession } from "./session";
 import { createClient } from "./supabase-server";
 
+// iron-session 제거 → Supabase 네이티브 세션으로 유저 정보 조회
+// @supabase/ssr이 쿠키 기반 세션을 자동 처리하므로 별도 세션 저장 불필요
 export async function getUser() {
-  const session = await getSession();
-
-  if (!session?.id) {
-    notFound();
-  }
-
   const supabase = await createClient();
 
-  const { data: userProfile, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('user_id', session.id)
+  const { data: { user }, error: authError } = await supabase.auth.getUser();
+
+  if (authError || !user) return null;
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
     .single();
 
-  if (error && error.code !== 'PGRST116') {
-    console.error('Supabase 프로필 조회 오류:', error);
-    throw new Error("사용자 프로필을 불러오는데 실패했습니다.");
-  }
-
-  if (!userProfile) {
-    console.warn(`사용자 ${session.id} 에 대한 프로필 데이터가 없습니다.`);
+  if (profileError && profileError.code !== "PGRST116") {
+    console.error("프로필 조회 오류:", profileError);
     return null;
   }
 
-  return userProfile;
+  return profile ?? null;
 }

@@ -1,6 +1,6 @@
 import { URL } from "@/commons/constants/global-url";
 import type { SignupFormType } from "../step-basic-info/form.schema";
-import { signup, uploadImageToS3 } from "./action";
+import { signup } from "./action";
 import type { IuseSignupFormStepsProps } from "./types";
 import { useMoveToPage } from "@/commons/hooks/use-move-to-page.hook";
 import useModal from "@/commons/hooks/use-modal.hook";

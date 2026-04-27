@@ -17,7 +17,8 @@ export default function useDiaryDetail({
 
   // 공감 관련 상태 관리
   const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic<
-    EmpathyWithUser[]
+    EmpathyWithUser[],
+    EmpathyWithUser
   >(
     (diary.empathies || []).map((e) => ({
       ...e,

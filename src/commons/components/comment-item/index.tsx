@@ -15,7 +15,7 @@ export function DiaryComment({
 }: DiaryCommentProps) {
   const [isPending, startTransition] = useTransition();
   const isLiked =
-    comment.likes?.some((like) => like.userId === currentUserId) || false;
+    comment.likes?.some((like) => like.user_id === currentUserId) || false;
 
   const handleLike = () => {
     if (!currentUserId) return;
@@ -43,7 +43,7 @@ export function DiaryComment({
     <CommentBase
       user={comment.user}
       content={comment.content}
-      createdAt={comment.createdAt}
+      createdAt={comment.created_at}
       likesCount={comment.likes?.length || 0}
       isLiked={isLiked}
       isOwner={isOwner}
@@ -66,7 +66,7 @@ export function DiaryReply({
 }) {
   const [isPending, startTransition] = useTransition();
   const isLiked =
-    reply.likes?.some((like) => like.userId === currentUserId) || false;
+    reply.likes?.some((like) => like.user_id === currentUserId) || false;
   const isOwner = reply.user?.user_id === currentUserId;
 
   const handleLike = () => {
@@ -95,7 +95,7 @@ export function DiaryReply({
     <CommentBase
       user={reply.user}
       content={reply.content}
-      createdAt={reply.createdAt}
+      createdAt={reply.created_at}
       likesCount={reply.likes?.length || 0}
       isLiked={isLiked}
       isOwner={isOwner}

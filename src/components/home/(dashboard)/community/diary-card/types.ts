@@ -5,7 +5,7 @@ type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface PublicDiaryCardProps {
   diary: PublicDiary;
-  loginUser: Pick<
+  loginUser?: Pick<
     Profile,
     "id" | "user_id" | "username" | "nickname" | "profile_image"
   > | null;

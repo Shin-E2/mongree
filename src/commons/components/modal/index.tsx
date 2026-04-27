@@ -161,6 +161,7 @@ export function SmartModal({
 
   return (
     <ModalStandardFitFit
+      isOpen={isOpen}
       variant={type}
       title={finalTitle}
       discription={finalMessage}

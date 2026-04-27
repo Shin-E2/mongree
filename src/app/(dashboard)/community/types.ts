@@ -39,7 +39,10 @@ export interface PublicDiary {
   }> | null;
   empathies: Array<{
     id: string;
-    user: Pick<Profile, "id" | "user_id" | "username" | "profile_image"> | null;
+    user: Pick<
+      Profile,
+      "id" | "user_id" | "username" | "nickname" | "profile_image"
+    > | null;
     createdAt: Date;
   }> | null;
   _count?: {
@@ -62,3 +65,8 @@ export interface GetPublicDiariesParams {
   emotions?: string[];
   sortBy?: "latest" | "popular";
 }
+
+export type CommunityLoginUser = Pick<
+  Profile,
+  "id" | "user_id" | "username" | "nickname" | "profile_image"
+> | null;

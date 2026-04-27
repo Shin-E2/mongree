@@ -4,9 +4,9 @@ import { getDiaryDetail } from "./action";
 import { getUser } from "@/lib/get-user";
 
 interface Props {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 }
 
 export default async function DiaryDetailPage({ params }: Props) {

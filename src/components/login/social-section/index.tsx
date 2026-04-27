@@ -6,13 +6,23 @@ import styles from "./styles.module.css";
 
 type SupportedProvider = "google" | "kakao";
 
+function getOAuthRedirectUrl() {
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
+
+  if (siteUrl) {
+    return `${siteUrl.replace(/\/$/, "")}/api/auth/callback`;
+  }
+
+  return `${window.location.origin}/api/auth/callback`;
+}
+
 async function handleSocialLogin(provider: SupportedProvider) {
   const supabase = createSupabaseBrowserClient();
   await supabase.auth.signInWithOAuth({
     provider,
     options: {
       // OAuth 인증 완료 후 돌아올 콜백 URL
-      redirectTo: `${window.location.origin}/api/auth/callback`,
+      redirectTo: getOAuthRedirectUrl(),
     },
   });
 }

@@ -59,3 +59,15 @@ mongree/
 - **`src/commons`**: 프로젝트 전반에 걸쳐 재사용되는 범용적인 컴포넌트, 훅, 유틸리티 함수 등을 모아두어 코드 중복을 최소화하고 유지보수성을 높였습니다.
 - **`src/components`**: `src/commons`의 범용 컴포넌트와 달리, 특정 페이지나 기능에 밀접하게 관련된 컴포넌트들을 모아두어 관심사를 분리했습니다.
 - **`src/lib`**: Supabase와 같은 외부 서비스와의 연동 로직을 추상화하여 관리합니다.
+
+## 🔐 소셜 로그인 배포 이슈 체크리스트
+
+배포 환경(Vercel 등)에서 소셜 로그인 후 `localhost:3000/?code=...`로 돌아가는 경우는 대부분 **Supabase Auth URL 설정 불일치**가 원인입니다.
+
+- Supabase Dashboard → Authentication → URL Configuration의 **Site URL**이 `http://localhost:3000`으로 남아있지 않은지 확인합니다.
+- **Redirect URLs**에 배포 도메인의 콜백 경로를 추가합니다.
+  - 예: `https://your-domain.com/api/auth/callback`
+  - 예: `https://*.vercel.app/api/auth/callback`
+- 프론트 환경변수 `NEXT_PUBLIC_SITE_URL`을 배포 도메인으로 설정합니다.
+  - 예: `https://your-domain.com`
+- OAuth 제공자(Google/Kakao) 콘솔에도 동일한 Redirect URI를 등록해야 합니다.

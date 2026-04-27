@@ -31,11 +31,25 @@ export interface HomeRecentDiary {
   } | null;
 }
 
+export interface HomePopularDiary {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  authorName: string;
+  profileImage: string | null;
+  emotion: { type: string; label: string } | null;
+  likes: number;
+  comments: number;
+  images: string[];
+}
+
 export interface HomeDashboardData {
   monthLabel: string;
   emotionStats: HomeEmotionStat[];
   calendarEntries: HomeCalendarEntry[];
   recentDiaries: HomeRecentDiary[];
+  popularDiaries: HomePopularDiary[];
 }
 
 interface DiaryEmotionRow {
@@ -68,6 +82,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
     emotionStats: [],
     calendarEntries: [],
     recentDiaries: [],
+    popularDiaries: [],
   };
 
   const user = await getUser();
@@ -176,10 +191,77 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
     };
   });
 
+  // 이번 주 인기 일기 TOP3 (공개 일기 중 공감 수 기준)
+  const oneWeekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+  const { data: popularData } = await supabase
+    .from("diaries")
+    .select(
+      `
+      id,
+      title,
+      content,
+      created_at,
+      profiles (
+        nickname,
+        profile_image
+      ),
+      diary_emotions (
+        emotion_id,
+        emotions (
+          id,
+          label
+        )
+      ),
+      diary_images (
+        image_url,
+        sort_order
+      ),
+      diary_likes (id),
+      comments (id, deleted_at)
+      `
+    )
+    .eq("is_private", false)
+    .is("deleted_at", null)
+    .gte("created_at", oneWeekAgo.toISOString())
+    .returns<{
+      id: string;
+      title: string;
+      content: string;
+      created_at: string | null;
+      profiles: { nickname: string; profile_image: string | null } | null;
+      diary_emotions: { emotion_id: string; emotions: { id: string; label: string } | null }[] | null;
+      diary_images: { image_url: string; sort_order: number }[] | null;
+      diary_likes: { id: string }[] | null;
+      comments: { id: string; deleted_at: string | null }[] | null;
+    }[]>();
+
+  const popularDiaries: HomePopularDiary[] = (popularData ?? [])
+    .sort((a, b) => (b.diary_likes?.length ?? 0) - (a.diary_likes?.length ?? 0))
+    .slice(0, 3)
+    .map((diary) => {
+      const firstEmotion = diary.diary_emotions?.[0]?.emotions ?? null;
+      const sortedImages = (diary.diary_images ?? [])
+        .sort((a, b) => a.sort_order - b.sort_order)
+        .map((img) => img.image_url);
+      return {
+        id: diary.id,
+        title: diary.title,
+        content: diary.content,
+        createdAt: diary.created_at ?? new Date().toISOString(),
+        authorName: diary.profiles?.nickname ?? "익명",
+        profileImage: diary.profiles?.profile_image ?? null,
+        emotion: firstEmotion ? { type: firstEmotion.id, label: firstEmotion.label } : null,
+        likes: diary.diary_likes?.length ?? 0,
+        comments: diary.comments?.filter((c) => c.deleted_at === null).length ?? 0,
+        images: sortedImages,
+      };
+    });
+
   return {
     monthLabel,
     emotionStats,
     calendarEntries: Array.from(calendarMap.values()),
     recentDiaries,
+    popularDiaries,
   };
 }

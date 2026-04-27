@@ -11,19 +11,19 @@ import styles from "./styles.module.css";
 
 interface IHomePopularDiaryCardProps {
   diary?: {
-    id: number;
+    id: string;
     title: string;
     content: string;
     emotion: {
       type: string;
       label: string;
-    };
+    } | null;
     authorName: string;
     likes: number;
     comments: number;
     createdAt: string;
     images?: string[];
-    profileImage?: string;
+    profileImage?: string | null;
   };
 }
 
@@ -45,7 +45,9 @@ export default function HomePopularDiaryCard({
           displayName={diaryData?.authorName ?? null}
           createdAt={diaryData?.createdAt ?? null}
         />
-        <span className={styles.emotionBadge}>{diaryData?.emotion.label}</span>
+        {diaryData?.emotion && (
+          <span className={styles.emotionBadge}>{diaryData.emotion.label}</span>
+        )}
       </div>
 
       {/* 본문 */}

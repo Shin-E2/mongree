@@ -1,25 +1,53 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import DiaryListSearchFilter from "@/components/home/(dashboard)/diary/list/search-filter";
-import type { PublicDiary } from "@/app/(dashboard)/community/types";
+import type {
+  CommunityLoginUser,
+  PublicDiary,
+} from "@/app/(dashboard)/community/types";
 import CommunityDiaryList from "../diary-list";
 import { FilterDropdown } from "@/commons/components/filter-dropdown";
 import { ChevronDown } from "lucide-react";
+import { getPublicDiaries } from "@/app/(dashboard)/community/action";
 import styles from "./styles.module.css";
 
 export default function CommunityDiarySection({
   initialDiaries,
+  loginUser,
 }: {
   initialDiaries: PublicDiary[];
+  loginUser: CommunityLoginUser;
 }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedEmotions, setSelectedEmotions] = useState<string[]>([]);
-  const [sortBy, setSortBy] = useState("latest");
+  const [sortBy, setSortBy] = useState<"latest" | "popular">("latest");
+  const [diaries, setDiaries] = useState(initialDiaries);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isPending, startTransition] = useTransition();
 
-  const diaries = initialDiaries;
+  useEffect(() => {
+    startTransition(async () => {
+      const result = await getPublicDiaries({
+        page: 1,
+        searchTerm,
+        emotions: selectedEmotions,
+        sortBy,
+      });
 
-  // 감정 필터
+      if (!result.success) {
+        setErrorMessage(
+          result.error ?? "공개 일기를 불러오는 중 문제가 발생했습니다."
+        );
+        setDiaries([]);
+        return;
+      }
+
+      setErrorMessage("");
+      setDiaries(result.diaries);
+    });
+  }, [searchTerm, selectedEmotions, sortBy]);
+
   const handleEmotionToggle = (id: string) => {
     setSelectedEmotions((prev) =>
       prev.includes(id) ? prev.filter((e) => e !== id) : [...prev, id]
@@ -60,8 +88,9 @@ export default function CommunityDiarySection({
           className={styles.filterDropdownWrapper}
         />
       </div>
-      {/* 일기 리스트 */}
-      <CommunityDiaryList diaries={diaries} />
+      {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}
+      {isPending && <p className={styles.loadingText}>불러오는 중...</p>}
+      <CommunityDiaryList diaries={diaries} loginUser={loginUser} />
     </>
   );
 }

@@ -4,10 +4,22 @@ import { getUser } from "@/lib/get-user";
 import { revalidateTag } from "next/cache";
 import { createClient } from "@/lib/supabase-server";
 
+interface DiaryLikeRow {
+  id: string;
+  created_at: string | null;
+  profiles: {
+    id: string;
+    user_id: string;
+    username: string | null;
+    nickname: string;
+    profile_image: string | null;
+  } | null;
+}
+
 export async function togglePublicEmpathy(diaryId: string) {
   try {
     const user = await getUser();
-    if (!user) return { error: "로그인이 필요합니다." };
+    if (!user) return { success: false, error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingEmpathy, error: checkError } = await supabase
@@ -56,13 +68,16 @@ export async function togglePublicEmpathy(diaryId: string) {
           profiles (
             id,
             user_id,
+            username,
+            nickname,
             profile_image
           )
           `
         )
         .eq("diary_id", diaryId)
         .order("created_at", { ascending: false })
-        .limit(3);
+        .limit(3)
+        .returns<DiaryLikeRow[]>();
 
     const { count: empathyCount, error: countError } = await supabase
       .from("diary_likes")
@@ -78,7 +93,7 @@ export async function togglePublicEmpathy(diaryId: string) {
     }
 
     const formattedEmpathies =
-      updatedEmpathies?.map((empathy: any) => ({
+      updatedEmpathies?.map((empathy) => ({
         id: empathy.id,
         createdAt: empathy.created_at
           ? new Date(empathy.created_at)
@@ -92,7 +107,7 @@ export async function togglePublicEmpathy(diaryId: string) {
       count: empathyCount ?? 0,
       isEmpathized: !existingEmpathy,
     };
-  } catch (error) {
+  } catch {
     return {
       success: false,
       error: "Failed to update empathy.",

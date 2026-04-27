@@ -15,7 +15,7 @@ export default function EmpathyUserList({
           <div key={empathy.id} className={styles.userImageWrapper}>
             <ImageThumbnail
               src={empathy.user?.profile_image || DEFAULT_PROFILE_IMAGE}
-              alt={empathy.user?.username || "사용자"}
+              alt={empathy.user?.nickname || "사용자"}
               width={24}
               height={24}
               shape="circle"

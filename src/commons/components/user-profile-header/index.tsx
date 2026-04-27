@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { ImageThumbnail } from "@/commons/components/image-thumbnail";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { formatToTimeAgo } from "@/lib/utils";
@@ -7,7 +6,7 @@ import styles from "./styles.module.css";
 
 export default function UserProfileHeader({
   profileImage,
-  username,
+  displayName,
   createdAt,
 }: IUserProfileHeaderProps) {
   return (
@@ -15,7 +14,7 @@ export default function UserProfileHeader({
       <div className={styles.imageWrapper}>
         <ImageThumbnail
           src={profileImage || DEFAULT_PROFILE_IMAGE}
-          alt={username || "사용자"}
+          alt={displayName || "사용자"}
           width={40}
           height={40}
           shape="circle"
@@ -23,7 +22,7 @@ export default function UserProfileHeader({
         />
       </div>
       <div>
-        <div className={styles.userInfo}>{username || "사용자"}</div>
+        <div className={styles.userInfo}>{displayName || "사용자"}</div>
         <div className={styles.createdAt}>
           {createdAt && !isNaN(new Date(createdAt).getTime())
             ? formatToTimeAgo(new Date(createdAt).toISOString())

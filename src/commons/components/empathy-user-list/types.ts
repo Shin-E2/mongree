@@ -3,7 +3,7 @@ export interface IEmpathyUserListProps {
     id: string;
     user: {
       profile_image: string | null;
-      username?: string | null;
+      nickname?: string | null;
     } | null;
   }[];
   maxCount?: number;

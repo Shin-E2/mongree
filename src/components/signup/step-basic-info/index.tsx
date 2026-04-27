@@ -5,7 +5,7 @@ import SignupStepBasicInfoEmailContainer from "./email-container";
 import { useState, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { SignupFormType } from "./form.schema";
-import { SignupTempFormData } from "@/app/(auth)/signup/hook";
+import { SignupTempFormData } from "@/commons/constants/signup";
 
 interface SignupStepBasicInfoProps {
   onNicknameChecked?: (v: boolean) => void;
@@ -93,7 +93,7 @@ export default function SignupStepBasicInfo({
       />
 
       {/* 주소 입력 */}
-      <InputFieldStandardSFull name="address" title="주소" isAddress />
+      <InputFieldStandardSFull name="address" title="주소" placeholder="주소를 입력해주세요" isAddress />
     </section>
   );
 }

@@ -15,9 +15,6 @@ export const SIGNUP_STEPS: readonly ISignupStepProps[] = [
       "email",
       "password",
       "passwordConfirm",
-      "address.zoneCode",
-      "address.address",
-      "address.detailAddress",
     ],
   },
   {

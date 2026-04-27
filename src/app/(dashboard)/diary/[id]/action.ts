@@ -33,24 +33,17 @@ export async function getDiaryDetail(diaryId: string) {
           profile_image
         ),
         diary_images (
-          id,
-          diary_id,
-          image_url,
-          sort_order
+          *
         ),
         diary_emotions (
           diary_id,
           emotion_id,
           emotions (
-            id,
-            label,
-            image
+            *
           )
         ),
         diary_likes (
-          id,
-          user_id,
-          created_at,
+          *,
           profiles (
             id,
             user_id,
@@ -61,8 +54,7 @@ export async function getDiaryDetail(diaryId: string) {
           diary_id,
           tag_id,
           tags (
-            id,
-            name
+            *
           )
         ),
         comments (

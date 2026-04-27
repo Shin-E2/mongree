@@ -20,6 +20,7 @@ function formatComment(comment: any) {
 export async function toggleCommentLike(commentId: string, diaryId: string) {
   try {
     const user = await getUser();
+    if (!user) return { error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingLike, error: checkError } = await supabase
@@ -69,6 +70,10 @@ export async function addComment(formData: FormData) {
   const diaryId = formData.get("diaryId") as string;
   const parentId = formData.get("parentId") as string | null;
   const supabase = await createClient();
+
+  if (!user) {
+    return { error: "로그인이 필요합니다." };
+  }
 
   if (!content?.trim()) {
     return { error: "Content is required." };
@@ -140,6 +145,7 @@ export async function addComment(formData: FormData) {
 
 export async function deleteComment(commentId: string, diaryId: string) {
   const user = await getUser();
+  if (!user) return { error: "로그인이 필요합니다." };
   const supabase = await createClient();
 
   try {

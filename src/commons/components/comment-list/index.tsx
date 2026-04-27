@@ -2,7 +2,7 @@
 
 import { DiaryComment, DiaryReply } from "@/commons/components/comment-item";
 import { CommentForm } from "@/commons/components/comment-form";
-import type { CommentListProps } from "./types";
+import type { ICommentListProps as CommentListProps } from "./types";
 import styles from "./styles.module.css";
 
 export function CommentList({
@@ -25,9 +25,9 @@ export function CommentList({
           <DiaryComment
             comment={comment}
             diaryId={diaryId}
-            currentUserId={currentUserId}
+            currentUserId={currentUserId ?? undefined}
             onReply={() => onReply(comment.id)}
-            isOwner={comment.user.id === currentUserId}
+            isOwner={comment.user?.id === currentUserId}
           />
 
           {showReplyForm === comment.id && currentUserId && (
@@ -49,7 +49,7 @@ export function CommentList({
               <DiaryReply
                 reply={reply}
                 diaryId={diaryId}
-                currentUserId={currentUserId}
+                currentUserId={currentUserId ?? undefined}
               />
             </div>
           ))}

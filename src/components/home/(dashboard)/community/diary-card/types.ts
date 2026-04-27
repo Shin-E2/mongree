@@ -16,7 +16,10 @@ export interface PublicEmpathyActionResult {
   error?: string;
   empathies?: {
     id: string;
-    user: Pick<Profile, "id" | "user_id" | "username" | "profile_image"> | null;
+    user: Pick<
+      Profile,
+      "id" | "user_id" | "username" | "nickname" | "profile_image"
+    > | null;
     createdAt: Date;
   }[];
   count?: number;

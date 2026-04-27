@@ -1,19 +1,15 @@
 "use client";
 
-import Image from "next/image";
 import { Heart, MessageCircle } from "lucide-react";
 import { EMOTIONS } from "@/mock/emotions";
-import { formatToTimeAgo } from "@/lib/utils";
 import TagList from "@/commons/components/tag";
 import { useRouter } from "next/navigation";
 import { URL } from "@/commons/constants/global-url";
 import usePublicDiaryCard from "./hook";
-import type { PublicDiaryCardProps, PublicEmpathyActionResult } from "./types";
+import type { PublicDiaryCardProps } from "./types";
 import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
 import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
 import { InteractionButton } from "@/commons/components/interaction-button";
-import { Database } from "@/lib/supabase.types";
-import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import UserProfileHeader from "@/commons/components/user-profile-header";
 import EmpathyUserList from "@/commons/components/empathy-user-list";
 import Link from "next/link";
@@ -31,17 +27,6 @@ export default function CommunityDiaryCard({
     }
   );
 
-  const emotions = (diary.diaryEmotion ?? []).map(({ emotion }) => {
-    const emotionConfig = EMOTIONS.find((e) => e.id === emotion.id);
-    return {
-      ...emotion,
-      bgColor: emotionConfig?.bgColor || "bg-gray-100",
-      image: emotionConfig?.image || "/image/emotions/default.svg",
-      label: emotion.label,
-    };
-  });
-
-  // EmotionBadgeList에 전달할 감정 데이터 형식으로 변환
   const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(({ emotion }) => {
     const emotionStyle =
       EMOTION_STYLES[emotion.id as keyof typeof EMOTION_STYLES];
@@ -66,8 +51,10 @@ export default function CommunityDiaryCard({
       <div className={styles.headerSection}>
         <UserProfileHeader
           profileImage={diary.user?.profile_image ?? null}
-          username={diary.user?.username ?? null}
-          createdAt={diary.createdAt ? new Date(diary.createdAt).toISOString() : null}
+          username={diary.user?.nickname ?? diary.user?.username ?? null}
+          createdAt={
+            diary.createdAt ? new Date(diary.createdAt).toISOString() : null
+          }
         />
         {emotionsForBadgeList.length > 0 && (
           <EmotionBadgeList

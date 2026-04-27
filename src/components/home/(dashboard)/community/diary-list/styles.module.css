@@ -1,1 +1,15 @@
- 
+.diaryListGrid {
+  @apply grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3;
+}
+
+.emptyState {
+  @apply flex min-h-64 flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-white px-6 py-12 text-center;
+}
+
+.emptyTitle {
+  @apply text-base font-semibold text-gray-800;
+}
+
+.emptyDescription {
+  @apply mt-2 text-sm text-gray-500;
+}

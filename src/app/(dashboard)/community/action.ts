@@ -1,9 +1,73 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
-import type { GetPublicDiariesParams, PublicDiaryResponse } from "./types";
+import type {
+  GetPublicDiariesParams,
+  PublicDiary,
+  PublicDiaryResponse,
+} from "./types";
 
 const ITEMS_PER_PAGE = 12;
+
+interface PublicDiaryRow {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string | null;
+  updated_at: string | null;
+  is_private: boolean | null;
+  user_id: string;
+  profiles: {
+    id: string;
+    user_id: string;
+    username: string | null;
+    nickname: string;
+    profile_image: string | null;
+  } | null;
+  diary_emotions:
+    | {
+        diary_id: string;
+        emotion_id: string;
+        emotions: {
+          id: string;
+          label: string;
+          image: string | null;
+        } | null;
+      }[]
+    | null;
+  diary_images:
+    | {
+        id: string;
+        diary_id: string;
+        image_url: string;
+        sort_order: number;
+      }[]
+    | null;
+  diary_tags:
+    | {
+        diary_id: string;
+        tag_id: string;
+        tags: {
+          id: string;
+          name: string;
+        } | null;
+      }[]
+    | null;
+  diary_likes:
+    | {
+        id: string;
+        created_at: string | null;
+        profiles: {
+          id: string;
+          user_id: string;
+          username: string | null;
+          nickname: string;
+          profile_image: string | null;
+        } | null;
+      }[]
+    | null;
+  comments: { id: string; deleted_at: string | null }[] | null;
+}
 
 export async function getPublicDiaries({
   page,
@@ -14,6 +78,7 @@ export async function getPublicDiaries({
   try {
     const supabase = await createClient();
     const skip = (page - 1) * ITEMS_PER_PAGE;
+    const keyword = searchTerm?.trim();
 
     let query = supabase
       .from("diaries")
@@ -62,32 +127,32 @@ export async function getPublicDiaries({
           profiles (
             id,
             user_id,
+            username,
+            nickname,
             profile_image
           )
         ),
         comments (
-          id
+          id,
+          deleted_at
         )
         `,
         { count: "exact" }
       )
-      .eq("is_private", false);
+      .eq("is_private", false)
+      .is("deleted_at", null);
 
-    if (searchTerm) {
-      query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
+    if (keyword) {
+      query = query.or(`title.ilike.%${keyword}%,content.ilike.%${keyword}%`);
     }
 
     if (emotions?.length) {
       query = query.in("diary_emotions.emotion_id", emotions);
     }
 
-    if (sortBy === "popular") {
-      query = query.order("created_at", { ascending: false });
-    } else {
-      query = query.order("created_at", { ascending: false });
-    }
+    query = query.order("created_at", { ascending: false });
 
-    const { data, error, count } = await query.range(skip, skip + ITEMS_PER_PAGE - 1);
+    const { data, error, count } = await query.returns<PublicDiaryRow[]>();
 
     if (error) {
       console.error("Supabase public diary list error:", error);
@@ -100,7 +165,8 @@ export async function getPublicDiaries({
       };
     }
 
-    const formattedDiaries = (data ?? []).map((diary: any) => ({
+    const rows = (data ?? []) as PublicDiaryRow[];
+    const formattedDiaries: PublicDiary[] = rows.map((diary) => ({
       id: diary.id,
       title: diary.title,
       content: diary.content,
@@ -111,16 +177,24 @@ export async function getPublicDiaries({
       user: diary.profiles,
       diaryEmotion:
         diary.diary_emotions
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             emotion: item.emotions,
             diaryId: item.diary_id,
             emotionId: item.emotion_id,
           }))
-          .filter((item: any) => item.emotion) ?? [],
+          .filter(
+            (
+              item
+            ): item is {
+              emotion: { id: string; label: string; image: string | null };
+              diaryId: string;
+              emotionId: string;
+            } => Boolean(item.emotion)
+          ) ?? [],
       images:
         diary.diary_images
-          ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-          .map((image: any) => ({
+          ?.sort((a, b) => a.sort_order - b.sort_order)
+          .map((image) => ({
             id: image.id,
             image_url: image.image_url,
             sort_order: image.sort_order,
@@ -128,29 +202,49 @@ export async function getPublicDiaries({
           })) ?? [],
       tags:
         diary.diary_tags
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             tag: item.tags,
             diaryId: item.diary_id,
             tagId: item.tag_id,
           }))
-          .filter((item: any) => item.tag) ?? [],
+          .filter(
+            (
+              item
+            ): item is {
+              tag: { id: string; name: string };
+              diaryId: string;
+              tagId: string;
+            } => Boolean(item.tag)
+          ) ?? [],
       empathies:
-        diary.diary_likes?.map((like: any) => ({
+        diary.diary_likes?.map((like) => ({
           id: like.id,
           createdAt: like.created_at ? new Date(like.created_at) : new Date(),
           user: like.profiles,
         })) ?? [],
       _count: {
         empathies: diary.diary_likes?.length ?? 0,
-        comments: diary.comments?.length ?? 0,
+        comments:
+          diary.comments?.filter((comment) => comment.deleted_at === null)
+            .length ?? 0,
       },
     }));
 
-    const total = count ?? 0;
+    const sortedDiaries =
+      sortBy === "popular"
+        ? [...formattedDiaries].sort((a, b) => {
+            const likeGap =
+              (b._count?.empathies ?? 0) - (a._count?.empathies ?? 0);
+            if (likeGap !== 0) return likeGap;
+            return b.createdAt.getTime() - a.createdAt.getTime();
+          })
+        : formattedDiaries;
+    const paginatedDiaries = sortedDiaries.slice(skip, skip + ITEMS_PER_PAGE);
+    const total = count ?? sortedDiaries.length;
 
     return {
       success: true,
-      diaries: formattedDiaries,
+      diaries: paginatedDiaries,
       hasMore: skip + ITEMS_PER_PAGE < total,
       total,
     };

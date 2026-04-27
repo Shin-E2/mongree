@@ -5,65 +5,62 @@ import type { IuseSignupFormStepsProps } from "./types";
 import { useMoveToPage } from "@/commons/hooks/use-move-to-page.hook";
 import useModal from "@/commons/hooks/use-modal.hook";
 import { uploadImage } from "@/commons/utils/upload-images";
+import { useState } from "react";
 
 export default function useSignupFormSteps({
   setCurrentStep,
   currentStepData,
 }: IuseSignupFormStepsProps) {
-  // const { formState } = useForm();
-  // const [successMessage, setSuccessMessage] = useState(false);
+  const { moveToPage } = useMoveToPage();
+  const { isOpen, setIsOpen } = useModal();
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  // 닉네임 중복 검사 상태와 폼 상태 조합
-  // const isNextButtonEnabled = formState.isValid && !!successMessage;
-
-  const { moveToPage } = useMoveToPage(); // 페이지 이동
-  const { isOpen, setIsOpen } = useModal(); // 모달
-
-  // 다음
   const handleNext = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault(); // form onsubmit 동작 방지
+    e.preventDefault();
     setCurrentStep((prev) => prev + 1);
   };
 
-  // 이전
   const handlePrev = () => {
     setCurrentStep((prev) => prev - 1);
   };
 
-  // 모달 ok 누르면 로그인 페이지로 이동하기
   const handleOk = () => {
     moveToPage(URL().LOGIN)();
   };
 
-  // 현재 단계의 컴포넌트
   const SignupStepComponent = currentStepData.Component;
 
-  // form 제출
   const onSubmit = async (data: SignupFormType) => {
+    setSubmitError(null);
+
     try {
       let updatedData = { ...data };
 
       if (data.profileImage instanceof File) {
-        // const imageUrl = await uploadImageToS3(data.profileImage);
         const imageUrl = await uploadImage(data.profileImage);
-        // data.profileImage = imageUrl!;
-
-        if (!imageUrl) {
-          throw new Error("이미지 업로드 실패");
-        }
-        // 새로운 객체에 이미지 URL 설정
-        updatedData = {
-          ...updatedData,
-          profileImage: imageUrl,
-        };
+        if (!imageUrl) throw new Error("이미지 업로드에 실패했습니다.");
+        updatedData = { ...updatedData, profileImage: imageUrl };
       }
 
-      // 업데이트된 데이터로 회원가입 진행
       const result = await signup(updatedData);
-      console.log("회원가입 성공", result);
-      setIsOpen(true); // 모달 오픈
+
+      if (!result.success) {
+        const errorMsg =
+          result.fieldErrors?.email?.[0] ||
+          result.fieldErrors?.password?.[0] ||
+          result.message ||
+          "회원가입에 실패했습니다. 다시 시도해주세요.";
+        setSubmitError(errorMsg);
+        return;
+      }
+
+      setIsOpen(true);
     } catch (error) {
-      console.log("회원가입 실패:", error);
+      const message =
+        error instanceof Error
+          ? error.message
+          : "회원가입 중 오류가 발생했습니다.";
+      setSubmitError(message);
     }
   };
 
@@ -74,6 +71,6 @@ export default function useSignupFormSteps({
     onSubmit,
     handleOk,
     isOpen,
-    // isNextButtonEnabled,
+    submitError,
   };
 }

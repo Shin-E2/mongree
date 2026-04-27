@@ -3,6 +3,8 @@ import { getPublicDiaries } from "./action";
 import CommunityDiarySection from "@/components/home/(dashboard)/community/diary-section";
 import styles from "./styles.module.css";
 
+export const dynamic = "force-dynamic";
+
 export default async function CommunityPage() {
   const { diaries } = await getPublicDiaries({ page: 1 });
 

@@ -1,14 +1,13 @@
 "use client";
 
 import { DiaryListDiaryCard } from "../diary-card";
-// import type { Database } from "@/lib/supabase.types"; // Database 타입 import 불필요
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { List } from "@/commons/components/list";
-import type { DiaryWithRelations } from "@/components/home/(dashboard)/diary/detail/types"; // DiaryWithRelations 타입 import
+import type { Diary } from "@/app/(dashboard)/diary/types";
 import styles from "./styles.module.css";
 
 interface DiaryListDiarySectionProps {
-  diaries: DiaryWithRelations[]; // DiaryWithRelations 타입 사용
+  diaries: Diary[];
   router: AppRouterInstance;
 }
 

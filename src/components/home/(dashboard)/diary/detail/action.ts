@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@/lib/supabase-server"; // Supabase 서버 클라이언트 임포트
+import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
 import { revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
@@ -8,74 +8,72 @@ import { redirect } from "next/navigation";
 export async function deleteDiary(diaryId: string) {
   try {
     const user = await getUser();
-    const supabase = await createClient(); // Supabase 클라이언트 초기화
+    const supabase = await createClient();
 
     const { data: diary, error: findError } = await supabase
-      .from("diary")
-      .select("userId")
+      .from("diaries")
+      .select("user_id")
       .eq("id", diaryId)
       .single();
 
-    if (findError || !diary || diary.userId !== user.id) {
+    if (findError || !diary || diary.user_id !== user.id) {
       console.error("Error finding diary or unauthorized:", findError);
-      return { error: "삭제 권한이 없거나 일기를 찾을 수 없습니다" };
+      return { error: "You do not have permission to delete this diary." };
     }
 
     const { error: deleteError } = await supabase
-      .from("diary")
+      .from("diaries")
       .delete()
       .eq("id", diaryId);
 
     if (deleteError) {
       console.error("Error deleting diary:", deleteError);
-      return { error: "일기 삭제에 실패했습니다" };
+      return { error: "Failed to delete diary." };
     }
 
     revalidateTag(`diary-${diaryId}`);
     redirect("/diary");
   } catch (error) {
     console.error("Unexpected error in deleteDiary:", error);
-    return { error: "일기 삭제에 실패했습니다" };
+    return { error: "Failed to delete diary." };
   }
 }
 
-// 공감하기 토글
 export async function toggleEmpathy(diaryId: string) {
   try {
     const user = await getUser();
-    const supabase = await createClient(); // Supabase 클라이언트 초기화
+    const supabase = await createClient();
 
     const { data: existingEmpathy, error: findEmpathyError } = await supabase
-      .from("diaryEmpathy")
+      .from("diary_likes")
       .select("id")
-      .eq("userId", user.id)
-      .eq("diaryId", diaryId)
-      .single();
+      .eq("user_id", user.id)
+      .eq("diary_id", diaryId)
+      .maybeSingle();
 
-    if (findEmpathyError && findEmpathyError.code !== "PGRST116") {
-      // PGRST116은 single() 결과 없음 오류
+    if (findEmpathyError) {
       console.error("Error finding empathy:", findEmpathyError);
-      return { error: "공감 처리 중 오류가 발생했습니다" };
+      return { error: "Failed to check empathy." };
     }
 
     if (existingEmpathy) {
       const { error: deleteEmpathyError } = await supabase
-        .from("diaryEmpathy")
+        .from("diary_likes")
         .delete()
         .eq("id", existingEmpathy.id);
 
       if (deleteEmpathyError) {
         console.error("Error deleting empathy:", deleteEmpathyError);
-        return { error: "공감 취소에 실패했습니다" };
+        return { error: "Failed to remove empathy." };
       }
     } else {
       const { error: createEmpathyError } = await supabase
-        .from("diaryEmpathy")
-        .insert({ userId: user.id, diaryId: diaryId });
+        .from("diary_likes")
+        .insert({ user_id: user.id, diary_id: diaryId });
 
       if (createEmpathyError) {
         console.error("Error creating empathy:", createEmpathyError);
-        return { error: "공감 추가에 실패했습니다" };
+        return { error: "Failed to add empathy." };
       }
     }
 
@@ -83,55 +81,55 @@ export async function toggleEmpathy(diaryId: string) {
 
     const { data: updatedEmpathies, error: fetchEmpathiesError } =
       await supabase
-        .from("diaryEmpathy")
-        .select("*, user:users(id, name, profileImage)") // 'users' 테이블명과 관계에 따라 조정 필요
-        .eq("diaryId", diaryId)
-        .order("createdAt", { ascending: false })
+        .from("diary_likes")
+        .select(
+          `
+          *,
+          profiles (
+            id,
+            user_id,
+            profile_image
+          )
+          `
+        )
+        .eq("diary_id", diaryId)
+        .order("created_at", { ascending: false })
         .limit(3);
 
     if (fetchEmpathiesError) {
       console.error("Error fetching updated empathies:", fetchEmpathiesError);
-      return { error: "공감 목록을 불러오는 데 실패했습니다" };
+      return { error: "Failed to load empathies." };
     }
 
     return {
       success: true,
-      empathies: updatedEmpathies,
+      empathies: updatedEmpathies?.map((empathy: any) => ({
+        ...empathy,
+        user: empathy.profiles,
+      })),
       isEmpathized: !existingEmpathy,
     };
   } catch (error) {
     console.error("Unexpected error in toggleEmpathy:", error);
-    return { error: "공감 처리에 실패했습니다" };
+    return { error: "Failed to update empathy." };
   }
 }
 
-// 댓글 수 계산 (대댓글 포함)
 export async function getCommentCount(diaryId: string) {
   try {
-    const supabase = await createClient(); // Supabase 클라이언트 초기화
+    const supabase = await createClient();
 
-    const { count: comments, error: commentCountError } = await supabase
-      .from("comment")
-      .select("*", { count: "exact" })
-      .eq("diaryId", diaryId);
+    const { count, error } = await supabase
+      .from("comments")
+      .select("*", { count: "exact", head: true })
+      .eq("diary_id", diaryId);
 
-    if (commentCountError) {
-      console.error("Error counting comments:", commentCountError);
-      return 0; // 또는 에러 처리 방식에 따라 변경
+    if (error) {
+      console.error("Error counting comments:", error);
+      return 0;
     }
 
-    const { count: replies, error: replyCountError } = await supabase
-      .from("comment")
-      .select("*", { count: "exact" })
-      .eq("diaryId", diaryId)
-      .not("parentId", "is", null);
-
-    if (replyCountError) {
-      console.error("Error counting replies:", replyCountError);
-      return 0; // 또는 에러 처리 방식에 따라 변경
-    }
-
-    return (comments || 0) + (replies || 0);
+    return count ?? 0;
   } catch (error) {
     console.error("Unexpected error in getCommentCount:", error);
     return 0;

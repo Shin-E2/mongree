@@ -63,7 +63,7 @@ function ImagePreviewBase<T extends FieldValues>({
           )}
 
           {images.map((image, index) => (
-            <div key={index} className={styles.imageItemWrapper}>
+            <div key={index} className={`${styles.imageItemWrapper} group`}>
               <div className={styles.imageItemThumbnailContainer}>
                 <Image
                   src={image.previewURL}
@@ -86,7 +86,7 @@ function ImagePreviewBase<T extends FieldValues>({
 
   return (
     <>
-      <div className={styles.singleImageGroup}>
+      <div className={`${styles.singleImageGroup} group`}>
         <label
           htmlFor="photo"
           className={`${cssprop} ${styles.common} ${className || ""}`}

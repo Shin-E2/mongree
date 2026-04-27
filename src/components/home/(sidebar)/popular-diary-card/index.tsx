@@ -36,7 +36,7 @@ export default function HomePopularDiaryCard({
   return (
     <div
       onClick={() => router.push(`/diary/${diaryData?.id}`)}
-      className={styles.cardContainer}
+      className={`${styles.cardContainer} group`}
     >
       {/* 헤더: 작성자 정보 & 감정 */}
       <div className={styles.header}>

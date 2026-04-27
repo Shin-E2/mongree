@@ -2,7 +2,7 @@
 
 import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
-import type { GetDiariesParams, DiaryResponse, Diary } from "./types";
+import type { Diary, DiaryResponse, GetDiariesParams } from "./types";
 
 const ITEMS_PER_PAGE = 12;
 
@@ -16,131 +16,124 @@ export async function getDiaries({
     const user = await getUser();
 
     if (!user) {
-      console.warn("getDiaries 함수: 사용자 정보가 없어 일기를 불러올 수 없습니다.");
       return {
         success: true,
         diaries: [],
         hasMore: false,
       };
     }
+
     const supabase = await createClient();
     const skip = (page - 1) * ITEMS_PER_PAGE;
 
     let query = supabase
-      .from('Diary')
+      .from("diaries")
       .select(
         `
         id,
         title,
         content,
-        createdAt,
-        updatedAt,
-        isPrivate,
-        userId,
-        DiaryEmotion (
-          emotionId,
-          diaryId,
-          Emotion (
+        created_at,
+        updated_at,
+        is_private,
+        user_id,
+        diary_emotions (
+          diary_id,
+          emotion_id,
+          emotions (
             id,
             label
           )
         ),
-        DiaryImage (
+        diary_images (
           id,
-          url,
-          order,
-          diaryId
+          image_url,
+          sort_order,
+          diary_id
         ),
-        DiaryTag (
-          tagId,
-          diaryId,
-          Tag (
+        diary_tags (
+          diary_id,
+          tag_id,
+          tags (
             id,
             name
           )
         )
         `,
-        { count: 'exact' }
+        { count: "exact" }
       )
-      .eq('userId', user.id);
+      .eq("user_id", user.id);
 
     if (searchTerm) {
       query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
     }
 
     if (emotions?.length) {
-      const emotionIds = emotions.join(',');
-      query = query.filter('id', 'in', 
-        `(select "diaryId" from "DiaryEmotion" where "emotionId" in (${emotionIds}))`
-      );
+      query = query.in("diary_emotions.emotion_id", emotions);
     }
 
     if (dateRange?.start && dateRange?.end) {
       query = query
-        .gte('createdAt', dateRange.start.toISOString())
-        .lte('createdAt', dateRange.end.toISOString());
+        .gte("created_at", dateRange.start.toISOString())
+        .lte("created_at", dateRange.end.toISOString());
     }
 
-    const { data: diaries, error: diariesError, count } = await query
-      .order('createdAt', { ascending: false })
+    const { data: diaries, error, count } = await query
+      .order("created_at", { ascending: false })
       .range(skip, skip + ITEMS_PER_PAGE - 1);
 
-    if (diariesError) {
-      console.error('Supabase 일기 조회 오류:', diariesError);
+    if (error) {
+      console.error("Supabase diary list error:", error);
       return {
         success: false,
         diaries: [],
         hasMore: false,
-        error: diariesError.message || "일기를 불러오는데 실패했습니다.",
+        error: error.message,
       };
     }
 
-    // 타입 안전한 데이터 포맷팅
-    const formattedDiaries: Diary[] = diaries?.map(diary => {
-      const { DiaryEmotion, DiaryImage, DiaryTag, ...baseData } = diary;
-      
-      return {
-        id: baseData.id,
-        title: baseData.title,
-        content: baseData.content,
-        userId: baseData.userId,
-        // 날짜 타입 변환
-        createdAt: baseData.createdAt ? new Date(baseData.createdAt) : new Date(),
-        updatedAt: baseData.updatedAt ? new Date(baseData.updatedAt) : new Date(),
-        // isPrivate null 처리
-        isPrivate: baseData.isPrivate ?? false,
-        
-        // DiaryEmotionItem[] 타입에 맞게 변환
-        diaryEmotion: DiaryEmotion?.map((de: any) => ({
-          emotion: {
-            id: de.Emotion?.id || '',
-            label: de.Emotion?.label || '',
-          },
-          diaryId: de.diaryId,
-          emotionId: de.emotionId,
-        })).filter((item: any) => item.emotion.id) || [],
-        
-        // DiaryImageItem[] 타입에 맞게 변환
-        images: DiaryImage?.map((image: any) => ({
-          id: image.id,
-          url: image.url,
-          order: image.order,
-          diaryId: image.diaryId,
-        })) || [],
-        
-        // DiaryTagItem[] 타입에 맞게 변환
-        tags: DiaryTag?.map((dt: any) => ({
-          tag: {
-            id: dt.Tag?.id || '',
-            name: dt.Tag?.name || '',
-          },
-          diaryId: dt.diaryId,
-          tagId: dt.tagId,
-        })).filter((item: any) => item.tag.id) || [],
-      };
-    }) || [];
+    const formattedDiaries: Diary[] = (diaries ?? []).map((diary: any) => ({
+      id: diary.id,
+      title: diary.title,
+      content: diary.content,
+      userId: diary.user_id,
+      createdAt: diary.created_at ? new Date(diary.created_at) : new Date(),
+      updatedAt: diary.updated_at ? new Date(diary.updated_at) : new Date(),
+      isPrivate: diary.is_private ?? false,
+      diaryEmotion:
+        diary.diary_emotions
+          ?.map((item: any) => ({
+            emotion: {
+              id: item.emotions?.id ?? "",
+              label: item.emotions?.label ?? "",
+            },
+            diaryId: item.diary_id,
+            emotionId: item.emotion_id,
+          }))
+          .filter((item: any) => item.emotion.id) ?? [],
+      images:
+        diary.diary_images
+          ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
+          .map((image: any) => ({
+            id: image.id,
+            url: image.image_url,
+            order: image.sort_order,
+            diaryId: image.diary_id,
+          })) ?? [],
+      tags:
+        diary.diary_tags
+          ?.map((item: any) => ({
+            tag: {
+              id: item.tags?.id ?? "",
+              name: item.tags?.name ?? "",
+            },
+            diaryId: item.diary_id,
+            tagId: item.tag_id,
+          }))
+          .filter((item: any) => item.tag.id) ?? [],
+    }));
 
-    const totalCount = count || 0;
+    const totalCount = count ?? 0;
 
     return {
       success: true,
@@ -148,12 +141,12 @@ export async function getDiaries({
       hasMore: skip + ITEMS_PER_PAGE < totalCount,
     };
   } catch (error) {
-    console.error('getDiaries 함수 오류:', error);
+    console.error("getDiaries error:", error);
     return {
       success: false,
       diaries: [],
       hasMore: false,
-      error: "일기를 불러오는데 실패했습니다.",
+      error: "Failed to load diaries.",
     };
   }
 }

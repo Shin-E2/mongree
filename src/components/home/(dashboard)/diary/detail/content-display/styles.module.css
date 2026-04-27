@@ -35,7 +35,7 @@
 }
 
 .proseWrapper {
-  @apply prose max-w-none;
+  @apply max-w-none;
 }
 
 .diaryContent {

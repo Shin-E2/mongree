@@ -94,8 +94,8 @@ export default function usePublicDiaryCard({
     optimisticData: {
       empathies: diary.empathies,
       count: diary._count?.empathies ?? 0,
-      isEmpathized: diary.empathies.some(
-        (empathy) => empathy.user.id === loginUser?.id
+      isEmpathized: (diary.empathies ?? []).some(
+        (empathy) => empathy.user?.id === loginUser?.id
       ),
     },
     isPending: false,

@@ -27,7 +27,7 @@
 }
 
 .imageItemWrapper {
-  @apply relative group flex-shrink-0;
+  @apply relative flex-shrink-0;
 }
 
 .imageItemThumbnailContainer {
@@ -43,7 +43,7 @@
 }
 
 .singleImageGroup {
-  @apply group;
+  @apply block;
 }
 
 .singleImageDeleteButton {

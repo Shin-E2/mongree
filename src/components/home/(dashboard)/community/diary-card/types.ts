@@ -1,12 +1,14 @@
-import type {
-  Database,
-  Tables
-} from "@/lib/supabase.types";
+import type { Database } from "@/lib/supabase.types";
 import type { PublicDiary } from "@/app/(dashboard)/community/types";
+
+type Profile = Database["public"]["Tables"]["profiles"]["Row"];
 
 export interface PublicDiaryCardProps {
   diary: PublicDiary;
-  loginUser: Pick<Database['public']['Tables']['profiles']['Row'], 'user_id' | 'nickname' | 'profile_image'> | null;
+  loginUser: Pick<
+    Profile,
+    "id" | "user_id" | "username" | "nickname" | "profile_image"
+  > | null;
 }
 
 export interface PublicEmpathyActionResult {
@@ -14,7 +16,7 @@ export interface PublicEmpathyActionResult {
   error?: string;
   empathies?: {
     id: string;
-    user: Pick<Database['public']['Tables']['profiles']['Row'], 'user_id' | 'profile_image'> | null;
+    user: Pick<Profile, "id" | "user_id" | "username" | "profile_image"> | null;
     createdAt: Date;
   }[];
   count?: number;

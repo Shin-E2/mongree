@@ -33,3 +33,7 @@
 .popularDiaryGrid {
   @apply grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4;
 }
+
+.emptyPopularText {
+  @apply col-span-3 py-8 text-center text-sm text-gray-400;
+}

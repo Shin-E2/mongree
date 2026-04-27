@@ -1,0 +1,23 @@
+.pageContainer {
+  @apply mb-20;
+}
+
+.contentWrapper {
+  @apply flex flex-col items-center justify-center px-4 py-16 md:mx-32;
+}
+
+.comingSoonCard {
+  @apply flex flex-col items-center gap-4 rounded-2xl border border-gray-100 bg-white p-12 text-center shadow-sm;
+}
+
+.icon {
+  @apply h-12 w-12 text-gray-300;
+}
+
+.title {
+  @apply text-xl font-semibold text-gray-600;
+}
+
+.description {
+  @apply max-w-sm text-sm leading-relaxed text-gray-400;
+}

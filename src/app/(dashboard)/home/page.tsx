@@ -3,7 +3,6 @@ import HomeEmotionStats from "@/components/home/(sidebar)/emotion-stats";
 import HomeEmotionalCalendar from "@/components/home/(sidebar)/emotional-calendar";
 import HomePopularDiaryCard from "@/components/home/(sidebar)/popular-diary-card";
 import HomeRecentDiary from "@/components/home/(sidebar)/recent-diary";
-import { popularDiaries } from "@/mock/popular-diaries";
 import { getHomeDashboardData } from "./action";
 import styles from "./styles.module.css";
 
@@ -36,9 +35,15 @@ export default async function HomePage() {
               </h2>
             </div>
             <div className={styles.popularDiaryGrid}>
-              {popularDiaries.map((diary) => (
-                <HomePopularDiaryCard key={diary.id} diary={diary} />
-              ))}
+              {dashboardData.popularDiaries.length > 0 ? (
+                dashboardData.popularDiaries.map((diary) => (
+                  <HomePopularDiaryCard key={diary.id} diary={diary} />
+                ))
+              ) : (
+                <p className={styles.emptyPopularText}>
+                  이번 주 공개된 인기 일기가 아직 없습니다.
+                </p>
+              )}
             </div>
           </div>
           <HomeRecentDiary diaries={dashboardData.recentDiaries} />

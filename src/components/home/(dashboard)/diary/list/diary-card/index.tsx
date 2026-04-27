@@ -7,14 +7,11 @@ import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.share
 import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
 import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
 import Image from "next/image";
-import type { DiaryWithRelations } from "@/components/home/(dashboard)/diary/detail/types";
+import type { Diary } from "@/app/(dashboard)/diary/types";
 import { TagList } from "@/commons/components/tag-list";
-import { Database } from "@/lib/supabase.types";
-
-type EmotionTable = Database["public"]["Tables"]["emotions"]["Row"];
 
 interface DiaryListDiaryCardProps {
-  diary: DiaryWithRelations;
+  diary: Diary;
   router: AppRouterInstance;
   onClick: () => void;
 }
@@ -23,20 +20,18 @@ export function DiaryListDiaryCard({
   diary,
   onClick,
 }: DiaryListDiaryCardProps) {
-  const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(
-    ({ emotion }: { emotion: EmotionTable }) => {
-      const emotionStyle =
-        EMOTION_STYLES[emotion.id as keyof typeof EMOTION_STYLES];
-      return {
-        id: emotion.id,
-        label: emotion.label,
-        image: EMOTIONS.find((e) => e.id === emotion.id)?.image || "",
-        bgColor: emotionStyle?.bgColor || "bg-gray-100",
-        borderColor: emotionStyle?.borderColor || "border-gray-400",
-        textColor: emotionStyle?.textColor || "text-gray-800",
-      };
-    }
-  );
+  const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(({ emotion }) => {
+    const emotionStyle =
+      EMOTION_STYLES[emotion.id as keyof typeof EMOTION_STYLES];
+    return {
+      id: emotion.id,
+      label: emotion.label,
+      image: EMOTIONS.find((e) => e.id === emotion.id)?.image || "",
+      bgColor: emotionStyle?.bgColor || "bg-gray-100",
+      borderColor: emotionStyle?.borderColor || "border-gray-400",
+      textColor: emotionStyle?.textColor || "text-gray-800",
+    };
+  });
 
   return (
     <div onClick={onClick} className={`${styles.container} group`}>
@@ -44,7 +39,7 @@ export function DiaryListDiaryCard({
       {diary.images && diary.images.length > 0 && (
         <div className={styles.image}>
           <Image
-            src={diary.images[0].image_url}
+            src={diary.images[0].url}
             alt="일기 이미지"
             className={styles.imageClass}
             width={300}
@@ -69,25 +64,25 @@ export function DiaryListDiaryCard({
         <div className={styles.contentHeader}>
           <h3 className={styles.title}>{diary.title}</h3>
           <time className={styles.date}>
-            {diary.created_at
-              ? formatToTimeAgo(new Date(diary.created_at).toISOString())
+            {diary.createdAt
+              ? formatToTimeAgo(new Date(diary.createdAt).toISOString())
               : "-"}
           </time>
         </div>
         <p className={styles.content}>{diary.content}</p>
         {(diary.tags ?? []).length > 0 && (
           <div className={styles.tagList}>
-            <TagList tags={(diary.tags ?? []).map((t) => ({ tag: t.tag }))} />
+            <TagList tags={diary.tags ?? []} />
           </div>
         )}
         <div className={styles.footer}>
           <div className={styles.privacy}>
             <span
               className={`${styles.privacyDot} ${
-                diary.is_private ? styles.privacyDotRed : styles.privacyDotGreen
+                diary.isPrivate ? styles.privacyDotRed : styles.privacyDotGreen
               }`}
             />
-            {diary.is_private ? "비공개" : "공개"}
+            {diary.isPrivate ? "비공개" : "공개"}
           </div>
         </div>
       </div>

@@ -32,9 +32,6 @@ create table if not exists public.profiles (
   nickname            text not null unique,
   full_name           text,
   profile_image       text,
-  zone_code           text,
-  address             text,
-  detail_address      text,
   is_active           boolean not null default true,
   is_profile_complete boolean not null default false,
   created_at          timestamptz not null default now(),
@@ -193,25 +190,19 @@ begin
 
   insert into public.profiles (
     id, username, nickname, full_name, profile_image,
-    zone_code, address, detail_address, is_profile_complete
+    is_profile_complete
   ) values (
     new.id,
     split_part(coalesce(new.email, ''), '@', 1),
     final_nickname,
     new.raw_user_meta_data ->> 'full_name',
     new.raw_user_meta_data ->> 'avatar_url',
-    coalesce(new.raw_user_meta_data ->> 'zoneCode',     new.raw_user_meta_data ->> 'zone_code'),
-    new.raw_user_meta_data ->> 'address',
-    coalesce(new.raw_user_meta_data ->> 'detailAddress', new.raw_user_meta_data ->> 'detail_address'),
     false
   )
   on conflict (id) do update set
     nickname            = excluded.nickname,
     full_name           = excluded.full_name,
     profile_image       = excluded.profile_image,
-    zone_code           = excluded.zone_code,
-    address             = excluded.address,
-    detail_address      = excluded.detail_address,
     updated_at          = now();
 
   return new;

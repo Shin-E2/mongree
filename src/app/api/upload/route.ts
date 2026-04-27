@@ -14,7 +14,7 @@ export async function POST(request: Request) {
     const key = `${Date.now()}-${fileName}`;
     // S3에 객체를 업로드하기 위한 PutObjectCommand 생성
     const command = new PutObjectCommand({
-      Bucket: process.env.AWS_BUCKET!, // 버킷이름
+      Bucket: process.env.AWS_S3_BUCKET_NAME!, // 버킷이름
       Key: key, // S3에 저장할 파일 이름
       ContentType: fileType,
     });

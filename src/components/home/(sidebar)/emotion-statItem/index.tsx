@@ -1,5 +1,5 @@
 import Image from "next/image";
-import { ProgressBarBase } from "@/commons/components/progress-bar";
+import ProgressBarBase from "@/commons/components/progress-bar";
 import styles from "./styles.module.css";
 
 interface EmotionStatItemProps {

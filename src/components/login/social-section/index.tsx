@@ -38,12 +38,6 @@ export default function LoginSocialSection() {
           provider="kakao"
           onClick={() => handleSocialLogin("kakao")}
         />
-        {/* Naver: Supabase 미지원, 추후 구현 예정 */}
-        <ButtonIconSocial
-          provider="naver"
-          disabled
-          title="준비 중입니다"
-        />
       </div>
     </section>
   );

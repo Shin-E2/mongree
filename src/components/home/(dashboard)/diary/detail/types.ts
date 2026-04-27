@@ -4,13 +4,15 @@ import type {
 } from "@/lib/supabase.types";
 import type { ICommentWithUser } from "@/commons/components/comment/types";
 
-// profiles 테이블 기반 사용자 기본 정보 타입 정의
-export type UserBasicInfo = Pick<Database['public']['Tables']['profiles']['Row'], "id" | "user_id" | "username" | "profile_image">;
-
 // profiles 테이블 기반 사용자 기본 정보 타입
+export type UserBasicInfo = Pick<
+  Database["public"]["Tables"]["profiles"]["Row"],
+  "id" | "nickname" | "profile_image"
+>;
+
 export type UserBasicInfoForDetail = Pick<
   Database["public"]["Tables"]["profiles"]["Row"],
-  "id" | "user_id" | "username" | "profile_image"
+  "id" | "nickname" | "profile_image"
 >;
 
 // optimisticEmpathies 배열 요소의 사용자 정보 타입

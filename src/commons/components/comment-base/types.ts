@@ -1,7 +1,7 @@
 import { Database } from "@/lib/supabase.types";
 
 // profiles 테이블 기반 사용자 정보 타입 정의
-type UserProfileForComment = Pick<Database['public']['Tables']['profiles']['Row'], "id" | "username" | "profile_image">;
+type UserProfileForComment = Pick<Database['public']['Tables']['profiles']['Row'], "id" | "nickname" | "profile_image">;
 
 export interface ICommentBaseProps {
   user: UserProfileForComment | null; // profiles 테이블 기반 사용자 정보
@@ -16,4 +16,4 @@ export interface ICommentBaseProps {
   onDelete?: () => void;
   cssprop: string;
   className?: string;
-} 
+}

@@ -24,7 +24,7 @@ export const CommentBase = ({
         <div className={styles.imageWrapper}>
           <ImageThumbnail
             src={user?.profile_image || DEFAULT_PROFILE_IMAGE}
-            alt={user?.username || "사용자"}
+            alt={user?.nickname || "사용자"}
             width={40}
             height={40}
             shape="circle"
@@ -36,7 +36,7 @@ export const CommentBase = ({
           <div className={styles.headerContainer}>
             <div className={styles.userInfoContainer}>
               <span className={styles.username}>
-                {user?.username || "사용자"}
+                {user?.nickname || "사용자"}
               </span>
               <span className={styles.divider}>•</span>
               <span className={styles.timestamp}>

@@ -1,5 +1,5 @@
 export interface IUserProfileHeaderProps {
   profileImage: string | null;
-  username: string | null;
+  displayName: string | null;
   createdAt: string | null;
-} 
+}

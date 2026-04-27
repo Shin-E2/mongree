@@ -9,8 +9,6 @@ interface DiaryLikeRow {
   created_at: string | null;
   profiles: {
     id: string;
-    user_id: string;
-    username: string | null;
     nickname: string;
     profile_image: string | null;
   } | null;
@@ -67,8 +65,6 @@ export async function togglePublicEmpathy(diaryId: string) {
           created_at,
           profiles (
             id,
-            user_id,
-            username,
             nickname,
             profile_image
           )

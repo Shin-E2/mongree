@@ -30,7 +30,7 @@ export function DiaryComment({
       !currentUserId ||
       !isOwner ||
       !comment.user ||
-      comment.user.user_id !== currentUserId
+      comment.user.id !== currentUserId
     )
       return;
 
@@ -67,7 +67,7 @@ export function DiaryReply({
   const [isPending, startTransition] = useTransition();
   const isLiked =
     reply.likes?.some((like) => like.user_id === currentUserId) || false;
-  const isOwner = reply.user?.user_id === currentUserId;
+  const isOwner = reply.user?.id === currentUserId;
 
   const handleLike = () => {
     if (!currentUserId) return;
@@ -82,7 +82,7 @@ export function DiaryReply({
       !currentUserId ||
       !isOwner ||
       !reply.user ||
-      reply.user.user_id !== currentUserId
+      reply.user.id !== currentUserId
     )
       return;
 

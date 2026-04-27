@@ -107,7 +107,7 @@ export default function CounselorProfilePage() {
                     <div className={styles.reviewHeader}>
                       <UserProfileHeader
                         profileImage={DEFAULT_PROFILE_IMAGE}
-                        username="김토닥"
+                        displayName="김토닥"
                         createdAt="2024.03.15"
                       />
                       <StarRating rating={5} size="small" />

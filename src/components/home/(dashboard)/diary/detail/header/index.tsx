@@ -1,10 +1,12 @@
-import { ChevronLeft, Share2, Trash2 } from "lucide-react";
+import { ChevronLeft, Pencil, Share2, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import type { DiaryDetailHeaderProps } from "./types";
 import styles from "./styles.module.css";
 
 export default function DiaryDetailHeader({
   isOwner,
+  diaryId,
   isPrivate,
   setShowDeleteModal,
 }: DiaryDetailHeaderProps) {
@@ -24,13 +26,22 @@ export default function DiaryDetailHeader({
             </button>
           )}
           {isOwner && (
-            <button
-              onClick={() => setShowDeleteModal(true)}
-              className={styles.deleteButton}
-              title="삭제하기"
-            >
-              <Trash2 className={styles.iconBase} />
-            </button>
+            <>
+              <Link
+                href={`/diary/${diaryId}/edit`}
+                className={styles.editButton}
+                title="수정하기"
+              >
+                <Pencil className={styles.iconBase} />
+              </Link>
+              <button
+                onClick={() => setShowDeleteModal(true)}
+                className={styles.deleteButton}
+                title="삭제하기"
+              >
+                <Trash2 className={styles.iconBase} />
+              </button>
+            </>
           )}
         </div>
       </div>

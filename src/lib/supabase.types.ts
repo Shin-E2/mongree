@@ -319,9 +319,7 @@ export type Database = {
       }
       profiles: {
         Row: {
-          address: string | null
           created_at: string | null
-          detail_address: string | null
           full_name: string | null
           id: string
           is_active: boolean | null
@@ -331,12 +329,9 @@ export type Database = {
           updated_at: string | null
           user_id: string
           username: string | null
-          zone_code: string | null
         }
         Insert: {
-          address?: string | null
           created_at?: string | null
-          detail_address?: string | null
           full_name?: string | null
           id: string
           is_active?: boolean | null
@@ -345,12 +340,9 @@ export type Database = {
           profile_image?: string | null
           updated_at?: string | null
           username?: string | null
-          zone_code?: string | null
         }
         Update: {
-          address?: string | null
           created_at?: string | null
-          detail_address?: string | null
           full_name?: string | null
           id?: string
           is_active?: boolean | null
@@ -359,7 +351,6 @@ export type Database = {
           profile_image?: string | null
           updated_at?: string | null
           username?: string | null
-          zone_code?: string | null
         }
         Relationships: []
       }

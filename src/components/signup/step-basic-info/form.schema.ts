@@ -6,13 +6,6 @@ import {
 } from "./constants";
 import { checkEmail, checkPasswords } from "./action";
 
-// 주소 검증 스키마
-export const AddressFormSchema = z.object({
-  zoneCode: z.string().optional(),
-  address: z.string().optional(),
-  detailAddress: z.string().optional(),
-});
-
 // 회원가입 검증 스키마
 export const SignupFormSchema = z
   .object({
@@ -30,7 +23,6 @@ export const SignupFormSchema = z
     passwordConfirm: z
       .string()
       .min(PASSWORD_MIN_LENGTH, "비밀번호는 10자 이상 작성해주세요."),
-    address: AddressFormSchema,
     profileImage: z.union([
       z.string(), // S3 URL string
       z.instanceof(File), // File 객체

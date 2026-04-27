@@ -4,7 +4,9 @@ export interface ICommentFormProps {
   diaryId: string;
   user: UserBasicInfo | null;
   placeholder?: string;
+  isReply?: boolean;
+  parentId?: string;
+  onSuccess?: () => void;
   onReply?: (commentId: string | null) => void;
   onCommentSubmitted?: () => void;
-  parentCommentId?: string; // 대댓글 작성을 위한 부모 댓글 ID
-} 
+}

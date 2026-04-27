@@ -25,9 +25,9 @@ export default function UserProfileHeader({
       <div>
         <div className={styles.userInfo}>{username || "사용자"}</div>
         <div className={styles.createdAt}>
-          {createdAt
+          {createdAt && !isNaN(new Date(createdAt).getTime())
             ? formatToTimeAgo(new Date(createdAt).toISOString())
-            : "날짜 정보 없음"}
+            : createdAt || "날짜 정보 없음"}
         </div>
       </div>
     </div>

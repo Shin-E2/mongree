@@ -2,16 +2,12 @@
 
 import { createSupabaseBrowserClient } from "@/lib/supabase/supabase";
 import { useSearchParams, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
-import {
-  SESSION_STORAGE_KEY,
-  SignupTempFormData,
-} from "@/commons/constants/signup";
+import { useEffect, useState, Suspense } from "react";
 import AuthPageLayout from "@/components/layout/auth-page-layout";
 import { CardStandardFullFull } from "@/commons/components/card";
 import styles from "./styles.module.css";
 
-export default function ConfirmPage() {
+function ConfirmContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const [verificationStatus, setVerificationStatus] = useState<
@@ -53,30 +49,38 @@ export default function ConfirmPage() {
   }, [searchParams, router]);
 
   return (
+    <CardStandardFullFull className={styles.cardContent}>
+      {verificationStatus === "pending" && (
+        <p className={styles.pendingText}>이메일 인증을 처리 중입니다...</p>
+      )}
+      {verificationStatus === "success" && (
+        <>
+          <p className={styles.successText}>
+            이메일이 성공적으로 인증되었습니다!
+          </p>
+          <p className={styles.successDescription}>
+            이 창을 닫고 원래 페이지로 돌아가 회원가입을 계속 진행해주세요.
+          </p>
+        </>
+      )}
+      {verificationStatus === "error" && (
+        <>
+          <p className={styles.errorText}>이메일 인증에 실패했습니다.</p>
+          <p className={styles.errorDescription}>
+            다시 시도하거나 고객 지원팀에 문의해주세요.
+          </p>
+        </>
+      )}
+    </CardStandardFullFull>
+  );
+}
+
+export default function ConfirmPage() {
+  return (
     <AuthPageLayout>
-      <CardStandardFullFull className={styles.cardContent}>
-        {verificationStatus === "pending" && (
-          <p className={styles.pendingText}>이메일 인증을 처리 중입니다...</p>
-        )}
-        {verificationStatus === "success" && (
-          <>
-            <p className={styles.successText}>
-              이메일이 성공적으로 인증되었습니다!
-            </p>
-            <p className={styles.successDescription}>
-              이 창을 닫고 원래 페이지로 돌아가 회원가입을 계속 진행해주세요.
-            </p>
-          </>
-        )}
-        {verificationStatus === "error" && (
-          <>
-            <p className={styles.errorText}>이메일 인증에 실패했습니다.</p>
-            <p className={styles.errorDescription}>
-              다시 시도하거나 고객 지원팀에 문의해주세요.
-            </p>
-          </>
-        )}
-      </CardStandardFullFull>
+      <Suspense fallback={<p>로딩 중...</p>}>
+        <ConfirmContent />
+      </Suspense>
     </AuthPageLayout>
   );
 }

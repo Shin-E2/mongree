@@ -1,7 +1,9 @@
+import React from "react";
+
 export interface ISignupStepProps {
   id: number;
   label: string;
-  Component: React.FC<{ state?: any }>;
+  Component: React.ComponentType<any>;
   fields: string[];
 }
 

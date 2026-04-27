@@ -42,8 +42,8 @@ export default function HomePopularDiaryCard({
       <div className={styles.header}>
         <UserProfileHeader
           profileImage={diaryData?.profileImage || DEFAULT_PROFILE_IMAGE}
-          username={diaryData?.authorName}
-          createdAt={diaryData?.createdAt}
+          username={diaryData?.authorName ?? null}
+          createdAt={diaryData?.createdAt ?? null}
         />
         <span className={styles.emotionBadge}>{diaryData?.emotion.label}</span>
       </div>
@@ -66,11 +66,13 @@ export default function HomePopularDiaryCard({
         <div className={styles.interactionButtons}>
           <InteractionButton
             icon={<Heart className={styles.iconBase} />}
+            label="공감"
             count={diaryData?.likes}
             className={styles.interactionButtonText}
           />
           <InteractionButton
             icon={<MessageCircle className={styles.iconBase} />}
+            label="댓글"
             count={diaryData?.comments}
             className={styles.interactionButtonText}
           />

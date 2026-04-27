@@ -10,6 +10,7 @@ export interface IInputFieldBaseProps<T extends FieldValues> {
   isAddress?: boolean;
   errors?: string;
   register?: UseFormRegister<T>;
+  disabled?: boolean;
 }
 
 export interface IInputFieldStandardSFullProps<T extends FieldValues>

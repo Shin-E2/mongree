@@ -4,6 +4,7 @@ export interface IButtonIconBaseProps {
   onClick?: (() => void) | ((e: React.MouseEvent) => void);
   className?: string;
   type?: "submit" | "reset" | "button";
+  disabled?: boolean;
 }
 
 export interface IButtonIconCommonProps

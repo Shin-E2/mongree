@@ -10,7 +10,7 @@ export interface IModalBaseProps {
   cssprop: string;
   variant?: ModalType;
   children?: React.ReactNode;
-  isOpen: boolean;
+  isOpen?: boolean;
   onClose?: () => void;
   isAddress?: boolean;
   title?: string;

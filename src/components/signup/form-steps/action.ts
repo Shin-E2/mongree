@@ -7,14 +7,14 @@ import {
 } from "../step-basic-info/form.schema";
 import { createClient } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
-import { uploadImage } from "@/commons/utils/upload-images";
+import { uploadImageServer } from "@/commons/utils/upload-images";
 
 export async function signup(data: SignupFormType) {
   try {
     // 1. 이미지 업로드
     let profileImageUrl: string | null = null;
     if (data.profileImage && data.profileImage instanceof File) {
-      profileImageUrl = await uploadImage(data.profileImage);
+      profileImageUrl = await uploadImageServer(data.profileImage);
     } else if (typeof data.profileImage === "string") {
       profileImageUrl = data.profileImage;
     }

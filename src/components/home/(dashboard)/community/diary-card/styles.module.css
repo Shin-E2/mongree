@@ -2,12 +2,12 @@
   @apply bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full relative;
 }
 
-.linkOverlay {
-  @apply absolute inset-0 z-0;
+.detailLink {
+  @apply flex flex-1 flex-col text-inherit no-underline;
 }
 
 .headerSection {
-  @apply p-4 border-b flex items-center justify-between relative z-10;
+  @apply p-4 border-b flex items-center justify-between;
 }
 
 .emotionBadgeListWrapper {
@@ -15,7 +15,7 @@
 }
 
 .contentSection {
-  @apply p-4 flex-1 flex flex-col relative z-10;
+  @apply p-4 flex-1 flex flex-col;
 }
 
 .titleWrapper {
@@ -35,7 +35,7 @@
 }
 
 .footerSection {
-  @apply px-4 py-3 bg-gray-50 border-t flex items-center justify-between relative z-10;
+  @apply px-4 py-3 bg-gray-50 border-t flex items-center justify-between;
 }
 
 .interactionButtonsWrapper {

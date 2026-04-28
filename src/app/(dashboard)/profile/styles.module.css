@@ -3,21 +3,170 @@
 }
 
 .contentWrapper {
-  @apply flex flex-col items-center justify-center px-4 py-16 md:mx-32;
+  @apply flex flex-col gap-6 px-4 py-6 md:px-8;
 }
 
-.comingSoonCard {
-  @apply flex flex-col items-center gap-4 rounded-2xl border border-gray-100 bg-white p-12 text-center shadow-sm;
+.heroSection {
+  @apply rounded-xl bg-white p-5 shadow-sm lg:p-7;
 }
 
-.icon {
-  @apply h-12 w-12 text-gray-300;
+.badge {
+  @apply mb-4 inline-flex rounded-full bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-600;
 }
 
-.title {
-  @apply text-xl font-semibold text-gray-600;
+.heroTitle {
+  @apply text-2xl font-bold leading-tight text-gray-950 sm:text-3xl;
 }
 
-.description {
-  @apply max-w-sm text-sm leading-relaxed text-gray-400;
+.heroDescription {
+  @apply mt-3 max-w-3xl text-sm leading-6 text-gray-500 sm:text-base;
+}
+
+.summaryGrid {
+  @apply grid gap-4 sm:grid-cols-3;
+}
+
+.summaryCard {
+  @apply flex min-h-32 flex-col rounded-xl bg-white p-5 shadow-sm;
+}
+
+.summaryIcon {
+  @apply mb-4 h-5 w-5 text-indigo-500;
+}
+
+.summaryValue {
+  @apply text-3xl font-bold text-gray-950;
+}
+
+.summaryLabel {
+  @apply mt-1 text-sm font-medium text-gray-600;
+}
+
+.interactiveGrid {
+  @apply grid gap-6 xl:grid-cols-[360px_minmax(0,1fr)];
+}
+
+.panel {
+  @apply rounded-xl bg-white p-5 shadow-sm;
+}
+
+.panelHeader {
+  @apply mb-5 flex items-start justify-between gap-3;
+}
+
+.panelTitle {
+  @apply text-lg font-semibold text-gray-900;
+}
+
+.panelDescription {
+  @apply mt-1 text-sm leading-6 text-gray-500;
+}
+
+.profileForm {
+  @apply flex flex-col gap-5;
+}
+
+.avatarEditor {
+  @apply flex items-center gap-4 rounded-xl bg-gray-50 p-4;
+}
+
+.avatarImage {
+  @apply ring-4 ring-white;
+}
+
+.avatarActions {
+  @apply flex flex-col gap-2;
+}
+
+.fileInput {
+  @apply sr-only;
+}
+
+.fieldGroup {
+  @apply flex flex-col gap-2;
+}
+
+.label {
+  @apply text-sm font-semibold text-gray-800;
+}
+
+.textInput {
+  @apply h-11 w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100;
+}
+
+.fieldHint {
+  @apply text-xs leading-5 text-gray-400;
+}
+
+.primaryButton,
+.secondaryButton,
+.primaryLink {
+  @apply inline-flex h-10 items-center justify-center rounded-lg px-4 text-sm font-semibold transition-colors;
+}
+
+.primaryButton,
+.primaryLink {
+  @apply bg-indigo-600 text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:bg-gray-300;
+}
+
+.secondaryButton {
+  @apply border border-gray-200 bg-white text-gray-700 hover:border-indigo-200 hover:bg-indigo-50 hover:text-indigo-700 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.dangerTextButton {
+  @apply rounded-lg px-3 py-2 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-300 disabled:hover:bg-transparent;
+}
+
+.commentList {
+  @apply flex flex-col gap-3;
+}
+
+.commentCard {
+  @apply rounded-lg border border-gray-100 bg-gray-50 p-4;
+}
+
+.commentHeader {
+  @apply mb-3 flex items-start justify-between gap-3;
+}
+
+.commentDiaryTitle {
+  @apply line-clamp-1 text-sm font-semibold text-gray-900;
+}
+
+.commentMeta {
+  @apply mt-1 text-xs font-medium text-gray-400;
+}
+
+.deleteButton {
+  @apply rounded-lg px-3 py-1.5 text-sm font-semibold text-red-500 transition-colors hover:bg-red-50 disabled:cursor-not-allowed disabled:text-gray-300;
+}
+
+.commentContent {
+  @apply line-clamp-3 whitespace-pre-line break-words text-sm leading-6 text-gray-600;
+}
+
+.commentLink {
+  @apply mt-3 inline-flex text-sm font-medium text-indigo-600 hover:text-indigo-700;
+}
+
+.statusMessage {
+  @apply xl:col-span-2 rounded-lg bg-indigo-50 px-4 py-3 text-sm font-medium text-indigo-700;
+}
+
+.emptyState {
+  @apply flex min-h-52 flex-col items-center justify-center rounded-xl border border-dashed border-gray-200 bg-white px-6 py-10 text-center shadow-sm;
+}
+
+.emptyTitle {
+  @apply text-base font-semibold text-gray-800;
+}
+
+.emptyDescription {
+  @apply mt-2 max-w-md text-sm leading-6 text-gray-500;
+}
+
+@media (max-width: 640px) {
+  .avatarEditor {
+    @apply flex-col items-start;
+  }
 }

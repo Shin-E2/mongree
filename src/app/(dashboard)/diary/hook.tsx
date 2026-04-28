@@ -20,7 +20,7 @@ export default function useDiaryList() {
     end: null,
   });
 
-  // 데이터 로드 함수
+  // 일기 목록 조회
   const loadDiaries = useCallback(
     async (pageNum: number, isNewSearch = false) => {
       setIsLoading(true);
@@ -66,7 +66,7 @@ export default function useDiaryList() {
     onLoadMore: loadMoreDiaries,
   });
 
-  // 검색어 입력 시 디바운스 처리
+  // 검색어와 필터가 바뀌면 첫 페이지부터 다시 조회
   useEffect(() => {
     const timer = setTimeout(() => {
       setPage(1);
@@ -74,39 +74,15 @@ export default function useDiaryList() {
     }, 300);
 
     return () => clearTimeout(timer);
-  }, [searchTerm, loadDiaries]);
+  }, [searchTerm, selectedEmotions, dateRange, loadDiaries]);
 
-  // 감정 필터 변경 함수
-  const handleEmotionToggle = useCallback(
-    (emotionId: string) => {
-      setSelectedEmotions((prev) => {
-        const newSelected = prev.includes(emotionId)
-          ? prev.filter((id) => id !== emotionId)
-          : [...prev, emotionId];
-
-        // 여기서 바로 데이터 리로드를 트리거하기 위해 setTimeout 사용
-        setTimeout(() => {
-          setPage(1);
-          loadDiaries(1, true);
-        }, 0);
-
-        return newSelected;
-      });
-    },
-    [loadDiaries]
-  );
-
-  // 날짜 범위 변경 시 데이터 리로드
-  useEffect(() => {
-    if (dateRange.start && dateRange.end) {
-      setPage(1);
-      loadDiaries(1, true);
-    }
-  }, [dateRange, loadDiaries]);
-
-  // 초기 데이터 로드
-  useEffect(() => {
-    loadDiaries(1, true);
+  // 감정 필터 변경
+  const handleEmotionToggle = useCallback((emotionId: string) => {
+    setSelectedEmotions((prev) =>
+      prev.includes(emotionId)
+        ? prev.filter((id) => id !== emotionId)
+        : [...prev, emotionId]
+    );
   }, []);
 
   return {

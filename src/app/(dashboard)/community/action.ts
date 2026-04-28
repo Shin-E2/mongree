@@ -75,6 +75,42 @@ export async function getPublicDiaries({
     const supabase = await createClient();
     const skip = (page - 1) * ITEMS_PER_PAGE;
     const keyword = searchTerm?.trim();
+    const emotionIds = emotions?.filter(Boolean) ?? [];
+
+    // 선택한 감정 중 하나라도 연결된 일기만 조회
+    let filteredDiaryIds: string[] | null = null;
+    if (emotionIds.length > 0) {
+      const { data: emotionRows, error: emotionError } = await supabase
+        .from("diary_emotions")
+        .select("diary_id, diaries!inner(is_private, deleted_at)")
+        .in("emotion_id", emotionIds)
+        .eq("diaries.is_private", false)
+        .is("diaries.deleted_at", null);
+
+      if (emotionError) {
+        console.error("Supabase public diary emotion filter error:", emotionError);
+        return {
+          success: false,
+          diaries: [],
+          hasMore: false,
+          total: 0,
+          error: emotionError.message,
+        };
+      }
+
+      filteredDiaryIds = Array.from(
+        new Set((emotionRows ?? []).map((row) => row.diary_id))
+      );
+
+      if (filteredDiaryIds.length === 0) {
+        return {
+          success: true,
+          diaries: [],
+          hasMore: false,
+          total: 0,
+        };
+      }
+    }
 
     let query = supabase
       .from("diaries")
@@ -138,8 +174,8 @@ export async function getPublicDiaries({
       query = query.or(`title.ilike.%${keyword}%,content.ilike.%${keyword}%`);
     }
 
-    if (emotions?.length) {
-      query = query.in("diary_emotions.emotion_id", emotions);
+    if (filteredDiaryIds) {
+      query = query.in("id", filteredDiaryIds);
     }
 
     query = query.order("created_at", { ascending: false });

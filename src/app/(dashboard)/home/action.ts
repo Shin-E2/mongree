@@ -46,6 +46,7 @@ export interface HomePopularDiary {
 
 export interface HomeDashboardData {
   monthLabel: string;
+  monthDate: string;
   emotionStats: HomeEmotionStat[];
   calendarEntries: HomeCalendarEntry[];
   recentDiaries: HomeRecentDiary[];
@@ -76,9 +77,11 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
   const startOfNextMonth = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   const monthLabel = `${now.getMonth() + 1}월의 감정 기록`;
+  const monthDate = toDateKey(startOfMonth);
 
   const emptyData: HomeDashboardData = {
     monthLabel,
+    monthDate,
     emotionStats: [],
     calendarEntries: [],
     recentDiaries: [],
@@ -259,6 +262,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
 
   return {
     monthLabel,
+    monthDate,
     emotionStats,
     calendarEntries: Array.from(calendarMap.values()),
     recentDiaries,

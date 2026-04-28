@@ -10,7 +10,11 @@ export default function DiaryDeleteModal({
   handleDeleteWithError,
 }: DiaryDeleteModalProps) {
   return (
-    <ModalStandardFitFit isOpen={isOpen} onClose={onClose} title="일기 삭제">
+    <ModalStandardFitFit
+      isOpen={isOpen}
+      onClose={isPending ? undefined : onClose}
+      title="일기 삭제"
+    >
       <div className={styles.modalContent} aria-busy={isPending}>
         <p className={styles.message}>이 일기를 정말 삭제하시겠습니까?</p>
         {deleteError && <p className={styles.errorMessage}>{deleteError}</p>}

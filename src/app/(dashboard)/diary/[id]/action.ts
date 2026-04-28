@@ -81,7 +81,9 @@ export async function getDiaryDetail(diaryId: string) {
       throw new Error("Diary not found.");
     }
 
-    const comments = diary.comments ?? [];
+    const comments = (diary.comments ?? []).filter(
+      (comment: any) => comment.deleted_at === null
+    );
     const topLevelComments = comments
       .filter((comment: any) => comment.parent_id === null)
       .map((comment: any) => ({

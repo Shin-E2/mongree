@@ -1,6 +1,9 @@
 "use server";
 
-import { revalidateTag } from "next/cache";
+import {
+  revalidateCommentLike,
+  revalidateDiaryComments,
+} from "@/commons/utils/cache-revalidation";
 import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
 
@@ -56,8 +59,7 @@ export async function toggleCommentLike(commentId: string, diaryId: string) {
       }
     }
 
-    revalidateTag(`comment-${commentId}`);
-    revalidateTag(`diary-comments-${diaryId}`);
+    revalidateCommentLike({ diaryId, commentId });
     return { success: true };
   } catch (error) {
     return { error: "Failed to update comment like." };
@@ -130,10 +132,7 @@ export async function addComment(formData: FormData) {
       throw new Error(createCommentError.message);
     }
 
-    revalidateTag(`comments-${diaryId}`);
-    if (parentId) {
-      revalidateTag(`replies-${parentId}`);
-    }
+    revalidateDiaryComments(diaryId, parentId);
 
     return { success: true, comment: formatComment(comment) };
   } catch (error) {
@@ -173,10 +172,7 @@ export async function deleteComment(commentId: string, diaryId: string) {
       throw new Error(deleteCommentError.message);
     }
 
-    revalidateTag(`comments-${diaryId}`);
-    if (commentToDelete.parent_id) {
-      revalidateTag(`replies-${commentToDelete.parent_id}`);
-    }
+    revalidateDiaryComments(diaryId, commentToDelete.parent_id);
 
     return { success: true };
   } catch (error) {

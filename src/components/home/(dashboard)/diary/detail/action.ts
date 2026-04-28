@@ -2,7 +2,10 @@
 
 import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
-import { revalidateTag } from "next/cache";
+import {
+  revalidateDiaryDeleted,
+  revalidateDiaryEmpathy,
+} from "@/commons/utils/cache-revalidation";
 import { redirect } from "next/navigation";
 
 export async function deleteDiary(diaryId: string) {
@@ -13,7 +16,7 @@ export async function deleteDiary(diaryId: string) {
 
   const { data: diary, error: findError } = await supabase
     .from("diaries")
-    .select("user_id")
+    .select("user_id, is_private")
     .eq("id", diaryId)
     .single();
 
@@ -30,7 +33,11 @@ export async function deleteDiary(diaryId: string) {
     return { error: "일기 삭제에 실패했습니다." };
   }
 
-  revalidateTag(`diary-${diaryId}`);
+  revalidateDiaryDeleted({
+    userId: user.id,
+    diaryId,
+    wasPrivate: diary.is_private ?? true,
+  });
   redirect("/diary");
 }
 
@@ -73,7 +80,7 @@ export async function toggleEmpathy(diaryId: string) {
       }
     }
 
-    revalidateTag(`diary-empathies-${diaryId}`);
+    revalidateDiaryEmpathy(diaryId);
 
     const { data: updatedEmpathies, error: fetchEmpathiesError } =
       await supabase

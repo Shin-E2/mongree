@@ -3,8 +3,12 @@
 import { ButtonOptionEmotion } from "@/commons/components/button-option";
 import { SmartModal } from "@/commons/components/modal";
 import { ModalType } from "@/commons/components/modal/types";
-import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
-import type { DiaryNewFormType } from "@/components/home/(dashboard)/diary/new/form.schema";
+import {
+  DIARY_CONTENT_MAX_LENGTH,
+  DIARY_TITLE_MAX_LENGTH,
+  DiaryNewFormSchema,
+  type DiaryNewFormType,
+} from "@/components/home/(dashboard)/diary/new/form.schema";
 import { EMOTIONS } from "@/mock/emotions";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, X } from "lucide-react";
@@ -68,6 +72,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
     formState: { errors },
   } = useForm<DiaryNewFormType>({
     resolver: zodResolver(DiaryNewFormSchema),
+    mode: "onChange",
     defaultValues: {
       isPrivate: diary.isPrivate,
       emotions: diary.emotions,
@@ -80,6 +85,8 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
 
   const selectedEmotions = watch("emotions") ?? [];
   const isPrivate = watch("isPrivate");
+  const titleLength = watch("title")?.length ?? 0;
+  const contentLength = watch("content")?.length ?? 0;
 
   const tagInputValue = useMemo(() => diary.tags.join(", "), [diary.tags]);
   const imageCount = existingImages.length + newImages.length;
@@ -252,9 +259,20 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
               placeholder="제목을 입력하세요"
               {...register("title")}
             />
-            {errors.title?.message && (
-              <p className={styles.errorText}>{errors.title.message}</p>
-            )}
+            <div className={styles.helperRow}>
+              <span className={errors.title?.message ? styles.errorText : styles.helperText}>
+                {errors.title?.message ?? "짧게 기억할 수 있는 제목"}
+              </span>
+              <span
+                className={
+                  titleLength > DIARY_TITLE_MAX_LENGTH
+                    ? styles.countTextError
+                    : styles.countText
+                }
+              >
+                {titleLength}/{DIARY_TITLE_MAX_LENGTH}
+              </span>
+            </div>
           </div>
 
           <div className={styles.fieldGroup}>
@@ -267,9 +285,21 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
               placeholder="오늘 하루는 어땠나요?"
               {...register("content")}
             />
-            {errors.content?.message && (
-              <p className={styles.errorText}>{errors.content.message}</p>
-            )}
+            <div className={styles.helperRow}>
+              <span className={errors.content?.message ? styles.errorText : styles.helperText}>
+                {errors.content?.message ?? "길게 써도 괜찮아요"}
+              </span>
+              <span
+                className={
+                  contentLength > DIARY_CONTENT_MAX_LENGTH
+                    ? styles.countTextError
+                    : styles.countText
+                }
+              >
+                {contentLength.toLocaleString()}/
+                {DIARY_CONTENT_MAX_LENGTH.toLocaleString()}
+              </span>
+            </div>
           </div>
 
           <div className={styles.fieldGroup}>

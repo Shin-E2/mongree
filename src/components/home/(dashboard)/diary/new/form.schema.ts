@@ -3,6 +3,9 @@ import { EMOTIONS } from "@/mock/emotions";
 
 const emotionIds = EMOTIONS.map((e) => e.id);
 
+export const DIARY_TITLE_MAX_LENGTH = 80;
+export const DIARY_CONTENT_MAX_LENGTH = 10000;
+
 export const DiaryNewFormSchema = z.object({
   isPrivate: z.boolean().default(true),
   emotions: z
@@ -11,11 +14,17 @@ export const DiaryNewFormSchema = z.object({
   title: z
     .string()
     .min(1, "필수입력 사항입니다")
-    .max(50, "제목은 최대 50자까지 입력 가능합니다"),
+    .max(
+      DIARY_TITLE_MAX_LENGTH,
+      `제목은 최대 ${DIARY_TITLE_MAX_LENGTH}자까지 입력 가능합니다`
+    ),
   content: z
     .string()
     .min(1, "필수입력 사항입니다")
-    .max(300, "내용은 최대 300자까지 입력 가능합니다"),
+    .max(
+      DIARY_CONTENT_MAX_LENGTH,
+      `내용은 최대 ${DIARY_CONTENT_MAX_LENGTH.toLocaleString()}자까지 입력 가능합니다`
+    ),
   tags: z
     .union([
       z.string().transform((val) =>

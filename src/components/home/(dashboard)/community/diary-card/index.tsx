@@ -44,38 +44,38 @@ export default function CommunityDiaryCard({
     <article className={styles.articleContainer}>
       <Link
         href={URL().DIARY_DETAIL(diary.id)}
-        className={styles.linkOverlay}
+        className={styles.detailLink}
         aria-label="일기 상세 보기"
-      ></Link>
-
-      <div className={styles.headerSection}>
-        <UserProfileHeader
-          profileImage={diary.user?.profile_image ?? null}
-          displayName={diary.user?.nickname ?? null}
-          createdAt={
-            diary.createdAt ? new Date(diary.createdAt).toISOString() : null
-          }
-        />
-        {emotionsForBadgeList.length > 0 && (
-          <EmotionBadgeList
-            emotions={emotionsForBadgeList}
-            className={styles.emotionBadgeListWrapper}
+      >
+        <div className={styles.headerSection}>
+          <UserProfileHeader
+            profileImage={diary.user?.profile_image ?? null}
+            displayName={diary.user?.nickname ?? null}
+            createdAt={
+              diary.createdAt ? new Date(diary.createdAt).toISOString() : null
+            }
           />
-        )}
-      </div>
-
-      <div className={styles.contentSection}>
-        <div className={styles.titleWrapper}>
-          <h3 className={styles.title}>{diary.title}</h3>
+          {emotionsForBadgeList.length > 0 && (
+            <EmotionBadgeList
+              emotions={emotionsForBadgeList}
+              className={styles.emotionBadgeListWrapper}
+            />
+          )}
         </div>
-        <p className={styles.description}>{diary.content}</p>
-        {(diary.tags ?? []).length > 0 && (
-          <TagList
-            tags={(diary.tags ?? []).map((t) => t.tag)}
-            className={styles.tagListWrapper}
-          />
-        )}
-      </div>
+
+        <div className={styles.contentSection}>
+          <div className={styles.titleWrapper}>
+            <h3 className={styles.title}>{diary.title}</h3>
+          </div>
+          <p className={styles.description}>{diary.content}</p>
+          {(diary.tags ?? []).length > 0 && (
+            <TagList
+              tags={(diary.tags ?? []).map((t) => t.tag)}
+              className={styles.tagListWrapper}
+            />
+          )}
+        </div>
+      </Link>
 
       <div className={styles.footerSection}>
         <div className={styles.interactionButtonsWrapper}>

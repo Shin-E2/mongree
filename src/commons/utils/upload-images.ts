@@ -4,6 +4,7 @@ import {
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { s3Client } from "@/lib/aws/s3-client";
+import { getS3BucketConfig } from "@/lib/aws/s3-config";
 
 interface UploadImageOptions {
   maxSize?: number;
@@ -19,8 +20,9 @@ function getKeyFromUrl(url: string) {
 export async function deleteImageFromS3(imageUrl: string) {
   try {
     const key = getKeyFromUrl(imageUrl);
+    const { bucketName } = getS3BucketConfig();
     const command = new DeleteObjectCommand({
-      Bucket: process.env.AWS_S3_BUCKET_NAME!,
+      Bucket: bucketName,
       Key: key,
     });
     await s3Client.send(command);
@@ -55,8 +57,7 @@ export async function uploadImageServer(
   }
 
   const key = `${Date.now()}-${file.name}`;
-  const bucketName = process.env.AWS_S3_BUCKET_NAME!;
-  const region = process.env.AWS_REGION!;
+  const { bucketName, region } = getS3BucketConfig();
 
   const command = new PutObjectCommand({
     Bucket: bucketName,

@@ -2,17 +2,16 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { NextResponse } from "next/server";
 import { s3Client } from "@/lib/aws/s3-client";
-
-const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
-const BUCKET_REGION = process.env.AWS_REGION!;
+import { getS3BucketConfig } from "@/lib/aws/s3-config";
 
 export async function POST(request: Request) {
   try {
     const { fileName, fileType } = await request.json();
+    const { bucketName, region } = getS3BucketConfig();
 
     const key = `${Date.now()}-${fileName}`;
     const command = new PutObjectCommand({
-      Bucket: BUCKET_NAME,
+      Bucket: bucketName,
       Key: key,
       ContentType: fileType,
     });
@@ -21,7 +20,7 @@ export async function POST(request: Request) {
       expiresIn: 3600,
     });
 
-    const finalUrl = `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${key}`;
+    const finalUrl = `https://${bucketName}.s3.${region}.amazonaws.com/${key}`;
 
     return NextResponse.json({
       success: true,

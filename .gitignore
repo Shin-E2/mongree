@@ -34,6 +34,10 @@ yarn-error.log*
 .env*
 !.env.example
 
+# 로컬 기획 문서
+/*.md
+/docs/
+
 # vercel
 .vercel
 

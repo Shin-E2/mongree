@@ -1,5 +1,11 @@
 .container {
-  @apply bg-white rounded-xl shadow-sm p-6;
+  @apply p-6;
+  border: 1px solid var(--mongree-line);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    radial-gradient(circle at 88% 18%, color-mix(in oklch, var(--scene-accent) 18%, transparent) 0 4rem, transparent 4.2rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .header {
@@ -8,20 +14,28 @@
 
 .title {
   @apply text-lg font-semibold;
+  color: var(--mongree-text);
 }
 
 .link {
-  @apply rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-100;
+  @apply px-3 py-1.5 text-sm font-medium;
+  border-radius: var(--mongree-radius-sm);
+  color: var(--mongree-primary-strong);
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
 }
 
 .comingSoon {
-  @apply flex flex-col items-center gap-3 rounded-lg bg-gray-50 px-4 py-5 text-center;
+  @apply flex flex-col items-center gap-3 px-4 py-5 text-center;
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--scene-accent) 13%, var(--mongree-surface-soft));
 }
 
 .icon {
-  @apply h-8 w-8 text-indigo-400;
+  @apply h-8 w-8;
+  color: var(--mongree-primary-strong);
 }
 
 .description {
-  @apply text-sm leading-relaxed text-gray-500;
+  @apply text-sm leading-relaxed;
+  color: var(--mongree-text-muted);
 }

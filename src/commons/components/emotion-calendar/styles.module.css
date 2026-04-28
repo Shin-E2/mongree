@@ -1,16 +1,22 @@
 .container {
   @apply h-full;
-  border: 1px solid var(--mongree-line);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
   border-radius: var(--mongree-radius-lg);
-  background: color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
-  box-shadow: var(--mongree-shadow-soft);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-object) 4%, transparent), transparent 34%),
+    color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  box-shadow:
+    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
 }
 
 .fullContainer {
-  border: 1px solid var(--mongree-line);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
   border-radius: var(--mongree-radius-lg);
   background: color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
-  box-shadow: var(--mongree-shadow-soft);
+  box-shadow:
+    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
 }
 
 .contentWrapper {
@@ -49,7 +55,8 @@
 .fullDayCell {
   @apply p-2;
   border-radius: var(--mongree-radius-sm);
-  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 64%, transparent);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 42%, transparent);
 }
 
 .dayCell {

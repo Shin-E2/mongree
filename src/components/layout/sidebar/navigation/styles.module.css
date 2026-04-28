@@ -1,34 +1,38 @@
 .nav {
   @apply flex-1 px-4 space-y-2;
 }
+
 .nav_icon {
   @apply w-5 h-5 mr-3;
 }
 
 .nav_current {
-  @apply text-indigo-600;
+  color: var(--mongree-primary-strong);
 }
 
 .nav_not_current {
-  @apply text-gray-500;
+  color: var(--mongree-text-muted);
 }
 
 .nav_not_current_title {
-  @apply text-gray-700;
+  color: var(--mongree-text-muted);
 }
 
 .nav_button {
-  @apply flex items-center w-full px-4 py-3 text-left rounded-lg hover:bg-indigo-50;
+  @apply flex w-full items-center px-4 py-3 text-left transition-colors duration-200;
+  border-radius: var(--mongree-radius-sm);
 }
 
-.nav_button:hover .nav_icon {
-  @apply text-indigo-600;
+.nav_button:hover {
+  background: color-mix(in oklch, var(--scene-accent) 13%, transparent);
 }
 
+.nav_button:hover .nav_icon,
 .nav_button:hover .nav_not_current_title {
-  @apply text-indigo-600;
+  color: var(--mongree-primary-strong);
 }
 
 .nav_current_backgroundColor {
-  @apply bg-indigo-100;
+  background: color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
+  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--mongree-primary) 18%, transparent);
 }

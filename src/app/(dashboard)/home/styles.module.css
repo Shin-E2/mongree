@@ -1,5 +1,135 @@
 .mainContainer {
-  @apply p-8 px-6 bg-gray-50 h-full pb-24;
+  @apply h-full px-4 pb-24 pt-6 sm:px-6 lg:px-8;
+  background: transparent;
+}
+
+.heroSection {
+  @apply mb-6 grid gap-5 lg:grid-cols-[1.4fr_0.8fr];
+}
+
+.heroCopy {
+  @apply relative overflow-hidden p-6 sm:p-8;
+  min-height: 18rem;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    radial-gradient(circle at 84% 18%, color-mix(in oklch, var(--scene-accent) 28%, transparent) 0 5.8rem, transparent 6rem),
+    radial-gradient(circle at 92% 70%, color-mix(in oklch, var(--scene-cloud) 76%, transparent) 0 7rem, transparent 7.2rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
+}
+
+.heroCopy::before,
+.heroCopy::after {
+  position: absolute;
+  content: "";
+  border-radius: 999px;
+  background: var(--scene-cloud);
+  opacity: 0.82;
+}
+
+.heroCopy::before {
+  right: 6.5rem;
+  bottom: 2.5rem;
+  width: 8.5rem;
+  height: 3.25rem;
+  box-shadow:
+    2.2rem -1.25rem 0 -0.45rem color-mix(in oklch, var(--scene-cloud) 94%, transparent),
+    4.8rem 0.1rem 0 -0.65rem color-mix(in oklch, var(--scene-cloud) 88%, transparent);
+}
+
+.heroCopy::after {
+  right: 1.5rem;
+  top: 2rem;
+  width: 3.7rem;
+  height: 3.7rem;
+  background: var(--scene-accent);
+  box-shadow: 0 14px 36px color-mix(in oklch, var(--scene-accent) 38%, transparent);
+}
+
+.heroEyebrow {
+  @apply relative z-10 mb-4 inline-flex text-sm font-semibold;
+  color: var(--mongree-primary-strong);
+}
+
+.heroTitle {
+  @apply relative z-10 max-w-2xl text-3xl font-bold leading-tight sm:text-4xl;
+  color: var(--mongree-text);
+  letter-spacing: 0;
+}
+
+.heroDescription {
+  @apply relative z-10 mt-4 max-w-xl text-base leading-7;
+  color: var(--mongree-text-muted);
+}
+
+.heroActions {
+  @apply relative z-10 mt-7 flex flex-wrap gap-3;
+}
+
+.primaryAction,
+.secondaryAction {
+  @apply inline-flex h-11 items-center justify-center px-5 text-sm font-semibold;
+  border-radius: 999px;
+}
+
+.primaryAction {
+  color: oklch(0.24 0.035 255);
+  background: var(--mongree-primary);
+  box-shadow: 0 14px 28px color-mix(in oklch, var(--mongree-primary) 28%, transparent);
+}
+
+.secondaryAction {
+  color: var(--mongree-text);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
+  border: 1px solid var(--mongree-line);
+}
+
+.heroWidget {
+  @apply flex flex-col justify-between gap-4 p-5 sm:p-6;
+  min-height: 18rem;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 86%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
+}
+
+.skyOrb {
+  @apply mx-auto flex items-center justify-center;
+  width: min(12rem, 52vw);
+  aspect-ratio: 1;
+  border-radius: 42% 58% 54% 46% / 48% 44% 56% 52%;
+  background:
+    radial-gradient(circle at 32% 28%, color-mix(in oklch, var(--scene-object) 96%, transparent), transparent 34%),
+    linear-gradient(145deg, var(--scene-accent), color-mix(in oklch, var(--scene-bg) 70%, var(--scene-accent)));
+  box-shadow:
+    inset -18px -24px 38px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 24px 46px color-mix(in oklch, var(--scene-accent) 26%, transparent);
+}
+
+.skyFace {
+  @apply text-3xl font-bold;
+  color: color-mix(in oklch, var(--mongree-text) 72%, transparent);
+}
+
+.heroMetricRow {
+  @apply grid grid-cols-2 gap-3;
+}
+
+.heroMetricRow > div {
+  @apply p-4;
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 74%, transparent);
+}
+
+.metricLabel {
+  @apply block text-xs font-medium;
+  color: var(--mongree-text-muted);
+}
+
+.metricValue {
+  @apply mt-1 block text-lg font-bold;
+  color: var(--mongree-text);
 }
 
 .gridContainer {
@@ -19,7 +149,11 @@
 }
 
 .popularDiaryCardContainer {
-  @apply bg-white rounded-xl shadow-sm p-6;
+  @apply p-6;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  border: 1px solid var(--mongree-line);
+  border-radius: var(--mongree-radius-lg);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .popularDiaryHeader {
@@ -28,6 +162,7 @@
 
 .popularDiaryTitle {
   @apply text-xl font-semibold;
+  color: var(--mongree-text);
 }
 
 .popularDiaryGrid {
@@ -35,5 +170,6 @@
 }
 
 .emptyPopularText {
-  @apply col-span-3 py-8 text-center text-sm text-gray-400;
+  @apply col-span-3 py-8 text-center text-sm;
+  color: var(--mongree-text-muted);
 }

@@ -1,0 +1,166 @@
+.scene {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 18% 14%, color-mix(in oklch, var(--scene-accent) 32%, transparent) 0 9rem, transparent 9.2rem),
+    linear-gradient(160deg, var(--scene-bg), var(--scene-bg-soft));
+  transition: background 480ms ease;
+}
+
+.sun,
+.moon,
+.cloudOne,
+.cloudTwo,
+.stars,
+.rain,
+.snow {
+  position: absolute;
+  transition:
+    opacity 360ms ease,
+    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.sun {
+  top: 5.5rem;
+  right: 9vw;
+  width: clamp(5rem, 9vw, 8.5rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 32% 28%, oklch(0.97 0.09 90), var(--scene-accent) 64%, oklch(0.76 0.13 70));
+  box-shadow: 0 18px 48px color-mix(in oklch, var(--scene-accent) 35%, transparent);
+}
+
+.moon {
+  top: 5.5rem;
+  right: 10vw;
+  width: clamp(4.5rem, 8vw, 7rem);
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 34% 28%, oklch(0.96 0.035 95), oklch(0.84 0.08 88));
+  box-shadow: 0 20px 56px color-mix(in oklch, var(--scene-star) 34%, transparent);
+}
+
+.cloudOne,
+.cloudTwo {
+  width: clamp(8rem, 18vw, 17rem);
+  height: clamp(3.2rem, 7vw, 6.2rem);
+  border-radius: 999px;
+  background: var(--scene-cloud);
+  box-shadow:
+    2.6rem -1.2rem 0 -0.2rem color-mix(in oklch, var(--scene-cloud) 96%, transparent),
+    5.8rem 0.15rem 0 -0.45rem color-mix(in oklch, var(--scene-cloud) 94%, transparent),
+    var(--mongree-shadow-soft);
+}
+
+.cloudOne {
+  top: 8rem;
+  left: 7vw;
+}
+
+.cloudTwo {
+  top: 18rem;
+  right: 18vw;
+  transform: scale(0.72);
+  opacity: 0.72;
+}
+
+.stars {
+  inset: 0;
+  opacity: 0;
+  background-image:
+    radial-gradient(circle, var(--scene-star) 0 2px, transparent 2.4px),
+    radial-gradient(circle, color-mix(in oklch, var(--scene-star) 78%, transparent) 0 1.4px, transparent 1.8px);
+  background-position:
+    8vw 12vh,
+    21vw 20vh;
+  background-size:
+    18rem 14rem,
+    13rem 11rem;
+}
+
+.rain {
+  inset: 0;
+  opacity: 0;
+  background-image: linear-gradient(
+    178deg,
+    transparent 0 34%,
+    color-mix(in oklch, var(--scene-accent) 46%, transparent) 35% 48%,
+    transparent 49% 100%
+  );
+  background-size: 1.8rem 4.8rem;
+  transform: rotate(8deg) translateY(-1rem);
+}
+
+.snow {
+  inset: 0;
+  opacity: 0;
+  background-image:
+    radial-gradient(circle, color-mix(in oklch, var(--scene-accent) 72%, transparent) 0 2px, transparent 2.4px),
+    radial-gradient(circle, color-mix(in oklch, var(--scene-accent) 46%, transparent) 0 1.5px, transparent 2px);
+  background-size:
+    5.5rem 5.5rem,
+    8rem 8rem;
+}
+
+.scene[data-scene="day"] .moon,
+.scene[data-scene="day"] .stars,
+.scene[data-scene="day"] .rain,
+.scene[data-scene="day"] .snow {
+  opacity: 0;
+}
+
+.scene[data-scene="night"] .sun,
+.scene[data-scene="night"] .rain,
+.scene[data-scene="night"] .snow {
+  opacity: 0;
+}
+
+.scene[data-scene="night"] .moon,
+.scene[data-scene="night"] .stars {
+  opacity: 1;
+}
+
+.scene[data-scene="night"] .cloudOne,
+.scene[data-scene="night"] .cloudTwo {
+  opacity: 0.28;
+}
+
+.scene[data-scene="rain"] .sun,
+.scene[data-scene="rain"] .moon,
+.scene[data-scene="rain"] .stars,
+.scene[data-scene="rain"] .snow {
+  opacity: 0;
+}
+
+.scene[data-scene="rain"] .rain {
+  opacity: 1;
+}
+
+.scene[data-scene="snow"] .sun,
+.scene[data-scene="snow"] .moon,
+.scene[data-scene="snow"] .stars,
+.scene[data-scene="snow"] .rain {
+  opacity: 0;
+}
+
+.scene[data-scene="snow"] .snow {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sun,
+  .moon,
+  .cloudOne,
+  .cloudTwo,
+  .stars,
+  .rain,
+  .snow,
+  .scene {
+    transition: none;
+  }
+}

@@ -1,5 +1,8 @@
 .aside {
-  @apply fixed top-0 left-0 w-64 h-full bg-white border-r z-50 border-gray-200 hidden md:block;
+  @apply fixed top-0 left-0 w-64 h-full border-r z-50 hidden md:block;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  border-color: var(--mongree-line);
+  box-shadow: 18px 0 46px color-mix(in oklch, var(--mongree-text) 5%, transparent);
 }
 
 .aside_div {
@@ -8,7 +11,10 @@
 
 /* 모바일 네비게이션 스타일 */
 .mobile_nav {
-  @apply fixed bottom-0 left-0 right-0 bg-white border-t z-50 border-gray-200 block md:hidden;
+  @apply fixed bottom-0 left-0 right-0 border-t z-50 block md:hidden;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 94%, transparent);
+  border-color: var(--mongree-line);
+  box-shadow: 0 -14px 34px color-mix(in oklch, var(--mongree-text) 7%, transparent);
 }
 
 .mobile_nav_container {
@@ -17,14 +23,15 @@
 
 .mobile_nav_item {
   @apply flex flex-col items-center justify-center p-2 rounded-lg;
+  min-width: 3.25rem;
 }
 
 .mobile_nav_item_active {
-  @apply text-indigo-600;
+  color: var(--mongree-primary-strong);
 }
 
 .mobile_nav_item_inactive {
-  @apply text-gray-500;
+  color: var(--mongree-text-muted);
 }
 
 .mobile_nav_icon {

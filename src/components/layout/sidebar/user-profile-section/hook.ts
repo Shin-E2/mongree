@@ -1,7 +1,7 @@
 "use client";
 
 import { getUser } from "@/lib/get-user";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 
 interface UserProfileForSidebar {
   id: string;
@@ -16,6 +16,24 @@ export default function useSidebarUserProfileSection() {
 
   // DOM 요소: useRef, dropdownRef.current는 실제 DOM 요소에 접근 가능
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const fetchUser = useCallback(async () => {
+    try {
+      const userData = await getUser();
+      if (userData) {
+        setUser({
+          id: userData.id,
+          nickname: userData.nickname,
+          profile_image: userData.profile_image,
+        });
+      } else {
+        setUser(null);
+      }
+    } catch (error) {
+      console.error("사용자 정보를 불러오는 중 오류 발생:", error);
+      setUser(null);
+    }
+  }, []);
 
   // 드롭다운 바깥? 클릭시
   useEffect(() => {
@@ -41,28 +59,17 @@ export default function useSidebarUserProfileSection() {
 
   // 사용자 정보 불러오기
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const userData = await getUser();
-        if (userData) {
-          setUser({
-            id: userData.id,
-            nickname: userData.nickname,
-            profile_image: userData.profile_image,
-          });
-        } else {
-          // 사용자 데이터가 없을 경우 기본값 설정
-          setUser(null); // 사용자 데이터가 없을 경우 null로 설정
-        }
-      } catch (error) {
-        console.error("사용자 정보를 불러오는 중 오류 발생:", error);
-        // 에러 발생 시 기본값 설정 또는 null
-        setUser(null); // 에러 발생 시 null로 설정
-      }
-    };
-
     fetchUser();
-  }, []);
+  }, [fetchUser]);
+
+  // 프로필 저장 후 사이드바 최신화
+  useEffect(() => {
+    window.addEventListener("profile-updated", fetchUser);
+
+    return () => {
+      window.removeEventListener("profile-updated", fetchUser);
+    };
+  }, [fetchUser]);
 
   // esc 키 입력 감지를 위한 키보드 이벤트 핸들러
   const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {

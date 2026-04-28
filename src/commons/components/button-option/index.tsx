@@ -104,13 +104,9 @@ export const ButtonOptionEmotion = ({
   onClick,
   ...rest
 }: IButtonOptionEmotionProps) => {
-  const dynamicClassName = `relative flex flex-col items-center p-4 rounded-xl
-    transition-all duration-200 ease-in-out
-    ${
-      isSelected
-        ? `${emotion.bgColor} ring-2 ${emotion.borderColor}`
-        : "hover:bg-gray-50"
-    }`;
+  const dynamicClassName = `${styles.emotionButton} ${
+    isSelected ? styles.emotionButtonSelected : ""
+  }`;
 
   return (
     <ButtonOptionBase
@@ -128,7 +124,7 @@ export const ButtonOptionEmotion = ({
         />
       }
       title={emotion.label}
-      titleColor={emotion.textColor}
+      titleColor={styles.emotionLabel}
     />
   );
 };

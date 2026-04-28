@@ -1,3 +1,81 @@
+.pageShell {
+  min-height: 100vh;
+  color: var(--mongree-text);
+  background:
+    radial-gradient(circle at 12% 16%, color-mix(in oklch, var(--scene-accent) 13%, transparent) 0 9rem, transparent 9.2rem),
+    radial-gradient(circle at 88% 8%, color-mix(in oklch, var(--scene-cloud) 24%, transparent) 0 12rem, transparent 12.3rem),
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-bg-soft) 86%, transparent), color-mix(in oklch, var(--mongree-surface) 94%, transparent));
+}
+
 .container {
-  @apply pt-16 pb-12 px-6 max-w-5xl mx-auto;
+  @apply mx-auto flex max-w-5xl flex-col px-4 pb-14 pt-5 sm:px-6 sm:pt-6;
+}
+
+.introPanel {
+  @apply relative mb-5 overflow-hidden px-5 py-6 sm:px-8 sm:py-7;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    radial-gradient(circle at 90% 20%, color-mix(in oklch, var(--scene-accent) 36%, transparent) 0 5rem, transparent 5.2rem),
+    radial-gradient(circle at 78% 96%, color-mix(in oklch, var(--scene-cloud) 36%, transparent) 0 6.8rem, transparent 7rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent);
+  box-shadow:
+    0 22px 56px color-mix(in oklch, var(--mongree-text) 9%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 18%, transparent);
+}
+
+.introPanel::after {
+  position: absolute;
+  right: 2rem;
+  bottom: 1.6rem;
+  width: 8rem;
+  height: 3rem;
+  content: "";
+  border-radius: 999px;
+  background: var(--scene-cloud);
+  opacity: 0.72;
+  box-shadow:
+    2rem -1rem 0 -0.4rem color-mix(in oklch, var(--scene-cloud) 92%, transparent),
+    4.2rem 0.1rem 0 -0.7rem color-mix(in oklch, var(--scene-cloud) 86%, transparent);
+}
+
+.eyebrow {
+  @apply relative z-10 text-sm font-semibold;
+  color: var(--mongree-primary-strong);
+}
+
+.title {
+  @apply relative z-10 mt-3 max-w-2xl text-2xl font-bold leading-tight sm:text-3xl;
+  color: var(--mongree-text);
+  letter-spacing: 0;
+}
+
+.description {
+  @apply relative z-10 mt-3 max-w-2xl text-sm leading-6 sm:text-base;
+  color: var(--mongree-text-muted);
+}
+
+.progressWrapper {
+  @apply mb-5;
+}
+
+.formPanel {
+  @apply px-4 py-5 sm:px-8 sm:py-8;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-object) 5%, transparent), transparent 42%),
+    color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  box-shadow:
+    0 24px 60px color-mix(in oklch, var(--mongree-text) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
+}
+
+@media (max-width: 640px) {
+  .introPanel::after {
+    right: -0.5rem;
+    bottom: 0.8rem;
+    opacity: 0.42;
+    transform: scale(0.74);
+  }
 }

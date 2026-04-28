@@ -1,9 +1,12 @@
 .header {
-  @apply bg-white border-b border-gray-200 sticky top-0 w-full px-6 z-50;
+  @apply sticky top-0 z-50 w-full px-4 sm:px-6;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  border-bottom: 1px solid color-mix(in oklch, var(--mongree-line) 82%, transparent);
+  box-shadow: 0 12px 34px color-mix(in oklch, var(--mongree-text) 5%, transparent);
 }
 
 .header_margin_padding {
-  @apply max-w-5xl mx-auto py-2;
+  @apply mx-auto max-w-5xl py-2;
 }
 
 .header_context {
@@ -15,11 +18,13 @@
 }
 
 .header__buttons {
-  @apply flex items-center gap-4;
+  @apply flex items-center gap-2 sm:gap-4;
 }
 
 .header__buttons__isPrivate_button {
-  @apply flex items-center gap-1 bg-gray-100 rounded-lg p-1 *:text-sm *:flex *:items-center *:gap-1 *:px-3 *:py-1.5 *:rounded-md *:transition-all *:duration-200;
+  @apply flex items-center gap-1 p-1 *:flex *:items-center *:gap-1 *:rounded-md *:px-2.5 *:py-1.5 *:text-sm *:transition-all *:duration-200 sm:*:px-3;
+  border-radius: var(--mongree-radius-sm);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 76%, transparent);
 }
 
 .header__buttons__icon_size {
@@ -27,21 +32,46 @@
 }
 
 .header__buttons_isPrivate_button_public {
-  @apply bg-white text-gray-900 shadow-sm;
+  color: var(--mongree-text);
+  background: color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
+  box-shadow: 0 8px 18px color-mix(in oklch, var(--mongree-text) 8%, transparent);
 }
 
 .header__buttons_isPrivate_button_private {
-  @apply text-gray-600 hover:text-gray-900;
+  color: var(--mongree-text-muted);
+}
+
+.header__buttons_isPrivate_button_private:hover {
+  color: var(--mongree-text);
 }
 
 .header__buttons__public_submit_button {
-  @apply px-4 py-2 rounded-lg text-sm font-medium transition-colors duration-200;
+  @apply px-3 py-2 text-sm font-medium transition-colors duration-200 sm:px-4;
+  border-radius: var(--mongree-radius-sm);
 }
 
 .header__buttons__selected {
-  @apply bg-indigo-600 text-white hover:bg-indigo-700;
+  color: oklch(0.24 0.035 255);
+  background: var(--mongree-primary);
+  box-shadow: 0 10px 24px color-mix(in oklch, var(--mongree-primary) 26%, transparent);
+}
+
+.header__buttons__selected:hover {
+  background: var(--mongree-primary-strong);
 }
 
 .header__buttons__not_selected {
-  @apply bg-gray-100 text-gray-400 cursor-not-allowed;
+  @apply cursor-not-allowed;
+  color: var(--mongree-text-muted);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 74%, transparent);
+}
+
+@media (max-width: 520px) {
+  .header__buttons__isPrivate_button {
+    @apply gap-0.5 *:px-2;
+  }
+
+  .header__buttons__isPrivate_button span {
+    @apply sr-only;
+  }
 }

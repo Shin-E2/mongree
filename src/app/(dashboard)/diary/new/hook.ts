@@ -105,13 +105,10 @@ export default function useDiaryNewPage() {
       const result = await createDiary(formData);
 
       if (result.success && result.diary) {
-        // 성공 모달 표시 후 페이지 이동
-        showModal(ModalType.SUCCESS, "일기가 성공적으로 저장되었습니다! 🎉", {
-          onConfirm: () => {
-            closeModal();
-            router.push(URL().DIARY_DETAIL(result.diary.id));
-          }
-        });
+        // 저장 성공 후 작성한 일기 상세로 이동
+        router.push(URL().DIARY_DETAIL(result.diary.id));
+        router.refresh();
+        return;
       } else {
         // 에러 타입에 따른 다른 모달 표시
         const isNetworkError = result.error?.includes('네트워크') ||

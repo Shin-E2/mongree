@@ -7,11 +7,38 @@
 }
 
 .titleInput {
-  @apply w-full text-2xl font-semibold border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+  @apply w-full border-0 px-0 text-2xl font-semibold focus:outline-none;
+  background: transparent;
+  color: var(--mongree-text);
+}
+
+.titleInput::placeholder {
+  color: color-mix(in oklch, var(--mongree-text-muted) 72%, transparent);
+}
+
+.titleInput:focus {
+  box-shadow: none;
 }
 
 .contentTextArea {
-  @apply w-full min-h-64 border-0 resize-y leading-7 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+  @apply min-h-64 w-full resize-y border leading-7 focus:outline-none;
+  border-color: color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-object) 5%, transparent), transparent 38%),
+    color-mix(in oklch, var(--mongree-surface-soft) 64%, var(--mongree-surface-raised));
+  color: var(--mongree-text);
+  padding: 1rem;
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--scene-object) 12%, transparent);
+}
+
+.contentTextArea::placeholder {
+  color: color-mix(in oklch, var(--mongree-text-muted) 78%, transparent);
+}
+
+.contentTextArea:focus {
+  border-color: var(--mongree-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--mongree-primary) 20%, transparent);
 }
 
 .helperRow {
@@ -19,11 +46,12 @@
 }
 
 .helperText {
-  @apply text-gray-400;
+  color: var(--mongree-text-muted);
 }
 
 .countText {
-  @apply flex-shrink-0 font-medium text-gray-400;
+  @apply flex-shrink-0 font-medium;
+  color: var(--mongree-text-muted);
 }
 
 .countTextError,

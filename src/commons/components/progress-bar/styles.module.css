@@ -1,11 +1,13 @@
 .common {
-  @apply h-2 bg-gray-200 rounded-full;
+  @apply h-2 overflow-hidden rounded-full;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
 }
 
 .common_div {
   @apply h-full rounded-full transition-all duration-300;
+  box-shadow: 0 8px 18px color-mix(in oklch, var(--mongree-primary) 22%, transparent);
 }
 
 .standard__s__full {
-  @apply bg-indigo-600;
+  background: linear-gradient(90deg, var(--mongree-primary), var(--scene-accent));
 }

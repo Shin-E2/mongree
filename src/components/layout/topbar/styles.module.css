@@ -1,5 +1,8 @@
 .headerContainer {
-  @apply fixed top-0 left-0 md:left-64 right-0 h-16 bg-white border-b border-gray-200 z-10;
+  @apply fixed top-0 left-0 md:left-64 right-0 h-16 border-b z-10;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent);
+  border-color: var(--mongree-line);
+  box-shadow: 0 12px 34px color-mix(in oklch, var(--mongree-text) 5%, transparent);
 }
 
 .headerContentWrapper {
@@ -19,7 +22,13 @@
 }
 
 .themeToggleButton {
-  @apply p-2 text-gray-500 rounded-lg hover:bg-gray-100;
+  @apply p-2 rounded-lg;
+  color: var(--mongree-text-muted);
+}
+
+.themeToggleButton:hover {
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
+  color: var(--mongree-text);
 }
 
 .iconBase {
@@ -27,7 +36,15 @@
 }
 
 .diaryWriteButton {
-  @apply flex items-center px-3 md:px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700;
+  @apply flex items-center px-3 md:px-4 py-2;
+  color: oklch(0.22 0.035 255);
+  background: var(--mongree-primary);
+  border-radius: var(--mongree-radius-sm);
+  box-shadow: 0 10px 24px color-mix(in oklch, var(--mongree-primary) 30%, transparent);
+}
+
+.diaryWriteButton:hover {
+  background: var(--mongree-primary-strong);
 }
 
 .plusIcon {

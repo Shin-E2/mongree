@@ -1,9 +1,13 @@
 .mainLayout {
-  @apply flex min-h-screen bg-gray-50;
+  @apply flex min-h-screen;
+  color: var(--mongree-text);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-bg-soft) 82%, transparent), color-mix(in oklch, var(--mongree-surface) 92%, transparent));
 }
 
 .contentWrapper {
   @apply flex-1 md:ml-64;
+  min-width: 0;
 }
 
 .mainContentWithPadding {

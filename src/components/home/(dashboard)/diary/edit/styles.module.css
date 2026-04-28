@@ -69,6 +69,22 @@
   @apply text-sm font-medium text-red-500;
 }
 
+.helperRow {
+  @apply flex items-center justify-between gap-3 text-xs;
+}
+
+.helperText {
+  @apply text-gray-400;
+}
+
+.countText {
+  @apply flex-shrink-0 font-medium text-gray-400;
+}
+
+.countTextError {
+  @apply flex-shrink-0 font-medium text-red-500;
+}
+
 .imageHeader {
   @apply flex items-center justify-between;
 }

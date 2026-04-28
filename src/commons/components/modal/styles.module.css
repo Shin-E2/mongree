@@ -1,21 +1,21 @@
 .container {
-  @apply flex justify-center items-center w-full h-full fixed top-0 left-0 bg-modal-bg-black z-50;
+  @apply fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-modal-bg-black px-4 py-6;
 }
 
 .common {
-  @apply flex flex-col bg-white rounded-lg shadow-lg;
+  @apply relative flex w-full flex-col rounded-lg bg-white px-6 py-6 shadow-xl;
 }
 
 .common__buttons {
-  @apply flex gap-2 pt-4 w-full;
+  @apply flex w-full flex-col-reverse gap-2 pt-6 sm:flex-row sm:justify-end;
 }
 
 .standard__full__full {
-  @apply w-[450px] flex flex-col items-end py-12 px-4 relative;
+  @apply max-w-[450px];
 }
 
 .standard__fit__fit {
-  @apply flex flex-col justify-center items-center p-8 pb-4;
+  @apply max-w-[420px] items-center;
 }
 
 /* Variant */
@@ -40,9 +40,9 @@
 }
 
 .titleText {
-  @apply text-2xl font-bold;
+  @apply text-center text-xl font-bold text-gray-950;
 }
 
 .descriptionText {
-  @apply text-gray-500 text-sm whitespace-pre-line text-center pt-2;
+  @apply whitespace-pre-line pt-3 text-center text-sm leading-6 text-gray-600;
 }

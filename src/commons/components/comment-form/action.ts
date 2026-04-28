@@ -2,7 +2,7 @@
 
 import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
-import { revalidateTag } from "next/cache";
+import { revalidateDiaryComments } from "@/commons/utils/cache-revalidation";
 
 export async function addComment(formData: FormData) {
   const user = await getUser();
@@ -50,10 +50,7 @@ export async function addComment(formData: FormData) {
       throw new Error(error.message);
     }
 
-    revalidateTag(`comments-${diaryId}`);
-    if (parentId) {
-      revalidateTag(`replies-${parentId}`);
-    }
+    revalidateDiaryComments(diaryId, parentId);
 
     return {
       success: true,

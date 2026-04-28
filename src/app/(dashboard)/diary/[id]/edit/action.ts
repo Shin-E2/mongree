@@ -7,7 +7,7 @@ import {
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
-import { revalidatePath } from "next/cache";
+import { revalidateDiaryUpdated } from "@/commons/utils/cache-revalidation";
 
 const MAX_DIARY_IMAGES = 3;
 
@@ -197,7 +197,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   const supabase = await createClient();
   const { data: diary, error: findError } = await supabase
     .from("diaries")
-    .select("id, user_id")
+    .select("id, user_id, is_private")
     .eq("id", diaryId)
     .is("deleted_at", null)
     .single();
@@ -402,9 +402,12 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     }
   }
 
-  revalidatePath("/diary");
-  revalidatePath(`/diary/${diaryId}`);
-  revalidatePath("/home");
+  revalidateDiaryUpdated({
+    userId: user.id,
+    diaryId,
+    isPrivate: validationResult.data.isPrivate,
+    wasPrivate: diary.is_private ?? true,
+  });
 
   return { success: true };
 }

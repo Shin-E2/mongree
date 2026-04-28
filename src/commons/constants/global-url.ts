@@ -27,5 +27,7 @@ export const URL = () => ({
 
   COMMUNITY: `/community`,
 
+  AI_REPORT: `/ai-report`,
+
   COUNSELORS: `/counselors`,
 });

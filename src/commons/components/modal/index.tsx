@@ -75,7 +75,7 @@ export default function ModalBase({
     <ModalPortal>
       <div className={styles.container}>
         <div className={`${cssprop} ${styles.common} ${variantClass}`}>
-          {children && onClose && <ButtonIconDeleteNoBackground onClick={onClose} />}
+          {onClose && <ButtonIconDeleteNoBackground onClick={onClose} />}
 
           {(title ?? discription) && (
             <>

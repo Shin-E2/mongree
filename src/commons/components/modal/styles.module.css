@@ -1,5 +1,5 @@
 .container {
-  @apply fixed inset-0 z-50 flex min-h-screen w-full items-center justify-center bg-modal-bg-black px-4 py-6;
+  @apply fixed inset-0 z-50 flex min-h-screen w-full items-start justify-center overflow-y-auto bg-modal-bg-black px-4 py-6 sm:items-center;
 }
 
 .common {

@@ -32,8 +32,9 @@ export async function getDiaries({
     if (emotionIds.length > 0) {
       const { data: emotionRows, error: emotionError } = await supabase
         .from("diary_emotions")
-        .select("diary_id")
-        .in("emotion_id", emotionIds);
+        .select("diary_id, diaries!inner(user_id)")
+        .in("emotion_id", emotionIds)
+        .eq("diaries.user_id", user.id);
 
       if (emotionError) {
         console.error("Supabase diary emotion filter error:", emotionError);

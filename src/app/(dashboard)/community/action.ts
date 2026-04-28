@@ -82,8 +82,10 @@ export async function getPublicDiaries({
     if (emotionIds.length > 0) {
       const { data: emotionRows, error: emotionError } = await supabase
         .from("diary_emotions")
-        .select("diary_id")
-        .in("emotion_id", emotionIds);
+        .select("diary_id, diaries!inner(is_private, deleted_at)")
+        .in("emotion_id", emotionIds)
+        .eq("diaries.is_private", false)
+        .is("diaries.deleted_at", null);
 
       if (emotionError) {
         console.error("Supabase public diary emotion filter error:", emotionError);

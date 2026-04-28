@@ -41,6 +41,16 @@ export default function ProfileSettingsClient({
   const [isPending, startTransition] = useTransition();
 
   useEffect(() => {
+    if (!message) return;
+
+    const timer = window.setTimeout(() => {
+      setMessage("");
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
+  }, [message]);
+
+  useEffect(() => {
     return () => {
       if (previewImage.startsWith("blob:")) {
         URL.revokeObjectURL(previewImage);
@@ -88,6 +98,7 @@ export default function ProfileSettingsClient({
 
       if (result.success) {
         setSelectedFile(null);
+        window.dispatchEvent(new Event("profile-updated"));
         router.refresh();
       }
     });
@@ -242,7 +253,7 @@ export default function ProfileSettingsClient({
         </div>
       </section>
 
-      {message && <p className={styles.statusMessage}>{message}</p>}
+      {message && <p className={styles.toastMessage}>{message}</p>}
     </div>
   );
 }

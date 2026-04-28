@@ -30,6 +30,7 @@ function DiaryNewPage() {
       <FormDiaryNew
         onSubmit={onSubmit}
         resolver={zodResolver(DiaryNewFormSchema)}
+        mode="onChange"
       >
         <DiaryNewHeader />
 

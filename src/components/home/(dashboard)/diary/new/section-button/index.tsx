@@ -22,8 +22,12 @@ export default function DiaryNewSectionButton({
   isLastStep,
   isSubmitting,
 }: IDiaryNewSectionButton) {
-  const { watch } = useFormContext<DiaryNewFormType>();
+  const {
+    watch,
+    formState: { isValid },
+  } = useFormContext<DiaryNewFormType>();
   const emotions = watch("emotions") || [];
+  const isSubmitDisabled = isSubmitting || !isValid;
 
   return (
     <div className={styles.buttonContainer}>
@@ -39,7 +43,7 @@ export default function DiaryNewSectionButton({
         <ButtonTextWithMarginLeftSS
           type="submit"
           title={isSubmitting ? "저장 중..." : "저장하기"}
-          disabled={isSubmitting}
+          disabled={isSubmitDisabled}
         />
       )}
     </div>

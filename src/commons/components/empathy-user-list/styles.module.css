@@ -3,9 +3,9 @@
 }
 
 .userImageWrapper {
-  @apply w-5 h-5 rounded-full border-2 border-white bg-gray-200 overflow-hidden;
+  @apply rounded-full border-2 border-white bg-gray-200 overflow-hidden;
 }
 
 .userImage {
-  @apply object-cover w-full h-full rounded-full;
+  @apply rounded-full;
 }

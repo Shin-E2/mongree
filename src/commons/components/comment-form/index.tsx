@@ -2,8 +2,8 @@
 
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
+import { ImageThumbnail } from "@/commons/components/image-thumbnail";
 import { addComment } from "./action";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -70,11 +70,12 @@ export function CommentForm({
     <div className={styles.container}>
       <div className={styles.flexContainer}>
         <div className={styles.imageWrapper}>
-          <Image
+          <ImageThumbnail
             src={user?.profile_image || DEFAULT_PROFILE_IMAGE}
             alt={user?.nickname || "사용자"}
             width={40}
             height={40}
+            shape="circle"
             className={styles.userImage}
           />
         </div>

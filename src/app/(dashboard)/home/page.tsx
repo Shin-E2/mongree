@@ -16,6 +16,7 @@ export default async function HomePage() {
         <div className={styles.calendarColumn}>
           <HomeEmotionalCalendar
             monthLabel={dashboardData.monthLabel}
+            monthDate={dashboardData.monthDate}
             entries={dashboardData.calendarEntries}
           />
         </div>

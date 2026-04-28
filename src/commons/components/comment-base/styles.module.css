@@ -7,7 +7,7 @@
 }
 
 .userImage {
-  @apply rounded-full object-cover;
+  @apply rounded-full;
 }
 
 .contentContainer {

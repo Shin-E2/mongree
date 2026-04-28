@@ -2,18 +2,10 @@
   @apply p-4 md:p-6;
 }
 
-.diary_comment img {
-  @apply w-8 h-8;
-}
-
 .diary_comment p {
   @apply text-gray-600;
 }
 
 .diary_reply {
   @apply mt-4;
-}
-
-.diary_reply img {
-  @apply w-8 h-8;
 }

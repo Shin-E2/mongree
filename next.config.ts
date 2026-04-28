@@ -26,11 +26,23 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "https",
+        hostname: "**.kakaocdn.net",
+      },
+      {
+        protocol: "https",
         hostname: "img1.kakaocdn.net",
       },
       {
         protocol: "http",
-        hostname: "img1.kakaocdn.net",
+        hostname: "**.kakaocdn.net",
+      },
+      {
+        protocol: "https",
+        hostname: "**.daumcdn.net",
+      },
+      {
+        protocol: "http",
+        hostname: "**.daumcdn.net",
       },
       {
         protocol: "https",

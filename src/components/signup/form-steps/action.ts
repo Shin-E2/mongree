@@ -8,6 +8,7 @@ import {
 import { createClient } from "@/lib/supabase-server";
 import { revalidatePath } from "next/cache";
 import { uploadImageServer } from "@/commons/utils/upload-images";
+import { getSiteUrl } from "@/commons/utils/site-url";
 
 export async function signup(data: SignupFormType) {
   try {
@@ -33,6 +34,7 @@ export async function signup(data: SignupFormType) {
     }
 
     const supabase = await createClient();
+    const siteUrl = await getSiteUrl();
 
     // 3. 회원가입 (메타데이터 올바르게 전달)
     const { data: authData, error: authError } = await supabase.auth.signUp({
@@ -44,7 +46,7 @@ export async function signup(data: SignupFormType) {
           nickname: result.data.nickname,
           profile_image: profileImageUrl,
         },
-        emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL}/confirm?source=signup`,
+        emailRedirectTo: `${siteUrl}/confirm?source=signup`,
       },
     });
 

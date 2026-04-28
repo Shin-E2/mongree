@@ -65,7 +65,7 @@ export const useEmailVerification = ({
         email: emailValue,
         options: {
           shouldCreateUser: true, // 새로운 사용자를 생성하고 OTP를 발송
-          emailRedirectTo: `${window.location.origin}/auth/callback`,
+          emailRedirectTo: `${window.location.origin}/confirm?source=email`,
         },
       });
 

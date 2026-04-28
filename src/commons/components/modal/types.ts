@@ -17,10 +17,12 @@ export interface IModalBaseProps {
   okButton?: {
     text: string;
     onClick: () => void | Promise<void>;
+    disabled?: boolean;
   };
   cancelButton?: {
     text: string;
     onClick?: () => void | Promise<void>;
+    disabled?: boolean;
   };
 }
 

@@ -59,6 +59,7 @@ export default function ModalBase({
   cssprop,
   variant,
   children,
+  isOpen = true,
   onClose,
   title,
   discription,
@@ -67,16 +68,14 @@ export default function ModalBase({
 }: IModalBaseProps) {
   const variantClass = getVariantClass(variant);
 
+  // 닫힌 모달은 포털까지 렌더링하지 않음
+  if (!isOpen) return null;
+
   return (
     <ModalPortal>
       <div className={styles.container}>
         <div className={`${cssprop} ${styles.common} ${variantClass}`}>
-          {children && (
-            <>
-              {onClose && <ButtonIconDeleteNoBackground onClick={onClose} />}
-              {children}
-            </>
-          )}
+          {children && onClose && <ButtonIconDeleteNoBackground onClick={onClose} />}
 
           {(title ?? discription) && (
             <>
@@ -87,6 +86,8 @@ export default function ModalBase({
             </>
           )}
 
+          {children}
+
           {(okButton ?? cancelButton) && (
             <div className={styles.common__buttons}>
               {cancelButton?.text && (
@@ -94,6 +95,7 @@ export default function ModalBase({
                   title={cancelButton?.text}
                   type="button"
                   onClick={cancelButton.onClick}
+                  disabled={cancelButton.disabled}
                 />
               )}
               {okButton?.text && (
@@ -101,6 +103,7 @@ export default function ModalBase({
                   title={okButton?.text}
                   type="button"
                   onClick={okButton.onClick}
+                  disabled={okButton.disabled}
                 />
               )}
             </div>

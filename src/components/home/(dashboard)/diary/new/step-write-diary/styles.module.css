@@ -2,10 +2,31 @@
   @apply flex flex-col gap-8;
 }
 
+.fieldGroup {
+  @apply flex flex-col gap-2;
+}
+
 .titleInput {
   @apply w-full text-2xl font-semibold border-0 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
 }
 
 .contentTextArea {
-  @apply w-full h-48 border-0 resize-none focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+  @apply w-full min-h-64 border-0 resize-y leading-7 focus:outline-none focus:ring-2 focus:ring-indigo-600 focus:border-transparent;
+}
+
+.helperRow {
+  @apply flex items-center justify-between gap-3 px-1 text-xs;
+}
+
+.helperText {
+  @apply text-gray-400;
+}
+
+.countText {
+  @apply flex-shrink-0 font-medium text-gray-400;
+}
+
+.countTextError,
+.errorText {
+  @apply flex-shrink-0 font-medium text-red-500;
 }

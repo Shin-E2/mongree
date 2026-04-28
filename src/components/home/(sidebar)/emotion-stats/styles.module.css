@@ -1,9 +1,14 @@
 .container {
-  @apply bg-white rounded-xl shadow-sm p-6;
+  @apply p-6;
+  border: 1px solid var(--mongree-line);
+  border-radius: var(--mongree-radius-lg);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .title {
   @apply text-lg font-semibold mb-4;
+  color: var(--mongree-text);
 }
 
 .listContainer {
@@ -11,5 +16,8 @@
 }
 
 .emptyText {
-  @apply rounded-lg bg-gray-50 px-4 py-6 text-center text-sm text-gray-500;
+  @apply px-4 py-6 text-center text-sm;
+  border-radius: var(--mongree-radius-md);
+  color: var(--mongree-text-muted);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
 }

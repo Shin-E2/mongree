@@ -1,5 +1,12 @@
 .container {
-  @apply p-4 border rounded-lg hover:shadow-md transition-shadow;
+  @apply p-4 transition-shadow;
+  border: 1px solid var(--mongree-line);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 62%, transparent);
+}
+
+.container:hover {
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .header {
@@ -12,10 +19,12 @@
 
 .title {
   @apply font-medium;
+  color: var(--mongree-text);
 }
 
 .content {
-  @apply text-gray-600 text-sm line-clamp-3;
+  @apply text-sm line-clamp-3;
+  color: var(--mongree-text-muted);
 }
 
 .footer {
@@ -23,9 +32,11 @@
 }
 
 .date {
-  @apply text-sm text-gray-500;
+  @apply text-sm;
+  color: var(--mongree-text-muted);
 }
 
 .detailButton {
-  @apply text-sm text-indigo-600;
+  @apply text-sm font-semibold;
+  color: var(--mongree-primary-strong);
 }

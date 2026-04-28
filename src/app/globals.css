@@ -35,6 +35,30 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+
+    --mongree-surface: oklch(0.985 0.012 86);
+    --mongree-surface-soft: oklch(0.96 0.025 86);
+    --mongree-surface-raised: oklch(0.995 0.008 86);
+    --mongree-text: oklch(0.28 0.03 255);
+    --mongree-text-muted: oklch(0.52 0.025 255);
+    --mongree-line: oklch(0.9 0.018 86);
+    --mongree-primary: oklch(0.74 0.14 72);
+    --mongree-primary-strong: oklch(0.63 0.16 62);
+    --mongree-danger: oklch(0.64 0.18 28);
+    --mongree-success: oklch(0.65 0.12 150);
+    --mongree-radius-sm: 10px;
+    --mongree-radius-md: 16px;
+    --mongree-radius-lg: 24px;
+    --mongree-shadow-soft: 0 14px 40px color-mix(in oklch, var(--mongree-text) 10%, transparent);
+    --mongree-shadow-float: 0 18px 52px color-mix(in oklch, var(--mongree-text) 14%, transparent);
+
+    --scene-bg: oklch(0.93 0.07 220);
+    --scene-bg-soft: oklch(0.97 0.035 95);
+    --scene-accent: oklch(0.82 0.16 78);
+    --scene-object: oklch(0.98 0.035 95);
+    --scene-text: var(--mongree-text);
+    --scene-star: oklch(0.87 0.15 88);
+    --scene-cloud: oklch(0.99 0.01 235);
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -62,6 +86,52 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
+}
+
+[data-theme-scene="day"] {
+  --scene-bg: oklch(0.93 0.07 220);
+  --scene-bg-soft: oklch(0.97 0.035 95);
+  --scene-accent: oklch(0.82 0.16 78);
+  --scene-object: oklch(0.98 0.035 95);
+  --scene-text: oklch(0.28 0.03 255);
+  --scene-star: oklch(0.85 0.14 82);
+  --scene-cloud: oklch(0.99 0.012 235);
+}
+
+[data-theme-scene="night"] {
+  --mongree-surface: oklch(0.27 0.035 260);
+  --mongree-surface-soft: oklch(0.31 0.045 260);
+  --mongree-surface-raised: oklch(0.35 0.05 260);
+  --mongree-text: oklch(0.94 0.015 255);
+  --mongree-text-muted: oklch(0.76 0.025 255);
+  --mongree-line: oklch(0.45 0.035 260);
+  --scene-bg: oklch(0.31 0.08 260);
+  --scene-bg-soft: oklch(0.38 0.06 260);
+  --scene-accent: oklch(0.84 0.15 86);
+  --scene-object: oklch(0.39 0.07 265);
+  --scene-text: oklch(0.94 0.015 255);
+  --scene-star: oklch(0.88 0.16 88);
+  --scene-cloud: oklch(0.48 0.045 260);
+}
+
+[data-theme-scene="rain"] {
+  --scene-bg: oklch(0.76 0.045 235);
+  --scene-bg-soft: oklch(0.91 0.025 230);
+  --scene-accent: oklch(0.67 0.08 225);
+  --scene-object: oklch(0.92 0.03 230);
+  --scene-text: oklch(0.3 0.035 245);
+  --scene-star: oklch(0.78 0.08 220);
+  --scene-cloud: oklch(0.89 0.022 230);
+}
+
+[data-theme-scene="snow"] {
+  --scene-bg: oklch(0.95 0.025 230);
+  --scene-bg-soft: oklch(0.985 0.012 225);
+  --scene-accent: oklch(0.72 0.07 215);
+  --scene-object: oklch(0.99 0.01 230);
+  --scene-text: oklch(0.31 0.035 245);
+  --scene-star: oklch(0.82 0.08 215);
+  --scene-cloud: oklch(0.995 0.008 230);
 }
 
 /* @keyframes fadeIn {

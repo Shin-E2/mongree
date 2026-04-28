@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { MongreeThemeProvider } from "@/components/theme/theme-provider";
+import WeatherScene from "@/components/theme/weather-scene";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -13,8 +15,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "mongree🐻🦊🐰🐶",
-  description: "🐻🦊🐰🐶",
+  title: "Mongree | 오늘의 감정을 기록하는 작은 일기장",
+  description:
+    "Mongree는 감정을 기록하고 돌아보는 따뜻한 감정 일기장입니다.",
 };
 
 export default function RootLayout({
@@ -27,7 +30,10 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        {children}
+        <MongreeThemeProvider>
+          <WeatherScene />
+          {children}
+        </MongreeThemeProvider>
         <div id="modal" /> {/* 모달 */}
       </body>
     </html>

@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import type { ImageThumbnailProps } from "./types";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import styles from "./styles.module.css";
@@ -11,7 +14,11 @@ export const ImageThumbnail = ({
   shape = "square",
   className,
 }: ImageThumbnailProps) => {
-  const imageSrc = src || DEFAULT_PROFILE_IMAGE;
+  const [imageSrc, setImageSrc] = useState(src || DEFAULT_PROFILE_IMAGE);
+
+  useEffect(() => {
+    setImageSrc(src || DEFAULT_PROFILE_IMAGE);
+  }, [src]);
 
   const shapeClass = shape === "circle" ? "rounded-full" : "rounded-lg";
 
@@ -28,6 +35,7 @@ export const ImageThumbnail = ({
         width={width}
         height={height}
         className={styles.imageFill}
+        onError={() => setImageSrc(DEFAULT_PROFILE_IMAGE)}
       />
     </div>
   );

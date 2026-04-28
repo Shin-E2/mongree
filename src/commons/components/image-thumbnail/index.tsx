@@ -24,16 +24,16 @@ export const ImageThumbnail = ({
 
   return (
     <div
-      className={`flex-shrink-0 overflow-hidden ${
-        shape === "circle" ? `w-[${width}px] h-[${height}px]` : ""
-      } ${shapeClass} ${className || ""}`}
-      style={shape === "square" ? { width, height } : undefined}
+      className={`relative flex-shrink-0 overflow-hidden ${shapeClass} ${
+        className || ""
+      }`}
+      style={{ width, height }}
     >
       <Image
         src={imageSrc}
         alt={alt}
-        width={width}
-        height={height}
+        fill
+        sizes={`${width}px`}
         className={styles.imageFill}
         onError={() => setImageSrc(DEFAULT_PROFILE_IMAGE)}
       />

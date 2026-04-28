@@ -1,10 +1,13 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import {
   deleteImageFromS3,
   uploadImageServer,
 } from "@/commons/utils/upload-images";
+import {
+  revalidateProfileComments,
+  revalidateProfileUpdated,
+} from "@/commons/utils/cache-revalidation";
 import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 
@@ -205,10 +208,7 @@ export async function updateProfile(formData: FormData) {
       await deletePreviousProfileImage(user.profile_image);
     }
 
-    revalidatePath("/profile");
-    revalidatePath("/home");
-    revalidatePath("/diary");
-    revalidatePath("/community");
+    revalidateProfileUpdated(user.id);
 
     return { success: true };
   } catch (error) {
@@ -227,6 +227,14 @@ export async function deleteProfileComment(commentId: string) {
   if (!user) return { success: false, error: "로그인이 필요합니다." };
 
   const supabase = await createClient();
+  const { data: comment } = await supabase
+    .from("comments")
+    .select("diary_id")
+    .eq("id", commentId)
+    .eq("user_id", user.id)
+    .is("deleted_at", null)
+    .maybeSingle();
+
   const { error } = await supabase
     .from("comments")
     .update({
@@ -243,7 +251,7 @@ export async function deleteProfileComment(commentId: string) {
     return { success: false, error: "댓글 삭제에 실패했습니다." };
   }
 
-  revalidatePath("/profile");
+  revalidateProfileComments(comment?.diary_id ? [comment.diary_id] : []);
   return { success: true };
 }
 
@@ -252,6 +260,12 @@ export async function deleteAllProfileComments() {
   if (!user) return { success: false, error: "로그인이 필요합니다." };
 
   const supabase = await createClient();
+  const { data: comments } = await supabase
+    .from("comments")
+    .select("diary_id")
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
+
   const { error } = await supabase
     .from("comments")
     .update({
@@ -267,6 +281,9 @@ export async function deleteAllProfileComments() {
     return { success: false, error: "댓글 전체 삭제에 실패했습니다." };
   }
 
-  revalidatePath("/profile");
+  const diaryIds = [
+    ...new Set((comments ?? []).map((comment) => comment.diary_id)),
+  ];
+  revalidateProfileComments(diaryIds);
   return { success: true };
 }

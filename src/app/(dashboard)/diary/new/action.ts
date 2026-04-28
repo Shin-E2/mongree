@@ -7,8 +7,8 @@ import {
 import { createClient } from "@/lib/supabase-server";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { getUser } from "@/lib/get-user";
-import { revalidatePath } from "next/cache";
 import { formatZodError } from "@/commons/utils/errorFormatters";
+import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
 
 // 폼 데이터 추출 함수
 function extractFormData(formData: FormData) {
@@ -207,8 +207,11 @@ export async function createDiary(formData: FormData) {
     }
 
     // 성공 시 캐시 갱신
-    revalidatePath('/diary');
-    revalidatePath('/home');
+    revalidateDiaryCreated({
+      userId: user.id,
+      diaryId: newDiary.id,
+      isPrivate: validationResult.data.isPrivate,
+    });
 
     return { success: true, diary: newDiary };
 

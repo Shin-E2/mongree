@@ -1,7 +1,7 @@
 "use server";
 
 import { getUser } from "@/lib/get-user";
-import { revalidateTag } from "next/cache";
+import { revalidateDiaryEmpathy } from "@/commons/utils/cache-revalidation";
 import { createClient } from "@/lib/supabase-server";
 
 interface DiaryLikeRow {
@@ -53,8 +53,7 @@ export async function togglePublicEmpathy(diaryId: string) {
       }
     }
 
-    revalidateTag(`public-diary-${diaryId}`);
-    revalidateTag("public-diaries");
+    revalidateDiaryEmpathy(diaryId);
 
     const { data: updatedEmpathies, error: fetchEmpathiesError } =
       await supabase

@@ -10,7 +10,7 @@
 }
 
 .delete__no__background {
-  @apply absolute top-4;
+  @apply absolute right-4 top-4;
 }
 
 .next {

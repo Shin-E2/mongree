@@ -1,23 +1,23 @@
 .modalContent {
-  @apply p-4;
+  @apply flex w-full flex-col items-center pt-4;
 }
 
 .message {
-  @apply mb-4;
+  @apply text-center text-sm leading-6 text-gray-600;
 }
 
 .errorMessage {
-  @apply text-red-500 text-sm mb-4;
+  @apply mt-3 rounded-md bg-red-50 px-3 py-2 text-center text-sm text-red-600;
 }
 
 .buttonContainer {
-  @apply flex justify-end gap-2;
+  @apply mt-6 flex w-full flex-col-reverse gap-2 sm:flex-row sm:justify-center;
 }
 
 .cancelButton {
-  @apply px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300;
+  @apply h-11 w-full rounded-md bg-gray-100 px-5 text-gray-700 hover:bg-gray-200 disabled:cursor-not-allowed disabled:opacity-60 sm:w-24;
 }
 
 .deleteButton {
-  @apply px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 disabled:opacity-50;
+  @apply h-11 w-full rounded-md bg-red-500 px-5 font-medium text-white hover:bg-red-600 disabled:cursor-wait disabled:bg-red-300 sm:w-24;
 }

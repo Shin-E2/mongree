@@ -55,3 +55,10 @@ node_modules/
 # Claude Code
 .claude/
 .mcp.json
+
+# Agent skills / local MCP tooling
+.agents/
+skills-lock.json
+
+# Added by code-review-graph
+.code-review-graph/

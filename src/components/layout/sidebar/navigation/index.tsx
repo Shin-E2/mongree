@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ButtonOptionStandardSFull } from "@/commons/components/button-option";
+import Link from "next/link";
 import { NAV_ITEMS } from "./constants";
 import styles from "./styles.module.css";
 
@@ -10,30 +10,20 @@ export default function SidebarNavigation() {
 
   return (
     <nav className={styles.nav}>
-      {NAV_ITEMS.map((item) => (
-        <ButtonOptionStandardSFull
-          key={item.path}
-          cssprop={`${styles.nav_button} ${
-            pathname === item.path ? styles.nav_current_backgroundColor : ""
-          }`}
-          icon={
-            <item.icon
-              className={`${styles.nav_icon} ${
-                pathname === item.path
-                  ? styles.nav_current
-                  : styles.nav_not_current_title
-              }`}
-            />
-          }
-          title={item.label}
-          titleColor={
-            pathname === item.path
-              ? styles.nav_current
-              : styles.nav_not_current_title
-          }
-          href={item.path}
-        />
-      ))}
+      {NAV_ITEMS.map((item) => {
+        const isActive = pathname === item.path;
+        return (
+          <Link
+            key={item.path}
+            href={item.path}
+            className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
+            aria-label={item.label}
+          >
+            <item.icon className={styles.navIcon} />
+            <span className={styles.tooltip}>{item.label}</span>
+          </Link>
+        );
+      })}
     </nav>
   );
 }

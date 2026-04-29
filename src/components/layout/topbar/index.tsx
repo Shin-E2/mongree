@@ -3,11 +3,12 @@
 import { CloudRain, Moon, Plus, Search, Snowflake, Sun } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
-import { SearchBarInput } from "@/commons/components/input";
+import { URL } from "@/commons/constants/global-url";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene } from "@/components/theme/theme.types";
 import TopbarUserAvatar from "./user-avatar";
 import styles from "./styles.module.css";
+import { usePageTitle } from "./use-page-title";
 
 const THEME_SEQUENCE: MongreeThemeScene[] = ["day", "night", "rain", "snow"];
 
@@ -28,6 +29,7 @@ const THEME_ICONS = {
 export default function TopBar() {
   const { scene, setScene } = useMongreeTheme();
   const [spinning, setSpinning] = useState(false);
+  const pageTitle = usePageTitle();
   const ThemeIcon = THEME_ICONS[scene];
 
   const handleThemeToggle = () => {
@@ -41,16 +43,20 @@ export default function TopBar() {
   return (
     <header className={styles.headerContainer}>
       <div className={styles.headerContentWrapper}>
-        <div className={styles.searchAreaWrapper}>
-          <div className={styles.searchBarContainer}>
-            <SearchBarInput
-              placeholder="일기 검색하기"
-              iconLeft={<Search />}
-            />
-          </div>
+        <div className={styles.pageContext}>
+          <span className={styles.pageEyebrow}>Mongree</span>
+          <strong className={styles.pageTitle}>{pageTitle}</strong>
         </div>
 
         <div className={styles.buttonsWrapper}>
+          <button
+            className={styles.searchButton}
+            type="button"
+            aria-label="일기 검색 열기"
+            title="일기 검색"
+          >
+            <Search className={styles.iconBase} />
+          </button>
           <button
             className={styles.themeToggleButton}
             type="button"
@@ -63,7 +69,7 @@ export default function TopBar() {
               onAnimationEnd={() => setSpinning(false)}
             />
           </button>
-          <Link href="/diary/new" className={styles.diaryWriteButton}>
+          <Link href={URL().DIARY_NEW} className={styles.diaryWriteButton}>
             <Plus className={styles.plusIcon} />
             <span className={styles.diaryWriteButtonText}>일기 작성</span>
           </Link>

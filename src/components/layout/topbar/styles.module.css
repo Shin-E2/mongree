@@ -10,22 +10,30 @@
 }
 
 .headerContentWrapper {
-  @apply flex h-full items-center justify-end gap-3 px-3 md:justify-between md:px-5;
+  @apply flex h-full items-center justify-between gap-3 px-3 md:px-5;
 }
 
-.searchAreaWrapper {
-  @apply hidden flex-1 md:block;
-  max-width: 42rem;
+.pageContext {
+  @apply flex min-w-0 flex-1 flex-col justify-center;
 }
 
-.searchBarContainer {
-  @apply relative;
+.pageEyebrow {
+  @apply hidden text-[0.68rem] font-semibold uppercase md:block;
+  color: color-mix(in oklch, var(--scene-accent) 72%, var(--mongree-text-muted));
+  line-height: 1;
+}
+
+.pageTitle {
+  @apply block truncate text-base font-bold md:text-lg;
+  color: var(--mongree-text);
+  line-height: 1.15;
 }
 
 .buttonsWrapper {
-  @apply flex items-center gap-2;
+  @apply flex shrink-0 items-center gap-2;
 }
 
+.searchButton,
 .themeToggleButton {
   @apply grid h-10 w-10 place-items-center rounded-full border;
   border-color: color-mix(in oklch, var(--mongree-line) 70%, transparent);
@@ -37,14 +45,23 @@
     color 160ms ease;
 }
 
+.searchButton:hover,
 .themeToggleButton:hover {
   background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
   color: var(--mongree-text);
   transform: translateY(-1px);
 }
 
+.searchButton:active,
 .themeToggleButton:active {
   transform: translateY(0) scale(0.98);
+}
+
+.searchButton:focus-visible,
+.themeToggleButton:focus-visible,
+.diaryWriteButton:focus-visible {
+  outline: 2px solid color-mix(in oklch, var(--scene-accent) 70%, var(--mongree-primary));
+  outline-offset: 3px;
 }
 
 .iconBase {

@@ -9,7 +9,7 @@
 
 .heroCopy {
   @apply relative overflow-hidden p-6 sm:p-8;
-  min-height: 18rem;
+  min-height: 16.5rem;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-lg);
   background:
@@ -90,7 +90,7 @@
 
 .heroWidget {
   @apply flex flex-col justify-between gap-4 p-5 sm:p-6;
-  min-height: 18rem;
+  min-height: 16.5rem;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-lg);
   background:
@@ -117,6 +117,15 @@
 .skyFace {
   @apply text-3xl font-bold;
   color: color-mix(in oklch, var(--mongree-text) 72%, transparent);
+}
+
+.skyOrbImage {
+  @apply object-contain;
+  width: clamp(3.5rem, 32%, 5rem);
+  height: auto;
+  filter: drop-shadow(
+    0 8px 16px color-mix(in oklch, var(--scene-accent) 22%, transparent)
+  );
 }
 
 .heroMetricRow {
@@ -186,4 +195,66 @@
   border-radius: var(--mongree-radius-md);
   color: var(--mongree-text-muted);
   background: color-mix(in oklch, var(--mongree-surface-soft) 62%, transparent);
+}
+
+@media (max-width: 639px) {
+  .mainContainer {
+    @apply px-3 pt-3;
+  }
+
+  .heroSection {
+    @apply gap-4;
+  }
+
+  .heroCopy,
+  .heroWidget {
+    min-height: auto;
+  }
+
+  .heroCopy {
+    @apply p-5;
+  }
+
+  .heroCopy::before {
+    right: 3.25rem;
+    bottom: 1.8rem;
+    width: 6.5rem;
+    height: 2.5rem;
+  }
+
+  .heroCopy::after {
+    right: 1.25rem;
+    top: 1.75rem;
+    width: 3rem;
+    height: 3rem;
+  }
+
+  .heroTitle {
+    @apply text-2xl;
+  }
+
+  .heroDescription {
+    @apply text-sm leading-6;
+  }
+
+  .heroActions {
+    @apply mt-6;
+  }
+
+  .primaryAction,
+  .secondaryAction {
+    @apply h-10 px-4;
+  }
+
+  .heroWidget {
+    @apply p-4;
+  }
+
+  .skyOrb {
+    width: min(10rem, 48vw);
+  }
+
+  .heroMetricRow > div {
+    @apply p-3;
+  }
 }

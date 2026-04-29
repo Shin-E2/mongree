@@ -54,7 +54,7 @@
 .dayCell,
 .fullDayCell {
   @apply p-2;
-  border-radius: var(--mongree-radius-sm);
+  border-radius: 10px;
   background: color-mix(in oklch, var(--mongree-surface-soft) 64%, transparent);
   border: 1px solid color-mix(in oklch, var(--mongree-line) 42%, transparent);
 }
@@ -71,8 +71,17 @@
   background: color-mix(in oklch, var(--scene-accent) 16%, var(--mongree-surface-soft));
 }
 
+.hasEntryDayCell {
+  background: color-mix(in oklch, var(--scene-accent) 16%, var(--mongree-surface));
+}
+
 .selectedDayCell {
+  background: color-mix(in oklch, var(--mongree-primary) 18%, var(--mongree-surface));
   box-shadow: 0 0 0 2px var(--mongree-primary);
+}
+
+.todayDayCell {
+  border: 2px solid var(--mongree-primary);
 }
 
 .dayNumber {
@@ -102,4 +111,43 @@
   @apply flex h-4 min-w-4 items-center justify-center rounded-full px-1 text-[10px] font-semibold;
   color: oklch(0.24 0.035 255);
   background: var(--mongree-primary);
+}
+
+@media (max-width: 639px) {
+  .contentWrapper {
+    @apply p-5;
+  }
+
+  .title,
+  .fullTitle {
+    @apply mb-5 text-lg;
+  }
+
+  .weekGrid,
+  .calendarGrid {
+    @apply gap-1.5;
+  }
+
+  .emptyCell,
+  .dayCell,
+  .fullDayCell {
+    @apply p-1.5;
+  }
+
+  .dayCell {
+    @apply min-h-14;
+  }
+
+  .fullDayCell {
+    @apply min-h-20;
+  }
+
+  .emotionMarker {
+    @apply gap-0.5;
+  }
+
+  .emotionImage {
+    width: 1.25rem;
+    height: 1.25rem;
+  }
 }

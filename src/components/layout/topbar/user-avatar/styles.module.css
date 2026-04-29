@@ -1,0 +1,64 @@
+.wrapper {
+  position: relative;
+}
+
+.avatarButton {
+  @apply flex h-10 w-10 items-center justify-center rounded-full border transition-all duration-150 ease-out;
+  border-color: color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface) 72%, transparent);
+  overflow: hidden;
+}
+
+.avatarButton:hover {
+  border-color: color-mix(in oklch, var(--scene-accent) 40%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--mongree-primary) 20%, transparent);
+}
+
+.avatarImage {
+  @apply h-full w-full object-cover;
+  border-radius: 999px;
+}
+
+.dropdown {
+  @apply absolute right-0 top-full z-50 mt-2 w-44 overflow-hidden rounded-2xl border;
+  border-color: color-mix(in oklch, var(--mongree-line) 64%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent);
+  box-shadow:
+    0 16px 40px color-mix(in oklch, var(--mongree-text) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 20%, transparent);
+  backdrop-filter: blur(12px);
+}
+
+.dropdownHeader {
+  @apply border-b px-4 py-2.5;
+  border-color: color-mix(in oklch, var(--mongree-line) 50%, transparent);
+}
+
+.nickname {
+  @apply block truncate text-sm font-semibold;
+  color: var(--mongree-text);
+}
+
+.dropdownItem {
+  @apply flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm transition-colors duration-100;
+  color: var(--mongree-text);
+  background: transparent;
+}
+
+.dropdownItem:hover {
+  background: color-mix(in oklch, var(--scene-accent) 10%, transparent);
+  color: var(--mongree-text);
+}
+
+.dropdownItemDanger {
+  color: oklch(0.52 0.18 25);
+}
+
+.dropdownItemDanger:hover {
+  background: color-mix(in oklch, oklch(0.52 0.18 25) 8%, transparent);
+  color: oklch(0.48 0.18 25);
+}
+
+.dropdownIcon {
+  @apply h-4 w-4 flex-shrink-0;
+}

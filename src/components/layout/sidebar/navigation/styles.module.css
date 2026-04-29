@@ -1,9 +1,9 @@
 .nav {
-  @apply flex-1 px-4 space-y-2;
+  @apply flex-1 space-y-1.5 px-3;
 }
 
 .nav_icon {
-  @apply w-5 h-5 mr-3;
+  @apply mr-3 h-5 w-5 transition-transform duration-200 ease-out;
 }
 
 .nav_current {
@@ -19,12 +19,15 @@
 }
 
 .nav_button {
-  @apply flex w-full items-center px-4 py-3 text-left transition-colors duration-200;
-  border-radius: var(--mongree-radius-sm);
+  @apply flex w-full items-center px-4 py-3 text-left text-sm font-medium transition-all duration-200;
+  border: 1px solid transparent;
+  border-radius: 16px;
 }
 
 .nav_button:hover {
-  background: color-mix(in oklch, var(--scene-accent) 13%, transparent);
+  border-color: color-mix(in oklch, var(--scene-accent) 20%, transparent);
+  background: color-mix(in oklch, var(--scene-accent) 12%, transparent);
+  transform: translateX(2px);
 }
 
 .nav_button:hover .nav_icon,
@@ -33,6 +36,9 @@
 }
 
 .nav_current_backgroundColor {
-  background: color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
-  box-shadow: inset 0 0 0 1px color-mix(in oklch, var(--mongree-primary) 18%, transparent);
+  border-color: color-mix(in oklch, var(--mongree-primary) 26%, transparent);
+  background:
+    radial-gradient(circle at 86% 50%, color-mix(in oklch, var(--scene-object) 16%, transparent) 0 2.5rem, transparent 2.7rem),
+    color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--scene-object) 18%, transparent);
 }

@@ -15,7 +15,7 @@
 }
 
 .logo {
-  @apply px-4 py-6 flex justify-center text-4xl font-extrabold;
+  @apply flex px-1 py-6 text-[2.35rem] font-extrabold leading-none;
   color: var(--mongree-primary);
   letter-spacing: 0;
   text-shadow: 0 10px 24px color-mix(in oklch, var(--mongree-primary) 22%, transparent);

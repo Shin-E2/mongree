@@ -8,7 +8,7 @@
 }
 
 .contentWrapper {
-  @apply flex-1 md:ml-[17rem];
+  @apply flex-1 md:ml-[4rem];
   min-width: 0;
 }
 

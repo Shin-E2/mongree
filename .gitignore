@@ -2,6 +2,7 @@
 
 # dependencies
 /node_modules
+skills/
 /.pnp
 .pnp.*
 .yarn/*
@@ -22,6 +23,7 @@
 
 # misc
 .DS_Store
+/.*/
 *.pem
 
 # debug

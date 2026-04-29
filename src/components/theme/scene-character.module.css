@@ -1,0 +1,164 @@
+.character {
+  position: relative;
+  width: 2rem;
+  height: 2.4rem;
+  pointer-events: none;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* idle float */
+@keyframes characterFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-3px); }
+}
+
+.character {
+  animation: characterFloat 3.2s ease-in-out infinite;
+}
+
+/* head */
+.head {
+  position: absolute;
+  bottom: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1.8rem;
+  height: 1.8rem;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 36% 28%, color-mix(in oklch, var(--scene-cloud) 90%, transparent), color-mix(in oklch, var(--scene-accent) 28%, var(--mongree-surface-raised)));
+  box-shadow:
+    0 4px 10px color-mix(in oklch, var(--mongree-text) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 40%, transparent);
+  transition: background 480ms ease;
+}
+
+/* eyes */
+.eyeLeft,
+.eyeRight {
+  position: absolute;
+  top: 38%;
+  width: 0.28rem;
+  height: 0.28rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mongree-text) 72%, transparent);
+  transition: height 200ms ease;
+}
+.eyeLeft  { left: 28%; }
+.eyeRight { right: 28%; }
+
+/* blinking */
+@keyframes blink {
+  0%, 94%, 100% { height: 0.28rem; }
+  96%            { height: 0.05rem; }
+}
+.eyeLeft,
+.eyeRight {
+  animation: blink 4s ease-in-out infinite;
+}
+.eyeRight {
+  animation-delay: 0.04s;
+}
+
+/* cheeks */
+.cheekLeft,
+.cheekRight {
+  position: absolute;
+  top: 52%;
+  width: 0.38rem;
+  height: 0.22rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-accent) 38%, transparent);
+  transition: background 480ms ease;
+}
+.cheekLeft  { left: 14%; }
+.cheekRight { right: 14%; }
+
+/* mouth */
+.mouth {
+  position: absolute;
+  bottom: 24%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.5rem;
+  height: 0.22rem;
+  border-bottom: 0.12rem solid color-mix(in oklch, var(--mongree-text) 54%, transparent);
+  border-radius: 0 0 999px 999px;
+}
+
+/* accessory — theme-specific detail above head */
+.accessory {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0.6rem;
+  height: 0.6rem;
+  border-radius: 999px;
+  opacity: 0;
+  transition:
+    opacity 320ms ease,
+    background 480ms ease,
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* day: tiny sun dot */
+[data-scene="day"] .accessory {
+  opacity: 1;
+  background: radial-gradient(circle, oklch(0.96 0.14 90), oklch(0.82 0.14 72));
+  box-shadow: 0 0 6px color-mix(in oklch, var(--scene-accent) 50%, transparent);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* night: tiny star */
+[data-scene="night"] .accessory {
+  opacity: 0.82;
+  background: oklch(0.96 0.09 95);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  border-radius: 0;
+  width: 0.7rem;
+  height: 0.7rem;
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* rain: tiny umbrella arc */
+[data-scene="rain"] .accessory {
+  opacity: 1;
+  width: 0.9rem;
+  height: 0.45rem;
+  border-radius: 999px 999px 0 0;
+  background: color-mix(in oklch, var(--scene-accent) 60%, var(--mongree-primary));
+  border: 0.1rem solid color-mix(in oklch, var(--mongree-primary-strong) 40%, transparent);
+  transform: translateX(-50%) translateY(-2px);
+}
+
+/* snow: tiny snowflake dot */
+[data-scene="snow"] .accessory {
+  opacity: 1;
+  background: oklch(0.96 0.025 220);
+  box-shadow: 0 0 5px color-mix(in oklch, oklch(0.85 0.04 220) 50%, transparent);
+  transform: translateX(-50%) translateY(-4px);
+  animation: snowDrift 2s ease-in-out infinite alternate;
+}
+
+@keyframes snowDrift {
+  from { transform: translateX(-50%) translateY(-4px); }
+  to   { transform: translateX(-50%) translateY(-7px); }
+}
+
+/* night: sleepy eye squint */
+[data-scene="night"] .eyeLeft,
+[data-scene="night"] .eyeRight {
+  height: 0.1rem;
+  top: 42%;
+  animation: none;
+}
+
+/* rain: concerned eyebrow-like tilt */
+[data-scene="rain"] .mouth {
+  width: 0.36rem;
+  border-radius: 999px 999px 0 0;
+  border-bottom: none;
+  border-top: 0.12rem solid color-mix(in oklch, var(--mongree-text) 44%, transparent);
+  bottom: 26%;
+}

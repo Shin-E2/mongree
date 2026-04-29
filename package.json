@@ -13,6 +13,7 @@
     "@aws-sdk/client-s3": "^3.726.1",
     "@aws-sdk/s3-request-presigner": "^3.726.1",
     "@hookform/resolvers": "^3.10.0",
+    "@reduxjs/toolkit": "^2.11.2",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.6.1",
     "@supabase/supabase-js": "^2.49.8",
@@ -25,6 +26,7 @@
     "react-dom": "19.0.1",
     "react-hook-form": "^7.54.2",
     "react-is": "^19.2.5",
+    "react-redux": "^9.2.0",
     "recharts": "^3.8.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"

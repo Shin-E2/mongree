@@ -2,9 +2,11 @@
 
 import { CloudRain, Moon, Plus, Search, Snowflake, Sun } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { SearchBarInput } from "@/commons/components/input";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene } from "@/components/theme/theme.types";
+import TopbarUserAvatar from "./user-avatar";
 import styles from "./styles.module.css";
 
 const THEME_SEQUENCE: MongreeThemeScene[] = ["day", "night", "rain", "snow"];
@@ -25,9 +27,12 @@ const THEME_ICONS = {
 
 export default function TopBar() {
   const { scene, setScene } = useMongreeTheme();
+  const [spinning, setSpinning] = useState(false);
   const ThemeIcon = THEME_ICONS[scene];
 
   const handleThemeToggle = () => {
+    if (spinning) return;
+    setSpinning(true);
     const currentIndex = THEME_SEQUENCE.indexOf(scene);
     const nextScene = THEME_SEQUENCE[(currentIndex + 1) % THEME_SEQUENCE.length];
     setScene(nextScene);
@@ -53,12 +58,16 @@ export default function TopBar() {
             aria-label={`${THEME_LABELS[scene]} 사용 중, 다음 테마로 변경`}
             title={`${THEME_LABELS[scene]} 사용 중`}
           >
-            <ThemeIcon className={styles.iconBase} />
+            <ThemeIcon
+              className={`${styles.iconBase} ${spinning ? styles.iconSpin : ""}`}
+              onAnimationEnd={() => setSpinning(false)}
+            />
           </button>
           <Link href="/diary/new" className={styles.diaryWriteButton}>
             <Plus className={styles.plusIcon} />
             <span className={styles.diaryWriteButtonText}>일기 작성</span>
           </Link>
+          <TopbarUserAvatar />
         </div>
       </div>
     </header>

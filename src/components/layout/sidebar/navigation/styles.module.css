@@ -1,44 +1,43 @@
 .nav {
-  @apply flex-1 space-y-1.5 px-3;
+  @apply flex w-full flex-col items-center gap-1 py-3;
 }
 
-.nav_icon {
-  @apply mr-3 h-5 w-5 transition-transform duration-200 ease-out;
-}
-
-.nav_current {
-  color: var(--mongree-primary-strong);
-}
-
-.nav_not_current {
+.navItem {
+  @apply relative flex h-10 w-10 items-center justify-center rounded-xl transition-all duration-150 ease-out;
   color: var(--mongree-text-muted);
 }
 
-.nav_not_current_title {
-  color: var(--mongree-text-muted);
-}
-
-.nav_button {
-  @apply flex w-full items-center px-4 py-3 text-left text-sm font-medium transition-all duration-200;
-  border: 1px solid transparent;
-  border-radius: 16px;
-}
-
-.nav_button:hover {
-  border-color: color-mix(in oklch, var(--scene-accent) 20%, transparent);
-  background: color-mix(in oklch, var(--scene-accent) 12%, transparent);
-  transform: translateX(2px);
-}
-
-.nav_button:hover .nav_icon,
-.nav_button:hover .nav_not_current_title {
+.navItem:hover {
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
   color: var(--mongree-primary-strong);
 }
 
-.nav_current_backgroundColor {
-  border-color: color-mix(in oklch, var(--mongree-primary) 26%, transparent);
+.navItemActive {
   background:
-    radial-gradient(circle at 86% 50%, color-mix(in oklch, var(--scene-object) 16%, transparent) 0 2.5rem, transparent 2.7rem),
-    color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
-  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--scene-object) 18%, transparent);
+    radial-gradient(circle at 70% 40%, color-mix(in oklch, var(--scene-object) 18%, transparent) 0 1.8rem, transparent 2rem),
+    color-mix(in oklch, var(--scene-accent) 20%, var(--mongree-surface-raised));
+  color: var(--mongree-primary-strong);
+  box-shadow: inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
+}
+
+.navIcon {
+  @apply h-5 w-5 flex-shrink-0;
+}
+
+.tooltip {
+  @apply pointer-events-none absolute left-full top-1/2 ml-3 whitespace-nowrap rounded-xl px-3 py-1.5 text-xs font-medium;
+  transform: translateY(-50%) translateX(-4px);
+  opacity: 0;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent);
+  color: var(--mongree-text);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 60%, transparent);
+  box-shadow: 0 8px 20px color-mix(in oklch, var(--mongree-text) 8%, transparent);
+  transition:
+    opacity 120ms ease-out,
+    transform 120ms ease-out;
+}
+
+.navItem:hover .tooltip {
+  opacity: 1;
+  transform: translateY(-50%) translateX(0);
 }

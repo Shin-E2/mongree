@@ -1,7 +1,7 @@
 import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 
 const s3Client = new S3Client({
-  region: process.env.AWS_REGIN,
+  region: process.env.AWS_REGION,
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
@@ -10,23 +10,21 @@ const s3Client = new S3Client({
 
 export async function uploadImageToS3(file: File) {
   const fileName = `${Date.now()}-${file.name}`;
-  const bucketName = process.env.AMPLIFY_BUCKET!;
+  const bucketName = process.env.AWS_S3_BUCKET_NAME!;
   const region = process.env.AWS_REGION!;
 
-  //File 객체를 ArraryBuffer로 변환
   const photoData = await file.arrayBuffer();
 
   const command = new PutObjectCommand({
     Bucket: bucketName,
     Key: fileName,
-    Body: new Uint8Array(photoData), // Uint8Array로 변환하여 전달
-    ContentType: file.type, // 파일 MIME 타입 설정
+    Body: new Uint8Array(photoData),
+    ContentType: file.type,
   });
 
   try {
     await s3Client.send(command);
 
-    //s3 객체 url 반환
     return `https://${bucketName}.s3.${region}.amazonaws.com/${fileName}`;
   } catch (error) {
     console.error("S3 업로드 실패:", error);

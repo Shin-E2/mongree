@@ -64,6 +64,8 @@ export async function GET(request: NextRequest) {
       await syncSocialProfileImage(supabase);
       return NextResponse.redirect(`${origin}/home`);
     }
+
+    console.error("OAuth 세션 교환 실패:", error.message);
   }
 
   return NextResponse.redirect(`${origin}/login?error=oauth`);

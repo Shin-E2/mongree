@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 80 80">
+  <circle cx="40" cy="55" r="18" fill="oklch(0.94 0.02 240)"/>
+  <circle cx="40" cy="36" r="13" fill="oklch(0.96 0.02 240)"/>
+  <circle cx="35.5" cy="33" r="2" fill="oklch(0.25 0.03 240)"/>
+  <circle cx="44.5" cy="33" r="2" fill="oklch(0.25 0.03 240)"/>
+  <path d="M40 37 L44 39 L40 41 Z" fill="oklch(0.7 0.18 50)"/>
+  <path d="M35 44 Q40 48 45 44" stroke="oklch(0.25 0.03 240)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <circle cx="16" cy="20" r="2" fill="oklch(0.85 0.04 230)" opacity="0.8"/>
+  <circle cx="64" cy="15" r="1.5" fill="oklch(0.85 0.04 230)" opacity="0.7"/>
+  <circle cx="70" cy="45" r="2" fill="oklch(0.85 0.04 230)" opacity="0.6"/>
+</svg>

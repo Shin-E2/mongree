@@ -3,6 +3,7 @@ import HomeEmotionStats from "@/components/home/(sidebar)/emotion-stats";
 import HomeEmotionalCalendar from "@/components/home/(sidebar)/emotional-calendar";
 import HomePopularDiaryCard from "@/components/home/(sidebar)/popular-diary-card";
 import HomeRecentDiary from "@/components/home/(sidebar)/recent-diary";
+import Image from "next/image";
 import Link from "next/link";
 import { getHomeDashboardData } from "./action";
 import styles from "./styles.module.css";
@@ -32,8 +33,19 @@ export default async function HomePage() {
           </div>
         </div>
         <div className={styles.heroWidget}>
-          <div className={styles.skyOrb}>
-            <span className={styles.skyFace}>•ᴗ•</span>
+          <div className={styles.skyOrb} aria-hidden="true">
+            {primaryEmotion ? (
+              <Image
+                src={primaryEmotion.image}
+                alt=""
+                width={80}
+                height={80}
+                className={styles.skyOrbImage}
+                priority
+              />
+            ) : (
+              <span className={styles.skyFace}>•ᴗ•</span>
+            )}
           </div>
           <div className={styles.heroMetricRow}>
             <div>

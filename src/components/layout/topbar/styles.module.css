@@ -1,5 +1,5 @@
 .headerContainer {
-  @apply fixed right-3 top-3 z-40 h-14 border md:left-[17rem] md:right-4;
+  @apply fixed right-3 top-3 z-40 h-14 border md:left-[4.5rem] md:right-4;
   border-color: color-mix(in oklch, var(--mongree-line) 72%, transparent);
   border-radius: 24px;
   background: color-mix(in oklch, var(--mongree-surface-raised) 82%, transparent);
@@ -49,6 +49,16 @@
 
 .iconBase {
   @apply w-5 h-5;
+}
+
+@keyframes sceneIconSpin {
+  0%   { transform: rotate(0deg) scale(1); }
+  40%  { transform: rotate(200deg) scale(0.85); }
+  100% { transform: rotate(360deg) scale(1); }
+}
+
+.iconSpin {
+  animation: sceneIconSpin 380ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
 }
 
 .diaryWriteButton {

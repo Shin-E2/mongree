@@ -3,6 +3,7 @@
 import SideBar from "./sidebar";
 import TopBar from "./topbar";
 import ChatBot from "./chatbot";
+import SceneCharacter from "./scene-character";
 import useLayout from "./hook";
 import styles from "./styles.module.css";
 
@@ -13,7 +14,6 @@ interface LayoutProps {
 export default function Layout({ children }: LayoutProps) {
   const { hideFullLayout, hidePartialLayout } = useLayout();
 
-  // 전체 레이아웃 숨김
   if (hideFullLayout) {
     return children;
   }
@@ -31,6 +31,7 @@ export default function Layout({ children }: LayoutProps) {
           {children}
         </main>
         {!hidePartialLayout && <ChatBot />}
+        {!hidePartialLayout && <SceneCharacter />}
       </div>
     </div>
   );

@@ -2,13 +2,23 @@
 }
 
 .common__title {
-  @apply text-2xl font-bold text-gray-900;
+  @apply text-2xl font-bold;
+  color: var(--mongree-text);
 }
 
 .common__description {
-  @apply mt-2 text-gray-600;
+  @apply mt-2;
+  color: var(--mongree-text-muted);
 }
 
 .standard__m__full {
-  @apply py-5 px-8 bg-white border-b;
+  @apply px-6 py-5 sm:px-8;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 82%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    radial-gradient(circle at 92% 18%, color-mix(in oklch, var(--scene-accent) 10%, transparent) 0 4.5rem, transparent 4.7rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent);
+  box-shadow:
+    0 18px 44px color-mix(in oklch, var(--mongree-text) 6%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
 }

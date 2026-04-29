@@ -40,6 +40,7 @@ export default function EmotionCalendar({
 }: EmotionCalendarProps) {
   const { blanks, days } = getCalendarDays(monthDate, entries);
   const isFull = variant === "full";
+  const todayKey = getLocalDateKey(new Date());
 
   const renderDayContent = ({
     day,
@@ -86,9 +87,14 @@ export default function EmotionCalendar({
             <div key={`blank-${index}`} className={styles.emptyCell} />
           ))}
           {days.map(({ day, dateKey, entry }) => {
-            const dayClassName = `${isFull ? styles.fullDayCell : styles.dayCell} ${
-              selectedDate === dateKey ? styles.selectedDayCell : ""
-            }`;
+            const dayClassName = [
+              isFull ? styles.fullDayCell : styles.dayCell,
+              entry ? styles.hasEntryDayCell : "",
+              selectedDate === dateKey ? styles.selectedDayCell : "",
+              todayKey === dateKey ? styles.todayDayCell : "",
+            ]
+              .filter(Boolean)
+              .join(" ");
 
             if (getDayHref) {
               return (

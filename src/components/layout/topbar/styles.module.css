@@ -1,16 +1,21 @@
 .headerContainer {
-  @apply fixed top-0 left-0 md:left-64 right-0 h-16 border-b z-10;
-  background: color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent);
-  border-color: var(--mongree-line);
-  box-shadow: 0 12px 34px color-mix(in oklch, var(--mongree-text) 5%, transparent);
+  @apply fixed right-3 top-3 z-40 h-14 border md:left-[17rem] md:right-4;
+  border-color: color-mix(in oklch, var(--mongree-line) 72%, transparent);
+  border-radius: 24px;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 82%, transparent);
+  box-shadow:
+    0 16px 42px color-mix(in oklch, var(--mongree-text) 6%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
+  backdrop-filter: blur(18px);
 }
 
 .headerContentWrapper {
-  @apply flex items-center justify-between h-full px-4 md:px-8;
+  @apply flex h-full items-center justify-end gap-3 px-3 md:justify-between md:px-5;
 }
 
 .searchAreaWrapper {
-  @apply flex-1 max-w-2xl;
+  @apply hidden flex-1 md:block;
+  max-width: 42rem;
 }
 
 .searchBarContainer {
@@ -18,17 +23,28 @@
 }
 
 .buttonsWrapper {
-  @apply flex items-center space-x-2 md:space-x-4;
+  @apply flex items-center gap-2;
 }
 
 .themeToggleButton {
-  @apply p-2 rounded-lg;
+  @apply grid h-10 w-10 place-items-center rounded-full border;
+  border-color: color-mix(in oklch, var(--mongree-line) 70%, transparent);
   color: var(--mongree-text-muted);
+  background: color-mix(in oklch, var(--mongree-surface) 72%, transparent);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    color 160ms ease;
 }
 
 .themeToggleButton:hover {
   background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
   color: var(--mongree-text);
+  transform: translateY(-1px);
+}
+
+.themeToggleButton:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .iconBase {
@@ -36,19 +52,28 @@
 }
 
 .diaryWriteButton {
-  @apply flex items-center px-3 md:px-4 py-2;
+  @apply flex h-10 items-center rounded-full px-3 text-sm font-semibold md:px-4;
   color: oklch(0.22 0.035 255);
   background: var(--mongree-primary);
-  border-radius: var(--mongree-radius-sm);
   box-shadow: 0 10px 24px color-mix(in oklch, var(--mongree-primary) 30%, transparent);
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    box-shadow 160ms ease;
 }
 
 .diaryWriteButton:hover {
   background: var(--mongree-primary-strong);
+  transform: translateY(-1px);
+  box-shadow: 0 14px 30px color-mix(in oklch, var(--mongree-primary) 34%, transparent);
+}
+
+.diaryWriteButton:active {
+  transform: translateY(0) scale(0.98);
 }
 
 .plusIcon {
-  @apply w-5 h-5 md:mr-2;
+  @apply h-5 w-5 md:mr-2;
 }
 
 .diaryWriteButtonText {

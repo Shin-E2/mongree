@@ -8,16 +8,17 @@ import MobileNavigation from "./navigation/mobile-navigation";
 export default function SideBar() {
   return (
     <>
-      {/* 데스크탑 사이드바 */}
       <aside className={styles.aside}>
         <div className={styles.aside_div}>
-          <ButtonTextLogo href={URL().HOME} title="mongree" />
+          <div className={styles.brandBlock}>
+            <ButtonTextLogo href={URL().HOME} title="mongree" />
+            <p className={styles.brandCaption}>오늘의 감정을 하늘에 적어요</p>
+          </div>
           <SidebarNavigation />
           <SidebarUserProfileSection />
         </div>
       </aside>
 
-      {/* 모바일 하단 네비게이션 */}
       <nav className={styles.mobile_nav}>
         <div className={styles.mobile_nav_container}>
           <MobileNavigation />

@@ -1,43 +1,33 @@
 .aside {
-  @apply fixed top-0 left-0 w-64 h-full border-r z-50 hidden md:block;
-  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
-  border-color: var(--mongree-line);
-  box-shadow: 18px 0 46px color-mix(in oklch, var(--mongree-text) 5%, transparent);
+  @apply fixed left-4 top-4 z-50 hidden h-[calc(100dvh-2rem)] w-[15rem] overflow-hidden border md:block;
+  border-color: color-mix(in oklch, var(--mongree-line) 78%, transparent);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 32% 8%, color-mix(in oklch, var(--scene-accent) 18%, transparent) 0 5.5rem, transparent 5.7rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  box-shadow:
+    0 22px 58px color-mix(in oklch, var(--mongree-text) 7%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
 }
 
 .aside_div {
-  @apply flex flex-col h-full;
+  @apply flex h-full flex-col;
 }
 
-/* 모바일 네비게이션 스타일 */
-.mobile_nav {
-  @apply fixed bottom-0 left-0 right-0 border-t z-50 block md:hidden;
-  background: color-mix(in oklch, var(--mongree-surface-raised) 94%, transparent);
-  border-color: var(--mongree-line);
-  box-shadow: 0 -14px 34px color-mix(in oklch, var(--mongree-text) 7%, transparent);
+.brandBlock {
+  @apply px-5 pb-5 pt-4;
 }
 
-.mobile_nav_container {
-  @apply flex justify-around items-center h-16 px-4;
-}
-
-.mobile_nav_item {
-  @apply flex flex-col items-center justify-center p-2 rounded-lg;
-  min-width: 3.25rem;
-}
-
-.mobile_nav_item_active {
-  color: var(--mongree-primary-strong);
-}
-
-.mobile_nav_item_inactive {
+.brandCaption {
+  @apply -mt-4 px-1 text-xs leading-5;
   color: var(--mongree-text-muted);
 }
 
-.mobile_nav_icon {
-  @apply w-6 h-6;
+.mobile_nav {
+  @apply fixed bottom-3 left-0 right-0 z-50 block px-3 md:hidden;
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-.mobile_nav_label {
-  @apply text-xs mt-1;
+.mobile_nav_container {
+  @apply mx-auto max-w-[27rem];
 }

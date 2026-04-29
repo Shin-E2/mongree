@@ -39,7 +39,7 @@ export default function TopBar() {
         <div className={styles.searchAreaWrapper}>
           <div className={styles.searchBarContainer}>
             <SearchBarInput
-              placeholder="일기 검색하기..."
+              placeholder="일기 검색하기"
               iconLeft={<Search />}
             />
           </div>

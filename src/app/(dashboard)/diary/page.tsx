@@ -1,9 +1,11 @@
 "use client";
 
 import { HeaderStandardMFull } from "@/commons/components/header";
-import useDiaryList from "./hook";
+import { URL } from "@/commons/constants/global-url";
 import DiaryListDiarySection from "@/components/home/(dashboard)/diary/list/diary-section";
 import DiaryListSearchFilter from "@/components/home/(dashboard)/diary/list/search-filter";
+import MongiCompanion from "@/components/home/(dashboard)/diary/mongi-companion";
+import useDiaryList from "./hook";
 import styles from "./styles.module.css";
 
 export default function DiaryListPage() {
@@ -25,17 +27,16 @@ export default function DiaryListPage() {
       />
 
       <div className={styles.contentWrapper}>
-        {/* 검색 및 필터 영역 */}
+        <MongiCompanion onStartDiary={() => router.push(URL().DIARY_NEW)} />
+
         <DiaryListSearchFilter
           setSearchTerm={setSearchTerm}
           selectedEmotions={selectedEmotions}
           handleEmotionToggle={handleEmotionToggle}
         />
 
-        {/* 일기 목록*/}
         <DiaryListDiarySection diaries={diaries} router={router} />
 
-        {/* 무한 스크롤 */}
         <div ref={observerRef} className={styles.observerDiv}>
           {isLoading && <div className={styles.loadingSpinner} />}
         </div>

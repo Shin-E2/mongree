@@ -1,5 +1,5 @@
 .pageShell {
-  min-height: 100vh;
+  min-height: 100dvh;
   color: var(--mongree-text);
   background:
     radial-gradient(circle at 12% 16%, color-mix(in oklch, var(--scene-accent) 13%, transparent) 0 9rem, transparent 9.2rem),

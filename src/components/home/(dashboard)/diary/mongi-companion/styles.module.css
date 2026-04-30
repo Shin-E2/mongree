@@ -1,0 +1,73 @@
+.wrapper {
+  @apply relative overflow-hidden rounded-3xl border border-orange-100 bg-orange-50 px-5 py-5 shadow-sm;
+  display: grid;
+  grid-template-columns: minmax(92px, 132px) minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+}
+
+.wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.72), transparent 28%),
+    radial-gradient(circle at 88% 8%, rgba(191, 219, 254, 0.42), transparent 24%),
+    linear-gradient(135deg, rgba(255, 247, 237, 0.94), rgba(239, 246, 255, 0.86));
+  pointer-events: none;
+}
+
+.characterWrap,
+.copy {
+  position: relative;
+  z-index: 1;
+}
+
+.characterWrap {
+  @apply flex items-center justify-center;
+  min-height: 132px;
+}
+
+.character {
+  width: min(132px, 100%);
+}
+
+.copy {
+  @apply flex min-w-0 flex-col items-start;
+}
+
+.eyebrow {
+  @apply mb-2 text-xs font-semibold text-orange-500;
+}
+
+.title {
+  @apply text-xl font-bold leading-snug text-gray-900;
+}
+
+.description {
+  @apply mt-2 max-w-xl text-sm leading-6 text-gray-600;
+}
+
+.action {
+  @apply mt-4 rounded-full bg-gray-900 px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-900 focus:ring-offset-2 focus:ring-offset-orange-50;
+}
+
+@media (max-width: 520px) {
+  .wrapper {
+    grid-template-columns: 1fr;
+    gap: 8px;
+    text-align: center;
+  }
+
+  .characterWrap {
+    min-height: 120px;
+  }
+
+  .copy {
+    align-items: center;
+  }
+
+  .description {
+    max-width: 30ch;
+  }
+}

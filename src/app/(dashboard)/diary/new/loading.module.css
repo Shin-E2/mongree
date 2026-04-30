@@ -1,0 +1,46 @@
+.pageShell {
+  @apply flex items-center justify-center px-4 py-10;
+  min-height: 100dvh;
+  color: var(--mongree-text);
+  background:
+    radial-gradient(circle at 18% 18%, color-mix(in oklch, var(--scene-accent) 18%, transparent) 0 10rem, transparent 10.2rem),
+    radial-gradient(circle at 88% 10%, color-mix(in oklch, var(--scene-cloud) 28%, transparent) 0 12rem, transparent 12.3rem),
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-bg-soft) 88%, transparent), color-mix(in oklch, var(--mongree-surface) 96%, transparent));
+}
+
+.panel {
+  @apply flex w-full max-w-md flex-col items-center px-6 py-8 text-center;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent);
+  box-shadow:
+    0 22px 56px color-mix(in oklch, var(--mongree-text) 9%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 18%, transparent);
+}
+
+.mongi {
+  width: 128px;
+}
+
+.eyebrow {
+  @apply mt-1 text-xs font-semibold text-orange-500;
+}
+
+.title {
+  @apply mt-3 text-2xl font-bold leading-snug;
+}
+
+.description {
+  @apply mt-3 max-w-xs text-sm leading-6;
+  color: var(--mongree-text-muted);
+}
+
+@media (max-width: 520px) {
+  .panel {
+    @apply px-5 py-7;
+  }
+
+  .mongi {
+    width: 116px;
+  }
+}

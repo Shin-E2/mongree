@@ -14,55 +14,33 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { ImagePlus, X } from "lucide-react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import type { ChangeEvent } from "react";
-import { useEffect, useMemo, useRef, useState, useTransition } from "react";
+import { useMemo, useTransition } from "react";
 import { useForm } from "react-hook-form";
-import type {
-  DiaryEditData,
-  DiaryEditImage,
-} from "@/app/(dashboard)/diary/[id]/edit/action";
+import type { DiaryEditData } from "@/app/(dashboard)/diary/[id]/edit/action";
 import { updateDiary } from "@/app/(dashboard)/diary/[id]/edit/action";
+import { useSmartModal } from "@/commons/hooks/use-smart-modal";
+import { useImageUpload } from "@/commons/hooks/use-image-upload";
 import styles from "./styles.module.css";
-
-const MAX_IMAGE_COUNT = 3;
 
 interface DiaryEditFormProps {
   diary: DiaryEditData;
 }
 
-interface NewImagePreview {
-  file: File;
-  previewUrl: string;
-}
-
 export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [existingImages, setExistingImages] = useState<DiaryEditImage[]>(
-    diary.images
-  );
-  const [removedImageIds, setRemovedImageIds] = useState<string[]>([]);
-  const [newImages, setNewImages] = useState<NewImagePreview[]>([]);
-  const newImagesRef = useRef<NewImagePreview[]>([]);
-  const [imageError, setImageError] = useState("");
-  const [modalState, setModalState] = useState({
-    type: null as ModalType | null,
-    isOpen: false,
-    message: "",
-    details: undefined as string | undefined,
-  });
-
-  useEffect(() => {
-    newImagesRef.current = newImages;
-  }, [newImages]);
-
-  useEffect(() => {
-    return () => {
-      newImagesRef.current.forEach((image) =>
-        URL.revokeObjectURL(image.previewUrl)
-      );
-    };
-  }, []);
+  const { modalState, showModal, closeModal } = useSmartModal();
+  const {
+    existingImages,
+    removedImageIds,
+    newImages,
+    imageCount,
+    imageError,
+    maxCount,
+    handleRemoveExisting,
+    handleRemoveNew,
+    handleImageChange,
+  } = useImageUpload({ initialImages: diary.images });
 
   const {
     register,
@@ -89,11 +67,6 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
   const contentLength = watch("content")?.length ?? 0;
 
   const tagInputValue = useMemo(() => diary.tags.join(", "), [diary.tags]);
-  const imageCount = existingImages.length + newImages.length;
-
-  const closeModal = () => {
-    setModalState((prev) => ({ ...prev, isOpen: false, type: null }));
-  };
 
   const toggleEmotion = (emotionId: string) => {
     const nextEmotions = selectedEmotions.includes(emotionId)
@@ -104,56 +77,6 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
       shouldDirty: true,
       shouldValidate: true,
     });
-  };
-
-  const handleRemoveExistingImage = (imageId: string) => {
-    setExistingImages((prev) => prev.filter((image) => image.id !== imageId));
-    setRemovedImageIds((prev) =>
-      prev.includes(imageId) ? prev : [...prev, imageId]
-    );
-    setImageError("");
-  };
-
-  const handleRemoveNewImage = (index: number) => {
-    setNewImages((prev) => {
-      const target = prev[index];
-      if (target) {
-        URL.revokeObjectURL(target.previewUrl);
-      }
-      return prev.filter((_, itemIndex) => itemIndex !== index);
-    });
-    setImageError("");
-  };
-
-  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(event.target.files ?? []);
-    if (files.length === 0) return;
-
-    if (imageCount + files.length > MAX_IMAGE_COUNT) {
-      setImageError(`이미지는 최대 ${MAX_IMAGE_COUNT}장까지 등록할 수 있습니다.`);
-      event.target.value = "";
-      return;
-    }
-
-    const supportedFiles = files.filter((file) =>
-      ["image/jpeg", "image/png"].includes(file.type)
-    );
-
-    if (supportedFiles.length !== files.length) {
-      setImageError("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
-      event.target.value = "";
-      return;
-    }
-
-    setNewImages((prev) => [
-      ...prev,
-      ...supportedFiles.map((file) => ({
-        file,
-        previewUrl: URL.createObjectURL(file),
-      })),
-    ]);
-    setImageError("");
-    event.target.value = "";
   };
 
   const onSubmit = (data: DiaryNewFormType) => {
@@ -178,12 +101,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
         return;
       }
 
-      setModalState({
-        type: ModalType.ERROR_WARNING,
-        isOpen: true,
-        message: result.error ?? "일기 수정에 실패했습니다.",
-        details: undefined,
-      });
+      showModal(ModalType.ERROR_WARNING, result.error ?? "일기 수정에 실패했습니다.");
     });
   };
 
@@ -319,7 +237,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             <div className={styles.imageHeader}>
               <label className={styles.label}>이미지</label>
               <span className={styles.imageCount}>
-                {imageCount}/{MAX_IMAGE_COUNT}
+                {imageCount}/{maxCount}
               </span>
             </div>
             <div className={styles.imageGrid}>
@@ -335,7 +253,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
                   <button
                     type="button"
                     className={styles.imageDeleteButton}
-                    onClick={() => handleRemoveExistingImage(image.id)}
+                    onClick={() => handleRemoveExisting(image.id)}
                     aria-label="기존 이미지 삭제"
                   >
                     <X className={styles.imageDeleteIcon} />
@@ -355,7 +273,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
                   <button
                     type="button"
                     className={styles.imageDeleteButton}
-                    onClick={() => handleRemoveNewImage(index)}
+                    onClick={() => handleRemoveNew(index)}
                     aria-label="새 이미지 삭제"
                   >
                     <X className={styles.imageDeleteIcon} />
@@ -363,7 +281,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
                 </div>
               ))}
 
-              {imageCount < MAX_IMAGE_COUNT && (
+              {imageCount < maxCount && (
                 <label className={styles.imageAddButton} htmlFor="diary-images">
                   <ImagePlus className={styles.imageAddIcon} />
                   <span>이미지 추가</span>
@@ -380,7 +298,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             />
             {imageError && <p className={styles.errorText}>{imageError}</p>}
             <p className={styles.imageNotice}>
-              기존 이미지는 삭제할 수 있고, 새 이미지는 총 {MAX_IMAGE_COUNT}장까지
+              기존 이미지는 삭제할 수 있고, 새 이미지는 총 {maxCount}장까지
               추가할 수 있습니다.
             </p>
           </div>

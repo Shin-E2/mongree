@@ -2,7 +2,21 @@
 
 import { createClient } from "@/lib/supabase-server";
 
-function formatComment(comment: any): any {
+interface RawComment {
+  id: string;
+  content: string;
+  parent_id: string | null;
+  user_id: string;
+  diary_id: string;
+  created_at: string | null;
+  updated_at: string | null;
+  deleted_at: string | null;
+  profiles: { id: string; nickname: string; profile_image: string | null } | null;
+  comment_likes: { id: string; user_id: string }[];
+  replies?: RawComment[];
+}
+
+function formatComment(comment: RawComment) {
   return {
     ...comment,
     parentId: comment.parent_id,
@@ -12,7 +26,7 @@ function formatComment(comment: any): any {
     updatedAt: comment.updated_at,
     user: comment.profiles,
     likes: comment.comment_likes ?? [],
-    replies: comment.replies?.map((reply: any) => formatComment(reply)) ?? [],
+    replies: comment.replies?.map((reply) => formatComment(reply)) ?? [],
   };
 }
 
@@ -81,41 +95,40 @@ export async function getDiaryDetail(diaryId: string) {
       throw new Error("Diary not found.");
     }
 
-    const comments = (diary.comments ?? []).filter(
-      (comment: any) => comment.deleted_at === null
-    );
-    const topLevelComments = comments
-      .filter((comment: any) => comment.parent_id === null)
-      .map((comment: any) => ({
-        ...comment,
-        replies: comments.filter((reply: any) => reply.parent_id === comment.id),
+    const rawComments = (diary.comments ?? []) as RawComment[];
+    const activeComments = rawComments.filter((c) => c.deleted_at === null);
+    const topLevelComments = activeComments
+      .filter((c) => c.parent_id === null)
+      .map((c) => ({
+        ...c,
+        replies: activeComments.filter((r) => r.parent_id === c.id),
       }))
-      .map((comment: any) => formatComment(comment));
+      .map((c) => formatComment(c));
 
     return {
       ...diary,
       user: diary.profiles,
       images:
-        diary.diary_images?.sort(
-          (a: any, b: any) => a.sort_order - b.sort_order
-        ) ?? [],
+        diary.diary_images
+          ?.slice()
+          .sort((a, b) => a.sort_order - b.sort_order) ?? [],
       diaryEmotion:
         diary.diary_emotions
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             emotion: item.emotions,
             diaryId: item.diary_id,
             emotionId: item.emotion_id,
           }))
-          .filter((item: any) => item.emotion) ?? [],
+          .filter((item) => item.emotion) ?? [],
       empathies: diary.diary_likes ?? [],
       tags:
         diary.diary_tags
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             tag: item.tags,
             diaryId: item.diary_id,
             tagId: item.tag_id,
           }))
-          .filter((item: any) => item.tag) ?? [],
+          .filter((item) => item.tag) ?? [],
       comments: topLevelComments,
     };
   } catch (error) {

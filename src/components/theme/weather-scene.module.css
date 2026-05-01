@@ -1,3 +1,4 @@
+/* ── Scene 배경 ── */
 .scene {
   position: fixed;
   inset: 0;
@@ -10,51 +11,62 @@
   transition: background 480ms ease;
 }
 
-.sun,
-.moon,
-.cloudOne,
-.cloudTwo,
-.stars,
-.rain,
-.snow {
-  position: absolute;
-  transition:
-    opacity 360ms ease,
-    transform 520ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
+/* ── 태양 ── */
 .sun {
+  position: absolute;
   top: 5.5rem;
   right: 9vw;
   width: clamp(5rem, 9vw, 8.5rem);
   aspect-ratio: 1;
   border-radius: 999px;
-  background:
-    radial-gradient(circle at 32% 28%, oklch(0.97 0.09 90), var(--scene-accent) 64%, oklch(0.76 0.13 70));
-  box-shadow: 0 18px 48px color-mix(in oklch, var(--scene-accent) 35%, transparent);
+  background: radial-gradient(circle at 32% 28%, oklch(0.97 0.09 90), var(--scene-accent) 64%, oklch(0.76 0.13 70));
+  box-shadow:
+    0 0 0 clamp(0.8rem, 1.4vw, 1.3rem) color-mix(in oklch, var(--scene-accent) 18%, transparent),
+    0 0 0 clamp(1.4rem, 2.6vw, 2.4rem) color-mix(in oklch, var(--scene-accent) 8%, transparent);
+  opacity: 0;
+  transition: opacity 600ms ease, background 480ms ease, box-shadow 480ms ease;
 }
 
+/* ── 달 ── */
 .moon {
+  position: absolute;
   top: 5.5rem;
   right: 10vw;
   width: clamp(4.5rem, 8vw, 7rem);
   aspect-ratio: 1;
   border-radius: 999px;
-  background:
-    radial-gradient(circle at 34% 28%, oklch(0.96 0.035 95), oklch(0.84 0.08 88));
-  box-shadow: 0 20px 56px color-mix(in oklch, var(--scene-star) 34%, transparent);
+  background: radial-gradient(circle at 34% 28%, oklch(0.96 0.035 95), oklch(0.84 0.08 88));
+  box-shadow:
+    0 0 0 clamp(0.5rem, 0.9vw, 0.8rem) color-mix(in oklch, oklch(0.91 0.16 90) 14%, transparent),
+    0 0 2.5rem color-mix(in oklch, var(--scene-star) 22%, transparent);
+  opacity: 0;
+  transition: opacity 600ms ease;
 }
 
+.moon::after {
+  content: "";
+  position: absolute;
+  width: 72%;
+  height: 72%;
+  border-radius: 50%;
+  background: oklch(0.20 0.07 265);
+  top: -8%;
+  right: -10%;
+}
+
+/* ── 구름 ── */
 .cloudOne,
 .cloudTwo {
+  position: absolute;
   width: clamp(8rem, 18vw, 17rem);
   height: clamp(3.2rem, 7vw, 6.2rem);
   border-radius: 999px;
   background: var(--scene-cloud);
   box-shadow:
     2.6rem -1.2rem 0 -0.2rem color-mix(in oklch, var(--scene-cloud) 96%, transparent),
-    5.8rem 0.15rem 0 -0.45rem color-mix(in oklch, var(--scene-cloud) 94%, transparent),
-    var(--mongree-shadow-soft);
+    5.8rem 0.15rem 0 -0.45rem color-mix(in oklch, var(--scene-cloud) 94%, transparent);
+  opacity: 0;
+  transition: opacity 600ms ease, background 480ms ease;
 }
 
 .cloudOne {
@@ -66,101 +78,145 @@
   top: 18rem;
   right: 18vw;
   transform: scale(0.72);
-  opacity: 0.72;
 }
 
-.stars {
+/* ── 별 컨테이너 ── */
+.starsWrap {
+  position: absolute;
   inset: 0;
   opacity: 0;
-  background-image:
-    radial-gradient(circle, var(--scene-star) 0 2px, transparent 2.4px),
-    radial-gradient(circle, color-mix(in oklch, var(--scene-star) 78%, transparent) 0 1.4px, transparent 1.8px);
-  background-position:
-    8vw 12vh,
-    21vw 20vh;
-  background-size:
-    18rem 14rem,
-    13rem 11rem;
+  transition: opacity 800ms ease;
 }
 
-.rain {
-  inset: 0;
-  opacity: 0;
-  background-image: linear-gradient(
-    178deg,
-    transparent 0 34%,
-    color-mix(in oklch, var(--scene-accent) 46%, transparent) 35% 48%,
-    transparent 49% 100%
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: var(--scene-star);
+  animation: twinkle var(--dur, 3s) ease-in-out var(--del, 0s) infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: var(--op1, 0.9); transform: scale(1); }
+  50%       { opacity: var(--op2, 0.1); transform: scale(0.55); }
+}
+
+/* ── 별똥별 ── */
+/* 이동 벡터(-520px, 380px) 기준 방향각 ≈ -36deg 로 회전하여 "/" 궤적 정렬 */
+.shootingStar {
+  position: absolute;
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(
+    90deg,
+    color-mix(in oklch, white 95%, oklch(0.92 0.16 88)) 0%,
+    color-mix(in oklch, white 55%, oklch(0.92 0.16 88)) 45%,
+    transparent 100%
   );
-  background-size: 1.8rem 4.8rem;
-  transform: rotate(8deg) translateY(-1rem);
+  transform: rotate(-36deg);
+  opacity: 0;
+  animation: shoot var(--sdur, 1.4s) ease-in var(--sdel, 7s) infinite;
 }
 
-.snow {
+@keyframes shoot {
+  0%   { opacity: 0;   transform: rotate(-36deg) translate(0, 0); }
+  10%  { opacity: 0; }
+  20%  { opacity: 1; }
+  65%  { opacity: 0.9; }
+  100% { opacity: 0;   transform: rotate(-36deg) translate(var(--sdx, -520px), var(--sdy, 380px)); }
+}
+
+/* ── 비 컨테이너 ── */
+.rainWrap {
+  position: absolute;
   inset: 0;
   opacity: 0;
-  background-image:
-    radial-gradient(circle, color-mix(in oklch, var(--scene-accent) 72%, transparent) 0 2px, transparent 2.4px),
-    radial-gradient(circle, color-mix(in oklch, var(--scene-accent) 46%, transparent) 0 1.5px, transparent 2px);
-  background-size:
-    5.5rem 5.5rem,
-    8rem 8rem;
+  transition: opacity 500ms ease;
 }
 
-.scene[data-scene="day"] .moon,
-.scene[data-scene="day"] .stars,
-.scene[data-scene="day"] .rain,
-.scene[data-scene="day"] .snow {
+.rainDrop {
+  position: absolute;
+  top: -40px;
+  border-radius: 999px;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    color-mix(in oklch, var(--scene-accent) 55%, white) 40%,
+    color-mix(in oklch, white 80%, var(--scene-accent)) 100%
+  );
+  animation: rainFall var(--dur, 0.8s) linear var(--del, 0s) infinite;
+}
+
+@keyframes rainFall {
+  0%   { transform: rotate(10deg) translateY(0); opacity: 0; }
+  12%  { opacity: 1; }
+  80%  { opacity: 0.85; }
+  100% { transform: rotate(10deg) translateY(110vh); opacity: 0; }
+}
+
+/* ── 눈 컨테이너 ── */
+.snowWrap {
+  position: absolute;
+  inset: 0;
   opacity: 0;
+  transition: opacity 500ms ease;
 }
 
-.scene[data-scene="night"] .sun,
-.scene[data-scene="night"] .rain,
-.scene[data-scene="night"] .snow {
-  opacity: 0;
+.snowFlake {
+  position: absolute;
+  top: -20px;
+  border-radius: 50%;
+  background: color-mix(in oklch, white 88%, var(--scene-accent));
+  animation: snowFall var(--dur, 6s) ease-in-out var(--del, 0s) infinite;
 }
 
-.scene[data-scene="night"] .moon,
-.scene[data-scene="night"] .stars {
-  opacity: 1;
+@keyframes snowFall {
+  0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+  10%  { opacity: 0.9; }
+  80%  { opacity: 0.55; }
+  100% { transform: translateY(105vh) translateX(40px) rotate(180deg); opacity: 0; }
 }
 
-.scene[data-scene="night"] .cloudOne,
-.scene[data-scene="night"] .cloudTwo {
-  opacity: 0.28;
-}
+/* ── 씬별 요소 표시 규칙 ── */
 
-.scene[data-scene="rain"] .sun,
-.scene[data-scene="rain"] .moon,
-.scene[data-scene="rain"] .stars,
-.scene[data-scene="rain"] .snow {
-  opacity: 0;
-}
+/* Day */
+.scene[data-scene="day"] .sun      { opacity: 1; }
+.scene[data-scene="day"] .cloudOne { opacity: 1; }
+.scene[data-scene="day"] .cloudTwo { opacity: 0.65; }
 
-.scene[data-scene="rain"] .rain {
-  opacity: 1;
-}
+/* Night */
+.scene[data-scene="night"] .moon      { opacity: 1; }
+.scene[data-scene="night"] .starsWrap { opacity: 1; }
+.scene[data-scene="night"] .cloudOne  { opacity: 0.28; }
+.scene[data-scene="night"] .cloudTwo  { opacity: 0.16; }
 
-.scene[data-scene="snow"] .sun,
-.scene[data-scene="snow"] .moon,
-.scene[data-scene="snow"] .stars,
-.scene[data-scene="snow"] .rain {
-  opacity: 0;
-}
+/* Rain */
+.scene[data-scene="rain"] .cloudOne { opacity: 0.85; }
+.scene[data-scene="rain"] .cloudTwo { opacity: 0.70; }
+.scene[data-scene="rain"] .rainWrap { opacity: 1; }
 
-.scene[data-scene="snow"] .snow {
-  opacity: 1;
-}
+/* Snow */
+.scene[data-scene="snow"] .cloudOne { opacity: 0.90; }
+.scene[data-scene="snow"] .cloudTwo { opacity: 0.60; }
+.scene[data-scene="snow"] .snowWrap { opacity: 1; }
 
+/* 움직임 감소 설정 존중 */
 @media (prefers-reduced-motion: reduce) {
+  .star,
+  .shootingStar,
+  .rainDrop,
+  .snowFlake {
+    animation: none;
+    opacity: 0.5;
+  }
+
+  .scene,
   .sun,
   .moon,
   .cloudOne,
   .cloudTwo,
-  .stars,
-  .rain,
-  .snow,
-  .scene {
+  .starsWrap,
+  .rainWrap,
+  .snowWrap {
     transition: none;
   }
 }

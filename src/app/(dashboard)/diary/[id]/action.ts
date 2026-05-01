@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
+import type { Tables } from "@/lib/supabase.types";
 
 interface RawComment {
   id: string;
@@ -12,11 +13,22 @@ interface RawComment {
   updated_at: string | null;
   deleted_at: string | null;
   profiles: { id: string; nickname: string; profile_image: string | null } | null;
-  comment_likes: { id: string; user_id: string }[];
+  comment_likes: Tables<"comment_likes">[];
   replies?: RawComment[];
 }
 
-function formatComment(comment: RawComment) {
+interface FormattedComment extends Omit<RawComment, "replies"> {
+  parentId: string | null;
+  userId: string;
+  diaryId: string;
+  createdAt: string | null;
+  updatedAt: string | null;
+  user: RawComment["profiles"];
+  likes: Tables<"comment_likes">[];
+  replies: FormattedComment[];
+}
+
+function formatComment(comment: RawComment): FormattedComment {
   return {
     ...comment,
     parentId: comment.parent_id,

@@ -1,9 +1,12 @@
 .nav_container {
   @apply grid h-[4.5rem] w-full grid-cols-5 items-center border px-2;
-  border-color: color-mix(in oklch, var(--mongree-line) 78%, transparent);
+  border-color: color-mix(in oklch, var(--scene-line) 60%, transparent);
   border-radius: 24px;
-  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  background: color-mix(in oklch, var(--scene-nav-bg) 90%, transparent);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   box-shadow:
-    0 18px 40px color-mix(in oklch, var(--mongree-text) 11%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
+    0 18px 40px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 20%, transparent);
+  transition: background 480ms ease, border-color 480ms ease;
 }

@@ -1,12 +1,14 @@
 .headerContainer {
   @apply fixed right-3 top-3 z-40 h-14 border md:left-[4.5rem] md:right-4;
-  border-color: color-mix(in oklch, var(--mongree-line) 72%, transparent);
+  border-color: color-mix(in oklch, var(--scene-line) 60%, transparent);
   border-radius: 24px;
-  background: color-mix(in oklch, var(--mongree-surface-raised) 82%, transparent);
+  background: color-mix(in oklch, var(--scene-nav-bg) 86%, transparent);
   box-shadow:
-    0 16px 42px color-mix(in oklch, var(--mongree-text) 6%, transparent),
-    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
+    0 16px 42px color-mix(in oklch, var(--scene-shadow) 8%, transparent),
+    inset 0 1px 0 color-mix(in oklch, white 20%, transparent);
   backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  transition: background 480ms ease, border-color 480ms ease;
 }
 
 .headerContentWrapper {

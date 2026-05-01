@@ -10,6 +10,7 @@ body {
 
 @layer base {
   :root {
+    /* ── Tailwind/shadcn tokens ── */
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -36,30 +37,43 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
 
-    --mongree-surface: oklch(0.985 0.012 86);
-    --mongree-surface-soft: oklch(0.96 0.025 86);
-    --mongree-surface-raised: oklch(0.995 0.008 86);
-    --mongree-text: oklch(0.28 0.03 255);
-    --mongree-text-muted: oklch(0.52 0.025 255);
-    --mongree-line: oklch(0.9 0.018 86);
-    --mongree-primary: oklch(0.74 0.14 72);
-    --mongree-primary-strong: oklch(0.63 0.16 62);
-    --mongree-danger: oklch(0.64 0.18 28);
-    --mongree-success: oklch(0.65 0.12 150);
+    /* ── Mongree brand tokens (theme-invariant) ── */
+    --mongree-primary:        oklch(0.74 0.14 72);
+    --mongree-primary-strong: oklch(0.60 0.16 62);
+    --mongree-danger:         oklch(0.64 0.18 28);
+    --mongree-success:        oklch(0.65 0.12 150);
     --mongree-radius-sm: 10px;
     --mongree-radius-md: 16px;
     --mongree-radius-lg: 24px;
-    --mongree-shadow-soft: 0 14px 40px color-mix(in oklch, var(--mongree-text) 10%, transparent);
-    --mongree-shadow-float: 0 18px 52px color-mix(in oklch, var(--mongree-text) 14%, transparent);
 
-    --scene-bg: oklch(0.93 0.07 220);
-    --scene-bg-soft: oklch(0.97 0.035 95);
-    --scene-accent: oklch(0.82 0.16 78);
-    --scene-object: oklch(0.98 0.035 95);
-    --scene-text: var(--mongree-text);
-    --scene-star: oklch(0.87 0.15 88);
-    --scene-cloud: oklch(0.99 0.01 235);
+    /* ── Scene tokens — day defaults ── */
+    --scene-bg:             oklch(0.88 0.07 215);
+    --scene-bg-soft:        oklch(0.93 0.05 210);
+    --scene-surface:        oklch(0.985 0.014 88);
+    --scene-surface-soft:   oklch(0.96 0.022 86);
+    --scene-surface-raised: oklch(0.998 0.008 88);
+    --scene-accent:         oklch(0.80 0.17 78);
+    --scene-accent2:        oklch(0.87 0.11 90);
+    --scene-object:         oklch(0.99 0.010 235);
+    --scene-cloud:          oklch(0.997 0.006 230);
+    --scene-star:           oklch(0.87 0.15 88);
+    --scene-text:           oklch(0.22 0.032 255);
+    --scene-text-muted:     oklch(0.50 0.025 255);
+    --scene-line:           oklch(0.90 0.018 86);
+    --scene-shadow:         oklch(0.22 0.032 255);
+    --scene-nav-bg:         oklch(0.995 0.009 88);
+
+    /* ── mongree-* aliases → follow scene tokens automatically ── */
+    --mongree-surface:        var(--scene-surface);
+    --mongree-surface-soft:   var(--scene-surface-soft);
+    --mongree-surface-raised: var(--scene-surface-raised);
+    --mongree-text:           var(--scene-text);
+    --mongree-text-muted:     var(--scene-text-muted);
+    --mongree-line:           var(--scene-line);
+    --mongree-shadow-soft:  0 14px 40px color-mix(in oklch, var(--scene-shadow) 10%, transparent);
+    --mongree-shadow-float: 0 18px 52px color-mix(in oklch, var(--scene-shadow) 14%, transparent);
   }
+
   .dark {
     --background: 0 0% 3.9%;
     --foreground: 0 0% 98%;
@@ -88,74 +102,81 @@ body {
   }
 }
 
+/* ── Day ── */
 [data-theme-scene="day"] {
-  --scene-bg: oklch(0.93 0.07 220);
-  --scene-bg-soft: oklch(0.97 0.035 95);
-  --scene-accent: oklch(0.82 0.16 78);
-  --scene-object: oklch(0.98 0.035 95);
-  --scene-text: oklch(0.28 0.03 255);
-  --scene-star: oklch(0.85 0.14 82);
-  --scene-cloud: oklch(0.99 0.012 235);
+  --scene-bg:             oklch(0.88 0.07 215);
+  --scene-bg-soft:        oklch(0.93 0.05 210);
+  --scene-surface:        oklch(0.985 0.014 88);
+  --scene-surface-soft:   oklch(0.96 0.022 86);
+  --scene-surface-raised: oklch(0.998 0.008 88);
+  --scene-accent:         oklch(0.80 0.17 78);
+  --scene-accent2:        oklch(0.87 0.11 90);
+  --scene-object:         oklch(0.99 0.010 235);
+  --scene-cloud:          oklch(0.997 0.006 230);
+  --scene-star:           oklch(0.85 0.14 82);
+  --scene-text:           oklch(0.22 0.032 255);
+  --scene-text-muted:     oklch(0.50 0.025 255);
+  --scene-line:           oklch(0.90 0.018 86);
+  --scene-shadow:         oklch(0.22 0.032 255);
+  --scene-nav-bg:         oklch(0.995 0.009 88);
 }
 
+/* ── Night ── */
 [data-theme-scene="night"] {
-  --mongree-surface: oklch(0.27 0.035 260);
-  --mongree-surface-soft: oklch(0.31 0.045 260);
-  --mongree-surface-raised: oklch(0.35 0.05 260);
-  --mongree-text: oklch(0.94 0.015 255);
-  --mongree-text-muted: oklch(0.76 0.025 255);
-  --mongree-line: oklch(0.45 0.035 260);
-  --scene-bg: oklch(0.31 0.08 260);
-  --scene-bg-soft: oklch(0.38 0.06 260);
-  --scene-accent: oklch(0.84 0.15 86);
-  --scene-object: oklch(0.39 0.07 265);
-  --scene-text: oklch(0.94 0.015 255);
-  --scene-star: oklch(0.88 0.16 88);
-  --scene-cloud: oklch(0.48 0.045 260);
+  --scene-bg:             oklch(0.18 0.07 265);
+  --scene-bg-soft:        oklch(0.24 0.08 262);
+  --scene-surface:        oklch(0.28 0.045 263);
+  --scene-surface-soft:   oklch(0.32 0.050 263);
+  --scene-surface-raised: oklch(0.34 0.052 263);
+  --scene-accent:         oklch(0.86 0.15 86);
+  --scene-accent2:        oklch(0.78 0.10 92);
+  --scene-object:         oklch(0.38 0.06 266);
+  --scene-cloud:          oklch(0.42 0.045 262);
+  --scene-star:           oklch(0.88 0.16 88);
+  --scene-text:           oklch(0.96 0.010 255);
+  --scene-text-muted:     oklch(0.70 0.022 255);
+  --scene-line:           oklch(0.42 0.032 263);
+  --scene-shadow:         oklch(0.06 0.04 265);
+  --scene-nav-bg:         oklch(0.26 0.05 263);
 }
 
+/* ── Rain ── */
 [data-theme-scene="rain"] {
-  --scene-bg: oklch(0.76 0.045 235);
-  --scene-bg-soft: oklch(0.91 0.025 230);
-  --scene-accent: oklch(0.67 0.08 225);
-  --scene-object: oklch(0.92 0.03 230);
-  --scene-text: oklch(0.3 0.035 245);
-  --scene-star: oklch(0.78 0.08 220);
-  --scene-cloud: oklch(0.89 0.022 230);
+  --scene-bg:             oklch(0.52 0.060 232);
+  --scene-bg-soft:        oklch(0.62 0.050 230);
+  --scene-surface:        oklch(0.82 0.028 228);
+  --scene-surface-soft:   oklch(0.78 0.030 228);
+  --scene-surface-raised: oklch(0.86 0.022 225);
+  --scene-accent:         oklch(0.72 0.10 225);
+  --scene-accent2:        oklch(0.76 0.08 230);
+  --scene-object:         oklch(0.88 0.032 228);
+  --scene-cloud:          oklch(0.78 0.026 228);
+  --scene-star:           oklch(0.72 0.08 220);
+  --scene-text:           oklch(0.22 0.032 245);
+  --scene-text-muted:     oklch(0.46 0.026 245);
+  --scene-line:           oklch(0.72 0.024 228);
+  --scene-shadow:         oklch(0.28 0.045 245);
+  --scene-nav-bg:         oklch(0.80 0.024 228);
 }
 
+/* ── Snow ── */
 [data-theme-scene="snow"] {
-  --scene-bg: oklch(0.95 0.025 230);
-  --scene-bg-soft: oklch(0.985 0.012 225);
-  --scene-accent: oklch(0.72 0.07 215);
-  --scene-object: oklch(0.99 0.01 230);
-  --scene-text: oklch(0.31 0.035 245);
-  --scene-star: oklch(0.82 0.08 215);
-  --scene-cloud: oklch(0.995 0.008 230);
+  --scene-bg:             oklch(0.80 0.032 228);
+  --scene-bg-soft:        oklch(0.86 0.024 226);
+  --scene-surface:        oklch(0.88 0.020 226);
+  --scene-surface-soft:   oklch(0.84 0.022 224);
+  --scene-surface-raised: oklch(0.91 0.016 224);
+  --scene-accent:         oklch(0.55 0.09 215);
+  --scene-accent2:        oklch(0.68 0.07 218);
+  --scene-object:         oklch(0.92 0.012 228);
+  --scene-cloud:          oklch(0.96 0.010 228);
+  --scene-star:           oklch(0.82 0.08 215);
+  --scene-text:           oklch(0.22 0.032 245);
+  --scene-text-muted:     oklch(0.46 0.026 245);
+  --scene-line:           oklch(0.78 0.020 226);
+  --scene-shadow:         oklch(0.26 0.042 245);
+  --scene-nav-bg:         oklch(0.86 0.018 226);
 }
-
-/* @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 1s ease-out forwards;
-}
-
-.animation-delay-300 {
-  animation-delay: 300ms;
-}
-
-.animation-delay-500 {
-  animation-delay: 500ms;
-} */
 
 @layer base {
   * {
@@ -163,5 +184,7 @@ body {
   }
   body {
     @apply bg-background text-foreground;
+    color: var(--scene-text);
+    transition: background 480ms ease, color 480ms ease;
   }
 }

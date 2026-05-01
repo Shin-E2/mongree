@@ -7,26 +7,12 @@ import { createDiary } from "./action";
 import { URL } from "@/commons/constants/global-url";
 import { useRouter } from "next/navigation";
 import { ModalType } from "@/commons/components/modal/types";
-
-// 모달 상태 타입
-interface ModalState {
-  type: ModalType | null;
-  isOpen: boolean;
-  title?: string;
-  message: string;
-  details?: string;
-  onRetry?: () => void;
-  onConfirm?: () => void;
-}
+import { useSmartModal } from "@/commons/hooks/use-smart-modal";
 
 export default function useDiaryNewPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [modalState, setModalState] = useState<ModalState>({
-    type: null,
-    isOpen: false,
-    message: '',
-  });
+  const { modalState, showModal, closeModal } = useSmartModal();
   const router = useRouter();
 
   // 메모이제이션된 값들
@@ -42,32 +28,6 @@ export default function useDiaryNewPage() {
 
   const handlePrev = useCallback(() => {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
-  }, []);
-
-  // 모달 표시 함수들
-  const showModal = useCallback((
-    type: ModalType,
-    message: string,
-    options?: {
-      title?: string;
-      details?: string;
-      onRetry?: () => void;
-      onConfirm?: () => void;
-    }
-  ) => {
-    setModalState({
-      type,
-      isOpen: true,
-      message,
-      title: options?.title,
-      details: options?.details,
-      onRetry: options?.onRetry,
-      onConfirm: options?.onConfirm,
-    });
-  }, []);
-
-  const closeModal = useCallback(() => {
-    setModalState(prev => ({ ...prev, isOpen: false, type: null }));
   }, []);
 
   // FormData 생성 함수

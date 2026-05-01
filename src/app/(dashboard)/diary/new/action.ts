@@ -9,6 +9,7 @@ import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form
 import { getUser } from "@/lib/get-user";
 import { formatZodError } from "@/commons/utils/errorFormatters";
 import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
+import { processTagsAndGetIds } from "@/lib/diary/tags";
 
 // 폼 데이터 추출 함수
 function extractFormData(formData: FormData) {
@@ -40,45 +41,9 @@ function extractFormData(formData: FormData) {
   };
 }
 
-// 태그 처리 함수 (개선됨)
-async function processTagsAndGetIds(supabase: any, tagNames: string[]): Promise<string[]> {
-  if (tagNames.length === 0) return [];
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
-  const tagIds: string[] = [];
-
-  for (const tagName of tagNames) {
-    const trimmedName = tagName.trim();
-    if (!trimmedName) continue; // 빈 태그 스킵
-    
-    // 기존 태그 확인
-    const { data: existingTag } = await supabase
-      .from('tags')
-      .select('id')
-      .eq('name', trimmedName)
-      .single();
-
-    if (existingTag) {
-      tagIds.push(existingTag.id);
-    } else {
-      // 새 태그 생성
-      const { data: newTag, error } = await supabase
-        .from('tags')
-        .insert({ name: trimmedName })
-        .select('id')
-        .single();
-
-      if (error) {
-        throw new Error(`태그 "${trimmedName}" 생성 실패: ${error.message}`);
-      }
-      tagIds.push(newTag.id);
-    }
-  }
-
-  return tagIds;
-}
-
-// 데이터베이스 정리 함수 (간소화됨)
-async function cleanupDiaryData(supabase: any, diaryId: string, imageUrls: string[]): Promise<void> {
+async function cleanupDiaryData(supabase: SupabaseClient, diaryId: string, imageUrls: string[]): Promise<void> {
   try {
     // 이미지 파일 삭제 (S3)
     if (imageUrls.length > 0) {

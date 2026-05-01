@@ -8,6 +8,7 @@ import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form
 import { getUser } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import { revalidateDiaryUpdated } from "@/commons/utils/cache-revalidation";
+import { processTagsAndGetIds } from "@/lib/diary/tags";
 
 const MAX_DIARY_IMAGES = 3;
 
@@ -78,44 +79,6 @@ const parseEditFormData = (formData: FormData) => {
       .map((imageId) => imageId.toString()),
   };
 };
-
-async function processTagsAndGetIds(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  tagNames: string[]
-): Promise<string[]> {
-  const tagIds: string[] = [];
-
-  for (const tagName of tagNames) {
-    const { data: existingTag, error: findError } = await supabase
-      .from("tags")
-      .select("id")
-      .eq("name", tagName)
-      .maybeSingle();
-
-    if (findError) {
-      throw new Error(`태그 조회 실패: ${findError.message}`);
-    }
-
-    if (existingTag) {
-      tagIds.push(existingTag.id);
-      continue;
-    }
-
-    const { data: newTag, error: createError } = await supabase
-      .from("tags")
-      .insert({ name: tagName })
-      .select("id")
-      .single();
-
-    if (createError) {
-      throw new Error(`태그 생성 실패: ${createError.message}`);
-    }
-
-    tagIds.push(newTag.id);
-  }
-
-  return tagIds;
-}
 
 export async function getDiaryEditData(
   diaryId: string

@@ -183,8 +183,8 @@ body {
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    background: transparent;
     color: var(--scene-text);
-    transition: background 480ms ease, color 480ms ease;
+    transition: color 480ms ease;
   }
 }

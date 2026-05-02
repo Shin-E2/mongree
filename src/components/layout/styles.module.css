@@ -1,10 +1,7 @@
 .mainLayout {
   @apply flex min-h-[100dvh];
   color: var(--mongree-text);
-  background:
-    radial-gradient(circle at 8% 8%, color-mix(in oklch, var(--scene-accent) 18%, transparent) 0 12rem, transparent 12.4rem),
-    radial-gradient(circle at 94% 4%, color-mix(in oklch, var(--scene-object) 16%, transparent) 0 14rem, transparent 14.4rem),
-    linear-gradient(180deg, color-mix(in oklch, var(--scene-bg-soft) 86%, transparent), color-mix(in oklch, var(--mongree-surface) 94%, transparent));
+  background: transparent;
 }
 
 .contentWrapper {
@@ -15,4 +12,9 @@
 .mainContentWithPadding {
   @apply pt-[4.75rem] pb-28 md:pb-10;
   min-height: 100dvh;
+}
+
+/* 콘텐츠 max-width 센터링 — 양쪽 배경(구름·해·달) 노출 */
+.pageContainer {
+  @apply max-w-[72rem] mx-auto;
 }

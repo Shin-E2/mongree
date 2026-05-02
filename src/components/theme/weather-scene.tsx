@@ -52,6 +52,7 @@ export default function WeatherScene() {
       <div className={styles.moon} />
       <div className={styles.cloudOne} />
       <div className={styles.cloudTwo} />
+      <div className={styles.cloudThree} />
 
       {/* 별 + 별똥별 (밤) */}
       <div className={styles.starsWrap}>

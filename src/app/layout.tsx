@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { MongreeThemeProvider } from "@/components/theme/theme-provider";
-import WeatherScene from "@/components/theme/weather-scene";
+import WeatherSceneClient from "@/components/theme/weather-scene-client";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -31,7 +31,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <MongreeThemeProvider>
-          <WeatherScene />
+          <WeatherSceneClient />
           {children}
         </MongreeThemeProvider>
         <div id="modal" /> {/* 모달 */}

@@ -5,8 +5,10 @@
   background:
     linear-gradient(180deg, color-mix(in oklch, var(--scene-object) 4%, transparent), transparent 34%),
     color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 22px 56px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
 }
 
@@ -14,8 +16,10 @@
   border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
   border-radius: var(--mongree-radius-lg);
   background: color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 22px 56px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
 }
 

@@ -12,42 +12,26 @@
   min-height: 16.5rem;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-lg);
-  background:
-    radial-gradient(circle at 84% 18%, color-mix(in oklch, var(--scene-accent) 28%, transparent) 0 5.8rem, transparent 6rem),
-    radial-gradient(circle at 92% 70%, color-mix(in oklch, var(--scene-object) 58%, transparent) 0 7rem, transparent 7.2rem),
-    color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 22px 56px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 20%, transparent);
 }
 
-.heroCopy::before,
-.heroCopy::after {
-  position: absolute;
-  content: "";
-  border-radius: 999px;
-  background: var(--scene-cloud);
-  opacity: 0.82;
-}
-
+/* Claude Design 방식: 카드 우상단 accent 글로우 */
 .heroCopy::before {
-  right: 6.5rem;
-  bottom: 2.5rem;
-  width: 8.5rem;
-  height: 3.25rem;
-  background: color-mix(in oklch, var(--scene-cloud) 78%, var(--mongree-surface-raised));
-  box-shadow:
-    2.2rem -1.25rem 0 -0.45rem color-mix(in oklch, var(--scene-cloud) 74%, var(--mongree-surface-raised)),
-    4.8rem 0.1rem 0 -0.65rem color-mix(in oklch, var(--scene-cloud) 68%, var(--mongree-surface-raised));
-}
-
-.heroCopy::after {
-  right: 1.5rem;
-  top: 2rem;
-  width: 3.7rem;
-  height: 3.7rem;
-  background: var(--scene-accent);
-  box-shadow: 0 14px 36px color-mix(in oklch, var(--scene-accent) 38%, transparent);
+  content: "";
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in oklch, var(--scene-accent) 28%, transparent), transparent 70%);
+  top: -40px;
+  right: -30px;
+  pointer-events: none;
+  transition: background 480ms ease;
 }
 
 .heroEyebrow {
@@ -93,11 +77,11 @@
   min-height: 16.5rem;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-lg);
-  background:
-    radial-gradient(circle at 50% 14%, color-mix(in oklch, var(--scene-accent) 16%, transparent) 0 7rem, transparent 7.2rem),
-    color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 22px 56px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 20%, transparent);
 }
 
@@ -137,6 +121,8 @@
   border-radius: var(--mongree-radius-md);
   background: color-mix(in oklch, var(--mongree-surface-soft) 68%, var(--mongree-surface-raised));
   border: 1px solid color-mix(in oklch, var(--mongree-line) 60%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .metricLabel {
@@ -167,13 +153,13 @@
 
 .popularDiaryCardContainer {
   @apply p-6;
-  background:
-    radial-gradient(circle at 92% 18%, color-mix(in oklch, var(--scene-accent) 12%, transparent) 0 5rem, transparent 5.2rem),
-    color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
   border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
   border-radius: var(--mongree-radius-lg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow:
-    0 22px 56px color-mix(in oklch, var(--mongree-text) 8%, transparent),
+    0 22px 56px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 16%, transparent);
 }
 

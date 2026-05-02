@@ -28,7 +28,9 @@ export default function Layout({ children }: LayoutProps) {
             !hidePartialLayout ? styles.mainContentWithPadding : ""
           }`}
         >
-          {children}
+          <div className={!hidePartialLayout ? styles.pageContainer : ""}>
+            {children}
+          </div>
         </main>
         {!hidePartialLayout && <ChatBot />}
         {!hidePartialLayout && <SceneCharacter />}

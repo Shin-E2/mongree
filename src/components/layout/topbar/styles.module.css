@@ -1,5 +1,8 @@
 .headerContainer {
-  @apply fixed right-3 top-3 z-40 h-14 border md:left-[4.5rem] md:right-4;
+  @apply fixed top-3 z-40 h-14 border;
+  /* 모바일: 좌우 여백 12px */
+  left: 0.75rem;
+  right: 0.75rem;
   border-color: color-mix(in oklch, var(--scene-line) 60%, transparent);
   border-radius: 24px;
   background: color-mix(in oklch, var(--scene-nav-bg) 86%, transparent);
@@ -9,6 +12,14 @@
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   transition: background 480ms ease, border-color 480ms ease;
+}
+
+/* 데스크톱: 콘텐츠(max-w-72rem, centered) 좌우 엣지에 정확히 정렬 */
+@media (min-width: 768px) {
+  .headerContainer {
+    left: calc(4.5rem + max(0px, (100vw - 4rem - 72rem) / 2));
+    right: calc(max(0.25rem, (100vw - 4rem - 72rem) / 2));
+  }
 }
 
 .headerContentWrapper {

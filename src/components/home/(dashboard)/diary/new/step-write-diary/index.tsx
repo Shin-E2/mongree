@@ -21,19 +21,22 @@ export default function DiaryNewStepWriteDiary() {
 
   return (
     <section className={styles.sectionContainer}>
-      {/* 태그 */}
       <DiaryNewStepWriteDiaryEmotionTags />
-      {/* 제목 */}
+
       <div className={styles.fieldGroup}>
         <InputWithCssprop
           name="title"
           register={register}
-          placeholder="제목을 입력하세요"
+          placeholder="제목을 입력해주세요"
           cssprop={styles.titleInput}
           errors={errors}
         />
         <div className={styles.helperRow}>
-          <span className={styles.helperText}>짧게 기억할 수 있는 제목</span>
+          <span
+            className={errors.title?.message ? styles.errorText : styles.helperText}
+          >
+            {errors.title?.message ?? "짧게 기억할 수 있는 제목"}
+          </span>
           <span
             className={
               titleLength > DIARY_TITLE_MAX_LENGTH
@@ -45,7 +48,7 @@ export default function DiaryNewStepWriteDiary() {
           </span>
         </div>
       </div>
-      {/* 내용 */}
+
       <div className={styles.fieldGroup}>
         <textarea
           {...register("content")}
@@ -72,14 +75,14 @@ export default function DiaryNewStepWriteDiary() {
           </span>
         </div>
       </div>
-      {/* 사진 */}
+
       <ImagePreviewByDiaryNew multiple maxImages={3} />
-      {/* 태그 */}
+
       <InputFieldStandardSFull
         title="태그 추가"
         name="tags"
         register={register}
-        placeholder="#태그입력 (쉼표로 구분)"
+        placeholder="#태그입력, 쉼표로 구분"
       />
     </section>
   );

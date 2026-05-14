@@ -32,14 +32,17 @@ function DiaryNewPage() {
         mode="onChange"
       >
         <div className={styles.pageShell}>
-          <DiaryNewHeader />
+          <DiaryNewHeader isSubmitting={isSubmitting} />
 
           <main className={styles.container}>
             <section className={styles.introPanel}>
               <span className={styles.eyebrow}>오늘의 기록</span>
-              <h1 className={styles.title}>지금 마음에 떠오른 감정을 골라주세요</h1>
+              <h1 className={styles.title}>
+                지금 마음에 가까운 감정을 골라주세요
+              </h1>
               <p className={styles.description}>
-                감정은 여러 개여도 괜찮아요. 짧은 문장으로 시작해도 오늘의 흐름은 충분히 남습니다.
+                감정은 여러 개여도 괜찮아요. 짧은 문장으로 시작해도 오늘의
+                흐름을 남기기에는 충분합니다.
               </p>
             </section>
 

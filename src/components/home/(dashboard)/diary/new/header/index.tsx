@@ -4,11 +4,15 @@ import {
 } from "@/commons/components/button-option";
 import { ButtonTextWithCssprop } from "@/commons/components/button-text";
 import { ChevronLeft, Globe, Lock } from "lucide-react";
-import styles from "./styles.module.css";
 import { useFormContext } from "react-hook-form";
 import type { DiaryNewFormType } from "../form.schema";
+import styles from "./styles.module.css";
 
-export default function DiaryNewHeader() {
+interface DiaryNewHeaderProps {
+  isSubmitting: boolean;
+}
+
+export default function DiaryNewHeader({ isSubmitting }: DiaryNewHeaderProps) {
   const { watch, setValue } = useFormContext<DiaryNewFormType>();
 
   const title = watch("title");
@@ -16,8 +20,13 @@ export default function DiaryNewHeader() {
   const isPrivate = watch("isPrivate");
   const emotions = watch("emotions") || [];
 
-  const handleTogglePublic = (value: boolean) => {
-    setValue("isPrivate", !value, { shouldValidate: true });
+  const canSubmit = emotions.length > 0 && Boolean(title) && Boolean(content);
+
+  const handleTogglePublic = (isPublic: boolean) => {
+    setValue("isPrivate", !isPublic, {
+      shouldDirty: true,
+      shouldValidate: true,
+    });
   };
 
   return (
@@ -56,10 +65,10 @@ export default function DiaryNewHeader() {
             </div>
             <ButtonTextWithCssprop
               type="submit"
-              title="등록하기"
-              disabled={emotions.length === 0 || !title || !content}
+              title={isSubmitting ? "저장 중..." : "등록하기"}
+              disabled={!canSubmit || isSubmitting}
               cssprop={`${styles.header__buttons__public_submit_button} ${
-                emotions.length > 0
+                canSubmit && !isSubmitting
                   ? styles.header__buttons__selected
                   : styles.header__buttons__not_selected
               }`}

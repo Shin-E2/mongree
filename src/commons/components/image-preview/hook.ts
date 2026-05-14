@@ -1,8 +1,12 @@
 "use client";
 
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
+import {
+  DIARY_IMAGE_ACCEPTED_TYPES,
+  DIARY_IMAGE_MAX_COUNT,
+} from "@/components/home/(dashboard)/diary/new/form.schema";
 
 interface ImageFile {
   file: File;
@@ -16,60 +20,76 @@ interface UseImagePreviewProps {
 
 export default function useImagePreview({
   multiple = false,
-  maxImages = 1,
+  maxImages = DIARY_IMAGE_MAX_COUNT,
 }: UseImagePreviewProps) {
-  const [preview, setPreview] = useState(DEFAULT_PROFILE_IMAGE); // 이미지 미리보기 url
-  const [selectedImage, setSelectedImage] = useState<File | null>(null); // 선택한 이미지
+  const [preview, setPreview] = useState(DEFAULT_PROFILE_IMAGE);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [images, setImages] = useState<ImageFile[]>([]);
+  const imagesRef = useRef<ImageFile[]>([]);
 
   const { setValue, register } = useFormContext();
 
-  // 파일 선택하기 -> 여기서 미리보기 url만 설정
+  useEffect(() => {
+    imagesRef.current = images;
+  }, [images]);
+
+  useEffect(() => {
+    return () => {
+      imagesRef.current.forEach((image) => URL.revokeObjectURL(image.previewURL));
+    };
+  }, []);
+
   const handleFileChange = useCallback(
     async (event: React.ChangeEvent<HTMLInputElement>) => {
-      const files = event.target.files;
-      if (!files || files.length === 0) return;
+      const files = Array.from(event.target.files ?? []);
+      event.target.value = "";
+
+      if (files.length === 0) return;
+
+      const invalidType = files.some(
+        (file) => !DIARY_IMAGE_ACCEPTED_TYPES.includes(file.type)
+      );
+      if (invalidType) {
+        alert("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
+        return;
+      }
 
       if (multiple) {
-        // 여러 이미지 처리
-        const newImages = Array.from(files).map((file) => ({
-          file,
-          previewURL: URL.createObjectURL(file),
-        }));
-
-        // 최대 이미지 개수 체크
-        if (images.length + newImages.length > maxImages) {
-          alert(`최대 ${maxImages}개의 이미지만 업로드할 수 있습니다.`);
+        if (images.length + files.length > maxImages) {
+          alert(`이미지는 최대 ${maxImages}개까지 등록할 수 있습니다.`);
           return;
         }
 
-        // 상태 업데이트
-        const updatedImages = [...images, ...newImages];
-        setImages(updatedImages);
+        const nextImages = [
+          ...images,
+          ...files.map((file) => ({
+            file,
+            previewURL: URL.createObjectURL(file),
+          })),
+        ];
 
-        // File 객체 배열을 저장
+        setImages(nextImages);
         setValue(
           "images",
-          updatedImages.map((img) => img.file),
-          { shouldDirty: true }
+          nextImages.map((image) => image.file),
+          { shouldDirty: true, shouldValidate: true }
         );
-      } else {
-        const file = files[0];
-        const previewUrl = URL.createObjectURL(file);
-
-        setSelectedImage(file);
-        setPreview(previewUrl);
-
-        setValue("profileImage", file, { shouldDirty: true });
+        return;
       }
 
-      // 폼 입력 필드 초기화 (같은 파일 선택 시에도 이벤트가 발생하도록)
-      event.target.value = "";
+      const file = files[0];
+      const previewUrl = URL.createObjectURL(file);
+
+      setSelectedImage(file);
+      setPreview(previewUrl);
+      setValue("profileImage", file, {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     },
     [images, maxImages, multiple, setValue]
   );
 
-  // 이미지 삭제
   const handleDeleteImage = useCallback(
     (index?: number) => (event: React.MouseEvent) => {
       event.stopPropagation();
@@ -77,24 +97,27 @@ export default function useImagePreview({
 
       if (multiple && typeof index === "number") {
         setImages((prev) => {
-          const newImages = [...prev];
-          // 미리보기 URL 메모리 해제
-          URL.revokeObjectURL(newImages[index].previewURL);
-          newImages.splice(index, 1);
+          const nextImages = [...prev];
+          URL.revokeObjectURL(nextImages[index].previewURL);
+          nextImages.splice(index, 1);
 
           setValue(
             "images",
-            newImages.map((img) => img.file),
-            { shouldDirty: true }
+            nextImages.map((image) => image.file),
+            { shouldDirty: true, shouldValidate: true }
           );
 
-          return newImages;
+          return nextImages;
         });
-      } else {
-        setSelectedImage(null);
-        setPreview(DEFAULT_PROFILE_IMAGE);
-        setValue("profileImage", "", { shouldDirty: true });
+        return;
       }
+
+      setSelectedImage(null);
+      setPreview(DEFAULT_PROFILE_IMAGE);
+      setValue("profileImage", "", {
+        shouldDirty: true,
+        shouldValidate: true,
+      });
     },
     [multiple, setValue]
   );

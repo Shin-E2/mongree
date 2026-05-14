@@ -1,5 +1,10 @@
 .page {
-  @apply min-h-screen bg-gray-50 px-4 py-8;
+  min-height: 100dvh;
+  background:
+    radial-gradient(circle at 12% 12%, color-mix(in oklch, var(--scene-accent) 12%, transparent) 0 9rem, transparent 9.2rem),
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-bg-soft) 84%, transparent), color-mix(in oklch, var(--mongree-surface) 94%, transparent));
+  color: var(--mongree-text);
+  padding: 2rem 1rem 4rem;
 }
 
 .form {
@@ -11,19 +16,38 @@
 }
 
 .backButton {
-  @apply rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-600 shadow-sm transition-colors hover:border-gray-300 hover:text-gray-900;
+  @apply flex-shrink-0 rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-60;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 88%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  color: var(--mongree-text-muted);
+  box-shadow: 0 8px 20px color-mix(in oklch, var(--mongree-text) 6%, transparent);
+}
+
+.backButton:hover:not(:disabled) {
+  color: var(--mongree-text);
+  border-color: color-mix(in oklch, var(--mongree-primary) 36%, var(--mongree-line));
 }
 
 .kicker {
-  @apply mb-1 text-sm font-semibold text-indigo-600;
+  @apply mb-1 text-sm font-semibold;
+  color: var(--mongree-primary-strong);
 }
 
 .title {
-  @apply text-2xl font-bold text-gray-900;
+  @apply text-2xl font-bold;
+  color: var(--mongree-text);
 }
 
 .card {
-  @apply flex flex-col gap-6 rounded-xl bg-white p-6 shadow-sm;
+  @apply flex flex-col gap-6 p-5 sm:p-6;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 86%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    linear-gradient(180deg, color-mix(in oklch, var(--scene-object) 5%, transparent), transparent 42%),
+    color-mix(in oklch, var(--mongree-surface-raised) 91%, transparent);
+  box-shadow:
+    0 24px 60px color-mix(in oklch, var(--mongree-text) 10%, transparent),
+    inset 0 1px 0 color-mix(in oklch, var(--scene-object) 14%, transparent);
 }
 
 .fieldGroup {
@@ -31,19 +55,25 @@
 }
 
 .label {
-  @apply text-sm font-semibold text-gray-800;
+  @apply text-sm font-semibold;
+  color: var(--mongree-text);
 }
 
 .segmented {
-  @apply grid grid-cols-2 rounded-lg bg-gray-100 p-1;
+  @apply grid grid-cols-2 p-1;
+  border-radius: var(--mongree-radius-sm);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 76%, transparent);
 }
 
 .segmentButton {
-  @apply rounded-md px-4 py-2 text-sm font-semibold text-gray-500 transition-colors;
+  @apply rounded-md px-4 py-2 text-sm font-semibold transition-colors;
+  color: var(--mongree-text-muted);
 }
 
 .segmentButtonActive {
-  @apply bg-white text-indigo-700 shadow-sm;
+  color: var(--mongree-text);
+  background: color-mix(in oklch, var(--scene-accent) 18%, var(--mongree-surface-raised));
+  box-shadow: 0 8px 18px color-mix(in oklch, var(--mongree-text) 8%, transparent);
 }
 
 .emotionGrid {
@@ -53,7 +83,23 @@
 .titleInput,
 .textInput,
 .contentTextarea {
-  @apply w-full rounded-lg border border-gray-200 bg-white px-4 text-sm text-gray-800 outline-none transition-colors placeholder:text-gray-400 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100;
+  @apply w-full rounded-lg px-4 text-sm outline-none transition-colors;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 64%, var(--mongree-surface-raised));
+  color: var(--mongree-text);
+}
+
+.titleInput::placeholder,
+.textInput::placeholder,
+.contentTextarea::placeholder {
+  color: color-mix(in oklch, var(--mongree-text-muted) 76%, transparent);
+}
+
+.titleInput:focus,
+.textInput:focus,
+.contentTextarea:focus {
+  border-color: var(--mongree-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--mongree-primary) 20%, transparent);
 }
 
 .titleInput,
@@ -74,11 +120,12 @@
 }
 
 .helperText {
-  @apply text-gray-400;
+  color: var(--mongree-text-muted);
 }
 
 .countText {
-  @apply flex-shrink-0 font-medium text-gray-400;
+  @apply flex-shrink-0 font-medium;
+  color: var(--mongree-text-muted);
 }
 
 .countTextError {
@@ -90,7 +137,8 @@
 }
 
 .imageCount {
-  @apply text-sm font-medium text-gray-500;
+  @apply text-sm font-medium;
+  color: var(--mongree-text-muted);
 }
 
 .imageGrid {
@@ -99,7 +147,9 @@
 
 .imageItem,
 .imageAddButton {
-  @apply relative aspect-square overflow-hidden rounded-lg border border-gray-200 bg-gray-50;
+  @apply relative aspect-square overflow-hidden rounded-lg;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
 }
 
 .previewImage {
@@ -107,7 +157,12 @@
 }
 
 .imageDeleteButton {
-  @apply absolute right-2 top-2 flex h-7 w-7 items-center justify-center rounded-full bg-black/60 text-white transition-colors hover:bg-red-500;
+  @apply absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors;
+  background: color-mix(in oklch, var(--mongree-text) 62%, transparent);
+}
+
+.imageDeleteButton:hover {
+  @apply bg-red-500;
 }
 
 .imageDeleteIcon {
@@ -115,7 +170,14 @@
 }
 
 .imageAddButton {
-  @apply flex cursor-pointer flex-col items-center justify-center gap-2 border-dashed text-sm font-semibold text-gray-500 transition-colors hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-600;
+  @apply flex cursor-pointer flex-col items-center justify-center gap-2 border-dashed text-sm font-semibold transition-colors;
+  color: var(--mongree-text-muted);
+}
+
+.imageAddButton:hover {
+  border-color: color-mix(in oklch, var(--mongree-primary) 42%, var(--mongree-line));
+  background: color-mix(in oklch, var(--mongree-primary) 9%, var(--mongree-surface-soft));
+  color: var(--mongree-primary-strong);
 }
 
 .imageAddIcon {
@@ -127,7 +189,9 @@
 }
 
 .imageNotice {
-  @apply rounded-lg bg-gray-50 px-4 py-3 text-sm text-gray-500;
+  @apply rounded-lg px-4 py-3 text-sm;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
+  color: var(--mongree-text-muted);
 }
 
 .actions {
@@ -136,13 +200,40 @@
 
 .cancelButton,
 .submitButton {
-  @apply rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:bg-gray-300 disabled:text-white;
+  @apply min-h-11 rounded-lg px-5 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 .cancelButton {
-  @apply bg-gray-200 text-gray-700 hover:bg-gray-300;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 80%, transparent);
+  color: var(--mongree-text-muted);
+}
+
+.cancelButton:hover:not(:disabled) {
+  color: var(--mongree-text);
 }
 
 .submitButton {
-  @apply bg-indigo-600 text-white hover:bg-indigo-500;
+  color: oklch(0.24 0.035 255);
+  background: var(--mongree-primary);
+  box-shadow: 0 10px 24px color-mix(in oklch, var(--mongree-primary) 26%, transparent);
+}
+
+.submitButton:hover:not(:disabled) {
+  background: var(--mongree-primary-strong);
+}
+
+@media (max-width: 520px) {
+  .page {
+    padding: 1rem 0.75rem 5rem;
+  }
+
+  .header {
+    @apply flex-col gap-3;
+  }
+
+  .actions {
+    @apply sticky bottom-3 z-20 grid grid-cols-[0.7fr_1fr] rounded-xl p-2;
+    background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+    box-shadow: 0 14px 34px color-mix(in oklch, var(--mongree-text) 12%, transparent);
+  }
 }

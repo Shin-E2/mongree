@@ -47,7 +47,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
     handleSubmit,
     setValue,
     watch,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<DiaryNewFormType>({
     resolver: zodResolver(DiaryNewFormSchema),
     mode: "onChange",
@@ -80,6 +80,8 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
   };
 
   const onSubmit = (data: DiaryNewFormType) => {
+    if (isPending) return;
+
     const formData = new FormData();
     formData.append("title", data.title);
     formData.append("content", data.content);
@@ -101,7 +103,11 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
         return;
       }
 
-      showModal(ModalType.ERROR_WARNING, result.error ?? "일기 수정에 실패했습니다.");
+      showModal(
+        ModalType.ERROR_WARNING,
+        result.error ?? "일기 수정에 실패했습니다.",
+        { details: "내용을 확인한 뒤 다시 시도해주세요." }
+      );
     });
   };
 
@@ -131,7 +137,12 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
                 className={`${styles.segmentButton} ${
                   isPrivate ? styles.segmentButtonActive : ""
                 }`}
-                onClick={() => setValue("isPrivate", true, { shouldDirty: true })}
+                onClick={() =>
+                  setValue("isPrivate", true, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
+                }
               >
                 비공개
               </button>
@@ -141,7 +152,10 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
                   !isPrivate ? styles.segmentButtonActive : ""
                 }`}
                 onClick={() =>
-                  setValue("isPrivate", false, { shouldDirty: true })
+                  setValue("isPrivate", false, {
+                    shouldDirty: true,
+                    shouldValidate: true,
+                  })
                 }
               >
                 공개
@@ -174,11 +188,15 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             <input
               id="title"
               className={styles.titleInput}
-              placeholder="제목을 입력하세요"
+              placeholder="제목을 입력해주세요"
               {...register("title")}
             />
             <div className={styles.helperRow}>
-              <span className={errors.title?.message ? styles.errorText : styles.helperText}>
+              <span
+                className={
+                  errors.title?.message ? styles.errorText : styles.helperText
+                }
+              >
                 {errors.title?.message ?? "짧게 기억할 수 있는 제목"}
               </span>
               <span
@@ -204,7 +222,13 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
               {...register("content")}
             />
             <div className={styles.helperRow}>
-              <span className={errors.content?.message ? styles.errorText : styles.helperText}>
+              <span
+                className={
+                  errors.content?.message
+                    ? styles.errorText
+                    : styles.helperText
+                }
+              >
                 {errors.content?.message ?? "길게 써도 괜찮아요"}
               </span>
               <span
@@ -227,7 +251,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             <input
               id="tags"
               className={styles.textInput}
-              placeholder="쉼표로 구분해서 입력하세요"
+              placeholder="쉼표로 구분해서 입력해주세요"
               defaultValue={tagInputValue}
               {...register("tags")}
             />
@@ -298,8 +322,8 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             />
             {imageError && <p className={styles.errorText}>{imageError}</p>}
             <p className={styles.imageNotice}>
-              기존 이미지는 삭제할 수 있고, 새 이미지는 총 {maxCount}장까지
-              추가할 수 있습니다.
+              기존 이미지를 삭제하거나 새 이미지를 추가할 수 있습니다. 총
+              {maxCount}개까지 저장됩니다.
             </p>
           </div>
         </section>
@@ -309,15 +333,16 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
             className={styles.cancelButton}
             type="button"
             onClick={() => router.back()}
+            disabled={isPending}
           >
             취소
           </button>
           <button
             className={styles.submitButton}
             type="submit"
-            disabled={isPending}
+            disabled={isPending || !isValid}
           >
-            {isPending ? "저장 중" : "수정 완료"}
+            {isPending ? "저장 중..." : "수정 완료"}
           </button>
         </div>
       </form>

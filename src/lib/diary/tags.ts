@@ -2,22 +2,26 @@ import { createClient } from "@/lib/supabase-server";
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
+export function normalizeTagNames(tagNames: string[]): string[] {
+  return Array.from(
+    new Set(tagNames.map((tagName) => tagName.trim()).filter(Boolean))
+  );
+}
+
 export async function processTagsAndGetIds(
   supabase: SupabaseClient,
   tagNames: string[]
 ): Promise<string[]> {
-  if (tagNames.length === 0) return [];
+  const normalizedTagNames = normalizeTagNames(tagNames);
+  if (normalizedTagNames.length === 0) return [];
 
   const tagIds: string[] = [];
 
-  for (const tagName of tagNames) {
-    const trimmed = tagName.trim();
-    if (!trimmed) continue;
-
+  for (const tagName of normalizedTagNames) {
     const { data: existing, error: findError } = await supabase
       .from("tags")
       .select("id")
-      .eq("name", trimmed)
+      .eq("name", tagName)
       .maybeSingle();
 
     if (findError) {
@@ -31,7 +35,7 @@ export async function processTagsAndGetIds(
 
     const { data: created, error: createError } = await supabase
       .from("tags")
-      .insert({ name: trimmed })
+      .insert({ name: tagName })
       .select("id")
       .single();
 

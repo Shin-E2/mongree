@@ -1,13 +1,44 @@
 "use client";
 
 import { useState, useCallback, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import { DIARY_NEW_STEPS } from "../../../../components/home/(dashboard)/diary/new/constants";
 import type { DiaryNewFormType } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { createDiary } from "./action";
 import { URL } from "@/commons/constants/global-url";
-import { useRouter } from "next/navigation";
 import { ModalType } from "@/commons/components/modal/types";
 import { useSmartModal } from "@/commons/hooks/use-smart-modal";
+
+function createDiaryFormData(data: DiaryNewFormType): FormData {
+  const formData = new FormData();
+
+  formData.append("title", data.title);
+  formData.append("content", data.content);
+  formData.append("isPrivate", String(data.isPrivate));
+
+  data.emotions.forEach((emotion) => {
+    formData.append("emotions", emotion);
+  });
+
+  if (data.tags?.length) {
+    formData.append("tags", data.tags.join(","));
+  }
+
+  data.images?.forEach((image) => {
+    if (image instanceof File) {
+      formData.append("images", image);
+    }
+  });
+
+  return formData;
+}
+
+function isCriticalSaveError(message?: string) {
+  if (!message) return false;
+  return ["네트워크", "서버", "연결", "업로드"].some((keyword) =>
+    message.includes(keyword)
+  );
+}
 
 export default function useDiaryNewPage() {
   const [currentStep, setCurrentStep] = useState(0);
@@ -15,13 +46,23 @@ export default function useDiaryNewPage() {
   const { modalState, showModal, closeModal } = useSmartModal();
   const router = useRouter();
 
-  // 메모이제이션된 값들
-  const currentStepData = useMemo(() => DIARY_NEW_STEPS[currentStep], [currentStep]);
-  const progress = useMemo(() => ((currentStep + 1) / DIARY_NEW_STEPS.length) * 100, [currentStep]);
-  const isLastStep = useMemo(() => currentStep === DIARY_NEW_STEPS.length - 1, [currentStep]);
-  const DiaryNewStepComponent = useMemo(() => currentStepData.Component, [currentStepData]);
+  const currentStepData = useMemo(
+    () => DIARY_NEW_STEPS[currentStep],
+    [currentStep]
+  );
+  const progress = useMemo(
+    () => ((currentStep + 1) / DIARY_NEW_STEPS.length) * 100,
+    [currentStep]
+  );
+  const isLastStep = useMemo(
+    () => currentStep === DIARY_NEW_STEPS.length - 1,
+    [currentStep]
+  );
+  const DiaryNewStepComponent = useMemo(
+    () => currentStepData.Component,
+    [currentStepData]
+  );
 
-  // 네비게이션 함수들
   const handleNext = useCallback(() => {
     setCurrentStep((prev) => Math.min(prev + 1, DIARY_NEW_STEPS.length - 1));
   }, []);
@@ -30,90 +71,61 @@ export default function useDiaryNewPage() {
     setCurrentStep((prev) => Math.max(prev - 1, 0));
   }, []);
 
-  // FormData 생성 함수
-  const createFormData = useCallback((data: DiaryNewFormType): FormData => {
-    const formData = new FormData();
+  const submitDiary = useCallback(
+    async (data: DiaryNewFormType) => {
+      if (isSubmitting) return;
 
-    formData.append("title", data.title);
-    formData.append("content", data.content);
-    formData.append("isPrivate", String(data.isPrivate));
+      setIsSubmitting(true);
 
-    data.emotions.forEach((emotion) => {
-      formData.append("emotions", emotion);
-    });
+      try {
+        const result = await createDiary(createDiaryFormData(data));
 
-    if (data.tags?.length) {
-      formData.append("tags", data.tags.join(","));
-    }
-
-    if (data.images?.length) {
-      data.images.forEach((image) => {
-        if (image instanceof File) {
-          formData.append("images", image);
+        if (result.success && result.diary) {
+          router.push(URL().DIARY_DETAIL(result.diary.id));
+          router.refresh();
+          return;
         }
-      });
-    }
 
-    return formData;
-  }, []);
-
-  const submitDiary = useCallback(async (data: DiaryNewFormType) => {
-    setIsSubmitting(true);
-
-    try {
-      const formData = createFormData(data);
-      const result = await createDiary(formData);
-
-      if (result.success && result.diary) {
-        // 저장 성공 후 작성한 일기 상세로 이동
-        router.push(URL().DIARY_DETAIL(result.diary.id));
-        router.refresh();
-        return;
-      } else {
-        // 에러 타입에 따른 다른 모달 표시
-        const isNetworkError = result.error?.includes('네트워크') ||
-                              result.error?.includes('서버') ||
-                              result.error?.includes('연결');
-
-        const modalDetails = result.details;
-
+        const message = result.error || "일기 저장에 실패했습니다.";
         showModal(
-          isNetworkError ? ModalType.ERROR_CRITICAL : ModalType.ERROR_WARNING,
-          result.error || "일기 저장에 실패했습니다",
+          isCriticalSaveError(message)
+            ? ModalType.ERROR_CRITICAL
+            : ModalType.ERROR_WARNING,
+          message,
           {
-            details: modalDetails, // 포맷된 값을 전달
+            details: result.details,
             onRetry: () => {
               closeModal();
-              submitDiary(data);
-            }
+              void submitDiary(data);
+            },
           }
         );
+      } catch (error) {
+        const message =
+          error instanceof Error
+            ? error.message
+            : "일기 저장 중 예상하지 못한 오류가 발생했습니다.";
+
+        showModal(ModalType.ERROR_CRITICAL, message, {
+          details: "잠시 후 다시 시도해주세요.",
+          onRetry: () => {
+            closeModal();
+            void submitDiary(data);
+          },
+        });
+      } finally {
+        setIsSubmitting(false);
       }
-    } catch (error) {
-      console.error("일기 저장 중 오류:", error);
+    },
+    [closeModal, isSubmitting, router, showModal]
+  );
 
-      // error 객체가 Error 인스턴스인 경우 message를 사용하고, 그렇지 않으면 문자열로 변환
-      const errorMessage =
-        error instanceof Error ? error.message : JSON.stringify(error);
-      const modalDetails = undefined;
-
-      showModal(ModalType.ERROR_CRITICAL, "일기 저장 중 예상치 못한 오류가 발생했습니다.", {
-        details: modalDetails || errorMessage, 
-        onRetry: () => {
-          closeModal();
-          submitDiary(data);
-        }
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  }, [router, createFormData, showModal, closeModal]);
-
-  // 폼 제출 처리
-  const onSubmit = useCallback(async (data: DiaryNewFormType) => {
-    if (isSubmitting) return;
-    await submitDiary(data);
-  }, [isSubmitting, submitDiary]);
+  const onSubmit = useCallback(
+    async (data: DiaryNewFormType) => {
+      await submitDiary(data);
+    },
+    [submitDiary]
+  );
 
   return {
     currentStep,

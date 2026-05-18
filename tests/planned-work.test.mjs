@@ -114,6 +114,28 @@ test("billing routes expose checkout, portal, and webhook contracts", () => {
   assert.match(webhook, /request\.text\(\)/);
 });
 
+test("planned AI and billing persistence tables are represented", () => {
+  const migration = read("supabase/migrations/20260518030000_ai_billing_tables.sql");
+  const types = read("src/lib/supabase.types.ts");
+  const aiRoute = read("src/app/api/ai/reports/route.ts");
+  const checkoutRoute = read("src/app/api/billing/checkout/route.ts");
+  const webhookRoute = read("src/app/api/webhooks/stripe/route.ts");
+
+  for (const table of ["ai_reports", "usage_events", "subscriptions"]) {
+    assert.equal(
+      migration.includes(`create table if not exists public.${table}`),
+      true,
+      table
+    );
+    assert.match(types, new RegExp(`${table}:`));
+  }
+
+  assert.match(aiRoute, /ai_reports/);
+  assert.match(aiRoute, /usage_events/);
+  assert.match(checkoutRoute, /usage_events/);
+  assert.match(webhookRoute, /subscriptions/);
+});
+
 test("profile page exposes subscription management entry point", () => {
   const source = read("src/app/(dashboard)/profile/profile-settings-client.tsx");
 

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getUser } from "@/lib/get-user";
 import { getStripeClient } from "@/lib/stripe";
 import { getSiteUrl } from "@/commons/utils/site-url";
+import { createClient } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
 
@@ -36,6 +37,16 @@ export async function POST() {
     },
   });
 
+  const supabase = await createClient();
+  await supabase.from("usage_events").insert({
+    user_id: user.id,
+    event_type: "billing.checkout.created",
+    source: "api",
+    metadata: {
+      sessionId: session.id,
+      priceId,
+    },
+  });
+
   return NextResponse.json({ url: session.url });
 }
-

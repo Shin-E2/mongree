@@ -105,3 +105,11 @@ STRIPE_WEBHOOK_SECRET
 ```
 
 After adding the four missing Vercel secrets, redeploy production and rerun `npm run verify:production`.
+
+To sync the four secret values from the current shell into Vercel Production and Preview, set them as local environment variables first, then run:
+
+```bash
+npm run sync:vercel-secrets
+```
+
+The sync script reads only process environment values. It does not store secret values in the repository.

@@ -9,6 +9,7 @@
     "test:e2e": "playwright test",
     "start": "next start",
     "lint": "next lint",
+    "verify:production": "node scripts/check-production-health.mjs",
     "update-types": "npx supabase gen types typescript --project-id \"cimffxixwjjaxrswrtes\" --schema public > src/lib/supabase.types.ts"
   },
   "dependencies": {

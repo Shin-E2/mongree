@@ -1,4 +1,5 @@
 import type { SignupTempFormData } from "@/commons/constants/signup";
+import type { SignupFormType } from "../step-basic-info/form.schema";
 import type { ISignupStepProps } from "../step-progress-section/types";
 
 export interface ISignupFormSteps {
@@ -7,7 +8,7 @@ export interface ISignupFormSteps {
   currentStepData: ISignupStepProps;
   isLastStep: boolean;
   initialFormData: SignupTempFormData;
-  saveTempFormData: (data: any) => void;
+  saveTempFormData: (data: Partial<SignupFormType>) => void;
   clearTempFormData: () => void;
   isEmailConfirmed: boolean;
 }

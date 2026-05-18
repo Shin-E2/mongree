@@ -15,7 +15,7 @@ export function DiaryComment({
   isOwner = false,
 }: DiaryCommentProps) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const isLiked =
     comment.likes?.some((like) => like.user_id === currentUserId) || false;
 
@@ -69,7 +69,7 @@ export function DiaryReply({
   currentUserId?: string;
 }) {
   const router = useRouter();
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
   const isLiked =
     reply.likes?.some((like) => like.user_id === currentUserId) || false;
   const isOwner = reply.user?.id === currentUserId;

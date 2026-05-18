@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { supabase } from "@/lib/supabase-client";
 import { type SignupFormType } from "../form.schema";
@@ -22,14 +22,13 @@ export const useEmailVerification = ({
     formState: { errors },
   } = useFormContext<SignupFormType>();
 
-  const [state, setState] = useState<Omit<EmailVerificationState, 'isVerified'>>({
+  const [state, setState] = useState<Omit<EmailVerificationState, "isVerified">>({
     isVerifying: false,
     successMessage: "",
   });
 
   const emailValue = watch("email", "");
 
-  // initialFormData로 이메일 필드 초기화
   useEffect(() => {
     if (initialFormData.email) {
       setValue("email", initialFormData.email);
@@ -40,18 +39,15 @@ export const useEmailVerification = ({
     clearErrors("email");
     setState((prev) => ({ ...prev, successMessage: "", isVerifying: true }));
 
-    // 이메일 유효성 먼저 체크
     if (errors.email) {
       setState((prev) => ({ ...prev, isVerifying: false }));
       return;
     }
 
     try {
-      // 이메일 중복 체크 (서버 액션 사용)
       const checkResult = await checkEmail({ email: emailValue });
 
       if (!checkResult.success) {
-        // 중복된 이메일인 경우 에러 처리
         setError("email", {
           type: "manual",
           message: checkResult.message || "이미 사용 중인 이메일입니다.",
@@ -60,11 +56,10 @@ export const useEmailVerification = ({
         return;
       }
 
-      // OTP 이메일 발송
       const { error } = await supabase.auth.signInWithOtp({
         email: emailValue,
         options: {
-          shouldCreateUser: true, // 새로운 사용자를 생성하고 OTP를 발송
+          shouldCreateUser: true,
           emailRedirectTo: `${window.location.origin}/confirm?source=email`,
         },
       });
@@ -76,10 +71,10 @@ export const useEmailVerification = ({
         setState((prev) => ({
           ...prev,
           isVerifying: false,
-          successMessage: "인증 메일이 발송되었습니다. 메일함을 확인하세요.",
+          successMessage: "인증 메일을 발송했습니다. 메일함을 확인해주세요.",
         }));
       }
-    } catch (error) {
+    } catch {
       setError("email", {
         type: "manual",
         message: "인증 중 오류가 발생했습니다.",
@@ -88,14 +83,13 @@ export const useEmailVerification = ({
     }
   };
 
-  // 이메일 입력값 변경 시 상태 초기화
   useEffect(() => {
     setState((prev) => ({
       ...prev,
       successMessage: "",
       isVerifying: false,
     }));
-    clearErrors("email"); // 이메일 값 변경 시 에러 초기화
+    clearErrors("email");
   }, [emailValue, clearErrors]);
 
   return {

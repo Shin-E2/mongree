@@ -1,32 +1,31 @@
-import { z } from 'zod';
+import { z } from "zod";
 
-/**
- * ZodFormattedError 객체를 읽기 쉬운 문자열 형식으로 변환합니다.
- * @param error - ZodFormattedError 객체
- * @returns 포맷된 에러 메시지 문자열
- */
-export function formatZodError(error: z.ZodFormattedError<any, any>): string {
+type FormattedZodError = z.ZodFormattedError<unknown, string> & {
+  [key: string]: unknown;
+};
+
+type FieldErrorNode = {
+  _errors?: string[];
+};
+
+export function formatZodError(error: FormattedZodError): string {
   let errorMessage = "";
-  const errors = error._errors; // 필드 특정 오류가 아닌 일반 오류
+  const errors = error._errors;
 
   if (errors.length > 0) {
-      errorMessage += `General Errors: ${errors.join(", ")}
-`;
+    errorMessage += `공통 오류: ${errors.join(", ")}\n`;
   }
 
-  // 필드별 오류 처리
   for (const key in error) {
     if (key !== "_errors") {
-      const fieldError = (error as Record<string, any>)[key];
-      if (fieldError && typeof fieldError === 'object' && '_errors' in fieldError) {
+      const fieldError = error[key] as FieldErrorNode | undefined;
+      const fieldErrors = fieldError?._errors;
 
-        const fieldErrors = fieldError._errors;
-        if (fieldErrors && fieldErrors.length > 0) {
-             errorMessage += `${String(key)}: ${fieldErrors.join(", ")}
-`;
-        }
+      if (fieldErrors && fieldErrors.length > 0) {
+        errorMessage += `${String(key)}: ${fieldErrors.join(", ")}\n`;
       }
     }
   }
+
   return errorMessage.trim();
 }

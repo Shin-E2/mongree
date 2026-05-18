@@ -5,21 +5,15 @@ import { useRouter } from "next/navigation";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { ImageThumbnail } from "@/commons/components/image-thumbnail";
 import { addComment } from "./action";
-import { z } from "zod";
 import { useForm } from "react-hook-form";
 import ButtonTextBase from "../button-text";
 import { InputWithCssprop } from "../input";
 import { ICommentFormProps } from "./types";
 import styles from "./styles.module.css";
 
-const commentSchema = z.object({
-  content: z
-    .string()
-    .min(1, "내용을 입력해주세요")
-    .max(300, "300자 이내로 입력해주세요"),
-});
-
-type CommentFormData = z.infer<typeof commentSchema>;
+type CommentFormData = {
+  content: string;
+};
 
 export function CommentForm({
   user,

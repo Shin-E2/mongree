@@ -1,4 +1,3 @@
-import { Tables } from "@/lib/supabase.types";
 import { DiaryWithRelations } from "../types";
 
 export interface DiaryContentDisplayProps {
@@ -11,4 +10,4 @@ export interface DiaryContentDisplayProps {
     textColor: string;
     borderColor: string;
   }[];
-} 
+}

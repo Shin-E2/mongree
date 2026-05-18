@@ -17,7 +17,7 @@ export async function addComment(formData: FormData) {
   }
 
   if (!content?.trim()) {
-    return { error: "Content is required." };
+    return { error: "댓글 내용을 입력해주세요." };
   }
 
   try {
@@ -65,7 +65,7 @@ export async function addComment(formData: FormData) {
         likes: comment.comment_likes ?? [],
       },
     };
-  } catch (error) {
-    return { error: "Failed to create comment." };
+  } catch {
+    return { error: "댓글 작성에 실패했습니다." };
   }
 }

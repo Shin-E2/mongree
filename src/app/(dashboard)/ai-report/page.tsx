@@ -105,6 +105,40 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
           </div>
         </section>
 
+        <section className={styles.generatedReportPanel}>
+          <div className={styles.generatedReportHeader}>
+            <span className={styles.generatedReportBadge}>
+              {reportData.generatedReport.source === "openai"
+                ? "OpenAI 생성 리포트"
+                : "로컬 안전 리포트"}
+            </span>
+            <h3 className={styles.generatedReportTitle}>
+              {reportData.generatedReport.summary}
+            </h3>
+            <p className={styles.generatedReportDescription}>
+              {reportData.generatedReport.gentleInsight}
+            </p>
+          </div>
+
+          {reportData.generatedReport.dominantEmotions.length > 0 && (
+            <div className={styles.generatedEmotionList}>
+              {reportData.generatedReport.dominantEmotions.map((emotion) => (
+                <span key={emotion} className={styles.generatedEmotion}>
+                  {emotion}
+                </span>
+              ))}
+            </div>
+          )}
+
+          <div className={styles.recommendationList}>
+            {reportData.generatedReport.recommendations.map((recommendation) => (
+              <p key={recommendation} className={styles.recommendationItem}>
+                {recommendation}
+              </p>
+            ))}
+          </div>
+        </section>
+
         <div className={styles.reportGrid}>
           <section className={styles.panel}>
             <h3 className={styles.panelTitle}>감정 분포</h3>

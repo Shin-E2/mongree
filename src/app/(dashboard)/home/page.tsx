@@ -17,7 +17,7 @@ export default async function HomePage() {
     <div className={styles.mainContainer}>
       <section className={styles.heroSection}>
         <div className={styles.heroCopy}>
-          <span className={styles.heroEyebrow}>오늘의 감정 날씨</span>
+          <span className={styles.heroEyebrow}>오늘의 감정 스냅</span>
           <h1 className={styles.heroTitle}>감정을 하늘에 살짝 붙여둘 시간</h1>
           <p className={styles.heroDescription}>
             길게 쓰지 않아도 괜찮아요. 지금 떠오르는 감정 하나와 짧은 문장만

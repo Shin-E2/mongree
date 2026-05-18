@@ -19,11 +19,14 @@ const plannedKoreanCopyFiles = [
   "src/app/(dashboard)/counselors/page.tsx",
   "src/app/(dashboard)/counselors/[id]/page.tsx",
   "src/app/(dashboard)/counselors/data.ts",
+  "src/app/(dashboard)/home/page.tsx",
+  "src/app/(dashboard)/home/action.ts",
   "src/components/login/form-section/index.tsx",
   "src/components/login/form-section/action.ts",
   "src/components/login/form-section/form.schema.ts",
   "src/app/(auth)/reset-password/page.tsx",
   "src/components/home/(sidebar)/ai-analysis/index.tsx",
+  "src/components/home/(sidebar)/popular-diary-card/index.tsx",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
   "src/components/layout/scene-character/index.tsx",
   "src/components/home/welcome-hero-section/index.tsx",
@@ -205,6 +208,24 @@ test("home AI analysis card links to the real report flow", () => {
   assert.match(source, /최근 일기 기반/);
   assert.doesNotMatch(source, /준비 중|comingSoon/);
   assert.doesNotMatch(styles, /\.comingSoon/);
+});
+
+test("home dashboard exposes readable Korean copy", () => {
+  const page = read("src/app/(dashboard)/home/page.tsx");
+  const action = read("src/app/(dashboard)/home/action.ts");
+  const popularCard = read("src/components/home/(sidebar)/popular-diary-card/index.tsx");
+
+  assert.match(page, /오늘의 감정 스냅/);
+  assert.match(page, /오늘 일기 쓰기/);
+  assert.match(page, /리포트 보기/);
+  assert.match(page, /이번 주 인기 일기 TOP 3/);
+  assert.match(page, /공개된 인기 일기가 아직 없습니다/);
+  assert.match(action, /월의 감정 기록/);
+  assert.match(action, /인기 일기 TOP3/);
+  assert.match(action, /익명/);
+  assert.match(popularCard, /공감/);
+  assert.match(popularCard, /댓글/);
+  assert.doesNotMatch(popularCard, /mock-user/);
 });
 
 test("billing routes expose checkout, portal, and webhook contracts", () => {

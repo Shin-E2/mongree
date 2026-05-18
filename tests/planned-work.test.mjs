@@ -78,9 +78,21 @@ test("planned production API routes exist", () => {
     "src/app/api/billing/portal/route.ts",
     "src/app/api/webhooks/stripe/route.ts",
     "src/app/api/weather/theme/route.ts",
+    "src/app/api/health/route.ts",
   ]) {
     assert.equal(fs.existsSync(path.join(root, routeFile)), true, routeFile);
   }
+});
+
+test("health route checks production readiness without leaking secrets", () => {
+  const source = read("src/app/api/health/route.ts");
+
+  assert.match(source, /OPENAI_API_KEY/);
+  assert.match(source, /STRIPE_SECRET_KEY/);
+  assert.match(source, /ai_reports/);
+  assert.match(source, /usage_events/);
+  assert.match(source, /subscriptions/);
+  assert.doesNotMatch(source, /process\.env\[[^\]]+\]\s*\}/);
 });
 
 test("AI report route uses structured OpenAI output with safe fallback", () => {

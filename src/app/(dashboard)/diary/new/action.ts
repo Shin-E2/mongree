@@ -31,7 +31,9 @@ function extractFormData(formData: FormData) {
   }
 
   if (imageFiles.length > DIARY_IMAGE_MAX_COUNT) {
-    throw new Error(`이미지는 최대 ${DIARY_IMAGE_MAX_COUNT}개까지 등록할 수 있습니다.`);
+    throw new Error(
+      `이미지는 최대 ${DIARY_IMAGE_MAX_COUNT}개까지 등록할 수 있습니다.`
+    );
   }
 
   return {
@@ -191,7 +193,7 @@ export async function createDiary(formData: FormData) {
     return {
       success: false,
       error: errorMessage,
-      details: "내용을 확인한 뒤 다시 시도해주세요.",
+      details: "내용을 확인하고 다시 시도해주세요.",
     };
   }
 }

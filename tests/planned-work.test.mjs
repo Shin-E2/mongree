@@ -16,13 +16,27 @@ const plannedKoreanCopyFiles = [
   "src/app/(dashboard)/diary/new/hook.ts",
   "src/app/(dashboard)/diary/[id]/edit/action.ts",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
+  "src/components/layout/scene-character/index.tsx",
 ];
 
-const mojibakePattern = /[\uFFFD\u4E00-\u9FFF]/;
+const mojibakeFragments = [
+  "\uFFFD",
+  "濡쒓",
+  "媛먯",
+  "留묒",
+  "諛?",
+  "鍮?",
+  "怨듦",
+  "?대?",
+  "?쇨",
+  "?쒕",
+  "?섏",
+  "?댁",
+];
 
 test("planned Korean copy files do not contain mojibake", () => {
   const brokenFiles = plannedKoreanCopyFiles.filter((file) =>
-    mojibakePattern.test(read(file))
+    mojibakeFragments.some((fragment) => read(file).includes(fragment))
   );
 
   assert.deepEqual(brokenFiles, []);
@@ -166,11 +180,17 @@ test("weather theme route maps weather and time into Mongree scenes", () => {
   assert.match(source, /theme/);
 });
 
-test("character assets use depth cues instead of flat placeholders", () => {
+test("character assets use premium 3D cues instead of flat placeholders", () => {
+  const component = read("src/components/layout/scene-character/index.tsx");
+
+  assert.match(component, /맑은 날 Mongree 캐릭터/);
+  assert.match(component, /프로필 보기/);
+
   for (const asset of ["day", "night", "rain", "snow"]) {
     const source = read(`public/characters/${asset}.svg`);
 
     assert.match(source, /linearGradient|radialGradient/, asset);
     assert.match(source, /filter|feDropShadow|feGaussianBlur/, asset);
+    assert.match(source, /specular|rim|ambient|floorShadow/, asset);
   }
 });

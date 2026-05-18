@@ -6,14 +6,14 @@ import { InputFieldStandardSFull } from "@/commons/components/input-field";
 import useLoginFormSection from "./hook";
 import { LoginFormSchema, type LoginFormType } from "./form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useState, useTransition } from "react";
 import { useFormContext } from "react-hook-form";
 
 export default function LoginFormSection() {
-  // const onSubmit = useLoginFormSection(); => 여기서 계속 context null 에러 발생
   return (
     <FormStandardFullFull<LoginFormType>
       resolver={zodResolver(LoginFormSchema)}
-      onSubmit={() => {}} // 실질적 onSubmit은 children에서 handleSubmit로 처리
+      onSubmit={() => {}}
     >
       <LoginFormFields />
     </FormStandardFullFull>
@@ -21,12 +21,23 @@ export default function LoginFormSection() {
 }
 
 function LoginFormFields() {
-  const { handleSubmit, setError } = useFormContext<LoginFormType>();
-  const { onSubmit } = useLoginFormSection();
+  const { getValues, handleSubmit, setError } = useFormContext<LoginFormType>();
+  const { onSubmit, onRequestPasswordReset } = useLoginFormSection();
+  const [resetMessage, setResetMessage] = useState("");
+  const [isPending, startTransition] = useTransition();
+
+  const handlePasswordReset = () => {
+    setResetMessage("");
+    startTransition(async () => {
+      const result = await onRequestPasswordReset(getValues("email"), setError);
+      if (result?.successMessage) {
+        setResetMessage(result.successMessage);
+      }
+    });
+  };
 
   return (
     <>
-      {/* 이메일 입력 필드 */}
       <InputFieldStandardSFull
         name="email"
         title="이메일"
@@ -35,7 +46,6 @@ function LoginFormFields() {
         required
       />
 
-      {/* 비밀번호 입력 필드 */}
       <InputFieldStandardSFull
         name="password"
         title="비밀번호"
@@ -44,14 +54,21 @@ function LoginFormFields() {
         required
       />
 
-      {/* 아이디/비밀번호 찾기 기능은 추후 구현 예정 */}
-      {/* <div className="flex justify-end">
-  <Button variant="link" className="text-sm text-gray-600">
-    아이디/비밀번호 찾기
-  </Button>
-</div> */}
+      <div className="flex justify-end">
+        <button
+          className="text-sm font-medium text-gray-600 transition-colors hover:text-indigo-600 disabled:text-gray-300"
+          disabled={isPending}
+          type="button"
+          onClick={handlePasswordReset}
+        >
+          {isPending ? "메일 발송 중..." : "비밀번호 찾기"}
+        </button>
+      </div>
 
-      {/* 로그인 버튼 */}
+      {resetMessage && (
+        <p className="text-sm font-medium text-emerald-600">{resetMessage}</p>
+      )}
+
       <ButtonTextStandardSFull
         title="로그인"
         type="submit"

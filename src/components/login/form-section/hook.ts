@@ -1,5 +1,5 @@
 import { LoginFormType } from "./form.schema";
-import { clickLogin } from "./action";
+import { clickLogin, requestPasswordReset } from "./action";
 
 export default function useLoginFormSection() {
   const onSubmit = async (
@@ -20,5 +20,21 @@ export default function useLoginFormSection() {
     }
   };
 
-  return { onSubmit };
+  const onRequestPasswordReset = async (
+    email: string,
+    setError: (field: keyof LoginFormType, error: { type: string; message: string }) => void
+  ) => {
+    const result = await requestPasswordReset(email);
+
+    if (result?.fieldErrors?.email?.length) {
+      setError("email", {
+        type: "manual",
+        message: result.fieldErrors.email[0],
+      });
+    }
+
+    return result;
+  };
+
+  return { onSubmit, onRequestPasswordReset };
 }

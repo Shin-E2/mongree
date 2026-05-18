@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase-server";
 import { LoginFormSchema, type LoginFormType } from "./form.schema";
 import { redirect } from "next/navigation";
 import { URL } from "@/commons/constants/global-url";
+import { getSiteUrl } from "@/commons/utils/site-url";
 
 export const clickLogin = async (data: LoginFormType) => {
   const result = await LoginFormSchema.safeParseAsync(data);
@@ -40,4 +41,36 @@ export const clickLogin = async (data: LoginFormType) => {
 
   // @supabase/ssr이 세션 쿠키를 자동 저장하므로 별도 login() 호출 불필요
   redirect(URL().HOME);
+};
+
+export const requestPasswordReset = async (email: string) => {
+  const parsedEmail = LoginFormSchema.shape.email.safeParse(email);
+
+  if (!parsedEmail.success) {
+    return {
+      fieldErrors: {
+        email: parsedEmail.error.issues.map((issue) => issue.message),
+        password: [],
+      },
+    };
+  }
+
+  const supabase = await createClient();
+  const siteUrl = await getSiteUrl();
+  const { error } = await supabase.auth.resetPasswordForEmail(parsedEmail.data, {
+    redirectTo: `${siteUrl}${URL().RESET_PASSWORD}`,
+  });
+
+  if (error) {
+    return {
+      fieldErrors: {
+        email: ["비밀번호 재설정 메일을 보내지 못했습니다."],
+        password: [],
+      },
+    };
+  }
+
+  return {
+    successMessage: "비밀번호 재설정 메일을 보냈습니다. 메일함을 확인해주세요.",
+  };
 };

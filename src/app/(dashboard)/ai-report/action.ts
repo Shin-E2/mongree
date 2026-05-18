@@ -29,6 +29,14 @@ export interface AiReportInsight {
   description: string;
 }
 
+export interface AiGeneratedReport {
+  summary: string;
+  dominantEmotions: string[];
+  gentleInsight: string;
+  recommendations: string[];
+  source: "local" | "openai";
+}
+
 export interface AiEmotionReportData {
   monthDate: string;
   monthLabel: string;
@@ -39,6 +47,7 @@ export interface AiEmotionReportData {
   tagStats: AiReportTagStat[];
   recentDiaries: AiReportDiaryPreview[];
   insights: AiReportInsight[];
+  generatedReport: AiGeneratedReport;
 }
 
 interface ReportDiaryRow {
@@ -170,6 +179,44 @@ function buildInsights({
   ];
 }
 
+function buildGeneratedReport({
+  monthLabel,
+  diaryCount,
+  emotionStats,
+  insights,
+}: Pick<AiEmotionReportData, "monthLabel" | "diaryCount" | "emotionStats" | "insights"> & {
+  monthLabel: string;
+}): AiGeneratedReport {
+  const dominantEmotions = emotionStats.slice(0, 3).map((emotion) => emotion.label);
+
+  if (diaryCount === 0) {
+    return {
+      summary: `${monthLabel}에는 아직 분석할 일기가 없습니다.`,
+      dominantEmotions,
+      gentleInsight: "짧은 문장 하나라도 남기면 다음 리포트가 더 따뜻하고 구체적으로 채워집니다.",
+      recommendations: [
+        "오늘 감정 하나를 골라 짧게 기록해보세요.",
+        "잠, 식사, 만난 사람처럼 감정에 영향을 준 단서를 함께 남겨보세요.",
+      ],
+      source: "local",
+    };
+  }
+
+  return {
+    summary: `${monthLabel}에는 ${diaryCount}개의 일기를 바탕으로 감정 흐름을 정리했습니다.`,
+    dominantEmotions,
+    gentleInsight:
+      insights[0]?.description ??
+      "반복해서 등장한 감정과 상황을 함께 보면 다음 선택을 더 부드럽게 정할 수 있습니다.",
+    recommendations: [
+      "가장 자주 나온 감정이 나타난 상황을 한 줄로 정리해보세요.",
+      "다음 일기에는 감정의 강도와 몸 상태를 함께 적어보세요.",
+      "좋았던 순간도 같은 비중으로 남겨 균형 있게 돌아보세요.",
+    ],
+    source: "local",
+  };
+}
+
 export async function getAiEmotionReportData({
   year,
   month,
@@ -198,6 +245,18 @@ export async function getAiEmotionReportData({
       longestStreak: 0,
       emotionStats: [],
       tagStats: [],
+    }),
+    generatedReport: buildGeneratedReport({
+      monthLabel,
+      diaryCount: 0,
+      emotionStats: [],
+      insights: buildInsights({
+        diaryCount: 0,
+        activeDayCount: 0,
+        longestStreak: 0,
+        emotionStats: [],
+        tagStats: [],
+      }),
     }),
   };
 
@@ -298,6 +357,14 @@ export async function getAiEmotionReportData({
   const activeDayCount = new Set(dateKeys).size;
   const longestStreak = getLongestStreak(dateKeys);
 
+  const insights = buildInsights({
+    diaryCount: diaries.length,
+    activeDayCount,
+    longestStreak,
+    emotionStats,
+    tagStats,
+  });
+
   return {
     monthDate,
     monthLabel,
@@ -312,12 +379,12 @@ export async function getAiEmotionReportData({
       content: diary.content,
       createdAt: diary.created_at ?? new Date().toISOString(),
     })),
-    insights: buildInsights({
+    insights,
+    generatedReport: buildGeneratedReport({
+      monthLabel,
       diaryCount: diaries.length,
-      activeDayCount,
-      longestStreak,
       emotionStats,
-      tagStats,
+      insights,
     }),
   };
 }

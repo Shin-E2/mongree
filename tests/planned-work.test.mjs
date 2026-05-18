@@ -93,6 +93,15 @@ test("AI report route uses structured OpenAI output with safe fallback", () => {
   assert.match(source, /recommendations/);
 });
 
+test("AI report page surfaces generated report fields", () => {
+  const pageSource = read("src/app/(dashboard)/ai-report/page.tsx");
+  const actionSource = read("src/app/(dashboard)/ai-report/action.ts");
+
+  assert.match(actionSource, /generatedReport/);
+  assert.match(pageSource, /generatedReport/);
+  assert.match(pageSource, /recommendations/);
+});
+
 test("billing routes expose checkout, portal, and webhook contracts", () => {
   const checkout = read("src/app/api/billing/checkout/route.ts");
   const portal = read("src/app/api/billing/portal/route.ts");
@@ -103,6 +112,14 @@ test("billing routes expose checkout, portal, and webhook contracts", () => {
   assert.match(portal, /billingPortal\.sessions\.create/);
   assert.match(webhook, /webhooks\.constructEvent/);
   assert.match(webhook, /request\.text\(\)/);
+});
+
+test("profile page exposes subscription management entry point", () => {
+  const source = read("src/app/(dashboard)/profile/profile-settings-client.tsx");
+
+  assert.match(source, /\/api\/billing\/checkout/);
+  assert.match(source, /구독/);
+  assert.match(source, /결제/);
 });
 
 test("weather theme route maps weather and time into Mongree scenes", () => {

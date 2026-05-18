@@ -9,12 +9,16 @@ const read = (relativePath) =>
   fs.readFileSync(path.join(root, relativePath), "utf8");
 
 const plannedKoreanCopyFiles = [
+  "README.md",
   "src/components/layout/sidebar/navigation/constants.ts",
   "src/commons/constants/global-url.ts",
   "src/components/home/(dashboard)/diary/new/form.schema.ts",
   "src/app/(dashboard)/diary/new/action.ts",
   "src/app/(dashboard)/diary/new/hook.ts",
   "src/app/(dashboard)/diary/[id]/edit/action.ts",
+  "src/app/(dashboard)/counselors/page.tsx",
+  "src/app/(dashboard)/counselors/[id]/page.tsx",
+  "src/app/(dashboard)/counselors/data.ts",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
   "src/components/layout/scene-character/index.tsx",
   "src/components/home/welcome-hero-section/index.tsx",
@@ -205,6 +209,20 @@ test("profile page exposes subscription management entry point", () => {
   assert.match(source, /\/api\/billing\/checkout/);
   assert.match(source, /구독/);
   assert.match(source, /결제/);
+});
+
+test("counselor pages expose a usable directory instead of placeholders", () => {
+  const listPage = read("src/app/(dashboard)/counselors/page.tsx");
+  const detailPage = read("src/app/(dashboard)/counselors/[id]/page.tsx");
+  const data = read("src/app/(dashboard)/counselors/data.ts");
+
+  assert.doesNotMatch(listPage, /준비 중|comingSoonCard/);
+  assert.doesNotMatch(detailPage, /return\s+notFound\(\);/);
+  assert.match(listPage, /counselors\.map/);
+  assert.match(detailPage, /generateStaticParams/);
+  assert.match(detailPage, /상담 신청/);
+  assert.match(data, /specialties/);
+  assert.match(data, /availableTimes/);
 });
 
 test("weather theme route maps weather and time into Mongree scenes", () => {

@@ -1,5 +1,12 @@
 import { HeaderStandardMFull } from "@/commons/components/header";
-import { Users } from "lucide-react";
+import {
+  ArrowRight,
+  CalendarClock,
+  MessageCircle,
+  ShieldCheck,
+} from "lucide-react";
+import Link from "next/link";
+import { counselors } from "./data";
 import styles from "./styles.module.css";
 
 export default function CounselorListPage() {
@@ -7,16 +14,59 @@ export default function CounselorListPage() {
     <div className={styles.mainContainer}>
       <HeaderStandardMFull
         title="상담사 찾기"
-        description="신뢰할 수 있는 전문 상담사를 만나보세요"
+        description="지금의 감정 흐름에 맞는 상담사를 고르고 상담 시간을 확인하세요"
       />
+
       <div className={styles.contentWrapper}>
-        <div className={styles.comingSoonCard}>
-          <Users className={styles.icon} />
-          <h2 className={styles.title}>준비 중입니다</h2>
-          <p className={styles.description}>
-            전문 심리 상담사 연결 기능을 준비 중입니다.
-            곧 더 나은 서비스로 찾아뵙겠습니다.
-          </p>
+        <section className={styles.summaryBand} aria-label="상담 안내">
+          <div className={styles.summaryItem}>
+            <ShieldCheck className={styles.summaryIcon} aria-hidden="true" />
+            <span>몽그리 감정 기록 기반 상담 준비</span>
+          </div>
+          <div className={styles.summaryItem}>
+            <CalendarClock className={styles.summaryIcon} aria-hidden="true" />
+            <span>가능 시간 확인 후 신청</span>
+          </div>
+          <div className={styles.summaryItem}>
+            <MessageCircle className={styles.summaryIcon} aria-hidden="true" />
+            <span>화상, 전화, 채팅 상담 선택</span>
+          </div>
+        </section>
+
+        <div className={styles.counselorGrid}>
+          {counselors.map((counselor) => (
+            <article className={styles.card} key={counselor.id}>
+              <div className={styles.cardHeader}>
+                <div>
+                  <p className={styles.eyebrow}>{counselor.experience}</p>
+                  <h2 className={styles.name}>{counselor.name}</h2>
+                  <p className={styles.title}>{counselor.title}</p>
+                </div>
+                <span className={styles.nextSlot}>{counselor.nextSlot}</span>
+              </div>
+
+              <p className={styles.description}>{counselor.summary}</p>
+
+              <ul
+                className={styles.tags}
+                aria-label={`${counselor.name} 전문 분야`}
+              >
+                {counselor.specialties.map((specialty) => (
+                  <li className={styles.tag} key={specialty}>
+                    {specialty}
+                  </li>
+                ))}
+              </ul>
+
+              <Link
+                className={styles.detailLink}
+                href={`/counselors/${counselor.id}`}
+              >
+                자세히 보기
+                <ArrowRight className={styles.linkIcon} aria-hidden="true" />
+              </Link>
+            </article>
+          ))}
         </div>
       </div>
     </div>

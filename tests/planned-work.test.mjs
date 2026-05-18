@@ -118,6 +118,23 @@ test("health route checks production readiness without leaking secrets", () => {
   assert.doesNotMatch(source, /process\.env\[[^\]]+\]\s*\}/);
 });
 
+test("production readiness has an operator verification path", () => {
+  const packageJson = JSON.parse(read("package.json"));
+  const script = read("scripts/check-production-health.mjs");
+  const runbook = read("README.md");
+
+  assert.equal(
+    packageJson.scripts["verify:production"],
+    "node scripts/check-production-health.mjs"
+  );
+  assert.match(script, /mongree\.vercel\.app\/api\/health/);
+  assert.match(script, /OPENAI_API_KEY/);
+  assert.match(script, /STRIPE_WEBHOOK_SECRET/);
+  assert.match(runbook, /OPENAI_API_KEY/);
+  assert.match(runbook, /STRIPE_WEBHOOK_SECRET/);
+  assert.match(runbook, /npm run verify:production/);
+});
+
 test("AI report route uses structured OpenAI output with safe fallback", () => {
   const source = read("src/app/api/ai/reports/route.ts");
 

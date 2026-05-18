@@ -59,3 +59,49 @@ mongree/
 - **`src/commons`**: 프로젝트 전반에 걸쳐 재사용되는 범용적인 컴포넌트, 훅, 유틸리티 함수 등을 모아두어 코드 중복을 최소화하고 유지보수성을 높였습니다.
 - **`src/components`**: `src/commons`의 범용 컴포넌트와 달리, 특정 페이지나 기능에 밀접하게 관련된 컴포넌트들을 모아두어 관심사를 분리했습니다.
 - **`src/lib`**: Supabase와 같은 외부 서비스와의 연동 로직을 추상화하여 관리합니다.
+## Production Readiness
+
+Production is ready only when the health endpoint returns `ready: true`.
+
+Run:
+
+```bash
+npm run verify:production
+```
+
+Health endpoint:
+
+```text
+https://mongree.vercel.app/api/health
+```
+
+Required Vercel environment variables:
+
+```text
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+OPENAI_API_KEY
+STRIPE_SECRET_KEY
+STRIPE_PRICE_ID
+STRIPE_WEBHOOK_SECRET
+```
+
+Required Supabase tables:
+
+```text
+ai_reports
+usage_events
+subscriptions
+```
+
+Current known blocker:
+
+```text
+OPENAI_API_KEY
+STRIPE_SECRET_KEY
+STRIPE_PRICE_ID
+STRIPE_WEBHOOK_SECRET
+```
+
+After adding the four missing Vercel secrets, redeploy production and rerun `npm run verify:production`.

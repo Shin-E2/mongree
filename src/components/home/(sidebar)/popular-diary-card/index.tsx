@@ -6,7 +6,6 @@ import UserProfileHeader from "@/commons/components/user-profile-header";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import ImageThumbnailList from "@/commons/components/image-thumbnail-list";
 import { InteractionButton } from "@/commons/components/interaction-button";
-import EmpathyUserList from "@/commons/components/empathy-user-list";
 import styles from "./styles.module.css";
 
 interface IHomePopularDiaryCardProps {
@@ -75,22 +74,6 @@ export default function HomePopularDiaryCard({
             className={styles.interactionButtonText}
           />
         </div>
-        {diaryData && diaryData.likes > 0 && (
-          <EmpathyUserList
-            empathies={Array.from({ length: Math.min(diaryData.likes, 3) }).map(
-              (_, idx) => ({
-                id: `mock-user-${idx}`,
-                user: {
-                  id: `user-${idx}`,
-                  nickname: `User ${idx + 1}`,
-                  profile_image: DEFAULT_PROFILE_IMAGE,
-                },
-              })
-            )}
-            maxCount={3}
-            className={styles.empathyUserList}
-          />
-        )}
       </div>
     </div>
   );

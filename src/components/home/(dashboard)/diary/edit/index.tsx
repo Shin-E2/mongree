@@ -106,7 +106,7 @@ export default function DiaryEditForm({ diary }: DiaryEditFormProps) {
       showModal(
         ModalType.ERROR_WARNING,
         result.error ?? "일기 수정에 실패했습니다.",
-        { details: "내용을 확인한 뒤 다시 시도해주세요." }
+        { details: "내용을 확인하고 다시 시도해주세요." }
       );
     });
   };

@@ -14,7 +14,6 @@ export const URL = () => ({
   // 일기 상세보기
   DIARY_DETAIL: (id: string) => `/diary/${id}`,
 
-
   // 일기 목록
   DIARY: `/diary`,
 

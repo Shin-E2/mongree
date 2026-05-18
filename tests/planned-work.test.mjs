@@ -19,6 +19,9 @@ const plannedKoreanCopyFiles = [
   "src/app/(dashboard)/counselors/page.tsx",
   "src/app/(dashboard)/counselors/[id]/page.tsx",
   "src/app/(dashboard)/counselors/data.ts",
+  "src/components/login/form-section/index.tsx",
+  "src/components/login/form-section/action.ts",
+  "src/components/login/form-section/form.schema.ts",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
   "src/components/layout/scene-character/index.tsx",
   "src/components/home/welcome-hero-section/index.tsx",
@@ -96,6 +99,21 @@ test("welcome hero exposes readable Korean copy", () => {
   assert.match(source, /몽그리와 함께/);
   assert.match(source, /당신의 마음을 보듬어보세요/);
   assert.match(source, /시작하기/);
+});
+
+test("login form exposes readable Korean labels and validation messages", () => {
+  const form = read("src/components/login/form-section/index.tsx");
+  const action = read("src/components/login/form-section/action.ts");
+  const schema = read("src/components/login/form-section/form.schema.ts");
+
+  assert.match(form, /이메일/);
+  assert.match(form, /비밀번호/);
+  assert.match(form, /로그인/);
+  assert.match(schema, /이메일을 입력해주세요/);
+  assert.match(schema, /올바른 이메일 형식이 아닙니다/);
+  assert.match(schema, /비밀번호를 입력해주세요/);
+  assert.match(action, /이메일 또는 비밀번호가 올바르지 않습니다/);
+  assert.match(action, /로그인에 실패했습니다/);
 });
 
 test("planned production API routes exist", () => {

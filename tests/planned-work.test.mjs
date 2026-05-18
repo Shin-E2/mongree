@@ -22,6 +22,8 @@ const plannedKoreanCopyFiles = [
   "src/components/login/form-section/index.tsx",
   "src/components/login/form-section/action.ts",
   "src/components/login/form-section/form.schema.ts",
+  "src/app/(auth)/reset-password/page.tsx",
+  "src/components/home/(sidebar)/ai-analysis/index.tsx",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
   "src/components/layout/scene-character/index.tsx",
   "src/components/home/welcome-hero-section/index.tsx",
@@ -105,15 +107,21 @@ test("login form exposes readable Korean labels and validation messages", () => 
   const form = read("src/components/login/form-section/index.tsx");
   const action = read("src/components/login/form-section/action.ts");
   const schema = read("src/components/login/form-section/form.schema.ts");
+  const resetPage = read("src/app/(auth)/reset-password/page.tsx");
 
   assert.match(form, /이메일/);
   assert.match(form, /비밀번호/);
   assert.match(form, /로그인/);
+  assert.match(form, /비밀번호 찾기/);
   assert.match(schema, /이메일을 입력해주세요/);
   assert.match(schema, /올바른 이메일 형식이 아닙니다/);
   assert.match(schema, /비밀번호를 입력해주세요/);
+  assert.match(action, /resetPasswordForEmail/);
+  assert.match(action, /redirectTo/);
   assert.match(action, /이메일 또는 비밀번호가 올바르지 않습니다/);
   assert.match(action, /로그인에 실패했습니다/);
+  assert.match(resetPage, /updateUser/);
+  assert.match(resetPage, /새 비밀번호/);
 });
 
 test("planned production API routes exist", () => {
@@ -124,6 +132,7 @@ test("planned production API routes exist", () => {
     "src/app/api/webhooks/stripe/route.ts",
     "src/app/api/weather/theme/route.ts",
     "src/app/api/health/route.ts",
+    "src/app/(auth)/reset-password/page.tsx",
   ]) {
     assert.equal(fs.existsSync(path.join(root, routeFile)), true, routeFile);
   }
@@ -185,6 +194,17 @@ test("AI report page surfaces generated report fields", () => {
   assert.match(actionSource, /generatedReport/);
   assert.match(pageSource, /generatedReport/);
   assert.match(pageSource, /recommendations/);
+});
+
+test("home AI analysis card links to the real report flow", () => {
+  const source = read("src/components/home/(sidebar)/ai-analysis/index.tsx");
+  const styles = read("src/components/home/(sidebar)/ai-analysis/styles.module.css");
+
+  assert.match(source, /AI 감정 리포트/);
+  assert.match(source, /URL\(\)\.AI_REPORT/);
+  assert.match(source, /최근 일기 기반/);
+  assert.doesNotMatch(source, /준비 중|comingSoon/);
+  assert.doesNotMatch(styles, /\.comingSoon/);
 });
 
 test("billing routes expose checkout, portal, and webhook contracts", () => {

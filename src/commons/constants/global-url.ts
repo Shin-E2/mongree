@@ -29,4 +29,6 @@ export const URL = () => ({
   AI_REPORT: `/ai-report`,
 
   COUNSELORS: `/counselors`,
+
+  RESET_PASSWORD: `/reset-password`,
 });

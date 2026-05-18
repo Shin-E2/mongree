@@ -25,7 +25,7 @@ export const clickLogin = async (data: LoginFormType) => {
 
   if (authError) {
     const message = authError.message.includes("Invalid login credentials")
-      ? "이메일 또는 비밀번호가 잘못되었습니다."
+      ? "이메일 또는 비밀번호가 올바르지 않습니다."
       : "로그인에 실패했습니다.";
     return {
       fieldErrors: { email: [], password: [message] },

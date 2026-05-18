@@ -217,13 +217,59 @@ export async function GET(request: Request) {
   const openAiReport = await buildOpenAiReport(month, diaries).catch(() => null);
 
   if (openAiReport) {
-    return NextResponse.json({
+    const generatedReport = {
       month,
       ...openAiReport,
       source: "openai",
-    } satisfies AiReport);
+    } satisfies AiReport;
+
+    await supabase
+      .from("ai_reports")
+      .upsert(
+        {
+          user_id: user.id,
+          month,
+          summary: generatedReport.summary,
+          dominant_emotions: generatedReport.dominantEmotions,
+          gentle_insight: generatedReport.gentleInsight,
+          recommendations: generatedReport.recommendations,
+          source: generatedReport.source,
+          payload: JSON.parse(JSON.stringify(generatedReport)),
+        },
+        { onConflict: "user_id,month" }
+      );
+    await supabase.from("usage_events").insert({
+      user_id: user.id,
+      event_type: "ai_report.generated",
+      source: "api",
+      metadata: { month, source: generatedReport.source },
+    });
+
+    return NextResponse.json(generatedReport);
   }
 
-  return NextResponse.json(buildLocalReport(month, diaries));
-}
+  const localReport = buildLocalReport(month, diaries);
+  await supabase
+    .from("ai_reports")
+    .upsert(
+      {
+        user_id: user.id,
+        month,
+        summary: localReport.summary,
+        dominant_emotions: localReport.dominantEmotions,
+        gentle_insight: localReport.gentleInsight,
+        recommendations: localReport.recommendations,
+        source: localReport.source,
+        payload: JSON.parse(JSON.stringify(localReport)),
+      },
+      { onConflict: "user_id,month" }
+    );
+  await supabase.from("usage_events").insert({
+    user_id: user.id,
+    event_type: "ai_report.generated",
+    source: "api",
+    metadata: { month, source: localReport.source },
+  });
 
+  return NextResponse.json(localReport);
+}

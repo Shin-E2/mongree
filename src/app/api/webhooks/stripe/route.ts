@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import Stripe from "stripe";
 import { getStripeClient } from "@/lib/stripe";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +12,102 @@ const handledEvents = new Set([
   "customer.subscription.deleted",
   "invoice.payment_failed",
 ]);
+
+function fromUnixTime(value?: number | null) {
+  return value ? new Date(value * 1000).toISOString() : null;
+}
+
+async function upsertSubscriptionFromStripe({
+  userId,
+  customerId,
+  subscription,
+}: {
+  userId?: string | null;
+  customerId?: string | null;
+  subscription: Stripe.Subscription;
+}) {
+  const supabase = createAdminClient();
+  const priceId = subscription.items.data[0]?.price.id ?? null;
+  const currentPeriodEnd =
+    fromUnixTime(subscription.items.data[0]?.current_period_end) ??
+    fromUnixTime(subscription.ended_at);
+
+  if (userId) {
+    await supabase.from("subscriptions").upsert({
+      user_id: userId,
+      stripe_customer_id: customerId,
+      stripe_subscription_id: subscription.id,
+      status: subscription.status,
+      price_id: priceId,
+      current_period_end: currentPeriodEnd,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+    });
+    await supabase.from("usage_events").insert({
+      user_id: userId,
+      event_type: "billing.subscription.synced",
+      source: "stripe_webhook",
+      metadata: {
+        subscriptionId: subscription.id,
+        status: subscription.status,
+      },
+    });
+    return;
+  }
+
+  await supabase
+    .from("subscriptions")
+    .update({
+      stripe_customer_id: customerId,
+      status: subscription.status,
+      price_id: priceId,
+      current_period_end: currentPeriodEnd,
+      cancel_at_period_end: subscription.cancel_at_period_end,
+    })
+    .eq("stripe_subscription_id", subscription.id);
+}
+
+async function handleStripeEvent(event: Stripe.Event) {
+  if (event.type === "checkout.session.completed") {
+    const session = event.data.object as Stripe.Checkout.Session;
+    const subscriptionId =
+      typeof session.subscription === "string"
+        ? session.subscription
+        : session.subscription?.id;
+    const customerId =
+      typeof session.customer === "string" ? session.customer : session.customer?.id;
+
+    if (!subscriptionId) return;
+
+    const stripe = getStripeClient();
+    if (!stripe) return;
+
+    const subscription = await stripe.subscriptions.retrieve(subscriptionId);
+    await upsertSubscriptionFromStripe({
+      userId: session.metadata?.userId,
+      customerId,
+      subscription,
+    });
+    return;
+  }
+
+  if (
+    event.type === "customer.subscription.created" ||
+    event.type === "customer.subscription.updated" ||
+    event.type === "customer.subscription.deleted"
+  ) {
+    const subscription = event.data.object as Stripe.Subscription;
+    const customerId =
+      typeof subscription.customer === "string"
+        ? subscription.customer
+        : subscription.customer.id;
+
+    await upsertSubscriptionFromStripe({
+      userId: subscription.metadata?.userId,
+      customerId,
+      subscription,
+    });
+  }
+}
 
 export async function POST(request: Request) {
   const stripe = getStripeClient();
@@ -40,7 +138,7 @@ export async function POST(request: Request) {
     );
 
     if (handledEvents.has(event.type)) {
-      console.info("Stripe webhook received:", event.type);
+      await handleStripeEvent(event);
     }
 
     return NextResponse.json({ received: true, type: event.type });
@@ -53,4 +151,3 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: message }, { status: 400 });
   }
 }
-

@@ -1,32 +1,31 @@
-import { useRouter } from "next/navigation";
 import { useOptimistic, useState, useTransition } from "react";
 import { deleteDiary, toggleEmpathy } from "./action";
-import { IDiaryDetailProps, EmpathyWithUser } from "./types";
+import { EmpathyWithUser, IDiaryDetailProps } from "./types";
 
 export default function useDiaryDetail({
   diary,
   loginUser,
 }: IDiaryDetailProps & { onDeleted?: () => void }) {
-  const router = useRouter();
   const [isPending, startTransition] = useTransition();
   const isOwner = diary.user?.id === loginUser?.id;
   const [showReplyForm, setShowReplyForm] = useState<string | null>(null);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  // 공감 관련 상태 관리
   const [optimisticEmpathies, addOptimisticEmpathy] = useOptimistic<
     EmpathyWithUser[],
     EmpathyWithUser
   >(
-    (diary.empathies || []).map((e) => ({
-      ...e,
-      user: diary.user?.id === e.user_id ? diary.user : null,
-    })) as EmpathyWithUser[], // 초기 diary.empathies도 타입에 맞게 매핑
+    (diary.empathies || []).map((empathy) => ({
+      ...empathy,
+      user: diary.user?.id === empathy.user_id ? diary.user : null,
+    })) as EmpathyWithUser[],
     (state, newEmpathy: EmpathyWithUser) => {
-      if (state.some((e) => e.user?.id === newEmpathy.user?.id)) {
-        return state.filter((e) => e.user?.id !== newEmpathy.user?.id);
+      if (state.some((empathy) => empathy.user?.id === newEmpathy.user?.id)) {
+        return state.filter(
+          (empathy) => empathy.user?.id !== newEmpathy.user?.id
+        );
       }
-      return [newEmpathy, ...state.slice(0, 2)]; // 최대 3개만 표시
+      return [newEmpathy, ...state.slice(0, 2)];
     }
   );
 
@@ -40,7 +39,7 @@ export default function useDiaryDetail({
     startTransition(async () => {
       const optimisticEmpathy: EmpathyWithUser = {
         id: "temp-id",
-        diary_id: diary.id, // diary_id 추가
+        diary_id: diary.id,
         user_id: loginUser.id,
         created_at: new Date().toISOString(),
         user: {
@@ -53,7 +52,6 @@ export default function useDiaryDetail({
 
       const result = await toggleEmpathy(diary.id);
       if (!result.success) {
-        // 실패 시 롤백
         addOptimisticEmpathy(optimisticEmpathy);
       }
     });
@@ -64,7 +62,6 @@ export default function useDiaryDetail({
     await deleteDiary(diary.id);
   };
 
-  // 총 댓글 수 계산 (최상위 댓글 + 대댓글) - nullish coalescing 적용
   const getTotalCommentCount = () => {
     let count = (diary.comments ?? []).length;
     (diary.comments ?? []).forEach((comment) => {

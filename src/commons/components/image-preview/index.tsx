@@ -1,20 +1,19 @@
 "use client";
 
 import Image from "next/image";
+import { ImageIcon } from "lucide-react";
+import { memo, useCallback } from "react";
+import { type FieldValues, type Path } from "react-hook-form";
 import { ButtonIconDelete } from "../button-icon";
-import styles from "./styles.module.css";
+import { InputStandardSFull } from "../input";
 import type {
   IImagePreviewBaseProps,
   IImagePreviewByDiaryNewProps,
   IImagePreviewByProfileProps,
 } from "./types";
-import { type FieldValues, type Path } from "react-hook-form";
-import { InputStandardSFull } from "../input";
-import { ImageIcon } from "lucide-react";
-import { memo, useCallback } from "react";
 import useImagePreview from "./hook";
+import styles from "./styles.module.css";
 
-// 이미지 미리보기 컴포넌트
 function ImagePreviewBase<T extends FieldValues>({
   cssprop,
   multiple = false,
@@ -23,14 +22,12 @@ function ImagePreviewBase<T extends FieldValues>({
 }: IImagePreviewBaseProps<T>) {
   const {
     preview,
-    selectedImage,
     images,
     handleDeleteImage,
     register,
     handleFileChange,
   } = useImagePreview({ multiple, maxImages });
 
-  // 이미지 삭제 핸들러를 메모이제이션
   const memoizedHandleDeleteImage = useCallback(
     (index?: number) => (event: React.MouseEvent) => {
       event.stopPropagation();
@@ -92,14 +89,12 @@ function ImagePreviewBase<T extends FieldValues>({
           className={`${cssprop} ${styles.common} ${className || ""}`}
         >
           <Image src={preview} alt="Preview" layout="fill" objectFit="cover" />
-          {/* 삭제 아이콘 오버레이 */}
           <ButtonIconDelete
             onClick={memoizedHandleDeleteImage()}
             className={styles.singleImageDeleteButton}
           />
         </label>
       </div>
-      {/* 숨김 파일 입력 */}
       <InputStandardSFull
         id="photo"
         name={"profileImage" as Path<T>}
@@ -111,19 +106,16 @@ function ImagePreviewBase<T extends FieldValues>({
   );
 }
 
-// 메모이제이션된 컴포넌트
 const MemoizedImagePreviewBase = memo(
   ImagePreviewBase
 ) as typeof ImagePreviewBase;
 
-// 프로필 이미지
 export const ImagePreviewByProfile = <T extends FieldValues>({
   ...rest
 }: IImagePreviewByProfileProps<T>) => {
   return <MemoizedImagePreviewBase {...rest} cssprop={styles.profile} />;
 };
 
-// 일기 등록하기
 export const ImagePreviewByDiaryNew = <T extends FieldValues>({
   className,
   ...rest

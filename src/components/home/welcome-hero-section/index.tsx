@@ -1,6 +1,5 @@
-import Link from "next/link";
-import styles from "./styles.module.css";
 import { ButtonTextStandardSFull } from "@/commons/components/button-text";
+import styles from "./styles.module.css";
 
 export default function WelcomeHeroSection() {
   return (

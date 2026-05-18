@@ -1,6 +1,6 @@
 "use client";
 
-import { Heart, MessageCircle, User } from "lucide-react";
+import { Heart, MessageCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import UserProfileHeader from "@/commons/components/user-profile-header";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
@@ -38,7 +38,6 @@ export default function HomePopularDiaryCard({
       onClick={() => router.push(`/diary/${diaryData?.id}`)}
       className={`${styles.cardContainer} group`}
     >
-      {/* 헤더: 작성자 정보 & 감정 */}
       <div className={styles.header}>
         <UserProfileHeader
           profileImage={diaryData?.profileImage || DEFAULT_PROFILE_IMAGE}
@@ -50,12 +49,10 @@ export default function HomePopularDiaryCard({
         )}
       </div>
 
-      {/* 본문 */}
       <div className={styles.body}>
         <h3 className={styles.title}>{diaryData?.title}</h3>
         <p className={styles.content}>{diaryData?.content}</p>
 
-        {/* 이미지 썸네일 영역 - 이미지가 있을 때만 표시 */}
         {diaryData?.images && diaryData?.images.length > 0 && (
           <div className={styles.imageThumbnailWrapper}>
             <ImageThumbnailList images={diaryData.images} />
@@ -63,7 +60,6 @@ export default function HomePopularDiaryCard({
         )}
       </div>
 
-      {/* 푸터: 상호작용 정보 */}
       <div className={styles.footer}>
         <div className={styles.interactionButtons}>
           <InteractionButton

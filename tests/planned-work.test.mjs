@@ -17,6 +17,7 @@ const plannedKoreanCopyFiles = [
   "src/app/(dashboard)/diary/[id]/edit/action.ts",
   "src/components/home/(dashboard)/diary/edit/index.tsx",
   "src/components/layout/scene-character/index.tsx",
+  "src/components/home/welcome-hero-section/index.tsx",
 ];
 
 const mojibakeFragments = [
@@ -83,6 +84,14 @@ test("app shell redesign artifacts are wired", () => {
   assert.match(sceneCharacter, /\/characters\/snow\.svg/);
   assert.match(topbarStyles, /@keyframes sceneIconSpin/);
   assert.match(sidebarNavigation, /styles\.tooltip/);
+});
+
+test("welcome hero exposes readable Korean copy", () => {
+  const source = read("src/components/home/welcome-hero-section/index.tsx");
+
+  assert.match(source, /몽그리와 함께/);
+  assert.match(source, /당신의 마음을 보듬어보세요/);
+  assert.match(source, /시작하기/);
 });
 
 test("planned production API routes exist", () => {

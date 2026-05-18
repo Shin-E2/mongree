@@ -106,7 +106,7 @@ export async function toggleEmpathy(diaryId: string) {
 
     return {
       success: true,
-      empathies: updatedEmpathies?.map((empathy: any) => ({
+      empathies: updatedEmpathies?.map((empathy) => ({
         ...empathy,
         user: empathy.profiles,
       })),

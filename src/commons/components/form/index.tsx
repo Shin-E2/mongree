@@ -1,15 +1,14 @@
 "use client";
 
+import { memo } from "react";
 import {
   FormProvider,
   useForm,
-  type DefaultValues,
   type FieldValues,
   type SubmitHandler,
 } from "react-hook-form";
-import styles from "./styles.module.css";
 import type { IFormBaseCommonProps, IFormBaseProps } from "./types";
-import { memo } from "react";
+import styles from "./styles.module.css";
 
 function FormBase<T extends FieldValues>({
   action,
@@ -23,8 +22,8 @@ function FormBase<T extends FieldValues>({
   criteriaMode = "all",
 }: IFormBaseProps<T>) {
   const methods = useForm<T>({
-    mode, // 유효성 검사 모드 (onBlur, onChange, onSubmit 등)
-    criteriaMode, // 모든 유효성 검사 에러 확인
+    mode,
+    criteriaMode,
     resolver,
     defaultValues,
   });
@@ -42,7 +41,6 @@ function FormBase<T extends FieldValues>({
   );
 }
 
-// 메모이제이션된 FormBase 컴포넌트
 const MemoizedFormBase = memo(FormBase) as typeof FormBase;
 
 export default MemoizedFormBase;
@@ -60,10 +58,22 @@ export const FormStandardFullFull = <T extends FieldValues>({
   );
 };
 
-// DiaryNew 폼 최적화
+type DiaryNewFormValues = {
+  isPrivate: boolean;
+  emotions: string[];
+  title: string;
+  content: string;
+  tags: string[];
+  images: File[];
+};
+
 export const FormDiaryNew = memo(
-  (props: Omit<IFormBaseProps<any>, "cssprop"> & { className?: string }) => {
-    const defaultValues = {
+  (
+    props: Omit<IFormBaseProps<DiaryNewFormValues>, "cssprop"> & {
+      className?: string;
+    }
+  ) => {
+    const defaultValues: DiaryNewFormValues = {
       isPrivate: true,
       emotions: [],
       title: "",
@@ -82,5 +92,3 @@ export const FormDiaryNew = memo(
     );
   }
 );
-
-

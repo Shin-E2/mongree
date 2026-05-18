@@ -65,7 +65,11 @@ export default function SignupFormSteps({
             isEmailVerified={isEmailConfirmed}
           />
         ) : (
-          <SignupStepComponent />
+          <SignupStepComponent
+            initialFormData={initialFormData}
+            saveTempFormData={saveTempFormData}
+            isEmailVerified={isEmailConfirmed}
+          />
         )}
 
         {submitError && (

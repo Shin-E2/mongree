@@ -1,18 +1,15 @@
 "use server";
 
-import { FILE_CONSTRAINTS } from "@/commons/constants/validation";
 import {
   SignupFormSchema,
   SignupFormType,
 } from "../step-basic-info/form.schema";
 import { createClient } from "@/lib/supabase-server";
-import { revalidatePath } from "next/cache";
 import { uploadImageServer } from "@/commons/utils/upload-images";
 import { getSiteUrl } from "@/commons/utils/site-url";
 
 export async function signup(data: SignupFormType) {
   try {
-    // 1. 이미지 업로드
     let profileImageUrl: string | null = null;
     if (data.profileImage && data.profileImage instanceof File) {
       profileImageUrl = await uploadImageServer(data.profileImage);
@@ -20,7 +17,6 @@ export async function signup(data: SignupFormType) {
       profileImageUrl = data.profileImage;
     }
 
-    // 2. 데이터 검증
     const result = await SignupFormSchema.safeParseAsync({
       ...data,
       profileImage: profileImageUrl,
@@ -36,7 +32,6 @@ export async function signup(data: SignupFormType) {
     const supabase = await createClient();
     const siteUrl = await getSiteUrl();
 
-    // 3. 회원가입 (메타데이터 올바르게 전달)
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: result.data.email,
       password: result.data.password,
@@ -51,7 +46,7 @@ export async function signup(data: SignupFormType) {
     });
 
     if (authError) {
-      console.error("Supabase Auth 회원가입 에러:", authError);
+      console.error("Supabase Auth 회원가입 오류:", authError);
 
       if (authError.message.includes("already registered")) {
         return {
@@ -62,7 +57,7 @@ export async function signup(data: SignupFormType) {
 
       return {
         success: false,
-        message: `회원가입 중 에러가 발생했습니다: ${authError.message}`,
+        message: `회원가입 중 오류가 발생했습니다: ${authError.message}`,
       };
     }
 
@@ -73,7 +68,7 @@ export async function signup(data: SignupFormType) {
         "회원가입이 완료되었습니다. 이메일을 확인하여 인증을 완료해주세요.",
     };
   } catch (error) {
-    console.error("회원가입 처리 중 예기치 않은 에러:", error);
+    console.error("회원가입 처리 중 예기치 못한 오류:", error);
     return {
       success: false,
       message:

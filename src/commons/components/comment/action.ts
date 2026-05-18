@@ -7,7 +7,17 @@ import {
 import { createClient } from "@/lib/supabase-server";
 import { getUser } from "@/lib/get-user";
 
-function formatComment(comment: any) {
+type RawComment = Record<string, unknown> & {
+  user_id: string;
+  diary_id: string;
+  parent_id: string | null;
+  created_at: string;
+  updated_at: string | null;
+  profiles: unknown;
+  comment_likes?: unknown[];
+};
+
+function formatComment(comment: RawComment) {
   return {
     ...comment,
     userId: comment.user_id,
@@ -61,8 +71,8 @@ export async function toggleCommentLike(commentId: string, diaryId: string) {
 
     revalidateCommentLike({ diaryId, commentId });
     return { success: true };
-  } catch (error) {
-    return { error: "Failed to update comment like." };
+  } catch {
+    return { error: "댓글 공감 처리에 실패했습니다." };
   }
 }
 
@@ -78,7 +88,7 @@ export async function addComment(formData: FormData) {
   }
 
   if (!content?.trim()) {
-    return { error: "Content is required." };
+    return { error: "댓글 내용을 입력해주세요." };
   }
 
   try {
@@ -95,11 +105,11 @@ export async function addComment(formData: FormData) {
       }
 
       if (!parentComment) {
-        return { error: "Parent comment was not found." };
+        return { error: "원댓글을 찾을 수 없습니다." };
       }
 
       if (parentComment.parent_id) {
-        return { error: "Replies cannot have nested replies." };
+        return { error: "답글에는 다시 답글을 달 수 없습니다." };
       }
     }
 
@@ -134,10 +144,10 @@ export async function addComment(formData: FormData) {
 
     revalidateDiaryComments(diaryId, parentId);
 
-    return { success: true, comment: formatComment(comment) };
+    return { success: true, comment: formatComment(comment as RawComment) };
   } catch (error) {
     console.error("addComment error:", error);
-    return { error: "Failed to create comment." };
+    return { error: "댓글 작성에 실패했습니다." };
   }
 }
 
@@ -159,7 +169,7 @@ export async function deleteComment(commentId: string, diaryId: string) {
     }
 
     if (!commentToDelete || commentToDelete.user_id !== user.id) {
-      return { error: "You do not have permission to delete this comment." };
+      return { error: "댓글 삭제 권한이 없습니다." };
     }
 
     const { error: deleteCommentError } = await supabase
@@ -175,7 +185,7 @@ export async function deleteComment(commentId: string, diaryId: string) {
     revalidateDiaryComments(diaryId, commentToDelete.parent_id);
 
     return { success: true };
-  } catch (error) {
-    return { error: "Failed to delete comment." };
+  } catch {
+    return { error: "댓글 삭제에 실패했습니다." };
   }
 }

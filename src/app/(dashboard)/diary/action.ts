@@ -6,6 +6,32 @@ import type { Diary, DiaryResponse, GetDiariesParams } from "./types";
 
 const ITEMS_PER_PAGE = 12;
 
+type DiaryListRow = {
+  id: string;
+  title: string;
+  content: string;
+  user_id: string;
+  created_at: string | null;
+  updated_at: string | null;
+  is_private: boolean | null;
+  diary_emotions?: {
+    diary_id: string;
+    emotion_id: string;
+    emotions?: { id: string | null; label: string | null } | null;
+  }[] | null;
+  diary_images?: {
+    id: string;
+    image_url: string;
+    sort_order: number;
+    diary_id: string;
+  }[] | null;
+  diary_tags?: {
+    diary_id: string;
+    tag_id: string;
+    tags?: { id: string | null; name: string | null } | null;
+  }[] | null;
+};
+
 export async function getDiaries({
   page,
   searchTerm,
@@ -125,7 +151,7 @@ export async function getDiaries({
       };
     }
 
-    const formattedDiaries: Diary[] = (diaries ?? []).map((diary: any) => ({
+    const formattedDiaries: Diary[] = ((diaries ?? []) as DiaryListRow[]).map((diary) => ({
       id: diary.id,
       title: diary.title,
       content: diary.content,
@@ -135,7 +161,7 @@ export async function getDiaries({
       isPrivate: diary.is_private ?? false,
       diaryEmotion:
         diary.diary_emotions
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             emotion: {
               id: item.emotions?.id ?? "",
               label: item.emotions?.label ?? "",
@@ -143,11 +169,11 @@ export async function getDiaries({
             diaryId: item.diary_id,
             emotionId: item.emotion_id,
           }))
-          .filter((item: any) => item.emotion.id) ?? [],
+          .filter((item) => item.emotion.id) ?? [],
       images:
         diary.diary_images
-          ?.sort((a: any, b: any) => a.sort_order - b.sort_order)
-          .map((image: any) => ({
+          ?.sort((a, b) => a.sort_order - b.sort_order)
+          .map((image) => ({
             id: image.id,
             url: image.image_url,
             order: image.sort_order,
@@ -155,7 +181,7 @@ export async function getDiaries({
           })) ?? [],
       tags:
         diary.diary_tags
-          ?.map((item: any) => ({
+          ?.map((item) => ({
             tag: {
               id: item.tags?.id ?? "",
               name: item.tags?.name ?? "",
@@ -163,7 +189,7 @@ export async function getDiaries({
             diaryId: item.diary_id,
             tagId: item.tag_id,
           }))
-          .filter((item: any) => item.tag.id) ?? [],
+          .filter((item) => item.tag.id) ?? [],
     }));
 
     const totalCount = count ?? 0;

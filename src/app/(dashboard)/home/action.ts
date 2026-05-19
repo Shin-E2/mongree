@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 
 export interface HomeEmotionStat {
@@ -88,7 +88,7 @@ export async function getHomeDashboardData(): Promise<HomeDashboardData> {
     popularDiaries: [],
   };
 
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) return emptyData;
 
   const supabase = await createClient();

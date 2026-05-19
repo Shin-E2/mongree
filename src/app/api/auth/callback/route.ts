@@ -43,15 +43,15 @@ async function syncSocialProfileImage(
 
   if (profileError || profile?.profile_image) return;
 
-  // 소셜 로그인 프로필 이미지가 있으면 최초 로그인 시 저장
+  // 소셜 로그인 프로필 이미지가 있으면 최초 로그인 때 저장한다.
   await supabase
     .from("profiles")
     .update({ profile_image: profileImage })
     .eq("id", user.id);
 }
 
-// 소셜 로그인 제공자가 여기로 리다이렉트
-// @supabase/ssr이 세션 쿠키를 저장하므로 별도 세션 저장 불필요
+// 소셜 로그인 성공 후 홈으로 보낸다.
+// @supabase/ssr가 세션 쿠키를 저장하므로 별도 세션 저장은 필요 없다.
 export async function GET(request: NextRequest) {
   const { searchParams, origin } = new URL(request.url);
   const code = searchParams.get("code");

@@ -144,11 +144,17 @@ test("planned production API routes exist", () => {
 test("health route checks production readiness without leaking secrets", () => {
   const source = read("src/app/api/health/route.ts");
 
+  assert.match(source, /requiredEnvironment/);
+  assert.match(source, /optionalEnvironment/);
+  assert.match(source, /NEXT_PUBLIC_SUPABASE_URL/);
+  assert.match(source, /SUPABASE_SERVICE_ROLE_KEY/);
   assert.match(source, /OPENAI_API_KEY/);
   assert.match(source, /STRIPE_SECRET_KEY/);
+  assert.match(source, /category: "optional"/);
   assert.match(source, /ai_reports/);
   assert.match(source, /usage_events/);
   assert.match(source, /subscriptions/);
+  assert.doesNotMatch(source, /environment\.every\(\(item\) => item\.ready\)/);
   assert.doesNotMatch(source, /process\.env\[[^\]]+\]\s*\}/);
 });
 
@@ -167,27 +173,37 @@ test("production readiness has an operator verification path", () => {
     "node scripts/sync-vercel-secrets.mjs"
   );
   assert.match(script, /mongree\.vercel\.app\/api\/health/);
+  assert.match(script, /requiredEnvironment/);
+  assert.match(script, /optionalEnvironment/);
+  assert.match(script, /NEXT_PUBLIC_SUPABASE_URL/);
   assert.match(script, /OPENAI_API_KEY/);
   assert.match(script, /STRIPE_WEBHOOK_SECRET/);
+  assert.match(script, /Optional environment/);
   assert.match(syncScript, /vercel/);
   assert.match(syncScript, /preview/);
   assert.match(syncScript, /production/);
+  assert.match(syncScript, /optionalSecrets/);
+  assert.match(syncScript, /No optional Vercel secrets/);
   assert.doesNotMatch(syncScript, /sk-/);
   assert.doesNotMatch(syncScript, /whsec_/);
   assert.match(runbook, /OPENAI_API_KEY/);
   assert.match(runbook, /STRIPE_WEBHOOK_SECRET/);
+  assert.match(runbook, /Optional Vercel environment variables/);
   assert.match(runbook, /npm run verify:production/);
   assert.match(runbook, /npm run sync:vercel-secrets/);
 });
 
 test("AI report route uses structured OpenAI output with safe fallback", () => {
   const source = read("src/app/api/ai/reports/route.ts");
+  const core = read("src/lib/ai-report/core.ts");
 
-  assert.match(source, /OPENAI_API_KEY/);
-  assert.match(source, /https:\/\/api\.openai\.com\/v1\/responses/);
-  assert.match(source, /json_schema/);
-  assert.match(source, /summary/);
-  assert.match(source, /recommendations/);
+  assert.match(source, /buildOpenAiReport/);
+  assert.match(source, /buildLocalReport/);
+  assert.match(core, /OPENAI_API_KEY/);
+  assert.match(core, /https:\/\/api\.openai\.com\/v1\/responses/);
+  assert.match(core, /json_schema/);
+  assert.match(core, /summary/);
+  assert.match(core, /recommendations/);
 });
 
 test("AI report page surfaces generated report fields", () => {
@@ -215,6 +231,8 @@ test("home dashboard exposes readable Korean copy", () => {
   const action = read("src/app/(dashboard)/home/action.ts");
   const popularCard = read("src/components/home/(sidebar)/popular-diary-card/index.tsx");
 
+  assert.doesNotMatch(page, /[�筌揶疫]/);
+  assert.doesNotMatch(action, /[�筌揶疫]/);
   assert.match(page, /오늘의 감정 스냅/);
   assert.match(page, /오늘 일기 쓰기/);
   assert.match(page, /리포트 보기/);

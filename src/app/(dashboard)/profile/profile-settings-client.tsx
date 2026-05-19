@@ -235,7 +235,7 @@ export default function ProfileSettingsClient({
             onClick={handleCheckout}
             disabled={isPending}
           >
-            {isPending ? "결제 준비 중..." : "구독 결제 시작"}
+            {isPending ? "결제 연결 중..." : "구독 결제 시작"}
           </button>
         </div>
       </section>

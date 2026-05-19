@@ -1,6 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
+import { escapePostgrestLikePattern } from "@/lib/supabase/filters";
 import type {
   GetPublicDiariesParams,
   PublicDiary,
@@ -9,7 +10,7 @@ import type {
 
 const ITEMS_PER_PAGE = 12;
 
-interface PublicDiaryRow {
+interface PublicDiaryFeedRow {
   id: string;
   title: string;
   content: string;
@@ -17,52 +18,17 @@ interface PublicDiaryRow {
   updated_at: string | null;
   is_private: boolean | null;
   user_id: string;
-  profiles: {
+  profile: {
     id: string;
     nickname: string;
     profile_image: string | null;
   } | null;
-  diary_emotions:
-    | {
-        diary_id: string;
-        emotion_id: string;
-        emotions: {
-          id: string;
-          label: string;
-          image: string | null;
-        } | null;
-      }[]
-    | null;
-  diary_images:
-    | {
-        id: string;
-        diary_id: string;
-        image_url: string;
-        sort_order: number;
-      }[]
-    | null;
-  diary_tags:
-    | {
-        diary_id: string;
-        tag_id: string;
-        tags: {
-          id: string;
-          name: string;
-        } | null;
-      }[]
-    | null;
-  diary_likes:
-    | {
-        id: string;
-        created_at: string | null;
-        profiles: {
-          id: string;
-          nickname: string;
-          profile_image: string | null;
-        } | null;
-      }[]
-    | null;
-  comments: { id: string; deleted_at: string | null }[] | null;
+  emotions: PublicDiary["diaryEmotion"];
+  images: PublicDiary["images"];
+  tags: PublicDiary["tags"];
+  like_count: number | null;
+  comment_count: number | null;
+  total_count: number | null;
 }
 
 export async function getPublicDiaries({
@@ -77,113 +43,16 @@ export async function getPublicDiaries({
     const keyword = searchTerm?.trim();
     const emotionIds = emotions?.filter(Boolean) ?? [];
 
-    // 선택한 감정 중 하나라도 연결된 일기만 조회
-    let filteredDiaryIds: string[] | null = null;
-    if (emotionIds.length > 0) {
-      const { data: emotionRows, error: emotionError } = await supabase
-        .from("diary_emotions")
-        .select("diary_id, diaries!inner(is_private, deleted_at)")
-        .in("emotion_id", emotionIds)
-        .eq("diaries.is_private", false)
-        .is("diaries.deleted_at", null);
-
-      if (emotionError) {
-        console.error("Supabase public diary emotion filter error:", emotionError);
-        return {
-          success: false,
-          diaries: [],
-          hasMore: false,
-          total: 0,
-          error: emotionError.message,
-        };
-      }
-
-      filteredDiaryIds = Array.from(
-        new Set((emotionRows ?? []).map((row) => row.diary_id))
-      );
-
-      if (filteredDiaryIds.length === 0) {
-        return {
-          success: true,
-          diaries: [],
-          hasMore: false,
-          total: 0,
-        };
-      }
-    }
-
-    let query = supabase
-      .from("diaries")
-      .select(
-        `
-        id,
-        title,
-        content,
-        created_at,
-        updated_at,
-        is_private,
-        user_id,
-        profiles (
-          id,
-          nickname,
-          profile_image
-        ),
-        diary_emotions (
-          diary_id,
-          emotion_id,
-          emotions (
-            id,
-            label,
-            image
-          )
-        ),
-        diary_images (
-          id,
-          diary_id,
-          image_url,
-          sort_order
-        ),
-        diary_tags (
-          diary_id,
-          tag_id,
-          tags (
-            id,
-            name
-          )
-        ),
-        diary_likes (
-          id,
-          created_at,
-          profiles (
-            id,
-            nickname,
-            profile_image
-          )
-        ),
-        comments (
-          id,
-          deleted_at
-        )
-        `,
-        { count: "exact" }
-      )
-      .eq("is_private", false)
-      .is("deleted_at", null);
-
-    if (keyword) {
-      query = query.or(`title.ilike.%${keyword}%,content.ilike.%${keyword}%`);
-    }
-
-    if (filteredDiaryIds) {
-      query = query.in("id", filteredDiaryIds);
-    }
-
-    query = query.order("created_at", { ascending: false });
-
-    const { data, error, count } = await query.returns<PublicDiaryRow[]>();
+    const { data, error } = await supabase.rpc("get_public_diary_feed", {
+      p_limit: ITEMS_PER_PAGE,
+      p_offset: skip,
+      p_search: keyword ? escapePostgrestLikePattern(keyword) : null,
+      p_emotion_ids: emotionIds,
+      p_sort_by: sortBy,
+    });
 
     if (error) {
-      console.error("Supabase public diary list error:", error);
+      console.error("Supabase public diary feed error:", error);
       return {
         success: false,
         diaries: [],
@@ -193,8 +62,10 @@ export async function getPublicDiaries({
       };
     }
 
-    const rows = (data ?? []) as PublicDiaryRow[];
-    const formattedDiaries: PublicDiary[] = rows.map((diary) => ({
+    const rows = (data ?? []) as PublicDiaryFeedRow[];
+    const total = Number(rows[0]?.total_count ?? 0);
+
+    const diaries: PublicDiary[] = rows.map((diary) => ({
       id: diary.id,
       title: diary.title,
       content: diary.content,
@@ -202,77 +73,20 @@ export async function getPublicDiaries({
       updatedAt: diary.updated_at ? new Date(diary.updated_at) : new Date(),
       isPrivate: diary.is_private ?? false,
       userId: diary.user_id,
-      user: diary.profiles,
-      diaryEmotion:
-        diary.diary_emotions
-          ?.map((item) => ({
-            emotion: item.emotions,
-            diaryId: item.diary_id,
-            emotionId: item.emotion_id,
-          }))
-          .filter(
-            (
-              item
-            ): item is {
-              emotion: { id: string; label: string; image: string | null };
-              diaryId: string;
-              emotionId: string;
-            } => Boolean(item.emotion)
-          ) ?? [],
-      images:
-        diary.diary_images
-          ?.sort((a, b) => a.sort_order - b.sort_order)
-          .map((image) => ({
-            id: image.id,
-            image_url: image.image_url,
-            sort_order: image.sort_order,
-            diary_id: image.diary_id,
-          })) ?? [],
-      tags:
-        diary.diary_tags
-          ?.map((item) => ({
-            tag: item.tags,
-            diaryId: item.diary_id,
-            tagId: item.tag_id,
-          }))
-          .filter(
-            (
-              item
-            ): item is {
-              tag: { id: string; name: string };
-              diaryId: string;
-              tagId: string;
-            } => Boolean(item.tag)
-          ) ?? [],
-      empathies:
-        diary.diary_likes?.map((like) => ({
-          id: like.id,
-          createdAt: like.created_at ? new Date(like.created_at) : new Date(),
-          user: like.profiles,
-        })) ?? [],
+      user: diary.profile,
+      diaryEmotion: diary.emotions ?? [],
+      images: diary.images ?? [],
+      tags: diary.tags ?? [],
+      empathies: [],
       _count: {
-        empathies: diary.diary_likes?.length ?? 0,
-        comments:
-          diary.comments?.filter((comment) => comment.deleted_at === null)
-            .length ?? 0,
+        empathies: diary.like_count ?? 0,
+        comments: diary.comment_count ?? 0,
       },
     }));
 
-    const sortedDiaries =
-      sortBy === "popular"
-        ? [...formattedDiaries].sort((a, b) => {
-            const likeGap =
-              (b._count?.empathies ?? 0) - (a._count?.empathies ?? 0);
-            if (likeGap !== 0) return likeGap;
-            return b.createdAt.getTime() - a.createdAt.getTime();
-          })
-        : formattedDiaries;
-    const paginatedDiaries = sortedDiaries.slice(skip, skip + ITEMS_PER_PAGE);
-    const total = count ?? sortedDiaries.length;
-
     return {
       success: true,
-      diaries: paginatedDiaries,
+      diaries,
       hasMore: skip + ITEMS_PER_PAGE < total,
       total,
     };

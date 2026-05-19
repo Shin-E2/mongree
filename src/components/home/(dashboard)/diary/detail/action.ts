@@ -1,7 +1,7 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import {
   revalidateDiaryDeleted,
   revalidateDiaryEmpathy,
@@ -9,8 +9,8 @@ import {
 import { redirect } from "next/navigation";
 
 export async function deleteDiary(diaryId: string) {
-  const user = await getUser();
-  if (!user) return { error: "로그인이 필요합니다." };
+  const user = await getCurrentProfile();
+  if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
 
   const supabase = await createClient();
 
@@ -21,7 +21,7 @@ export async function deleteDiary(diaryId: string) {
     .single();
 
   if (findError || !diary || diary.user_id !== user.id) {
-    return { error: "삭제 권한이 없습니다." };
+    return { error: "??젣 沅뚰븳???놁뒿?덈떎." };
   }
 
   const { error: deleteError } = await supabase
@@ -30,7 +30,7 @@ export async function deleteDiary(diaryId: string) {
     .eq("id", diaryId);
 
   if (deleteError) {
-    return { error: "일기 삭제에 실패했습니다." };
+    return { error: "?쇨린 ??젣???ㅽ뙣?덉뒿?덈떎." };
   }
 
   revalidateDiaryDeleted({
@@ -43,8 +43,8 @@ export async function deleteDiary(diaryId: string) {
 
 export async function toggleEmpathy(diaryId: string) {
   try {
-    const user = await getUser();
-    if (!user) return { error: "로그인이 필요합니다." };
+    const user = await getCurrentProfile();
+    if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
     const supabase = await createClient();
 
     const { data: existingEmpathy, error: findEmpathyError } = await supabase

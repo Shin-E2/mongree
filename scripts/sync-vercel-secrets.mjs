@@ -1,6 +1,6 @@
 import { spawn } from "node:child_process";
 
-const requiredSecrets = [
+const optionalSecrets = [
   "OPENAI_API_KEY",
   "STRIPE_SECRET_KEY",
   "STRIPE_PRICE_ID",
@@ -44,18 +44,16 @@ function runVercelEnvAdd(key, environment, value) {
 }
 
 async function main() {
-  const missing = requiredSecrets.filter((key) => !process.env[key]);
+  const configuredSecrets = optionalSecrets.filter((key) => process.env[key]);
 
-  if (missing.length) {
-    console.error(`Missing local environment values: ${missing.join(", ")}`);
-    console.error(
-      "Set them in the current shell, then run npm run sync:vercel-secrets."
+  if (configuredSecrets.length === 0) {
+    console.log(
+      "No optional Vercel secrets found in the current shell. Nothing to sync."
     );
-    process.exitCode = 1;
     return;
   }
 
-  for (const key of requiredSecrets) {
+  for (const key of configuredSecrets) {
     for (const environment of environments) {
       console.log(`Syncing ${key} to ${environment}`);
       await runVercelEnvAdd(key, environment, process.env[key]);

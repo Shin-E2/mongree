@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import {
   deleteImagesFromS3,
@@ -9,10 +9,10 @@ import {
   DIARY_IMAGE_MAX_COUNT,
   DiaryNewFormSchema,
 } from "@/components/home/(dashboard)/diary/new/form.schema";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import { revalidateDiaryUpdated } from "@/commons/utils/cache-revalidation";
-import { processTagsAndGetIds } from "@/lib/diary/tags";
+import type { Json } from "@/lib/supabase.types";
 
 export interface DiaryEditImage {
   id: string;
@@ -51,6 +51,20 @@ interface DiaryEditRow {
     | null;
 }
 
+interface DiaryImagePayload {
+  image_url: string;
+  file_name: string;
+  mime_type: string;
+  file_size: number | null;
+}
+
+interface UpdateDiaryRpcResult {
+  diary_id: string;
+  removed_image_urls: string[] | null;
+  was_private: boolean | null;
+  is_private: boolean | null;
+}
+
 const parseEditFormData = (formData: FormData) => {
   const imageFiles = formData
     .getAll("images")
@@ -77,16 +91,13 @@ const parseEditFormData = (formData: FormData) => {
     keptImageIds: formData
       .getAll("keptImageIds")
       .map((imageId) => String(imageId)),
-    removedImageIds: formData
-      .getAll("removedImageIds")
-      .map((imageId) => String(imageId)),
   };
 };
 
 export async function getDiaryEditData(
   diaryId: string
 ): Promise<DiaryEditData | null> {
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) return null;
 
   const supabase = await createClient();
@@ -145,7 +156,7 @@ export async function getDiaryEditData(
 }
 
 export async function updateDiary(diaryId: string, formData: FormData) {
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) {
     return { success: false, error: "로그인이 필요합니다." };
   }
@@ -172,46 +183,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     };
   }
 
-  const supabase = await createClient();
-  const { data: diary, error: findError } = await supabase
-    .from("diaries")
-    .select("id, user_id, is_private")
-    .eq("id", diaryId)
-    .is("deleted_at", null)
-    .single();
-
-  if (findError || !diary) {
-    return { success: false, error: "수정할 일기를 찾을 수 없습니다." };
-  }
-
-  if (diary.user_id !== user.id) {
-    return { success: false, error: "수정 권한이 없습니다." };
-  }
-
-  const { data: currentImages, error: imageFindError } = await supabase
-    .from("diary_images")
-    .select("id, image_url, sort_order")
-    .eq("diary_id", diaryId)
-    .order("sort_order", { ascending: true });
-
-  if (imageFindError) {
-    return {
-      success: false,
-      error: `이미지 조회 실패: ${imageFindError.message}`,
-    };
-  }
-
-  const currentImageMap = new Map(
-    (currentImages ?? []).map((image) => [image.id, image])
-  );
-  const keptImages = parsedData.keptImageIds
-    .map((imageId) => currentImageMap.get(imageId))
-    .filter((image): image is NonNullable<typeof image> => Boolean(image));
-  const removedImages = parsedData.removedImageIds
-    .map((imageId) => currentImageMap.get(imageId))
-    .filter((image): image is NonNullable<typeof image> => Boolean(image));
-
-  if (keptImages.length + parsedData.images.length > DIARY_IMAGE_MAX_COUNT) {
+  if (parsedData.keptImageIds.length + parsedData.images.length > DIARY_IMAGE_MAX_COUNT) {
     return {
       success: false,
       error: `이미지는 최대 ${DIARY_IMAGE_MAX_COUNT}개까지 등록할 수 있습니다.`,
@@ -238,137 +210,39 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     uploadedImageUrls = [];
   };
 
-  const { error: diaryError } = await supabase
-    .from("diaries")
-    .update({
-      title: validationResult.data.title,
-      content: validationResult.data.content,
-      is_private: validationResult.data.isPrivate,
-    })
-    .eq("id", diaryId);
+  const newImages: DiaryImagePayload[] = uploadedImageUrls.map((url, index) => ({
+    image_url: url,
+    file_name: parsedData.images[index]?.name ?? `image_${index + 1}`,
+    mime_type: parsedData.images[index]?.type ?? "image/jpeg",
+    file_size: parsedData.images[index]?.size ?? null,
+  }));
 
-  if (diaryError) {
-    await cleanupUploadedImages();
-    return { success: false, error: `일기 수정 실패: ${diaryError.message}` };
-  }
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("update_diary_transaction", {
+    p_diary_id: diaryId,
+    p_title: validationResult.data.title,
+    p_content: validationResult.data.content,
+    p_is_private: validationResult.data.isPrivate,
+    p_emotion_ids: validationResult.data.emotions,
+    p_tag_names: validationResult.data.tags,
+    p_kept_image_ids: parsedData.keptImageIds,
+    p_new_images: newImages as unknown as Json,
+  });
 
-  const { error: deleteEmotionError } = await supabase
-    .from("diary_emotions")
-    .delete()
-    .eq("diary_id", diaryId);
-
-  if (deleteEmotionError) {
-    await cleanupUploadedImages();
-    return {
-      success: false,
-      error: `감정 초기화 실패: ${deleteEmotionError.message}`,
-    };
-  }
-
-  const { error: emotionError } = await supabase.from("diary_emotions").insert(
-    validationResult.data.emotions.map((emotionId) => ({
-      diary_id: diaryId,
-      emotion_id: emotionId,
-    }))
-  );
-
-  if (emotionError) {
-    await cleanupUploadedImages();
-    return { success: false, error: `감정 수정 실패: ${emotionError.message}` };
-  }
-
-  const { error: deleteTagError } = await supabase
-    .from("diary_tags")
-    .delete()
-    .eq("diary_id", diaryId);
-
-  if (deleteTagError) {
+  if (error || !data?.[0]) {
     await cleanupUploadedImages();
     return {
       success: false,
-      error: `태그 초기화 실패: ${deleteTagError.message}`,
+      error: `일기 수정 실패: ${error?.message ?? "RPC 응답이 비어 있습니다."}`,
     };
   }
 
-  if (validationResult.data.tags.length > 0) {
-    const tagIds = await processTagsAndGetIds(
-      supabase,
-      validationResult.data.tags
-    );
+  const result = data[0] as UpdateDiaryRpcResult;
+  const removedImageUrls = result.removed_image_urls ?? [];
 
-    const { error: tagError } = await supabase.from("diary_tags").insert(
-      tagIds.map((tagId) => ({
-        diary_id: diaryId,
-        tag_id: tagId,
-      }))
-    );
-
-    if (tagError) {
-      await cleanupUploadedImages();
-      return { success: false, error: `태그 수정 실패: ${tagError.message}` };
-    }
-  }
-
-  if (removedImages.length > 0) {
-    const { error: deleteImageRowError } = await supabase
-      .from("diary_images")
-      .delete()
-      .in(
-        "id",
-        removedImages.map((image) => image.id)
-      );
-
-    if (deleteImageRowError) {
-      await cleanupUploadedImages();
-      return {
-        success: false,
-        error: `이미지 삭제 실패: ${deleteImageRowError.message}`,
-      };
-    }
-  }
-
-  for (const [index, image] of keptImages.entries()) {
-    const { error: sortError } = await supabase
-      .from("diary_images")
-      .update({ sort_order: index + 1 })
-      .eq("id", image.id)
-      .eq("diary_id", diaryId);
-
-    if (sortError) {
-      await cleanupUploadedImages();
-      return {
-        success: false,
-        error: `이미지 순서 저장 실패: ${sortError.message}`,
-      };
-    }
-  }
-
-  if (uploadedImageUrls.length > 0) {
-    const { error: insertImageError } = await supabase
-      .from("diary_images")
-      .insert(
-        uploadedImageUrls.map((url, index) => ({
-          diary_id: diaryId,
-          image_url: url,
-          sort_order: keptImages.length + index + 1,
-          file_name: parsedData.images[index]?.name ?? `image_${index + 1}`,
-          mime_type: parsedData.images[index]?.type ?? "image/jpeg",
-          file_size: parsedData.images[index]?.size ?? null,
-        }))
-      );
-
-    if (insertImageError) {
-      await cleanupUploadedImages();
-      return {
-        success: false,
-        error: `이미지 정보 저장 실패: ${insertImageError.message}`,
-      };
-    }
-  }
-
-  if (removedImages.length > 0) {
+  if (removedImageUrls.length > 0) {
     try {
-      await deleteImagesFromS3(removedImages.map((image) => image.image_url));
+      await deleteImagesFromS3(removedImageUrls);
     } catch (error) {
       console.error("삭제된 이미지 파일 정리 실패:", error);
     }
@@ -377,8 +251,8 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   revalidateDiaryUpdated({
     userId: user.id,
     diaryId,
-    isPrivate: validationResult.data.isPrivate,
-    wasPrivate: diary.is_private ?? true,
+    isPrivate: result.is_private ?? validationResult.data.isPrivate,
+    wasPrivate: result.was_private ?? true,
   });
 
   return { success: true };

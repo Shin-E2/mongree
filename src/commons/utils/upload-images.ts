@@ -15,6 +15,12 @@ function getKeyFromUrl(url: string) {
   return urlObj.pathname.substring(1);
 }
 
+function extensionForMimeType(type: string) {
+  if (type === "image/png") return "png";
+  if (type === "image/webp") return "webp";
+  return "jpg";
+}
+
 // 서버 전용: S3에서 이미지 삭제
 export async function deleteImageFromS3(imageUrl: string) {
   try {
@@ -54,7 +60,7 @@ export async function uploadImageServer(
     );
   }
 
-  const key = `${Date.now()}-${file.name}`;
+  const key = `server/uploads/${crypto.randomUUID()}.${extensionForMimeType(file.type)}`;
   const bucketName = process.env.AWS_S3_BUCKET_NAME!;
   const region = process.env.AWS_REGION!;
 
@@ -104,7 +110,7 @@ export async function uploadImage(
   const response = await fetch("/api/upload", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ fileName: file.name, fileType: file.type }),
+    body: JSON.stringify({ fileType: file.type, fileSize: file.size }),
   });
 
   if (!response.ok) {

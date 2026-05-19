@@ -506,12 +506,83 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      public_diary_feed: {
+        Row: {
+          comment_count: number | null
+          content: string | null
+          created_at: string | null
+          id: string | null
+          is_private: boolean | null
+          like_count: number | null
+          nickname: string | null
+          profile_image: string | null
+          title: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: never
+        Update: never
+        Relationships: []
+      }
     }
     Functions: {
+      create_diary_transaction: {
+        Args: {
+          p_content: string
+          p_emotion_ids?: string[]
+          p_images?: Json
+          p_is_private: boolean
+          p_tag_names?: string[]
+          p_title: string
+        }
+        Returns: string
+      }
+      get_public_diary_feed: {
+        Args: {
+          p_emotion_ids?: string[]
+          p_limit?: number
+          p_offset?: number
+          p_search?: string | null
+          p_sort_by?: string
+        }
+        Returns: {
+          comment_count: number | null
+          content: string | null
+          created_at: string | null
+          emotions: Json | null
+          id: string
+          images: Json | null
+          is_private: boolean | null
+          like_count: number | null
+          profile: Json | null
+          tags: Json | null
+          title: string | null
+          total_count: number | null
+          updated_at: string | null
+          user_id: string
+        }[]
+      }
       get_or_create_tag_id: {
         Args: { tag_name: string }
         Returns: string
+      }
+      update_diary_transaction: {
+        Args: {
+          p_content: string
+          p_diary_id: string
+          p_emotion_ids?: string[]
+          p_is_private: boolean
+          p_kept_image_ids?: string[]
+          p_new_images?: Json
+          p_tag_names?: string[]
+          p_title: string
+        }
+        Returns: {
+          diary_id: string
+          is_private: boolean | null
+          removed_image_urls: string[] | null
+          was_private: boolean | null
+        }[]
       }
     }
     Enums: {

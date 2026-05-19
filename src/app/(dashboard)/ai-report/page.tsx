@@ -12,6 +12,8 @@ import { HeaderStandardMFull } from "@/commons/components/header";
 import { URL } from "@/commons/constants/global-url";
 import { formatToTimeAgo } from "@/lib/utils";
 import { getAiEmotionReportData } from "./action";
+import { GenerateReportButton } from "./generate-report-button";
+import { ReportActions } from "./report-actions";
 import styles from "./styles.module.css";
 
 interface AiReportPageProps {
@@ -45,7 +47,7 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
     <div className={styles.pageContainer}>
       <HeaderStandardMFull
         title="AI 감정 리포트"
-        description="이번 달 일기 속 감정 흐름과 반복되는 단서를 정리해보세요."
+        description="이번 달 일기의 감정 흐름과 반복되는 단서를 정리해보세요."
       />
 
       <div className={styles.contentWrapper}>
@@ -71,7 +73,7 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
           <div className={styles.heroText}>
             <span className={styles.badge}>
               <Sparkles className={styles.badgeIcon} />
-              데이터 기반 AI 리포트
+              데이터 기반 월간 리포트
             </span>
             <h2 className={styles.heroTitle}>
               {dominantEmotion
@@ -79,7 +81,7 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
                 : "이번 달 감정 흐름을 기다리고 있어요"}
             </h2>
             <p className={styles.heroDescription}>
-              일기를 쌓을수록 AI가 감정의 반복, 기록 리듬, 자주 등장하는 단서를 더 선명하게 읽어낼 수 있습니다.
+              일기를 쌓을수록 AI가 감정의 반복, 기록 리듬, 자주 등장하는 단서를 더 선명하게 읽어줍니다.
             </p>
           </div>
           <div className={styles.heroMetricGrid}>
@@ -118,6 +120,22 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
             <p className={styles.generatedReportDescription}>
               {reportData.generatedReport.gentleInsight}
             </p>
+            <p className={styles.privacyNote}>
+              공유와 내보내기는 원문 제외 요약만 사용합니다.
+            </p>
+            <div className={styles.reportControlRow}>
+              <GenerateReportButton
+                month={reportData.reportStatus.month}
+                hasSavedReport={reportData.reportStatus.saved}
+              />
+              {reportData.reportStatus.saved && (
+                <ReportActions
+                  month={reportData.reportStatus.month}
+                  monthLabel={reportData.monthLabel}
+                  report={reportData.generatedReport}
+                />
+              )}
+            </div>
           </div>
 
           {reportData.generatedReport.dominantEmotions.length > 0 && (

@@ -5,22 +5,16 @@ import {
   SignupFormType,
 } from "../step-basic-info/form.schema";
 import { createClient } from "@/lib/supabase-server";
-import { uploadImageServer } from "@/commons/utils/upload-images";
+import {
+  deleteImageFromS3,
+  uploadImageServer,
+} from "@/commons/utils/upload-images";
 import { getSiteUrl } from "@/commons/utils/site-url";
+import { createAdminClient } from "@/lib/supabase/admin";
 
 export async function signup(data: SignupFormType) {
   try {
-    let profileImageUrl: string | null = null;
-    if (data.profileImage && data.profileImage instanceof File) {
-      profileImageUrl = await uploadImageServer(data.profileImage);
-    } else if (typeof data.profileImage === "string") {
-      profileImageUrl = data.profileImage;
-    }
-
-    const result = await SignupFormSchema.safeParseAsync({
-      ...data,
-      profileImage: profileImageUrl,
-    });
+    const result = await SignupFormSchema.safeParseAsync(data);
 
     if (!result.success) {
       return {
@@ -31,6 +25,10 @@ export async function signup(data: SignupFormType) {
 
     const supabase = await createClient();
     const siteUrl = await getSiteUrl();
+    const profileImageFile =
+      result.data.profileImage instanceof File ? result.data.profileImage : null;
+    let profileImageUrl =
+      typeof result.data.profileImage === "string" ? result.data.profileImage : null;
 
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email: result.data.email,
@@ -39,7 +37,7 @@ export async function signup(data: SignupFormType) {
         data: {
           full_name: data.name,
           nickname: result.data.nickname,
-          profile_image: profileImageUrl,
+          profile_image: profileImageFile ? null : profileImageUrl,
         },
         emailRedirectTo: `${siteUrl}/confirm?source=signup`,
       },
@@ -59,6 +57,23 @@ export async function signup(data: SignupFormType) {
         success: false,
         message: `회원가입 중 오류가 발생했습니다: ${authError.message}`,
       };
+    }
+
+    if (profileImageFile && authData.user) {
+      profileImageUrl = await uploadImageServer(profileImageFile);
+      const admin = createAdminClient();
+      const { error: profileUpdateError } = await admin
+        .from("profiles")
+        .update({ profile_image: profileImageUrl })
+        .eq("id", authData.user.id);
+
+      if (profileUpdateError) {
+        await deleteImageFromS3(profileImageUrl);
+        return {
+          success: false,
+          message: `프로필 이미지 저장 중 오류가 발생했습니다: ${profileUpdateError.message}`,
+        };
+      }
     }
 
     return {

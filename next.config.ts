@@ -1,55 +1,53 @@
 import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  // Webpack 캐시 설정 (클라이언트에서 캐시 비활성화)
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      config.cache = false;
-    }
-    return config;
-  },
+const uploadBucketHostname = `${
+  process.env.AWS_S3_BUCKET_NAME ?? "mongree-upload-image"
+}.s3.${process.env.AWS_REGION ?? "ap-northeast-2"}.amazonaws.com`;
 
-  // 이미지 도메인 허용
+const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
         protocol: "https",
         hostname: "sesac.s3.amazonaws.com",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
       {
         protocol: "https",
-        hostname: "lh3.googleusercontent.com", // Google 프로필 이미지
-      },
-      {
-        protocol: "https",
-        hostname: "k.kakaocdn.net",
+        hostname: "lh3.googleusercontent.com",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
       {
         protocol: "https",
         hostname: "**.kakaocdn.net",
-      },
-      {
-        protocol: "https",
-        hostname: "img1.kakaocdn.net",
-      },
-      {
-        protocol: "http",
-        hostname: "**.kakaocdn.net",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
       {
         protocol: "https",
         hostname: "**.daumcdn.net",
-      },
-      {
-        protocol: "http",
-        hostname: "**.daumcdn.net",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
       {
         protocol: "https",
-        hostname: "ssl.pstatic.net", // Naver 프로필 이미지
+        hostname: "ssl.pstatic.net",
+        port: "",
+        pathname: "/**",
+        search: "",
       },
       {
-        hostname: "mongree-upload-image.s3.ap-northeast-2.amazonaws.com", // aws s3 이미지
+        protocol: "https",
+        hostname: uploadBucketHostname,
+        port: "",
+        pathname: "/users/**",
+        search: "",
       },
     ],
   },

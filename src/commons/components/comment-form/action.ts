@@ -1,11 +1,11 @@
 "use server";
 
 import { createClient } from "@/lib/supabase-server";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { revalidateDiaryComments } from "@/commons/utils/cache-revalidation";
 
 export async function addComment(formData: FormData) {
-  const user = await getUser();
+  const user = await getCurrentProfile();
   const content = formData.get("content") as string;
   const diaryId = formData.get("diaryId") as string;
   const parentId = formData.get("parentId") as string | null;
@@ -13,11 +13,11 @@ export async function addComment(formData: FormData) {
   const supabase = await createClient();
 
   if (!user) {
-    return { error: "로그인이 필요합니다." };
+    return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
   }
 
   if (!content?.trim()) {
-    return { error: "댓글 내용을 입력해주세요." };
+    return { error: "?볤? ?댁슜???낅젰?댁＜?몄슂." };
   }
 
   try {
@@ -66,6 +66,6 @@ export async function addComment(formData: FormData) {
       },
     };
   } catch {
-    return { error: "댓글 작성에 실패했습니다." };
+    return { error: "?볤? ?묒꽦???ㅽ뙣?덉뒿?덈떎." };
   }
 }

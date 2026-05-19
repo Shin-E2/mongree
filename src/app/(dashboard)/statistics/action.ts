@@ -1,6 +1,6 @@
-"use server";
+﻿"use server";
 
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 
 export interface StatisticsSummary {
@@ -128,7 +128,7 @@ function getEmptyData(monthDate: string, monthLabel: string): EmotionStatisticsD
     summary: {
       diaryCount: 0,
       activeDayCount: 0,
-      dominantEmotionLabel: "아직 없음",
+      dominantEmotionLabel: "?꾩쭅 ?놁쓬",
       diaryCountDelta: 0,
     },
     emotions: [],
@@ -150,10 +150,10 @@ export async function getEmotionStatisticsData({
   const startOfNextMonth = new Date(validMonth.year, validMonth.month, 1);
   const startOfPrevMonth = new Date(validMonth.year, validMonth.month - 2, 1);
   const monthDate = getLocalDateKey(startOfMonth);
-  const monthLabel = `${validMonth.year}년 ${validMonth.month}월 감정 통계`;
+  const monthLabel = `${validMonth.year}??${validMonth.month}??媛먯젙 ?듦퀎`;
   const emptyData = getEmptyData(monthDate, monthLabel);
 
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) return emptyData;
 
   const supabase = await createClient();
@@ -186,7 +186,7 @@ export async function getEmotionStatisticsData({
     .returns<StatisticsDiaryRow[]>();
 
   if (error) {
-    console.error("감정 통계 조회 오류:", error);
+    console.error("媛먯젙 ?듦퀎 議고쉶 ?ㅻ쪟:", error);
     return emptyData;
   }
 
@@ -322,7 +322,7 @@ export async function getEmotionStatisticsData({
         tagId: tag.tagId,
         tagName: tag.tagName,
         count: tag.count,
-        topEmotionLabel: topEmotion?.label ?? "감정 없음",
+        topEmotionLabel: topEmotion?.label ?? "媛먯젙 ?놁쓬",
         topEmotionImage: topEmotion?.image ?? "/image/emotions/calm.svg",
       };
     })
@@ -335,7 +335,7 @@ export async function getEmotionStatisticsData({
     summary: {
       diaryCount: diaries.length,
       activeDayCount: new Set(Array.from(dateMap.keys())).size,
-      dominantEmotionLabel: emotions[0]?.label ?? "아직 없음",
+      dominantEmotionLabel: emotions[0]?.label ?? "?꾩쭅 ?놁쓬",
       diaryCountDelta: diaries.length - (prevMonthCount ?? 0),
     },
     emotions,

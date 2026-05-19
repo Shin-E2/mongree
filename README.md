@@ -81,6 +81,11 @@ Required Vercel environment variables:
 NEXT_PUBLIC_SUPABASE_URL
 NEXT_PUBLIC_SUPABASE_ANON_KEY
 SUPABASE_SERVICE_ROLE_KEY
+```
+
+Optional Vercel environment variables:
+
+```text
 OPENAI_API_KEY
 STRIPE_SECRET_KEY
 STRIPE_PRICE_ID
@@ -95,18 +100,16 @@ usage_events
 subscriptions
 ```
 
-Current known blocker:
+Optional integration status:
 
 ```text
-OPENAI_API_KEY
-STRIPE_SECRET_KEY
-STRIPE_PRICE_ID
-STRIPE_WEBHOOK_SECRET
+OPENAI_API_KEY enables OpenAI-generated AI reports. Without it, local fallback reports are used.
+STRIPE_SECRET_KEY, STRIPE_PRICE_ID, and STRIPE_WEBHOOK_SECRET enable paid subscription checkout and webhook sync.
 ```
 
-After adding the four missing Vercel secrets, redeploy production and rerun `npm run verify:production`.
+After adding optional Vercel secrets, redeploy production and rerun `npm run verify:production`.
 
-To sync the four secret values from the current shell into Vercel Production and Preview, set them as local environment variables first, then run:
+To sync configured optional secret values from the current shell into Vercel Production and Preview, set them as local environment variables first, then run:
 
 ```bash
 npm run sync:vercel-secrets

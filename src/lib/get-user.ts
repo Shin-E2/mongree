@@ -2,16 +2,25 @@
 
 import { createClient } from "./supabase-server";
 
-export async function getUser() {
+export async function getCurrentAuthUser() {
   const supabase = await createClient();
 
   const { data: { user }, error: authError } = await supabase.auth.getUser();
 
   if (authError || !user) return null;
 
+  return user;
+}
+
+export async function getCurrentProfile() {
+  const supabase = await createClient();
+  const user = await getCurrentAuthUser();
+
+  if (!user) return null;
+
   const { data: profile, error: profileError } = await supabase
     .from("profiles")
-    .select("*")
+    .select("id, nickname, profile_image, created_at, updated_at, is_profile_complete")
     .eq("id", user.id)
     .single();
 
@@ -22,3 +31,5 @@ export async function getUser() {
 
   return profile ?? null;
 }
+
+export const getUser = getCurrentProfile;

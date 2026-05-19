@@ -18,10 +18,10 @@ export default async function HomePage() {
       <section className={styles.heroSection}>
         <div className={styles.heroCopy}>
           <span className={styles.heroEyebrow}>오늘의 감정 스냅</span>
-          <h1 className={styles.heroTitle}>감정을 하늘에 살짝 붙여둘 시간</h1>
+          <h1 className={styles.heroTitle}>감정에 이름을 붙여보는 시간</h1>
           <p className={styles.heroDescription}>
             길게 쓰지 않아도 괜찮아요. 지금 떠오르는 감정 하나와 짧은 문장만
-            남겨도 이번 달의 흐름이 조금씩 보여요.
+            남기면 이번 달의 흐름이 조금씩 보입니다.
           </p>
           <div className={styles.heroActions}>
             <Link href="/diary/new" className={styles.primaryAction}>
@@ -44,7 +44,7 @@ export default async function HomePage() {
                 priority
               />
             ) : (
-              <span className={styles.skyFace}>•ᴗ•</span>
+              <span className={styles.skyFace}>몽</span>
             )}
           </div>
           <div className={styles.heroMetricRow}>
@@ -61,8 +61,8 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
+
       <div className={styles.gridContainer}>
-        {/* 감정 캘린더 */}
         <div className={styles.calendarColumn}>
           <HomeEmotionalCalendar
             monthLabel={dashboardData.monthLabel}
@@ -71,14 +71,12 @@ export default async function HomePage() {
           />
         </div>
 
-        {/* 이번달 감정 분포, ai감정분석 */}
         <div className={styles.sidebarColumn}>
           <HomeEmotionStats stats={dashboardData.emotionStats} />
           <HomeAIAnalysis />
         </div>
 
         <div className={styles.bottomSectionColumn}>
-          {/* 주간 인기 일기 TOP3 */}
           <div className={styles.popularDiaryCardContainer}>
             <div className={styles.popularDiaryHeader}>
               <h2 className={styles.popularDiaryTitle}>

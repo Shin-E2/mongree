@@ -1,6 +1,7 @@
 "use server";
 
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
+import { buildDiarySearchOrFilter } from "@/lib/supabase/filters";
 import { createClient } from "@/lib/supabase-server";
 import type { Diary, DiaryResponse, GetDiariesParams } from "./types";
 
@@ -39,7 +40,7 @@ export async function getDiaries({
   dateRange,
 }: GetDiariesParams): Promise<DiaryResponse> {
   try {
-    const user = await getUser();
+    const user = await getCurrentProfile();
 
     if (!user) {
       return {
@@ -53,7 +54,7 @@ export async function getDiaries({
     const skip = (page - 1) * ITEMS_PER_PAGE;
     const emotionIds = emotions?.filter(Boolean) ?? [];
 
-    // 선택한 감정 중 하나라도 연결된 일기만 조회
+    // ?좏깮??媛먯젙 以??섎굹?쇰룄 ?곌껐???쇨린留?議고쉶
     let filteredDiaryIds: string[] | null = null;
     if (emotionIds.length > 0) {
       const { data: emotionRows, error: emotionError } = await supabase
@@ -121,10 +122,11 @@ export async function getDiaries({
         `,
         { count: "exact" }
       )
-      .eq("user_id", user.id);
+      .eq("user_id", user.id)
+      .is("deleted_at", null);
 
     if (searchTerm) {
-      query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
+      query = query.or(buildDiarySearchOrFilter(searchTerm));
     }
 
     if (filteredDiaryIds) {

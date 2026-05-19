@@ -1,7 +1,7 @@
 import DiaryDetailContent from "@/components/home/(dashboard)/diary/detail";
 import { notFound } from "next/navigation";
 import { getDiaryDetail } from "./action";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +16,7 @@ export default async function DiaryDetailPage({ params }: Props) {
     const { id } = await params;
     const [diary, loginUser] = await Promise.all([
       getDiaryDetail(id),
-      getUser(),
+      getCurrentProfile(),
     ]);
 
     if (!diary) {
@@ -25,7 +25,7 @@ export default async function DiaryDetailPage({ params }: Props) {
 
     return <DiaryDetailContent diary={diary} loginUser={loginUser} />;
   } catch (error) {
-    console.error("일기 상세 조회 중 오류:", error);
+    console.error("?쇨린 ?곸꽭 議고쉶 以??ㅻ쪟:", error);
     return notFound();
   }
 }

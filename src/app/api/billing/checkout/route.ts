@@ -11,7 +11,7 @@ export async function POST() {
 
   if (!user) {
     return NextResponse.json(
-      { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" },
+      { error: "로그인이 필요합니다." },
       { status: 401 }
     );
   }
@@ -21,7 +21,7 @@ export async function POST() {
 
   if (!stripe || !priceId) {
     return NextResponse.json(
-      { error: "寃곗젣 ?섍꼍 蹂?섍? ?ㅼ젙?섏? ?딆븯?듬땲??" },
+      { error: "결제 환경 변수가 설정되지 않았습니다." },
       { status: 503 }
     );
   }

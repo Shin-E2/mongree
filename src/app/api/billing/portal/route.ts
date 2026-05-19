@@ -1,8 +1,8 @@
-import { NextResponse } from "next/server";
+import { getSiteUrl } from "@/commons/utils/site-url";
 import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import { getStripeClient } from "@/lib/stripe";
-import { getSiteUrl } from "@/commons/utils/site-url";
+import { NextResponse } from "next/server";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export async function POST() {
 
   if (!user) {
     return NextResponse.json(
-      { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" },
+      { error: "로그인이 필요합니다." },
       { status: 401 }
     );
   }
@@ -20,7 +20,7 @@ export async function POST() {
 
   if (!stripe) {
     return NextResponse.json(
-      { error: "寃곗젣 ?섍꼍 蹂?섍? ?ㅼ젙?섏? ?딆븯?듬땲??" },
+      { error: "결제 환경 변수가 설정되지 않았습니다." },
       { status: 503 }
     );
   }
@@ -34,14 +34,14 @@ export async function POST() {
 
   if (subscriptionError) {
     return NextResponse.json(
-      { error: "援щ룆 ?뺣낫瑜?議고쉶?섏? 紐삵뻽?듬땲??" },
+      { error: "구독 정보를 조회하지 못했습니다." },
       { status: 500 }
     );
   }
 
   if (!subscription?.stripe_customer_id) {
     return NextResponse.json(
-      { error: "?곌껐??Stripe 怨좉컼 ?뺣낫媛 ?놁뒿?덈떎." },
+      { error: "연결된 Stripe 고객 정보가 없습니다." },
       { status: 404 }
     );
   }

@@ -1,19 +1,20 @@
 "use client";
 
-import { Heart, MessageCircle } from "lucide-react";
-import { EMOTIONS } from "@/mock/emotions";
-import TagList from "@/commons/components/tag";
-import { useRouter } from "next/navigation";
-import { URL } from "@/commons/constants/global-url";
-import usePublicDiaryCard from "./hook";
-import type { PublicDiaryCardProps } from "./types";
-import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
-import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
-import { InteractionButton } from "@/commons/components/interaction-button";
-import UserProfileHeader from "@/commons/components/user-profile-header";
 import EmpathyUserList from "@/commons/components/empathy-user-list";
+import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
+import { InteractionButton } from "@/commons/components/interaction-button";
+import SurfaceCard from "@/commons/components/surface-card";
+import TagList from "@/commons/components/tag";
+import UserProfileHeader from "@/commons/components/user-profile-header";
+import { URL } from "@/commons/constants/global-url";
+import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
+import { EMOTIONS } from "@/mock/emotions";
+import { Heart, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import usePublicDiaryCard from "./hook";
 import styles from "./styles.module.css";
+import type { PublicDiaryCardProps } from "./types";
 
 export default function CommunityDiaryCard({
   diary,
@@ -41,7 +42,7 @@ export default function CommunityDiaryCard({
   });
 
   return (
-    <article className={styles.articleContainer}>
+    <SurfaceCard className={styles.articleContainer}>
       <Link
         href={URL().DIARY_DETAIL(diary.id)}
         className={styles.detailLink}
@@ -112,6 +113,6 @@ export default function CommunityDiaryCard({
           />
         )}
       </div>
-    </article>
+    </SurfaceCard>
   );
 }

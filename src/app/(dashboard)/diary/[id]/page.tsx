@@ -25,7 +25,7 @@ export default async function DiaryDetailPage({ params }: Props) {
 
     return <DiaryDetailContent diary={diary} loginUser={loginUser} />;
   } catch (error) {
-    console.error("?쇨린 ?곸꽭 議고쉶 以??ㅻ쪟:", error);
+    console.error("일기 상세 조회 중 오류:", error);
     return notFound();
   }
 }

@@ -65,7 +65,9 @@ export default function TopBar() {
             title={`${THEME_LABELS[scene]} 사용 중`}
           >
             <ThemeIcon
-              className={`${styles.iconBase} ${spinning ? styles.iconSpin : ""}`}
+              className={`${styles.iconBase} ${
+                spinning ? styles.iconSpin : ""
+              }`}
               onAnimationEnd={() => setSpinning(false)}
             />
           </button>

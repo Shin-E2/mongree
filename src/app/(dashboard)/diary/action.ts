@@ -1,4 +1,4 @@
-"use server";
+﻿"use server";
 
 import { getCurrentProfile } from "@/lib/get-user";
 import { buildDiarySearchOrFilter } from "@/lib/supabase/filters";
@@ -54,7 +54,7 @@ export async function getDiaries({
     const skip = (page - 1) * ITEMS_PER_PAGE;
     const emotionIds = emotions?.filter(Boolean) ?? [];
 
-    // ?좏깮??媛먯젙 以??섎굹?쇰룄 ?곌껐???쇨린留?議고쉶
+    // 선택한 감정 중 하나라도 연결된 일기만 조회합니다.
     let filteredDiaryIds: string[] | null = null;
     if (emotionIds.length > 0) {
       const { data: emotionRows, error: emotionError } = await supabase

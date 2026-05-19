@@ -1,5 +1,5 @@
 .articleContainer {
-  @apply bg-white rounded-xl shadow-sm overflow-hidden hover:shadow-md transition-shadow flex flex-col h-full relative;
+  @apply h-full;
 }
 
 .detailLink {
@@ -7,53 +7,64 @@
 }
 
 .headerSection {
-  @apply p-4 border-b flex items-center justify-between;
+  @apply flex items-center justify-between gap-3 px-4 pb-3 pt-5;
+  border-bottom: 1px solid color-mix(in oklch, var(--scene-line) 54%, transparent);
 }
 
 .emotionBadgeListWrapper {
-  @apply flex items-center;
+  @apply flex shrink-0 items-center;
 }
 
 .contentSection {
-  @apply p-4 flex-1 flex flex-col;
+  @apply flex flex-1 flex-col px-4 py-4;
 }
 
 .titleWrapper {
-  @apply flex items-center justify-between mb-2;
+  @apply mb-2 flex items-center justify-between;
 }
 
 .title {
-  @apply font-medium text-base line-clamp-1;
+  @apply line-clamp-1 text-base font-semibold;
+  color: var(--mongree-text);
 }
 
 .description {
-  @apply text-gray-600 text-sm line-clamp-2 mb-3;
+  @apply mb-4 line-clamp-3 text-sm;
+  color: var(--mongree-text-muted);
+  line-height: 1.65;
 }
 
 .tagListWrapper {
-  @apply mt-auto mb-3;
+  @apply mb-3 mt-auto;
 }
 
 .footerSection {
-  @apply px-4 py-3 bg-gray-50 border-t flex items-center justify-between;
+  @apply flex items-center justify-between px-4 py-3;
+  border-top: 1px solid color-mix(in oklch, var(--scene-line) 54%, transparent);
+  background: color-mix(in oklch, var(--scene-object) 8%, transparent);
 }
 
 .interactionButtonsWrapper {
-  @apply flex items-center space-x-4;
+  @apply flex items-center gap-4;
 }
 
 .heartIconBase {
-  @apply w-4 h-4;
+  @apply h-4 w-4;
 }
 
 .heartIconEmpathized {
-  @apply text-indigo-700;
+  color: color-mix(in oklch, var(--mongree-primary-strong) 80%, var(--scene-accent));
 }
 
 .commentButton {
-  @apply flex items-center space-x-1 text-gray-500 hover:text-gray-700;
+  @apply flex items-center gap-1 text-sm;
+  color: var(--mongree-text-muted);
+}
+
+.commentButton:hover {
+  color: var(--mongree-text);
 }
 
 .empathyUserListWrapper {
-  @apply flex items-center space-x-2;
+  @apply flex items-center gap-2;
 }

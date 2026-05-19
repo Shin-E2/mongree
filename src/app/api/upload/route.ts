@@ -20,7 +20,7 @@ export async function POST(request: Request) {
 
     if (!user) {
       return NextResponse.json(
-        { success: false, error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" },
+      { success: false, error: "로그인이 필요합니다." },
         { status: 401 }
       );
     }
@@ -44,7 +44,7 @@ export async function POST(request: Request) {
       fileSize > MAX_UPLOAD_BYTES
     ) {
       return NextResponse.json(
-        { success: false, error: "?낅줈??媛?ν븳 ?뚯씪 ?ш린瑜?珥덇낵?덉뒿?덈떎." },
+      { success: false, error: "업로드 가능한 파일 크기를 초과했습니다." },
         { status: 400 }
       );
     }

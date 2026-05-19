@@ -16,9 +16,9 @@ const CHARACTER_IMAGES: Record<MongreeThemeScene, string> = {
 
 const CHARACTER_ALTS: Record<MongreeThemeScene, string> = {
   day: "맑은 날 Mongree 캐릭터",
-  night: "밤하늘 Mongree 캐릭터",
-  rain: "비 오는 날 Mongree 캐릭터",
-  snow: "눈 오는 날 Mongree 캐릭터",
+  night: "밤하늘의 Mongree 캐릭터",
+  rain: "비 오는 날의 Mongree 캐릭터",
+  snow: "눈 오는 날의 Mongree 캐릭터",
 };
 
 export default function SceneCharacter() {

@@ -4,8 +4,8 @@ import {
   revalidateCommentLike,
   revalidateDiaryComments,
 } from "@/commons/utils/cache-revalidation";
-import { createClient } from "@/lib/supabase-server";
 import { getCurrentProfile } from "@/lib/get-user";
+import { createClient } from "@/lib/supabase-server";
 
 type RawComment = Record<string, unknown> & {
   user_id: string;
@@ -33,7 +33,7 @@ function formatComment(comment: RawComment) {
 export async function toggleCommentLike(commentId: string, diaryId: string) {
   try {
     const user = await getCurrentProfile();
-    if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+    if (!user) return { error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingLike, error: checkError } = await supabase
@@ -72,7 +72,7 @@ export async function toggleCommentLike(commentId: string, diaryId: string) {
     revalidateCommentLike({ diaryId, commentId });
     return { success: true };
   } catch {
-    return { error: "?볤? 怨듦컧 泥섎━???ㅽ뙣?덉뒿?덈떎." };
+    return { error: "댓글 공감 처리 중 오류가 발생했습니다." };
   }
 }
 
@@ -84,11 +84,11 @@ export async function addComment(formData: FormData) {
   const supabase = await createClient();
 
   if (!user) {
-    return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+    return { error: "로그인이 필요합니다." };
   }
 
   if (!content?.trim()) {
-    return { error: "?볤? ?댁슜???낅젰?댁＜?몄슂." };
+    return { error: "댓글 내용을 입력해주세요." };
   }
 
   try {
@@ -105,11 +105,11 @@ export async function addComment(formData: FormData) {
       }
 
       if (!parentComment) {
-        return { error: "?먮뙎湲??李얠쓣 ???놁뒿?덈떎." };
+        return { error: "답글을 작성할 댓글을 찾을 수 없습니다." };
       }
 
       if (parentComment.parent_id) {
-        return { error: "?듦??먮뒗 ?ㅼ떆 ?듦????????놁뒿?덈떎." };
+        return { error: "대댓글에는 답글을 작성할 수 없습니다." };
       }
     }
 
@@ -147,13 +147,13 @@ export async function addComment(formData: FormData) {
     return { success: true, comment: formatComment(comment as RawComment) };
   } catch (error) {
     console.error("addComment error:", error);
-    return { error: "?볤? ?묒꽦???ㅽ뙣?덉뒿?덈떎." };
+    return { error: "댓글 작성 중 오류가 발생했습니다." };
   }
 }
 
 export async function deleteComment(commentId: string, diaryId: string) {
   const user = await getCurrentProfile();
-  if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+  if (!user) return { error: "로그인이 필요합니다." };
   const supabase = await createClient();
 
   try {
@@ -169,7 +169,7 @@ export async function deleteComment(commentId: string, diaryId: string) {
     }
 
     if (!commentToDelete || commentToDelete.user_id !== user.id) {
-      return { error: "?볤? ??젣 沅뚰븳???놁뒿?덈떎." };
+      return { error: "댓글을 삭제할 권한이 없습니다." };
     }
 
     const { error: deleteCommentError } = await supabase
@@ -186,6 +186,6 @@ export async function deleteComment(commentId: string, diaryId: string) {
 
     return { success: true };
   } catch {
-    return { error: "?볤? ??젣???ㅽ뙣?덉뒿?덈떎." };
+    return { error: "댓글 삭제 중 오류가 발생했습니다." };
   }
 }

@@ -44,7 +44,7 @@ function revalidateUserDiarySummaries(userId: string) {
     CACHE_PATHS.aiReport,
   ]);
 
-  // 媛쒖씤 ?곗씠?곕뒗 ?ъ슜?먮퀎 ?쒓렇濡쒕쭔 媛깆떊
+  // 개인 데이터는 사용자별 세그먼트만 갱신
   revalidateUniqueTags([
     CACHE_TAGS.home,
     CACHE_TAGS.userDiaries(userId),

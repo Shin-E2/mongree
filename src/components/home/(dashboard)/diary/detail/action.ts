@@ -1,16 +1,16 @@
 "use server";
 
-import { createClient } from "@/lib/supabase-server";
-import { getCurrentProfile } from "@/lib/get-user";
 import {
   revalidateDiaryDeleted,
   revalidateDiaryEmpathy,
 } from "@/commons/utils/cache-revalidation";
+import { getCurrentProfile } from "@/lib/get-user";
+import { createClient } from "@/lib/supabase-server";
 import { redirect } from "next/navigation";
 
 export async function deleteDiary(diaryId: string) {
   const user = await getCurrentProfile();
-  if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+  if (!user) return { error: "로그인이 필요합니다." };
 
   const supabase = await createClient();
 
@@ -21,7 +21,7 @@ export async function deleteDiary(diaryId: string) {
     .single();
 
   if (findError || !diary || diary.user_id !== user.id) {
-    return { error: "??젣 沅뚰븳???놁뒿?덈떎." };
+    return { error: "일기를 삭제할 권한이 없습니다." };
   }
 
   const { error: deleteError } = await supabase
@@ -30,7 +30,7 @@ export async function deleteDiary(diaryId: string) {
     .eq("id", diaryId);
 
   if (deleteError) {
-    return { error: "?쇨린 ??젣???ㅽ뙣?덉뒿?덈떎." };
+    return { error: "일기 삭제 중 오류가 발생했습니다." };
   }
 
   revalidateDiaryDeleted({
@@ -44,7 +44,7 @@ export async function deleteDiary(diaryId: string) {
 export async function toggleEmpathy(diaryId: string) {
   try {
     const user = await getCurrentProfile();
-    if (!user) return { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+    if (!user) return { error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingEmpathy, error: findEmpathyError } = await supabase
@@ -56,7 +56,7 @@ export async function toggleEmpathy(diaryId: string) {
 
     if (findEmpathyError) {
       console.error("Error finding empathy:", findEmpathyError);
-      return { error: "Failed to check empathy." };
+      return { error: "공감 상태를 확인하지 못했습니다." };
     }
 
     if (existingEmpathy) {
@@ -67,7 +67,7 @@ export async function toggleEmpathy(diaryId: string) {
 
       if (deleteEmpathyError) {
         console.error("Error deleting empathy:", deleteEmpathyError);
-        return { error: "Failed to remove empathy." };
+        return { error: "공감을 취소하지 못했습니다." };
       }
     } else {
       const { error: createEmpathyError } = await supabase
@@ -76,7 +76,7 @@ export async function toggleEmpathy(diaryId: string) {
 
       if (createEmpathyError) {
         console.error("Error creating empathy:", createEmpathyError);
-        return { error: "Failed to add empathy." };
+        return { error: "공감을 추가하지 못했습니다." };
       }
     }
 
@@ -101,7 +101,7 @@ export async function toggleEmpathy(diaryId: string) {
 
     if (fetchEmpathiesError) {
       console.error("Error fetching updated empathies:", fetchEmpathiesError);
-      return { error: "Failed to load empathies." };
+      return { error: "공감 목록을 불러오지 못했습니다." };
     }
 
     return {
@@ -114,7 +114,7 @@ export async function toggleEmpathy(diaryId: string) {
     };
   } catch (error) {
     console.error("Unexpected error in toggleEmpathy:", error);
-    return { error: "Failed to update empathy." };
+    return { error: "공감 처리 중 오류가 발생했습니다." };
   }
 }
 

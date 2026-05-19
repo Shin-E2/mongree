@@ -1,6 +1,5 @@
 .wrapper {
   @apply fixed bottom-6 right-6 z-20 cursor-pointer select-none;
-  animation: idle 2.8s ease-in-out infinite;
   filter: drop-shadow(
     0 4px 12px color-mix(in oklch, var(--mongree-text) 14%, transparent)
   );
@@ -8,6 +7,7 @@
 
 .image {
   @apply h-20 w-20;
+  animation: idle 2.8s ease-in-out infinite;
   transition: transform 200ms ease;
 }
 
@@ -41,7 +41,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .wrapper {
+  .image {
     animation: none;
   }
 

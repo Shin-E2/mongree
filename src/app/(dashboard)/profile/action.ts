@@ -61,7 +61,7 @@ async function deletePreviousProfileImage(imageUrl: string | null) {
   try {
     await deleteImageFromS3(imageUrl);
   } catch (error) {
-    console.error("湲곗〈 ?꾨줈???대?吏 ??젣 ?ㅽ뙣:", error);
+    console.error("기존 프로필 이미지 삭제 실패:", error);
   }
 }
 
@@ -126,7 +126,7 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
   ]);
 
   if (commentsError) {
-    console.error("?꾨줈???볤? 議고쉶 ?ㅻ쪟:", commentsError);
+    console.error("프로필 댓글 조회 실패:", commentsError);
   }
 
   return {
@@ -148,7 +148,7 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
         content: comment.content,
         createdAt: comment.created_at ?? new Date().toISOString(),
         diaryId: comment.diary_id,
-        diaryTitle: comment.diaries?.title ?? "??젣???쇨린",
+        diaryTitle: comment.diaries?.title ?? "삭제된 일기",
         isReply: Boolean(comment.parent_id),
       })),
   };
@@ -156,17 +156,17 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
 
 export async function updateProfile(formData: FormData) {
   const user = await getCurrentProfile();
-  if (!user) return { success: false, error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+  if (!user) return { success: false, error: "로그인이 필요합니다." };
 
   const nickname = formData.get("nickname")?.toString().trim() ?? "";
   const profileImageFile = formData.get("profileImage");
 
   if (nickname.length < 2) {
-    return { success: false, error: "?됰꽕?꾩? 2湲???댁긽 ?낅젰?댁＜?몄슂." };
+    return { success: false, error: "닉네임은 2글자 이상 입력해주세요." };
   }
 
   if (nickname.length > 20) {
-    return { success: false, error: "?됰꽕?꾩? 理쒕? 20?먭퉴吏 ?낅젰 媛?ν빀?덈떎." };
+    return { success: false, error: "닉네임은 최대 20자까지 입력 가능합니다." };
   }
 
   const supabase = await createClient();
@@ -178,7 +178,7 @@ export async function updateProfile(formData: FormData) {
     .maybeSingle();
 
   if (duplicatedNickname) {
-    return { success: false, error: "?대? ?ъ슜 以묒씤 ?됰꽕?꾩엯?덈떎." };
+    return { success: false, error: "이미 사용 중인 닉네임입니다." };
   }
 
   let nextProfileImage = user.profile_image;
@@ -217,14 +217,14 @@ export async function updateProfile(formData: FormData) {
     }
 
     const message =
-      error instanceof Error ? error.message : "?꾨줈???섏젙???ㅽ뙣?덉뒿?덈떎.";
+      error instanceof Error ? error.message : "프로필 수정에 실패했습니다.";
     return { success: false, error: message };
   }
 }
 
 export async function deleteProfileComment(commentId: string) {
   const user = await getCurrentProfile();
-  if (!user) return { success: false, error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+  if (!user) return { success: false, error: "로그인이 필요합니다." };
 
   const supabase = await createClient();
   const { data: comment } = await supabase
@@ -239,7 +239,7 @@ export async function deleteProfileComment(commentId: string) {
     .from("comments")
     .update({
       deleted_at: new Date().toISOString(),
-      content: "??젣???볤??낅땲??",
+      content: "삭제된 댓글입니다.",
       updated_at: new Date().toISOString(),
     })
     .eq("id", commentId)
@@ -247,8 +247,8 @@ export async function deleteProfileComment(commentId: string) {
     .is("deleted_at", null);
 
   if (error) {
-    console.error("?꾨줈???볤? ??젣 ?ㅻ쪟:", error);
-    return { success: false, error: "?볤? ??젣???ㅽ뙣?덉뒿?덈떎." };
+    console.error("프로필 댓글 삭제 실패:", error);
+    return { success: false, error: "댓글 삭제에 실패했습니다." };
   }
 
   revalidateProfileComments(comment?.diary_id ? [comment.diary_id] : []);
@@ -257,7 +257,7 @@ export async function deleteProfileComment(commentId: string) {
 
 export async function deleteAllProfileComments() {
   const user = await getCurrentProfile();
-  if (!user) return { success: false, error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+  if (!user) return { success: false, error: "로그인이 필요합니다." };
 
   const supabase = await createClient();
   const { data: comments } = await supabase
@@ -270,15 +270,15 @@ export async function deleteAllProfileComments() {
     .from("comments")
     .update({
       deleted_at: new Date().toISOString(),
-      content: "??젣???볤??낅땲??",
+      content: "삭제된 댓글입니다.",
       updated_at: new Date().toISOString(),
     })
     .eq("user_id", user.id)
     .is("deleted_at", null);
 
   if (error) {
-    console.error("?꾨줈???볤? ?꾩껜 ??젣 ?ㅻ쪟:", error);
-    return { success: false, error: "?볤? ?꾩껜 ??젣???ㅽ뙣?덉뒿?덈떎." };
+    console.error("프로필 댓글 전체 삭제 실패:", error);
+    return { success: false, error: "댓글 전체 삭제에 실패했습니다." };
   }
 
   const diaryIds = [

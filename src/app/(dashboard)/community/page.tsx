@@ -16,8 +16,8 @@ export default async function CommunityPage() {
     <div className={styles.pageContainer}>
       {/* ?ㅻ뜑*/}
       <HeaderStandardMFull
-        title="怨듦컻 ?쇨린"
-        description="?ㅻⅨ ?щ엺?ㅼ쓽 ?댁빞湲곕? ?쎄퀬 怨듦컧?대낫?몄슂"
+        title="공개 일기"
+        description="다른 사람들의 이야기를 읽고 공감해보세요"
       />
       <div className={styles.contentWrapper}>
         <CommunityDiarySection initialDiaries={diaries} loginUser={loginUser} />

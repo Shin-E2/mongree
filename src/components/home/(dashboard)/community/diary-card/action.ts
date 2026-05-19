@@ -1,7 +1,7 @@
 "use server";
 
-import { getCurrentProfile } from "@/lib/get-user";
 import { revalidateDiaryEmpathy } from "@/commons/utils/cache-revalidation";
+import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 
 interface DiaryLikeRow {
@@ -17,7 +17,7 @@ interface DiaryLikeRow {
 export async function togglePublicEmpathy(diaryId: string) {
   try {
     const user = await getCurrentProfile();
-    if (!user) return { success: false, error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" };
+    if (!user) return { success: false, error: "로그인이 필요합니다." };
     const supabase = await createClient();
 
     const { data: existingEmpathy, error: checkError } = await supabase
@@ -105,7 +105,7 @@ export async function togglePublicEmpathy(diaryId: string) {
   } catch {
     return {
       success: false,
-      error: "Failed to update empathy.",
+      error: "공감 처리 중 오류가 발생했습니다.",
     };
   }
 }

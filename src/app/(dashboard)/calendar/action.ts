@@ -1,6 +1,6 @@
 "use server";
 
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import type { EmotionCalendarEntry } from "@/commons/components/emotion-calendar/types";
 
@@ -88,7 +88,7 @@ export async function getEmotionCalendarData({
   const startOfMonth = new Date(validMonth.year, validMonth.month - 1, 1);
   const startOfNextMonth = new Date(validMonth.year, validMonth.month, 1);
   const monthDate = getLocalDateKey(startOfMonth);
-  const monthLabel = `${validMonth.month}월의 감정 기록`;
+  const monthLabel = `${validMonth.month}?붿쓽 媛먯젙 湲곕줉`;
   const todayKey = getLocalDateKey(new Date());
   const isCurrentMonth =
     todayKey.slice(0, 7) === monthDate.slice(0, 7);
@@ -102,7 +102,7 @@ export async function getEmotionCalendarData({
     selectedDiaries: [],
   };
 
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) return emptyData;
 
   const supabase = await createClient();
@@ -133,7 +133,7 @@ export async function getEmotionCalendarData({
     .returns<CalendarDiaryRow[]>();
 
   if (error) {
-    console.error("감정 캘린더 조회 오류:", error);
+    console.error("媛먯젙 罹섎┛??議고쉶 ?ㅻ쪟:", error);
     return emptyData;
   }
 

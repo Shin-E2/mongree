@@ -1,6 +1,13 @@
-"use server";
+﻿"use server";
 
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
+import {
+  getLocalDateKey,
+  getValidMonth,
+  serializeStoredReport,
+  type AiGeneratedReport,
+  type StoredAiReportRow,
+} from "@/lib/ai-report/core";
 import { createClient } from "@/lib/supabase-server";
 
 export interface AiReportEmotionStat {
@@ -29,14 +36,6 @@ export interface AiReportInsight {
   description: string;
 }
 
-export interface AiGeneratedReport {
-  summary: string;
-  dominantEmotions: string[];
-  gentleInsight: string;
-  recommendations: string[];
-  source: "local" | "openai";
-}
-
 export interface AiEmotionReportData {
   monthDate: string;
   monthLabel: string;
@@ -48,6 +47,10 @@ export interface AiEmotionReportData {
   recentDiaries: AiReportDiaryPreview[];
   insights: AiReportInsight[];
   generatedReport: AiGeneratedReport;
+  reportStatus: {
+    saved: boolean;
+    month: string;
+  };
 }
 
 interface ReportDiaryRow {
@@ -72,32 +75,6 @@ interface ReportDiaryRow {
         } | null;
       }[]
     | null;
-}
-
-function getLocalDateKey(date: Date) {
-  const year = date.getFullYear();
-  const month = `${date.getMonth() + 1}`.padStart(2, "0");
-  const day = `${date.getDate()}`.padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-function getValidMonth(year?: string, month?: string) {
-  const now = new Date();
-  const parsedYear = Number(year);
-  const parsedMonth = Number(month);
-
-  if (
-    Number.isInteger(parsedYear) &&
-    Number.isInteger(parsedMonth) &&
-    parsedYear >= 2000 &&
-    parsedYear <= 2100 &&
-    parsedMonth >= 1 &&
-    parsedMonth <= 12
-  ) {
-    return { year: parsedYear, month: parsedMonth };
-  }
-
-  return { year: now.getFullYear(), month: now.getMonth() + 1 };
 }
 
 function getLongestStreak(dateKeys: string[]) {
@@ -139,7 +116,7 @@ function buildInsights({
       {
         title: "아직 읽을 기록이 부족합니다",
         description:
-          "이번 달 일기를 한 편 이상 작성하면 감정 흐름과 기록 리듬을 함께 정리할 수 있습니다.",
+          "이번 달 일기를 조금 더 작성하면 감정 흐름과 기록 리듬을 함께 정리할 수 있습니다.",
       },
       {
         title: "시작은 짧게 해도 충분합니다",
@@ -158,22 +135,22 @@ function buildInsights({
       title: "이번 달 가장 자주 보인 감정",
       description: dominantEmotion
         ? `${dominantEmotion.label} 감정이 ${dominantEmotion.percentage}%로 가장 많이 기록되었습니다. 이 감정이 나타난 날의 일기 내용을 함께 돌아보면 반복되는 상황을 더 쉽게 찾을 수 있습니다.`
-        : "감정을 선택한 일기가 아직 적어 대표 감정을 계산하기 어렵습니다.",
+        : "감정이 선택된 일기가 아직 적어 대표 감정을 계산하기 어렵습니다.",
     },
     {
-      title: "감정의 폭",
+      title: "감정의 결",
       description: secondEmotion
-        ? `${dominantEmotion.label} 다음으로 ${secondEmotion.label} 감정이 자주 보였습니다. 한 가지 감정만이 아니라 여러 감정이 함께 기록되고 있어, 단순한 좋고 나쁨보다 더 입체적인 흐름을 볼 수 있습니다.`
-        : "이번 달에는 한 감정이 중심에 가깝게 기록되었습니다. 다른 감정이 떠오른 날도 함께 남기면 리포트가 더 풍부해집니다.",
+        ? `${dominantEmotion.label} 다음으로 ${secondEmotion.label} 감정이 자주 보였습니다. 한 가지 감정만이 아니라 여러 감정을 함께 기록하고 있어, 단순한 좋고 나쁨보다 더 입체적인 흐름을 볼 수 있습니다.`
+        : "이번 달에는 한 감정이 중심에 가깝게 기록되었습니다. 다른 감정의 신호도 함께 남기면 리포트가 더 풍부해집니다.",
     },
     {
       title: "기록 리듬",
-      description: `${activeDayCount}일 동안 일기를 남겼고, 가장 길게 이어진 기록은 ${longestStreak}일입니다. 리듬을 유지하면 AI가 감정 변화의 전후 맥락을 더 잘 읽을 수 있습니다.`,
+      description: `${activeDayCount}일 동안 일기를 남겼고 가장 길게 이어진 기록은 ${longestStreak}일입니다. 기록 리듬이 유지되면 AI가 감정 변화의 전후 맥락을 더 잘 읽을 수 있습니다.`,
     },
     {
       title: "자주 등장한 단서",
       description: mainTag
-        ? `${mainTag.name} 태그가 가장 자주 등장했습니다. 이 태그와 연결된 일기는 감정이 반복되는 원인을 찾는 좋은 출발점입니다.`
+        ? `${mainTag.name} 태그가 가장 자주 등장했습니다. 이 태그와 연결된 일기의 감정을 보면 반복되는 원인을 찾는 좋은 출발점이 됩니다.`
         : "아직 자주 쓰인 태그가 없습니다. 반복되는 상황이나 사람, 장소를 태그로 남기면 감정 원인을 더 잘 묶어볼 수 있습니다.",
     },
   ];
@@ -193,10 +170,11 @@ function buildGeneratedReport({
     return {
       summary: `${monthLabel}에는 아직 분석할 일기가 없습니다.`,
       dominantEmotions,
-      gentleInsight: "짧은 문장 하나라도 남기면 다음 리포트가 더 따뜻하고 구체적으로 채워집니다.",
+      gentleInsight:
+        "짧은 문장 하나라도 남기면 다음 리포트가 더 구체적으로 채워집니다.",
       recommendations: [
         "오늘 감정 하나를 골라 짧게 기록해보세요.",
-        "잠, 식사, 만난 사람처럼 감정에 영향을 준 단서를 함께 남겨보세요.",
+        "장소, 사건, 만난 사람처럼 감정에 영향을 준 단서를 함께 남겨보세요.",
       ],
       source: "local",
     };
@@ -207,11 +185,11 @@ function buildGeneratedReport({
     dominantEmotions,
     gentleInsight:
       insights[0]?.description ??
-      "반복해서 등장한 감정과 상황을 함께 보면 다음 선택을 더 부드럽게 정할 수 있습니다.",
+      "반복해서 등장한 감정과 상황을 함께 보면 다음 선택을 더 부드럽게 정리할 수 있습니다.",
     recommendations: [
-      "가장 자주 나온 감정이 나타난 상황을 한 줄로 정리해보세요.",
+      "가장 자주 나온 감정을 만든 상황을 한 줄로 정리해보세요.",
       "다음 일기에는 감정의 강도와 몸 상태를 함께 적어보세요.",
-      "좋았던 순간도 같은 비중으로 남겨 균형 있게 돌아보세요.",
+      "좋았던 시간도 같은 비중으로 남겨 균형 있게 돌아보세요.",
     ],
     source: "local",
   };
@@ -258,9 +236,13 @@ export async function getAiEmotionReportData({
         tagStats: [],
       }),
     }),
+    reportStatus: {
+      saved: false,
+      month: monthDate.slice(0, 7),
+    },
   };
 
-  const user = await getUser();
+  const user = await getCurrentProfile();
   if (!user) return emptyData;
 
   const supabase = await createClient();
@@ -364,6 +346,22 @@ export async function getAiEmotionReportData({
     emotionStats,
     tagStats,
   });
+  const reportMonth = monthDate.slice(0, 7);
+  const { data: savedReport } = await supabase
+    .from("ai_reports")
+    .select("summary, dominant_emotions, gentle_insight, recommendations, source")
+    .eq("user_id", user.id)
+    .eq("month", reportMonth)
+    .maybeSingle()
+    .returns<StoredAiReportRow>();
+  const generatedReport: AiGeneratedReport = savedReport
+    ? serializeStoredReport(savedReport)
+    : buildGeneratedReport({
+        monthLabel,
+        diaryCount: diaries.length,
+        emotionStats,
+        insights,
+      });
 
   return {
     monthDate,
@@ -380,11 +378,10 @@ export async function getAiEmotionReportData({
       createdAt: diary.created_at ?? new Date().toISOString(),
     })),
     insights,
-    generatedReport: buildGeneratedReport({
-      monthLabel,
-      diaryCount: diaries.length,
-      emotionStats,
-      insights,
-    }),
+    generatedReport,
+    reportStatus: {
+      saved: Boolean(savedReport),
+      month: reportMonth,
+    },
   };
 }

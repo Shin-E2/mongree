@@ -1,0 +1,35 @@
+Mongree Security Review Remediation
+
+Verification result
+
+The main P0/P1 findings from the external review were correct. The codebase had unauthenticated S3 presigned uploads, overly broad profile RLS around private address fields, missing Supabase SSR middleware, Billing Portal trusting client customerId, missing diary_images update RLS, missing soft-delete filtering in the private diary list, raw PostgREST .or() search composition, and non-paginated community feed work.
+
+First hardening pass
+
+1. /api/upload now requires authentication, validates MIME type and size, and only issues users/{user.id}/uploads/{uuid}.{ext} keys.
+2. Billing Portal ignores request body customerId and reads subscriptions.stripe_customer_id for the current user.
+3. middleware.ts refreshes Supabase SSR cookies and protects actual route-group URLs: /home, /diary, /calendar, /statistics, /community, /ai-report, and /profile.
+4. profile_private migration moves address fields away from publicly readable profiles.
+5. diary_images_update_owner RLS policy exists.
+6. private diary list filters deleted_at is null.
+7. PostgREST search input is normalized before .or() use.
+8. latest community feed uses DB range().
+9. Next Image remotePatterns no longer allow http or unrestricted S3 paths.
+10. lint script uses eslint . instead of next lint.
+
+Additional completed work
+
+1. Diary create/update DB writes are wrapped by create_diary_transaction and update_diary_transaction RPC functions. S3 remains outside the DB transaction, so newly uploaded files are deleted if RPC fails, and removed existing files are deleted from S3 after update RPC succeeds.
+2. Community latest/popular feed uses public_diary_feed plus get_public_diary_feed RPC. Like/comment counts and limit/offset pagination are handled in the database.
+3. AI report API is split: GET only reads stored reports, POST performs generation. POST requires explicitConsent, checks monthly usage, applies free/paid subscription limits, and returns cached stored reports before calling OpenAI.
+4. AI report page reads stored reports and renders a consent-controlled generation button.
+5. Signup now validates form input and creates the auth user before uploading a profile image. If the later profile image update fails, the uploaded S3 object is deleted.
+6. getUser() has been split into getCurrentProfile() and getCurrentAuthUser(). The old name remains only as a compatibility alias in src/lib/get-user.ts.
+7. Health readiness can be protected with HEALTH_CHECK_SECRET, and scripts/check-production-health.mjs sends MONGREE_HEALTH_SECRET as a bearer token when present.
+8. AI report product completion now includes owner-only DELETE, RLS delete policy, safe share summary copy, JSON export without diary raw text, and a delete action in the UI.
+9. AI report Korean copy in the page, generation button, local fallback, and API responses has been restored from mojibake.
+
+Remaining separate improvement items
+
+1. ESLint/TypeScript strictness can be raised further after reducing existing any and unused warning debt.
+2. README and operations docs should expand into auth-flow, rls-policy, image-upload-security, ai-report-privacy, and billing-flow documents when the project is ready for public positioning.

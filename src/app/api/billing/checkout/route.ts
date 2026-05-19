@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { getStripeClient } from "@/lib/stripe";
 import { getSiteUrl } from "@/commons/utils/site-url";
 import { createClient } from "@/lib/supabase-server";
@@ -7,11 +7,11 @@ import { createClient } from "@/lib/supabase-server";
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  const user = await getUser();
+  const user = await getCurrentProfile();
 
   if (!user) {
     return NextResponse.json(
-      { error: "로그인이 필요합니다." },
+      { error: "濡쒓렇?몄씠 ?꾩슂?⑸땲??" },
       { status: 401 }
     );
   }
@@ -21,7 +21,7 @@ export async function POST() {
 
   if (!stripe || !priceId) {
     return NextResponse.json(
-      { error: "결제 환경 변수가 설정되지 않았습니다." },
+      { error: "寃곗젣 ?섍꼍 蹂?섍? ?ㅼ젙?섏? ?딆븯?듬땲??" },
       { status: 503 }
     );
   }

@@ -1,11 +1,15 @@
 const DEFAULT_HEALTH_URL = "https://mongree.vercel.app/api/health";
 
 const healthUrl = process.env.MONGREE_HEALTH_URL || DEFAULT_HEALTH_URL;
+const healthSecret = process.env.MONGREE_HEALTH_SECRET;
 
 const requiredEnvironment = [
   "NEXT_PUBLIC_SUPABASE_URL",
   "NEXT_PUBLIC_SUPABASE_ANON_KEY",
   "SUPABASE_SERVICE_ROLE_KEY",
+];
+
+const optionalEnvironment = [
   "OPENAI_API_KEY",
   "STRIPE_SECRET_KEY",
   "STRIPE_PRICE_ID",
@@ -25,7 +29,10 @@ function formatStatus(items, keyName) {
 
 async function main() {
   const response = await fetch(healthUrl, {
-    headers: { accept: "application/json" },
+    headers: {
+      accept: "application/json",
+      ...(healthSecret ? { Authorization: `Bearer ${healthSecret}` } : {}),
+    },
   });
   const body = await response.json();
 
@@ -40,8 +47,22 @@ async function main() {
 
   console.log(`Health URL: ${healthUrl}`);
   console.log(`HTTP status: ${response.status}`);
-  console.log("\nEnvironment");
-  console.log(formatStatus(environment, "key"));
+  const requiredStatuses = environment.filter(
+    (item) => item.category !== "optional"
+  );
+  const optionalStatuses = optionalEnvironment.map(
+    (key) =>
+      environment.find((item) => item.key === key) ?? {
+        key,
+        ready: false,
+        category: "optional",
+      }
+  );
+
+  console.log("\nRequired environment");
+  console.log(formatStatus(requiredStatuses, "key"));
+  console.log("\nOptional environment");
+  console.log(formatStatus(optionalStatuses, "key"));
   console.log("\nTables");
   console.log(formatStatus(tables, "table"));
 

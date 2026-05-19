@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { LogOut, Settings } from "lucide-react";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import { logOut } from "@/lib/logout";
 import { URL } from "@/commons/constants/global-url";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
@@ -22,7 +22,7 @@ export default function TopbarUserAvatar() {
 
   const fetchUser = useCallback(async () => {
     try {
-      const data = await getUser();
+      const data = await getCurrentProfile();
       if (data) setUser({ nickname: data.nickname, profile_image: data.profile_image });
     } catch {
       setUser(null);

@@ -1,7 +1,7 @@
 import { HeaderStandardMFull } from "@/commons/components/header";
 import { getPublicDiaries } from "./action";
 import CommunityDiarySection from "@/components/home/(dashboard)/community/diary-section";
-import { getUser } from "@/lib/get-user";
+import { getCurrentProfile } from "@/lib/get-user";
 import styles from "./styles.module.css";
 
 export const dynamic = "force-dynamic";
@@ -9,15 +9,15 @@ export const dynamic = "force-dynamic";
 export default async function CommunityPage() {
   const [{ diaries }, loginUser] = await Promise.all([
     getPublicDiaries({ page: 1 }),
-    getUser(),
+    getCurrentProfile(),
   ]);
 
   return (
     <div className={styles.pageContainer}>
-      {/* 헤더*/}
+      {/* ?ㅻ뜑*/}
       <HeaderStandardMFull
-        title="공개 일기"
-        description="다른 사람들의 이야기를 읽고 공감해보세요"
+        title="怨듦컻 ?쇨린"
+        description="?ㅻⅨ ?щ엺?ㅼ쓽 ?댁빞湲곕? ?쎄퀬 怨듦컧?대낫?몄슂"
       />
       <div className={styles.contentWrapper}>
         <CommunityDiarySection initialDiaries={diaries} loginUser={loginUser} />

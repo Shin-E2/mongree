@@ -267,11 +267,11 @@
 
 .emotionLegend {
   display: flex;
-  width: min(100%, 28rem);
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   gap: 0.65rem;
-  justify-self: center;
+  justify-self: stretch;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 58%, transparent);
   border-radius: var(--mongree-radius-md);
   background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
@@ -280,13 +280,14 @@
 
 .dominantEmotionCard {
   display: grid;
+  width: 100%;
   gap: 0.15rem;
   border: 1px solid color-mix(in oklch, var(--emotion-color) 30%, var(--mongree-line));
   border-radius: var(--mongree-radius-sm);
   background:
     radial-gradient(circle at 8% 20%, color-mix(in oklch, var(--emotion-color) 18%, transparent) 0 4rem, transparent 4.2rem),
     color-mix(in oklch, var(--emotion-soft-color) 72%, var(--mongree-surface-raised));
-  padding: 0.85rem;
+  padding: 1rem;
 }
 
 .dominantLabel {
@@ -492,6 +493,10 @@
 }
 
 @media (max-width: 640px) {
+  .distributionLayout {
+    justify-content: stretch;
+  }
+
   .chartBox {
     height: 16rem;
   }

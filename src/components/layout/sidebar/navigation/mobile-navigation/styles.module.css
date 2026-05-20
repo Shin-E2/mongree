@@ -2,7 +2,7 @@
   @apply grid h-[4.5rem] w-full grid-cols-5 items-center border px-2;
   border-color: color-mix(in oklch, var(--scene-line) 60%, transparent);
   border-radius: 24px;
-  background: color-mix(in oklch, var(--scene-nav-bg) 90%, transparent);
+  background: color-mix(in oklch, var(--scene-nav-bg) 98%, var(--mongree-bg));
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   box-shadow:

@@ -1,19 +1,29 @@
 .container {
-  @apply flex items-center space-x-3;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .imageWrapper {
-  @apply relative w-10 h-10;
+  position: relative;
+  height: 2.5rem;
+  width: 2.5rem;
 }
 
 .imageClass {
-  @apply w-full h-full object-cover rounded-full;
+  height: 100%;
+  width: 100%;
+  border-radius: 999px;
+  object-fit: cover;
 }
 
 .userInfo {
-  @apply text-sm font-semibold text-gray-800;
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .createdAt {
-  @apply text-xs text-gray-500;
+  color: var(--mongree-text-muted);
+  font-size: 0.75rem;
 }

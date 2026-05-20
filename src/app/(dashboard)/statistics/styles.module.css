@@ -1,206 +1,389 @@
 .pageContainer {
-  @apply mb-20;
+  margin-bottom: 5rem;
 }
 
 .contentWrapper {
-  @apply flex flex-col gap-6 px-4 py-6 md:px-8;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1.5rem 1rem;
+}
+
+.toolbar,
+.heroSection,
+.summaryCard,
+.panel,
+.tagCard,
+.emptyState,
+.emptyText {
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .toolbar {
-  @apply flex items-center justify-between rounded-xl bg-white px-4 py-3 shadow-sm;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
 }
 
 .navButton {
-  @apply flex h-10 w-10 items-center justify-center rounded-lg border text-gray-600 hover:bg-gray-50;
+  display: flex;
+  height: 2.5rem;
+  width: 2.5rem;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 70%, transparent);
+  border-radius: var(--mongree-radius-sm);
+  color: var(--mongree-text-muted);
+  transition: background-color 150ms ease-out, border-color 150ms ease-out, color 150ms ease-out;
 }
 
-.navIcon {
-  @apply h-5 w-5;
+.navButton:hover {
+  border-color: color-mix(in oklch, var(--scene-accent) 42%, var(--mongree-line));
+  background: color-mix(in oklch, var(--scene-accent) 10%, transparent);
+  color: var(--mongree-text);
+}
+
+.navIcon,
+.badgeIcon,
+.summaryIcon {
+  height: 1.25rem;
+  width: 1.25rem;
+}
+
+.monthTitle,
+.heroTitle,
+.heroEmotionLabel,
+.summaryValue,
+.panelTitle,
+.tagName,
+.emptyTitle {
+  color: var(--mongree-text);
+  font-weight: 800;
 }
 
 .monthTitle {
-  @apply text-center text-base font-semibold text-gray-900 sm:text-lg;
+  text-align: center;
+  font-size: 1rem;
 }
 
 .heroSection {
-  @apply grid gap-5 overflow-hidden rounded-xl bg-white p-5 shadow-sm lg:grid-cols-[minmax(0,1fr)_340px] lg:p-7;
+  display: grid;
+  overflow: hidden;
+  gap: 1.25rem;
+  padding: 1.25rem;
 }
 
 .heroText {
-  @apply flex flex-col justify-center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.badge,
+.tagCount {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
+  color: var(--mongree-primary-strong);
+  font-weight: 700;
 }
 
 .badge {
-  @apply mb-4 flex w-fit items-center gap-2 rounded-full bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-600;
-}
-
-.badgeIcon {
-  @apply h-4 w-4;
+  margin-bottom: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.375rem 0.75rem;
+  font-size: 0.875rem;
 }
 
 .heroTitle {
-  @apply text-2xl font-bold leading-tight text-gray-950 sm:text-3xl;
+  font-size: 1.5rem;
+  line-height: 1.18;
+}
+
+.heroDescription,
+.heroEmotionDescription,
+.emptyHeroEmotion,
+.summaryLabel,
+.summaryHint,
+.panelDescription,
+.legendLabel,
+.tagEmotion,
+.emptyText,
+.emptyDescription {
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
 }
 
 .heroDescription {
-  @apply mt-3 max-w-3xl text-sm leading-6 text-gray-500 sm:text-base;
+  margin-top: 0.75rem;
+  max-width: 68ch;
 }
 
 .heroEmotionCard {
-  @apply flex min-h-40 items-center gap-4 rounded-xl bg-indigo-50 p-5;
+  display: flex;
+  min-height: 10rem;
+  align-items: center;
+  gap: 1rem;
+  border: 1px solid color-mix(in oklch, var(--scene-accent) 24%, var(--mongree-line));
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--scene-accent) 12%, var(--mongree-surface-soft));
+  padding: 1.25rem;
 }
 
-.heroEmotionImage {
-  @apply flex-shrink-0 drop-shadow-sm;
+.heroEmotionImage,
+.tagEmotionImage {
+  flex-shrink: 0;
 }
 
 .heroEmotionLabel {
-  @apply text-xl font-bold text-gray-950;
+  font-size: 1.25rem;
 }
 
 .heroEmotionDescription {
-  @apply mt-2 text-sm leading-6 text-gray-600;
+  margin-top: 0.5rem;
 }
 
-.emptyHeroEmotion {
-  @apply text-sm leading-6 text-gray-500;
-}
-
-.summaryGrid {
-  @apply grid gap-4 sm:grid-cols-3;
+.summaryGrid,
+.chartGrid,
+.tagGrid {
+  display: grid;
+  gap: 1rem;
 }
 
 .summaryCard {
-  @apply flex min-h-36 flex-col rounded-xl bg-white p-5 shadow-sm;
+  display: flex;
+  min-height: 9rem;
+  flex-direction: column;
+  padding: 1.25rem;
 }
 
 .summaryIcon {
-  @apply mb-4 h-5 w-5 text-indigo-500;
+  margin-bottom: 1rem;
+  color: var(--scene-accent);
 }
 
 .summaryValue {
-  @apply line-clamp-1 text-2xl font-bold text-gray-950;
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 1.5rem;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
 .summaryLabel {
-  @apply mt-1 text-sm font-medium text-gray-700;
+  margin-top: 0.25rem;
+  font-weight: 700;
 }
 
 .summaryHint {
-  @apply mt-auto pt-4 text-xs leading-5 text-gray-500;
-}
-
-.chartGrid {
-  @apply grid gap-6 xl:grid-cols-[minmax(0,1.25fr)_minmax(340px,0.75fr)];
+  margin-top: auto;
+  padding-top: 1rem;
+  font-size: 0.75rem;
 }
 
 .panel {
-  @apply rounded-xl bg-white p-5 shadow-sm;
+  padding: 1.25rem;
 }
 
 .trendPanel,
 .weekdayPanel {
-  @apply xl:col-span-2;
+  min-width: 0;
 }
 
 .panelHeader {
-  @apply mb-4 flex items-start justify-between gap-3;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .panelTitle {
-  @apply text-lg font-semibold text-gray-900;
+  font-size: 1.125rem;
 }
 
 .panelDescription {
-  @apply mt-1 text-sm leading-6 text-gray-500;
+  margin-top: 0.25rem;
 }
 
 .chartBox {
-  @apply h-72 w-full min-w-0;
+  height: 18rem;
+  min-width: 0;
+  width: 100%;
 }
 
 .distributionLayout {
-  @apply grid gap-4 sm:grid-cols-[180px_minmax(0,1fr)] xl:grid-cols-1;
+  display: grid;
+  gap: 1rem;
 }
 
 .pieBox {
-  @apply h-48 min-w-0;
+  height: 12rem;
+  min-width: 0;
 }
 
 .emotionLegend {
-  @apply flex flex-col justify-center gap-2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .legendItem {
-  @apply grid grid-cols-[12px_minmax(0,1fr)_44px] items-center gap-2 text-sm;
+  display: grid;
+  grid-template-columns: 12px minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
 }
 
 .legendDot {
-  @apply h-3 w-3 rounded-full;
+  height: 0.75rem;
+  width: 0.75rem;
+  border-radius: 999px;
+}
+
+.legendLabel,
+.tagName {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .legendLabel {
-  @apply truncate font-medium text-gray-700;
+  font-weight: 650;
 }
 
 .legendValue {
-  @apply text-right font-semibold text-gray-800;
-}
-
-.tagGrid {
-  @apply grid gap-3 sm:grid-cols-2 xl:grid-cols-4;
+  color: var(--mongree-text);
+  text-align: right;
+  font-weight: 750;
 }
 
 .tagCard {
-  @apply rounded-lg border border-gray-100 bg-gray-50 p-4;
+  padding: 1rem;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
 }
 
 .tagHeader {
-  @apply flex items-center justify-between gap-3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
 }
 
 .tagName {
-  @apply truncate text-sm font-semibold text-gray-900;
+  font-size: 0.875rem;
 }
 
 .tagCount {
-  @apply rounded-full bg-white px-2 py-1 text-xs font-semibold text-indigo-600;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
 }
 
 .tagEmotion {
-  @apply mt-4 flex items-center gap-2 text-sm text-gray-600;
+  margin-top: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
-.tagEmotionImage {
-  @apply flex-shrink-0;
-}
-
-.emptyText {
-  @apply rounded-lg border border-dashed border-gray-200 px-4 py-8 text-center text-sm leading-6 text-gray-500;
+.emptyText,
+.emptyState {
+  border-style: dashed;
+  padding: 2rem 1rem;
+  text-align: center;
 }
 
 .emptyState {
-  @apply flex min-h-44 flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 px-6 py-8 text-center;
-}
-
-.emptyTitle {
-  @apply text-base font-semibold text-gray-800;
+  display: flex;
+  min-height: 11rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .emptyDescription {
-  @apply mt-2 max-w-md text-sm leading-6 text-gray-500;
+  margin-top: 0.5rem;
+  max-width: 28rem;
 }
 
 .writeLink {
-  @apply mt-4 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-700;
+  margin-top: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--mongree-radius-sm);
+  background: var(--mongree-primary);
+  padding: 0.5rem 1rem;
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.writeLink:hover {
+  background: var(--mongree-primary-strong);
+}
+
+@media (min-width: 640px) {
+  .summaryGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .distributionLayout {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  .tagGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .contentWrapper {
+    padding-inline: 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroSection {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    padding: 1.75rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .chartGrid {
+    grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
+  }
+
+  .trendPanel,
+  .weekdayPanel {
+    grid-column: span 2;
+  }
+
+  .distributionLayout {
+    grid-template-columns: 1fr;
+  }
+
+  .tagGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }
 
 @media (max-width: 640px) {
   .chartBox {
-    @apply h-64;
+    height: 16rem;
   }
 
   .heroEmotionCard {
-    @apply min-h-0;
+    min-height: 0;
   }
 }

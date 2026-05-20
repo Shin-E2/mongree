@@ -56,7 +56,7 @@ function LoginFormFields() {
 
       <div className="flex justify-end">
         <button
-          className="text-sm font-medium text-gray-600 transition-colors hover:text-indigo-600 disabled:text-gray-300"
+          className="text-sm font-medium text-[var(--mongree-text-muted)] transition-colors hover:text-[var(--mongree-primary-strong)] disabled:opacity-50"
           disabled={isPending}
           type="button"
           onClick={handlePasswordReset}
@@ -66,7 +66,9 @@ function LoginFormFields() {
       </div>
 
       {resetMessage && (
-        <p className="text-sm font-medium text-emerald-600">{resetMessage}</p>
+        <p className="text-sm font-medium text-[var(--mongree-success)]">
+          {resetMessage}
+        </p>
       )}
 
       <ButtonTextStandardSFull

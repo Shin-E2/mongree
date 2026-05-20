@@ -6,6 +6,11 @@ import { createSupabaseBrowserClient } from "@/lib/supabase/supabase";
 import { useRouter } from "next/navigation";
 import { FormEvent, useState, useTransition } from "react";
 
+const fieldClassName =
+  "flex flex-col gap-2 text-sm font-semibold text-[var(--mongree-text)]";
+const inputClassName =
+  "h-11 rounded-[var(--mongree-radius-sm)] border border-[color-mix(in_oklch,var(--mongree-line)_82%,transparent)] bg-[color-mix(in_oklch,var(--mongree-surface-raised)_92%,transparent)] px-4 text-sm text-[var(--mongree-text)] outline-none transition-shadow focus:border-[var(--mongree-primary)] focus:ring-2 focus:ring-[color-mix(in_oklch,var(--mongree-primary)_20%,transparent)]";
+
 export default function ResetPasswordPage() {
   const router = useRouter();
   const [password, setPassword] = useState("");
@@ -50,16 +55,18 @@ export default function ResetPasswordPage() {
       <CardStandardFullFull>
         <form className="flex flex-col gap-4" onSubmit={onSubmit}>
           <div className="flex flex-col gap-2">
-            <h1 className="text-2xl font-bold text-gray-950">새 비밀번호 설정</h1>
-            <p className="text-sm leading-6 text-gray-500">
+            <h1 className="text-2xl font-bold text-[var(--mongree-text)]">
+              새 비밀번호 설정
+            </h1>
+            <p className="text-sm leading-6 text-[var(--mongree-text-muted)]">
               재설정 메일로 인증된 세션에서 새 비밀번호를 저장합니다.
             </p>
           </div>
 
-          <label className="flex flex-col gap-2 text-sm font-semibold text-gray-700">
+          <label className={fieldClassName}>
             새 비밀번호
             <input
-              className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              className={inputClassName}
               minLength={8}
               onChange={(event) => setPassword(event.target.value)}
               placeholder="새 비밀번호를 입력하세요"
@@ -68,10 +75,10 @@ export default function ResetPasswordPage() {
             />
           </label>
 
-          <label className="flex flex-col gap-2 text-sm font-semibold text-gray-700">
+          <label className={fieldClassName}>
             새 비밀번호 확인
             <input
-              className="h-11 rounded-lg border border-gray-200 px-4 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+              className={inputClassName}
               minLength={8}
               onChange={(event) => setPasswordConfirm(event.target.value)}
               placeholder="새 비밀번호를 다시 입력하세요"
@@ -80,13 +87,19 @@ export default function ResetPasswordPage() {
             />
           </label>
 
-          {error && <p className="text-sm font-medium text-red-600">{error}</p>}
+          {error && (
+            <p className="text-sm font-medium text-[var(--mongree-danger)]">
+              {error}
+            </p>
+          )}
           {message && (
-            <p className="text-sm font-medium text-emerald-600">{message}</p>
+            <p className="text-sm font-medium text-[var(--mongree-success)]">
+              {message}
+            </p>
           )}
 
           <button
-            className="h-11 rounded-lg bg-indigo-600 text-sm font-semibold text-white transition-colors hover:bg-indigo-700 disabled:bg-gray-300"
+            className="h-11 rounded-[var(--mongree-radius-sm)] bg-[var(--mongree-primary)] text-sm font-semibold text-[color-mix(in_oklch,var(--mongree-surface-raised)_96%,var(--mongree-text))] transition-colors hover:bg-[var(--mongree-primary-strong)] disabled:cursor-not-allowed disabled:opacity-55"
             disabled={isPending}
             type="submit"
           >

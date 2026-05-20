@@ -1,41 +1,68 @@
 .headerContainer {
-  @apply sticky top-0 bg-white z-10 py-4 border-b border-gray-200;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  border-bottom: 1px solid color-mix(in oklch, var(--mongree-line) 70%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  padding: 1rem;
+  backdrop-filter: blur(12px);
 }
 
 .headerContent {
-  @apply max-w-screen-md mx-auto flex items-center justify-between;
+  margin-inline: auto;
+  display: flex;
+  max-width: 768px;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .backButton {
-  @apply flex items-center text-gray-600 hover:text-gray-900 transition-colors duration-200;
+  display: flex;
+  align-items: center;
+  color: var(--mongree-text-muted);
+  transition: color 150ms ease-out;
+}
+
+.backButton:hover {
+  color: var(--mongree-text);
 }
 
 .backButtonText {
-  @apply text-base font-medium;
+  font-size: 1rem;
+  font-weight: 650;
 }
 
 .actionButtons {
-  @apply flex items-center space-x-2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .shareButton,
 .editButton,
 .deleteButton {
-  @apply p-2 rounded-full text-gray-500 hover:bg-gray-100 transition-colors duration-200;
+  border-radius: 999px;
+  color: var(--mongree-text-muted);
+  padding: 0.5rem;
+  transition: background-color 150ms ease-out, color 150ms ease-out;
 }
 
-.editButton {
-  @apply hover:text-indigo-600;
+.shareButton:hover,
+.editButton:hover {
+  background: color-mix(in oklch, var(--scene-accent) 10%, transparent);
+  color: var(--mongree-primary-strong);
 }
 
-.deleteButton {
-  @apply hover:text-red-600;
+.deleteButton:hover {
+  background: color-mix(in oklch, var(--mongree-danger) 10%, transparent);
+  color: var(--mongree-danger);
 }
 
 .iconBase {
-  @apply w-5 h-5;
+  height: 1.25rem;
+  width: 1.25rem;
 }
 
 .backIcon {
-  @apply mr-1;
+  margin-right: 0.25rem;
 }

@@ -1,5 +1,6 @@
 .mainLayout {
   @apply flex min-h-[100dvh];
+  --mobile-nav-reserved-height: calc(7rem + env(safe-area-inset-bottom));
   color: var(--mongree-text);
   background: transparent;
 }
@@ -10,11 +11,17 @@
 }
 
 .mainContentWithPadding {
-  @apply pt-[4.75rem] pb-28 md:pb-10;
+  @apply pt-[4.75rem];
   min-height: 100dvh;
+  padding-bottom: var(--mobile-nav-reserved-height);
 }
 
-/* 콘텐츠 max-width 센터링 — 양쪽 배경(구름·해·달) 노출 */
 .pageContainer {
   @apply max-w-[72rem] mx-auto;
+}
+
+@media (min-width: 768px) {
+  .mainContentWithPadding {
+    padding-bottom: 2.5rem;
+  }
 }

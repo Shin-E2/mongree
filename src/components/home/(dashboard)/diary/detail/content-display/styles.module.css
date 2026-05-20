@@ -1,47 +1,79 @@
 .container {
-  @apply bg-white rounded-2xl shadow-sm overflow-hidden;
+  overflow: hidden;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
-.authorEmotionSection {
-  @apply p-4 md:p-6 border-b;
+.authorEmotionSection,
+.imageSection {
+  border-bottom: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+}
+
+.authorEmotionSection,
+.contentSection {
+  padding: 1rem;
 }
 
 .profileHeaderWrapper {
-  @apply flex items-center justify-between mb-4;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .publicBadge {
-  @apply px-2.5 py-1 bg-green-100 text-green-800 text-sm rounded-full;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mongree-success) 14%, transparent);
+  color: var(--mongree-success);
+  padding: 0.25rem 0.625rem;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .emotionBadgeList {
-  @apply mb-4;
+  margin-bottom: 1rem;
 }
 
 .title {
-  @apply text-xl md:text-2xl font-bold text-gray-900;
-}
-
-.imageSection {
-  @apply border-b;
+  color: var(--mongree-text);
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 .imageThumbnailList {
-  @apply grid-cols-2 md:grid-cols-3 gap-2 p-4 md:p-6;
-}
-
-.contentSection {
-  @apply p-4 md:p-6;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 1rem;
 }
 
 .proseWrapper {
-  @apply max-w-none;
+  max-width: none;
 }
 
 .diaryContent {
-  @apply text-gray-700 whitespace-pre-line leading-relaxed;
+  white-space: pre-line;
+  color: var(--mongree-text);
+  line-height: 1.75;
 }
 
 .tagSection {
-  @apply mt-6;
+  margin-top: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .authorEmotionSection,
+  .contentSection,
+  .imageThumbnailList {
+    padding: 1.5rem;
+  }
+
+  .title {
+    font-size: 1.5rem;
+  }
+
+  .imageThumbnailList {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
 }

@@ -14,7 +14,7 @@ export default function CounselorListPage() {
     <div className={styles.mainContainer}>
       <HeaderStandardMFull
         title="상담사 찾기"
-        description="지금의 감정 흐름에 맞는 상담사를 고르고 상담 시간을 확인하세요"
+        description="지금의 감정 흐름에 맞는 상담사를 고르고 가능한 상담 시간을 확인하세요."
       />
 
       <div className={styles.contentWrapper}>
@@ -25,11 +25,11 @@ export default function CounselorListPage() {
           </div>
           <div className={styles.summaryItem}>
             <CalendarClock className={styles.summaryIcon} aria-hidden="true" />
-            <span>가능 시간 확인 후 신청</span>
+            <span>가능한 시간 확인 후 신청</span>
           </div>
           <div className={styles.summaryItem}>
             <MessageCircle className={styles.summaryIcon} aria-hidden="true" />
-            <span>화상, 전화, 채팅 상담 선택</span>
+            <span>영상, 전화, 채팅 상담 선택</span>
           </div>
         </section>
 

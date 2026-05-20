@@ -1,132 +1,263 @@
 .mainContainer {
-  @apply mb-20;
+  margin-bottom: 5rem;
 }
 
 .contentWrapper,
 .detailWrapper {
-  @apply mx-auto flex w-full max-w-6xl flex-col gap-6 px-4 py-8 md:px-8;
+  margin-inline: auto;
+  display: flex;
+  width: 100%;
+  max-width: 72rem;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 2rem 1rem;
+}
+
+.summaryBand,
+.card,
+.detailHero,
+.detailSection,
+.bookingPanel {
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
 }
 
 .summaryBand {
-  @apply grid gap-3 rounded-lg border border-emerald-100 bg-emerald-50 p-4 text-sm font-medium text-emerald-900 md:grid-cols-3;
+  display: grid;
+  gap: 0.75rem;
+  border-color: color-mix(in oklch, var(--mongree-success) 24%, var(--mongree-line));
+  background: color-mix(in oklch, var(--mongree-success) 9%, var(--mongree-surface-soft));
+  padding: 1rem;
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  font-weight: 700;
 }
 
 .summaryItem {
-  @apply flex items-center gap-2;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .summaryIcon,
 .methodIcon,
 .checkIcon,
 .linkIcon {
-  @apply h-4 w-4 shrink-0;
+  height: 1rem;
+  width: 1rem;
+  flex-shrink: 0;
 }
 
 .counselorGrid {
-  @apply grid gap-4 md:grid-cols-3;
-}
-
-.card,
-.detailHero,
-.detailSection,
-.bookingPanel {
-  @apply rounded-lg border border-gray-100 bg-white shadow-sm;
+  display: grid;
+  gap: 1rem;
 }
 
 .card {
-  @apply flex min-h-72 flex-col gap-5 p-5;
+  display: flex;
+  min-height: 18rem;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 1.25rem;
 }
 
 .cardHeader {
-  @apply flex items-start justify-between gap-4;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .eyebrow,
 .panelLabel {
-  @apply text-xs font-semibold uppercase tracking-wide text-emerald-700;
+  color: var(--mongree-primary-strong);
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.name,
+.detailName,
+.sectionTitle,
+.bookingPanel strong {
+  color: var(--mongree-text);
+  font-weight: 800;
 }
 
 .name {
-  @apply mt-1 text-xl font-bold text-gray-950;
+  margin-top: 0.25rem;
+  font-size: 1.25rem;
 }
 
-.title {
-  @apply mt-1 text-sm font-medium text-gray-600;
-}
-
-.nextSlot {
-  @apply rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700;
-}
-
+.title,
 .description,
 .detailSummary,
 .bodyText {
-  @apply text-sm leading-6 text-gray-600;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+
+.title {
+  margin-top: 0.25rem;
+  font-weight: 650;
+}
+
+.nextSlot,
+.tag {
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
+  color: var(--mongree-primary-strong);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.nextSlot {
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
 }
 
 .tags,
 .checkList,
 .timeList {
-  @apply flex list-none flex-wrap gap-2 p-0;
+  display: flex;
+  list-style: none;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
 }
 
 .tag {
-  @apply rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-700;
+  padding: 0.25rem 0.75rem;
 }
 
 .detailLink,
 .backLink,
 .bookingButton {
-  @apply inline-flex items-center justify-center gap-2 rounded-lg font-semibold transition-colors;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-radius: var(--mongree-radius-sm);
+  font-weight: 750;
+  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out;
 }
 
 .detailLink {
-  @apply mt-auto text-sm text-indigo-700 hover:text-indigo-900;
+  margin-top: auto;
+  color: var(--mongree-primary-strong);
+  font-size: 0.875rem;
+}
+
+.detailLink:hover {
+  color: var(--mongree-primary);
 }
 
 .backLink {
-  @apply w-fit text-sm text-gray-600 hover:text-gray-950;
+  width: fit-content;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
+}
+
+.backLink:hover {
+  color: var(--mongree-text);
 }
 
 .detailHero {
-  @apply grid gap-6 p-6 md:grid-cols-[1fr_280px] md:items-center;
+  display: grid;
+  gap: 1.5rem;
+  padding: 1.5rem;
 }
 
 .detailName {
-  @apply mt-2 text-2xl font-bold text-gray-950;
+  margin-top: 0.5rem;
+  font-size: 1.5rem;
+}
+
+.detailSummary {
+  margin-top: 0.75rem;
 }
 
 .bookingPanel {
-  @apply flex flex-col gap-3 bg-gray-50 p-5;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  background: color-mix(in oklch, var(--scene-accent) 10%, var(--mongree-surface-soft));
+  padding: 1.25rem;
 }
 
 .bookingPanel strong {
-  @apply text-2xl text-gray-950;
+  font-size: 1.5rem;
 }
 
 .bookingButton {
-  @apply h-11 bg-indigo-600 px-4 text-sm text-white hover:bg-indigo-700;
+  height: 2.75rem;
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0 1rem;
+  font-size: 0.875rem;
+}
+
+.bookingButton:hover {
+  background: var(--mongree-primary-strong);
 }
 
 .detailSection {
-  @apply flex flex-col gap-4 p-6;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.5rem;
 }
 
 .sectionTitle {
-  @apply text-base font-bold text-gray-950;
+  font-size: 1rem;
 }
 
 .methodGrid {
-  @apply grid gap-3 sm:grid-cols-2;
+  display: grid;
+  gap: 0.75rem;
 }
 
 .methodItem,
 .checkList li,
 .timeList li {
-  @apply flex items-center gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm font-medium text-gray-700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: var(--mongree-radius-sm);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
+  padding: 0.5rem 0.75rem;
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  font-weight: 650;
 }
 
 .methodIcon,
 .checkIcon {
-  @apply text-emerald-600;
+  color: var(--mongree-success);
+}
+
+@media (min-width: 640px) {
+  .methodGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 768px) {
+  .contentWrapper,
+  .detailWrapper {
+    padding-inline: 2rem;
+  }
+
+  .summaryBand,
+  .counselorGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .detailHero {
+    grid-template-columns: minmax(0, 1fr) 280px;
+    align-items: center;
+  }
 }

@@ -1,27 +1,42 @@
 .section {
-  @apply flex flex-col gap-6;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .section__group {
-  @apply relative mt-6;
+  position: relative;
+  margin-top: 1.5rem;
 }
 
 .section__group__line {
-  @apply absolute inset-0 flex items-center;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
 }
 
 .section__group__line__divider {
-  @apply w-full border-t border-gray-300;
+  width: 100%;
+  border-top: 1px solid color-mix(in oklch, var(--mongree-line) 78%, transparent);
 }
 
 .section__group__text {
-  @apply relative flex justify-center text-sm;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
 }
 
 .section__group__text__span {
-  @apply px-2 bg-white text-gray-500;
+  background: var(--mongree-surface);
+  padding: 0 0.5rem;
+  color: var(--mongree-text-muted);
 }
 
 .section__buttons {
-  @apply flex justify-center gap-4;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
 }

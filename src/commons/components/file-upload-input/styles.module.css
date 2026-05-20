@@ -1,31 +1,61 @@
 .container {
-  @apply mb-4;
+  margin-bottom: 1rem;
 }
 
 .label {
-  @apply block text-sm font-medium text-gray-700 mb-1;
+  margin-bottom: 0.25rem;
+  display: block;
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  font-weight: 650;
 }
 
 .inputWrapper {
-  @apply flex items-center justify-center w-full;
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
 }
 
 .dropzone {
-  @apply w-full h-32 flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-gray-400 transition-colors;
+  display: flex;
+  height: 8rem;
+  width: 100%;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed color-mix(in oklch, var(--mongree-line) 82%, transparent);
+  border-radius: var(--mongree-radius-sm);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.dropzone:hover {
+  border-color: color-mix(in oklch, var(--scene-accent) 52%, var(--mongree-line));
+  background: color-mix(in oklch, var(--scene-accent) 8%, var(--mongree-surface-soft));
 }
 
 .dropzoneContent {
-  @apply flex flex-col items-center justify-center pt-5 pb-6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem 0 1.5rem;
 }
 
 .icon {
-  @apply w-8 h-8 text-gray-400 mb-2;
+  margin-bottom: 0.5rem;
+  height: 2rem;
+  width: 2rem;
+  color: var(--mongree-text-muted);
 }
 
 .placeholder {
-  @apply text-sm text-gray-500;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
 }
 
 .fileInput {
-  @apply hidden;
+  display: none;
 }

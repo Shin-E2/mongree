@@ -1,11 +1,20 @@
 .section {
-  @apply mt-6 text-center;
+  margin-top: 1.5rem;
+  text-align: center;
 }
 
 .section__span {
-  @apply text-sm text-gray-600;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
 }
 
 .section__link {
-  @apply ml-2 text-sm text-indigo-600 hover:text-indigo-500;
+  margin-left: 0.5rem;
+  color: var(--mongree-primary-strong);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.section__link:hover {
+  color: var(--mongree-primary);
 }

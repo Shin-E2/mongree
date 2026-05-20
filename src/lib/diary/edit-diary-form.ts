@@ -8,11 +8,21 @@ export interface EditDiaryImagePayload {
   file_size: number | null;
 }
 
-export function extractEditDiaryFormData(formData: FormData) {
-  const imageFiles = formData
+const getStringValue = (formData: FormData, key: string) =>
+  String(formData.get(key) ?? "");
+
+const getStringList = (formData: FormData, key: string) =>
+  formData
+    .getAll(key)
+    .map((value) => String(value))
+    .filter((value) => value.length > 0);
+
+const getImageFiles = (formData: FormData) =>
+  formData
     .getAll("images")
     .filter((file): file is File => file instanceof File && file.size > 0);
 
+function assertSupportedImages(imageFiles: File[]) {
   const invalidImage = imageFiles.find(
     (file) => !DIARY_IMAGE_ACCEPTED_TYPES.includes(file.type)
   );
@@ -20,17 +30,20 @@ export function extractEditDiaryFormData(formData: FormData) {
   if (invalidImage) {
     throw new Error("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
   }
+}
+
+export function extractEditDiaryFormData(formData: FormData) {
+  const imageFiles = getImageFiles(formData);
+  assertSupportedImages(imageFiles);
 
   return {
-    title: String(formData.get("title") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    title: getStringValue(formData, "title"),
+    content: getStringValue(formData, "content"),
     isPrivate: formData.get("isPrivate") === "true",
-    emotions: formData.getAll("emotions").map((emotion) => String(emotion)),
-    tags: normalizeDiaryTags(String(formData.get("tags") ?? "")),
+    emotions: getStringList(formData, "emotions"),
+    tags: normalizeDiaryTags(getStringValue(formData, "tags")),
     images: imageFiles,
-    keptImageIds: formData
-      .getAll("keptImageIds")
-      .map((imageId) => String(imageId)),
+    keptImageIds: getStringList(formData, "keptImageIds"),
   };
 }
 

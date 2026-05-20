@@ -5,6 +5,11 @@ const uploadBucketHostname = `${
 }.s3.${process.env.AWS_REGION ?? "ap-northeast-2"}.amazonaws.com`;
 
 const nextConfig: NextConfig = {
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "6mb",
+    },
+  },
   images: {
     remotePatterns: [
       {

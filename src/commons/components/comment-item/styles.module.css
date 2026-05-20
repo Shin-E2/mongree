@@ -1,11 +1,20 @@
 .diary_comment {
-  @apply p-4 md:p-6;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 58%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface) 76%, transparent);
+  padding: 1rem;
 }
 
 .diary_comment p {
-  @apply text-gray-600;
+  color: var(--mongree-text-muted);
 }
 
 .diary_reply {
-  @apply mt-4;
+  margin-top: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .diary_comment {
+    padding: 1.25rem;
+  }
 }

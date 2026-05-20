@@ -9,6 +9,13 @@
 .toolbar {
   @apply flex items-center justify-between;
   gap: 1rem;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background:
+    radial-gradient(circle at 50% -40%, color-mix(in oklch, var(--scene-accent) 16%, transparent) 0 6rem, transparent 6.2rem),
+    color-mix(in oklch, var(--mongree-surface-raised) 82%, transparent);
+  box-shadow: var(--mongree-shadow-soft);
+  padding: 0.75rem 1rem;
 }
 
 .navButton {
@@ -37,7 +44,10 @@
 
 .monthTitle {
   @apply min-w-0 text-center text-base font-bold sm:text-lg;
-  color: var(--mongree-text);
+  color: color-mix(in oklch, var(--mongree-text) 82%, var(--scene-accent));
+  text-shadow:
+    0 1px 0 color-mix(in oklch, var(--mongree-surface-raised) 78%, transparent),
+    0 10px 24px color-mix(in oklch, var(--scene-accent) 18%, transparent);
 }
 
 .layoutGrid {

@@ -1,15 +1,32 @@
 .emptyMessage {
-  @apply py-12 text-center text-gray-500;
+  border: 1px dashed color-mix(in oklch, var(--mongree-line) 70%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 62%, transparent);
+  padding: 2.5rem 1rem;
+  color: var(--mongree-text-muted);
+  text-align: center;
 }
 
 .container {
-  @apply divide-y;
+  display: grid;
+  gap: 0.75rem;
+  padding-top: 1rem;
 }
 
 .replyContainer {
-  @apply ml-6 md:ml-12;
+  margin-left: 1.25rem;
+  border-left: 1px solid color-mix(in oklch, var(--mongree-line) 70%, transparent);
+  padding-left: 1rem;
 }
 
 .replyItem {
-  @apply ml-5 md:ml-12 border-gray-100 p-4 pt-0;
+  margin-left: 0.75rem;
+  border-left: 1px solid color-mix(in oklch, var(--scene-accent) 22%, var(--mongree-line));
+  padding: 0.75rem 0 0.75rem 1rem;
+}
+
+@media (min-width: 768px) {
+  .replyContainer {
+    margin-left: 2.5rem;
+  }
 }

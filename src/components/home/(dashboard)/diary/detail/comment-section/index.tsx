@@ -19,7 +19,7 @@ export default function CommentSection({
       <CommentForm
         diaryId={diaryId}
         user={loginUser}
-        placeholder="댓글을 입력하세요..."
+        placeholder="댓글을 입력하세요"
       />
       {comments && (
         <CommentList

@@ -193,7 +193,8 @@
 }
 
 .trendPanel,
-.weekdayPanel {
+.weekdayPanel,
+.distributionPanel {
   min-width: 0;
 }
 
@@ -221,11 +222,12 @@
 
 .distributionLayout {
   display: grid;
-  gap: 1rem;
+  align-items: center;
+  gap: 1.25rem;
 }
 
 .pieBox {
-  height: 12rem;
+  height: 13.5rem;
   min-width: 0;
 }
 
@@ -361,16 +363,21 @@
 
 @media (min-width: 1280px) {
   .chartGrid {
-    grid-template-columns: minmax(0, 1.25fr) minmax(340px, 0.75fr);
+    grid-template-columns: minmax(0, 0.95fr) minmax(360px, 1.05fr);
   }
 
   .trendPanel,
-  .weekdayPanel {
+  .weekdayPanel,
+  .distributionPanel {
     grid-column: span 2;
   }
 
   .distributionLayout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(280px, 0.8fr) minmax(0, 1.2fr);
+  }
+
+  .pieBox {
+    height: 18rem;
   }
 
   .tagGrid {

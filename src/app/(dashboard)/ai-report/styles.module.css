@@ -162,11 +162,25 @@
 .generatedReportPanel {
   border-color: color-mix(in oklch, var(--scene-accent) 30%, var(--mongree-line));
   background: linear-gradient(145deg, color-mix(in oklch, var(--scene-accent) 14%, var(--mongree-surface)), color-mix(in oklch, var(--mongree-surface-raised) 90%, transparent));
+  display: flex;
+  justify-content: center;
   padding: 1.25rem;
 }
 
+.generatedReportBody {
+  display: grid;
+  width: 100%;
+  max-width: 52rem;
+  gap: 1rem;
+}
+
 .generatedReportHeader {
-  max-width: 68ch;
+  max-width: 52rem;
+  text-align: center;
+}
+
+.generatedReportBadge {
+  margin-inline: auto;
 }
 
 .generatedReportBadge,
@@ -283,6 +297,11 @@
   gap: 0.5rem;
 }
 
+.reportActions,
+.generatedEmotionList {
+  justify-content: center;
+}
+
 .actionMessage {
   width: 100%;
   font-weight: 650;
@@ -300,7 +319,8 @@
 }
 
 .recommendationList {
-  margin-top: 1.25rem;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  margin-top: 0;
 }
 
 .recommendationItem,

@@ -75,7 +75,8 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
                 : "이번 달 감정 흐름을 기다리고 있어요"}
             </h2>
             <p className={styles.heroDescription}>
-              일기를 쌓을수록 AI가 감정의 반복, 기록 리듬, 자주 등장하는 단서를 더 선명하게 읽어줍니다.
+              일기가 쌓일수록 감정의 반복, 기록 리듬, 자주 등장하는 단서를
+              더 선명하게 읽어줍니다.
             </p>
           </div>
           <div className={styles.heroMetricGrid}>
@@ -102,52 +103,54 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
         </section>
 
         <section className={styles.generatedReportPanel}>
-          <div className={styles.generatedReportHeader}>
-            <span className={styles.generatedReportBadge}>
-              {reportData.generatedReport.source === "openai"
-                ? "OpenAI 생성 리포트"
-                : "로컬 안전 리포트"}
-            </span>
-            <h3 className={styles.generatedReportTitle}>
-              {reportData.generatedReport.summary}
-            </h3>
-            <p className={styles.generatedReportDescription}>
-              {reportData.generatedReport.gentleInsight}
-            </p>
-            <p className={styles.privacyNote}>
-              공유와 내보내기는 원문 제외 요약만 사용합니다.
-            </p>
-            <div className={styles.reportControlRow}>
-              <GenerateReportButton
-                month={reportData.reportStatus.month}
-                hasSavedReport={reportData.reportStatus.saved}
-              />
-              {reportData.reportStatus.saved && (
-                <ReportActions
+          <div className={styles.generatedReportBody}>
+            <div className={styles.generatedReportHeader}>
+              <span className={styles.generatedReportBadge}>
+                {reportData.generatedReport.source === "openai"
+                  ? "OpenAI 생성 리포트"
+                  : "로컬 안전 리포트"}
+              </span>
+              <h3 className={styles.generatedReportTitle}>
+                {reportData.generatedReport.summary}
+              </h3>
+              <p className={styles.generatedReportDescription}>
+                {reportData.generatedReport.gentleInsight}
+              </p>
+              <p className={styles.privacyNote}>
+                공유와 내보내기는 원문 제외 요약만 사용합니다.
+              </p>
+              <div className={styles.reportControlRow}>
+                <GenerateReportButton
                   month={reportData.reportStatus.month}
-                  monthLabel={reportData.monthLabel}
-                  report={reportData.generatedReport}
+                  hasSavedReport={reportData.reportStatus.saved}
                 />
-              )}
+                {reportData.reportStatus.saved && (
+                  <ReportActions
+                    month={reportData.reportStatus.month}
+                    monthLabel={reportData.monthLabel}
+                    report={reportData.generatedReport}
+                  />
+                )}
+              </div>
             </div>
-          </div>
 
-          {reportData.generatedReport.dominantEmotions.length > 0 && (
-            <div className={styles.generatedEmotionList}>
-              {reportData.generatedReport.dominantEmotions.map((emotion) => (
-                <span key={emotion} className={styles.generatedEmotion}>
-                  {emotion}
-                </span>
+            {reportData.generatedReport.dominantEmotions.length > 0 && (
+              <div className={styles.generatedEmotionList}>
+                {reportData.generatedReport.dominantEmotions.map((emotion) => (
+                  <span key={emotion} className={styles.generatedEmotion}>
+                    {emotion}
+                  </span>
+                ))}
+              </div>
+            )}
+
+            <div className={styles.recommendationList}>
+              {reportData.generatedReport.recommendations.map((recommendation) => (
+                <p key={recommendation} className={styles.recommendationItem}>
+                  {recommendation}
+                </p>
               ))}
             </div>
-          )}
-
-          <div className={styles.recommendationList}>
-            {reportData.generatedReport.recommendations.map((recommendation) => (
-              <p key={recommendation} className={styles.recommendationItem}>
-                {recommendation}
-              </p>
-            ))}
           </div>
         </section>
 

@@ -22,7 +22,7 @@ export default function EmpathySection({
   }));
 
   if (isPrivate) {
-    return null; // 비공개 일기인 경우 공감 섹션 렌더링 안 함
+    return null;
   }
 
   return (

@@ -122,7 +122,7 @@ export default function StatisticsCharts({
         </div>
       </section>
 
-      <section className={styles.panel}>
+      <section className={`${styles.panel} ${styles.distributionPanel}`}>
         <div className={styles.panelHeader}>
           <div>
             <h2 className={styles.panelTitle}>감정 분포</h2>

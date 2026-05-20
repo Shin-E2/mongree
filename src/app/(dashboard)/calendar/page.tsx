@@ -121,7 +121,7 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
               </div>
             ) : (
               <div className={styles.emptyState}>
-                <p className={styles.emptyTitle}>기록된 일기가 없습니다</p>
+                <p className={styles.emptyTitle}>기록한 일기가 없습니다</p>
                 <p className={styles.emptyDescription}>
                   날짜를 선택하거나 오늘의 감정을 일기로 남겨보세요.
                 </p>

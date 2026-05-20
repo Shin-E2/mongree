@@ -12,7 +12,7 @@ import type {
 import useImagePreview from "./hook";
 import styles from "./styles.module.css";
 
-function ImagePreviewBase<T extends FieldValues>({
+function ProfileImagePreviewBase<T extends FieldValues>({
   cssprop,
   className,
 }: IImagePreviewBaseProps<T>) {
@@ -53,14 +53,14 @@ function ImagePreviewBase<T extends FieldValues>({
   );
 }
 
-const MemoizedImagePreviewBase = memo(
-  ImagePreviewBase
-) as typeof ImagePreviewBase;
+const MemoizedProfileImagePreview = memo(
+  ProfileImagePreviewBase
+) as typeof ProfileImagePreviewBase;
 
 export const ImagePreviewByProfile = <T extends FieldValues>({
   ...rest
 }: IImagePreviewByProfileProps<T>) => {
-  return <MemoizedImagePreviewBase {...rest} cssprop={styles.profile} />;
+  return <MemoizedProfileImagePreview {...rest} cssprop={styles.profile} />;
 };
 
-export default MemoizedImagePreviewBase;
+export default MemoizedProfileImagePreview;

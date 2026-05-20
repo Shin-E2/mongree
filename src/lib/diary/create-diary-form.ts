@@ -8,18 +8,24 @@ export interface DiaryImagePayload {
   file_size: number | null;
 }
 
+const getStringValue = (formData: FormData, key: string) =>
+  String(formData.get(key) ?? "");
+
+const getStringList = (formData: FormData, key: string) =>
+  formData
+    .getAll(key)
+    .map((value) => String(value))
+    .filter((value) => value.length > 0);
+
 export function extractCreateDiaryFormData(formData: FormData) {
-  const imageUrls = formData
-    .getAll("imageUrls")
-    .map((url) => String(url))
-    .filter(Boolean);
+  const imageUrls = getStringList(formData, "imageUrls");
 
   return {
-    title: String(formData.get("title") ?? ""),
-    content: String(formData.get("content") ?? ""),
+    title: getStringValue(formData, "title"),
+    content: getStringValue(formData, "content"),
     isPrivate: formData.get("isPrivate") === "true",
-    emotions: formData.getAll("emotions").map((emotion) => String(emotion)),
-    tags: normalizeDiaryTags(String(formData.get("tags") ?? "")),
+    emotions: getStringList(formData, "emotions"),
+    tags: normalizeDiaryTags(getStringValue(formData, "tags")),
     imageUrls,
   };
 }

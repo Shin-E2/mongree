@@ -6,15 +6,12 @@ import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form
 import { getCurrentProfile } from "@/lib/get-user";
 import { formatZodError } from "@/commons/utils/errorFormatters";
 import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
+import {
+  buildDiaryImagePayloads,
+  extractCreateDiaryFormData,
+  type DiaryImagePayload,
+} from "@/lib/diary/create-diary-form";
 import type { Json } from "@/lib/supabase.types";
-
-interface DiaryImagePayload {
-  image_url: string;
-  sort_order: number;
-  file_name: string;
-  mime_type: string;
-  file_size: number | null;
-}
 
 interface CreateDiaryWithoutRpcParams {
   supabase: Awaited<ReturnType<typeof createClient>>;
@@ -25,25 +22,6 @@ interface CreateDiaryWithoutRpcParams {
   emotionIds: string[];
   tagNames: string[];
   images: DiaryImagePayload[];
-}
-
-function extractFormData(formData: FormData) {
-  const imageUrls = formData
-    .getAll("imageUrls")
-    .map((url) => String(url))
-    .filter(Boolean);
-
-  return {
-    title: String(formData.get("title") ?? ""),
-    content: String(formData.get("content") ?? ""),
-    isPrivate: formData.get("isPrivate") === "true",
-    emotions: formData.getAll("emotions").map((emotion) => String(emotion)),
-    tags: String(formData.get("tags") ?? "")
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean),
-    imageUrls,
-  };
 }
 
 function isMissingCreateDiaryRpc(error: { message?: string } | null) {
@@ -164,7 +142,7 @@ export async function createDiary(formData: FormData) {
       return { success: false, error: "로그인이 필요합니다." };
     }
 
-    const extractedData = extractFormData(formData);
+    const extractedData = extractCreateDiaryFormData(formData);
     uploadedImageUrls = extractedData.imageUrls;
 
     const validationResult = await DiaryNewFormSchema.safeParseAsync({
@@ -180,13 +158,7 @@ export async function createDiary(formData: FormData) {
       };
     }
 
-    const images: DiaryImagePayload[] = uploadedImageUrls.map((url, index) => ({
-      image_url: url,
-      sort_order: index + 1,
-      file_name: `diary_image_${index + 1}.jpg`,
-      mime_type: "image/jpeg",
-      file_size: null,
-    }));
+    const images = buildDiaryImagePayloads(uploadedImageUrls);
 
     const { data: diaryId, error } = await supabase.rpc(
       "create_diary_transaction",

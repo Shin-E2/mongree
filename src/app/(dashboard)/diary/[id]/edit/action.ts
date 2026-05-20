@@ -5,13 +5,17 @@ import {
   uploadMultipleImages,
 } from "@/commons/utils/upload-images";
 import {
-  DIARY_IMAGE_ACCEPTED_TYPES,
   DIARY_IMAGE_MAX_COUNT,
   DiaryNewFormSchema,
 } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
 import { revalidateDiaryUpdated } from "@/commons/utils/cache-revalidation";
+import {
+  buildEditDiaryImagePayloads,
+  extractEditDiaryFormData,
+  type EditDiaryImagePayload,
+} from "@/lib/diary/edit-diary-form";
 import type { Json } from "@/lib/supabase.types";
 
 export interface DiaryEditImage {
@@ -51,48 +55,12 @@ interface DiaryEditRow {
     | null;
 }
 
-interface DiaryImagePayload {
-  image_url: string;
-  file_name: string;
-  mime_type: string;
-  file_size: number | null;
-}
-
 interface UpdateDiaryRpcResult {
   diary_id: string;
   removed_image_urls: string[] | null;
   was_private: boolean | null;
   is_private: boolean | null;
 }
-
-const parseEditFormData = (formData: FormData) => {
-  const imageFiles = formData
-    .getAll("images")
-    .filter((file): file is File => file instanceof File && file.size > 0);
-
-  const invalidImage = imageFiles.find(
-    (file) => !DIARY_IMAGE_ACCEPTED_TYPES.includes(file.type)
-  );
-
-  if (invalidImage) {
-    throw new Error("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
-  }
-
-  return {
-    title: String(formData.get("title") ?? ""),
-    content: String(formData.get("content") ?? ""),
-    isPrivate: formData.get("isPrivate") === "true",
-    emotions: formData.getAll("emotions").map((emotion) => String(emotion)),
-    tags: String(formData.get("tags") ?? "")
-      .split(",")
-      .map((tag) => tag.trim())
-      .filter(Boolean),
-    images: imageFiles,
-    keptImageIds: formData
-      .getAll("keptImageIds")
-      .map((imageId) => String(imageId)),
-  };
-};
 
 export async function getDiaryEditData(
   diaryId: string
@@ -161,9 +129,9 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     return { success: false, error: "로그인이 필요합니다." };
   }
 
-  let parsedData: ReturnType<typeof parseEditFormData>;
+  let parsedData: ReturnType<typeof extractEditDiaryFormData>;
   try {
-    parsedData = parseEditFormData(formData);
+    parsedData = extractEditDiaryFormData(formData);
   } catch (error) {
     return {
       success: false,
@@ -210,12 +178,10 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     uploadedImageUrls = [];
   };
 
-  const newImages: DiaryImagePayload[] = uploadedImageUrls.map((url, index) => ({
-    image_url: url,
-    file_name: parsedData.images[index]?.name ?? `image_${index + 1}`,
-    mime_type: parsedData.images[index]?.type ?? "image/jpeg",
-    file_size: parsedData.images[index]?.size ?? null,
-  }));
+  const newImages: EditDiaryImagePayload[] = buildEditDiaryImagePayloads(
+    uploadedImageUrls,
+    parsedData.images
+  );
 
   const supabase = await createClient();
   const { data, error } = await supabase.rpc("update_diary_transaction", {

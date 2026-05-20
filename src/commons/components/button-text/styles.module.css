@@ -1,4 +1,8 @@
 .common {
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
   border-radius: var(--mongree-radius-sm);
   transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out, opacity 150ms ease-out;
@@ -9,6 +13,7 @@
   background: var(--mongree-primary);
   color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
   padding: 0.5rem 0.75rem;
+  font-size: clamp(0.84rem, 2.7vw, 0.95rem);
   font-weight: 750;
 }
 
@@ -23,6 +28,7 @@
   background: var(--mongree-primary);
   color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
   padding: 0.5rem 0.75rem;
+  font-size: clamp(0.82rem, 2.6vw, 0.92rem);
 }
 
 .margin__left__s__s {
@@ -32,6 +38,7 @@
   background: var(--mongree-primary);
   color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
   padding: 0.5rem 0.75rem;
+  font-size: clamp(0.82rem, 2.6vw, 0.92rem);
 }
 
 .logo {
@@ -47,6 +54,7 @@
   background: color-mix(in oklch, var(--mongree-surface-soft) 82%, transparent);
   color: var(--mongree-text);
   padding: 0.5rem 0.75rem;
+  font-size: clamp(0.84rem, 2.7vw, 0.95rem);
 }
 
 .commentButton {
@@ -54,6 +62,7 @@
   background: var(--mongree-primary);
   color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
   padding: 0.5rem 1rem;
+  font-size: clamp(0.78rem, 2.5vw, 0.9rem);
 }
 
 .common:disabled {

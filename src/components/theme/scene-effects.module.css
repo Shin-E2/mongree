@@ -1,0 +1,214 @@
+.effects {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.cloudOne,
+.cloudTwo,
+.starOne,
+.starTwo,
+.shootingStar,
+.dropOne,
+.dropTwo,
+.dropThree,
+.snowOne,
+.snowTwo,
+.snowThree {
+  position: absolute;
+  display: block;
+  opacity: 0;
+}
+
+.cloudOne,
+.cloudTwo {
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-cloud) 56%, transparent);
+  filter: blur(1px);
+}
+
+.cloudOne {
+  top: 9rem;
+  left: 12%;
+  width: 12rem;
+  height: 4rem;
+}
+
+.cloudTwo {
+  top: 14rem;
+  right: 16%;
+  width: 8rem;
+  height: 3rem;
+}
+
+[data-scene="day"] .cloudOne,
+[data-scene="day"] .cloudTwo,
+[data-scene="rain"] .cloudOne,
+[data-scene="rain"] .cloudTwo,
+[data-scene="snow"] .cloudOne,
+[data-scene="snow"] .cloudTwo {
+  opacity: 0.38;
+  animation: cloudDrift 18s ease-in-out infinite alternate;
+}
+
+[data-scene="rain"] .cloudOne,
+[data-scene="rain"] .cloudTwo {
+  opacity: 0.24;
+}
+
+.starOne,
+.starTwo,
+.shootingStar {
+  background: var(--scene-star);
+}
+
+.starOne,
+.starTwo {
+  width: 0.24rem;
+  height: 0.24rem;
+  border-radius: 999px;
+  box-shadow: 0 0 10px color-mix(in oklch, var(--scene-star) 70%, transparent);
+}
+
+.starOne {
+  top: 18%;
+  left: 36%;
+}
+
+.starTwo {
+  top: 34%;
+  right: 18%;
+}
+
+[data-scene="night"] .starOne,
+[data-scene="night"] .starTwo {
+  opacity: 0.75;
+  animation: starTwinkle 2.8s ease-in-out infinite;
+}
+
+.shootingStar {
+  top: 18%;
+  left: 66%;
+  width: 5rem;
+  height: 1px;
+  border-radius: 999px;
+  transform: rotate(-38deg);
+  transform-origin: right center;
+  background: linear-gradient(90deg, transparent, var(--scene-star));
+}
+
+[data-scene="night"] .shootingStar {
+  opacity: 0;
+  animation: shootingStar 5.4s ease-in-out infinite;
+}
+
+.dropOne,
+.dropTwo,
+.dropThree {
+  width: 1px;
+  height: 3.8rem;
+  border-radius: 999px;
+  background: linear-gradient(180deg, transparent, color-mix(in oklch, var(--scene-object) 72%, transparent));
+}
+
+.dropOne { top: -5rem; left: 18%; }
+.dropTwo { top: -6rem; left: 54%; }
+.dropThree { top: -4rem; right: 18%; }
+
+[data-scene="rain"] .dropOne,
+[data-scene="rain"] .dropTwo,
+[data-scene="rain"] .dropThree {
+  opacity: 0.42;
+  animation: rainFall 1.8s linear infinite;
+}
+
+[data-scene="rain"] .dropTwo { animation-delay: 0.45s; }
+[data-scene="rain"] .dropThree { animation-delay: 0.9s; }
+
+.snowOne,
+.snowTwo,
+.snowThree {
+  width: 0.42rem;
+  height: 0.42rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-cloud) 92%, transparent);
+  box-shadow: 0 0 10px color-mix(in oklch, white 58%, transparent);
+}
+
+.snowOne { top: -1rem; left: 22%; }
+.snowTwo { top: -2rem; left: 58%; }
+.snowThree { top: -1.5rem; right: 18%; }
+
+[data-scene="snow"] .snowOne,
+[data-scene="snow"] .snowTwo,
+[data-scene="snow"] .snowThree {
+  opacity: 0.78;
+  animation: snowFall 6s linear infinite;
+}
+
+[data-scene="snow"] .snowTwo { animation-delay: 1.6s; }
+[data-scene="snow"] .snowThree { animation-delay: 3.1s; }
+
+@keyframes cloudDrift {
+  from { transform: translateX(-0.5rem); }
+  to { transform: translateX(1.25rem); }
+}
+
+@keyframes starTwinkle {
+  0%, 100% { transform: scale(0.82); opacity: 0.4; }
+  50% { transform: scale(1.18); opacity: 0.95; }
+}
+
+@keyframes shootingStar {
+  0%, 72%, 100% { transform: translate3d(0, 0, 0) rotate(-38deg); opacity: 0; }
+  78% { opacity: 0.9; }
+  88% { transform: translate3d(-9rem, 5rem, 0) rotate(-38deg); opacity: 0; }
+}
+
+@keyframes rainFall {
+  from { transform: translate3d(0, -10vh, 0) rotate(12deg); }
+  to { transform: translate3d(-2rem, 115vh, 0) rotate(12deg); }
+}
+
+@keyframes snowFall {
+  from { transform: translate3d(0, -8vh, 0); }
+  to { transform: translate3d(1.75rem, 115vh, 0); }
+}
+
+@media (max-width: 640px) {
+  .effects {
+    display: block;
+  }
+
+  .cloudOne {
+    top: 8rem;
+    left: 12%;
+    width: 9rem;
+    height: 3.2rem;
+  }
+
+  .cloudTwo {
+    top: 13rem;
+    right: 12%;
+    width: 6rem;
+    height: 2.4rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloudOne,
+  .cloudTwo,
+  .starOne,
+  .starTwo,
+  .shootingStar,
+  .dropOne,
+  .dropTwo,
+  .dropThree,
+  .snowOne,
+  .snowTwo,
+  .snowThree {
+    animation: none !important;
+  }
+}

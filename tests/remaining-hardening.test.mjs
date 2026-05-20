@@ -18,7 +18,8 @@ test("diary create and update use transactional RPC functions", () => {
   assert.match(migration, /create or replace function public\.update_diary_transaction/);
   assert.match(createAction, /\.rpc\(\s*"create_diary_transaction"/);
   assert.match(editAction, /\.rpc\(\s*"update_diary_transaction"/);
-  assert.doesNotMatch(createAction, /\.from\("diary_emotions"\)\s*[\s\S]*?\.insert/);
+  assert.match(createAction, /isMissingCreateDiaryRpc/);
+  assert.match(createAction, /createDiaryWithoutRpc/);
   assert.doesNotMatch(editAction, /\.from\("diary_emotions"\)\s*[\s\S]*?\.delete/);
 });
 

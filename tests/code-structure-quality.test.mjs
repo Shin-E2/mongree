@@ -267,9 +267,11 @@ test("dashboard mobile shell reserves space for fixed navigation and companion",
 
 test("community diary cards use the shared Mongree surface component", () => {
   const source = read("src/components/home/(dashboard)/community/diary-card/index.tsx");
+  const sharedSource = read("src/commons/components/diary-feed-card/index.tsx");
   const styles = read("src/components/home/(dashboard)/community/diary-card/styles.module.css");
 
-  assert.match(source, /@\/commons\/components\/surface-card/);
+  assert.match(source, /@\/commons\/components\/diary-feed-card/);
+  assert.match(sharedSource, /@\/commons\/components\/surface-card/);
   assert.match(source, /label="공감"/);
   assert.match(source, /label="댓글"/);
   assert.doesNotMatch(styles, /bg-white|shadow-sm|rounded-xl|text-gray-/);

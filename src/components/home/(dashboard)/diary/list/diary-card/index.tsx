@@ -1,14 +1,11 @@
 "use client";
 
-import { formatToTimeAgo } from "@/lib/utils";
+import DiaryFeedCard from "@/commons/components/diary-feed-card";
 import { EMOTIONS } from "@/mock/emotions";
 import styles from "./styles.module.css";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
-import { EmotionBadgeList } from "@/commons/components/emotion-badge-list";
 import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
-import Image from "next/image";
 import type { Diary } from "@/app/(dashboard)/diary/types";
-import { TagList } from "@/commons/components/tag-list";
 
 interface DiaryListDiaryCardProps {
   diary: Diary;
@@ -34,58 +31,34 @@ export function DiaryListDiaryCard({
   });
 
   return (
-    <div onClick={onClick} className={`${styles.container} group`}>
-      {/* 이미지 영역 */}
-      {diary.images && diary.images.length > 0 && (
-        <div className={styles.image}>
-          <Image
-            src={diary.images[0].url}
-            alt="일기 이미지"
-            className={styles.imageClass}
-            width={300}
-            height={200}
+    <DiaryFeedCard
+      title={diary.title}
+      content={diary.content}
+      ariaLabel="일기 상세 보기"
+      onClick={onClick}
+      profile={{
+        profileImage: null,
+        displayName: diary.isPrivate ? "비공개 일기" : "공개 일기",
+        createdAt: diary.createdAt
+          ? new Date(diary.createdAt).toISOString()
+          : null,
+      }}
+      emotions={emotionsForBadgeList}
+      images={(diary.images ?? []).map((image) => ({
+        id: image.id,
+        url: image.url,
+      }))}
+      tags={(diary.tags ?? []).map(({ tag }) => tag)}
+      footer={
+        <div className={styles.privacy}>
+          <span
+            className={`${styles.privacyDot} ${
+              diary.isPrivate ? styles.privacyDotRed : styles.privacyDotGreen
+            }`}
           />
-          {diary.images.length > 1 && (
-            <div className={styles.imageMore}>+{diary.images.length - 1}</div>
-          )}
+          {diary.isPrivate ? "비공개" : "공개"}
         </div>
-      )}
-
-      {/* 감정 뱃지 */}
-      {emotionsForBadgeList.length > 0 && (
-        <EmotionBadgeList
-          emotions={emotionsForBadgeList}
-          className={styles.emotionList}
-        />
-      )}
-
-      {/* 컨텐츠 영역 */}
-      <div className={styles.body}>
-        <div className={styles.contentHeader}>
-          <h3 className={styles.title}>{diary.title}</h3>
-          <time className={styles.date}>
-            {diary.createdAt
-              ? formatToTimeAgo(new Date(diary.createdAt).toISOString())
-              : "-"}
-          </time>
-        </div>
-        <p className={styles.content}>{diary.content}</p>
-        {(diary.tags ?? []).length > 0 && (
-          <div className={styles.tagList}>
-            <TagList tags={diary.tags ?? []} />
-          </div>
-        )}
-        <div className={styles.footer}>
-          <div className={styles.privacy}>
-            <span
-              className={`${styles.privacyDot} ${
-                diary.isPrivate ? styles.privacyDotRed : styles.privacyDotGreen
-              }`}
-            />
-            {diary.isPrivate ? "비공개" : "공개"}
-          </div>
-        </div>
-      </div>
-    </div>
+      }
+    />
   );
 }

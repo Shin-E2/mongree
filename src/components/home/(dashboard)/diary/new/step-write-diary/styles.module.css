@@ -21,7 +21,7 @@
 }
 
 .contentTextArea {
-  @apply min-h-64 w-full resize-y border leading-7 focus:outline-none;
+  @apply h-64 w-full resize-none border leading-7 focus:outline-none;
   border-color: color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-md);
   background:
@@ -47,6 +47,75 @@
 
 .helperText {
   color: var(--mongree-text-muted);
+}
+
+.label {
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
+.tagInputBox {
+  display: flex;
+  min-height: 3rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 82%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 70%, var(--mongree-surface-raised));
+  padding: 0.5rem 0.75rem;
+}
+
+.tagInputBox:focus-within {
+  border-color: var(--mongree-primary);
+  box-shadow: 0 0 0 3px color-mix(in oklch, var(--mongree-primary) 20%, transparent);
+}
+
+.tagChip {
+  display: inline-flex;
+  height: 2rem;
+  align-items: center;
+  gap: 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-accent) 16%, var(--mongree-surface-soft));
+  color: var(--mongree-primary-strong);
+  padding: 0 0.45rem 0 0.7rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+}
+
+.tagRemoveButton {
+  display: grid;
+  height: 1.25rem;
+  width: 1.25rem;
+  place-items: center;
+  border-radius: 999px;
+  color: var(--mongree-text-muted);
+}
+
+.tagRemoveButton:hover {
+  background: color-mix(in oklch, var(--scene-accent) 18%, transparent);
+  color: var(--mongree-text);
+}
+
+.tagRemoveIcon {
+  height: 0.8rem;
+  width: 0.8rem;
+}
+
+.tagInput {
+  min-width: 12rem;
+  flex: 1;
+  border: 0;
+  background: transparent;
+  color: var(--mongree-text);
+  font-size: 0.875rem;
+  outline: none;
+}
+
+.tagInput::placeholder {
+  color: color-mix(in oklch, var(--mongree-text-muted) 78%, transparent);
 }
 
 .countText {

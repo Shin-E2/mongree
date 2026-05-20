@@ -63,6 +63,11 @@ interface UpdateDiaryRpcResult {
   is_private: boolean | null;
 }
 
+async function cleanupUploadedImages(uploadedImageUrls: string[]) {
+  if (uploadedImageUrls.length === 0) return;
+  await deleteImagesFromS3(uploadedImageUrls);
+}
+
 export async function getDiaryEditData(
   diaryId: string
 ): Promise<DiaryEditData | null> {
@@ -173,12 +178,6 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     return { success: false, error: message };
   }
 
-  const cleanupUploadedImages = async () => {
-    if (uploadedImageUrls.length === 0) return;
-    await deleteImagesFromS3(uploadedImageUrls);
-    uploadedImageUrls = [];
-  };
-
   const newImages: EditDiaryImagePayload[] = buildEditDiaryImagePayloads(
     uploadedImageUrls,
     parsedData.images
@@ -197,7 +196,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   });
 
   if (error || !data?.[0]) {
-    await cleanupUploadedImages();
+    await cleanupUploadedImages(uploadedImageUrls);
     return {
       success: false,
       error: `일기 수정 실패: ${error?.message ?? "RPC 응답이 비어 있습니다."}`,

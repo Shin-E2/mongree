@@ -1,27 +1,37 @@
 .mainLayout {
-  @apply flex min-h-[100dvh];
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100dvh;
   --mobile-nav-reserved-height: calc(7rem + env(safe-area-inset-bottom));
   color: var(--mongree-text);
   background: transparent;
 }
 
 .contentWrapper {
-  @apply flex-1 md:ml-[4rem];
+  position: relative;
+  z-index: 1;
+  flex: 1;
   min-width: 0;
 }
 
 .mainContentWithPadding {
-  @apply pt-[4.75rem];
   min-height: 100dvh;
+  padding-top: 4.75rem;
   padding-bottom: var(--mobile-nav-reserved-height);
 }
 
 .pageContainer {
-  @apply max-w-[72rem] mx-auto;
+  max-width: 72rem;
+  margin-inline: auto;
 }
 
 @media (min-width: 768px) {
+  .contentWrapper {
+    margin-left: 4rem;
+  }
+
   .mainContentWithPadding {
     padding-bottom: 2.5rem;
   }
-}
+} 

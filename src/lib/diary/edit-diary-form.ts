@@ -8,6 +8,16 @@ export interface EditDiaryImagePayload {
   file_size: number | null;
 }
 
+export interface EditDiaryFormData {
+  title: string;
+  content: string;
+  isPrivate: boolean;
+  emotions: string[];
+  tags: string[];
+  images: File[];
+  keptImageIds: string[];
+}
+
 const getStringValue = (formData: FormData, key: string) =>
   String(formData.get(key) ?? "");
 
@@ -32,7 +42,7 @@ function assertSupportedImages(imageFiles: File[]) {
   }
 }
 
-export function extractEditDiaryFormData(formData: FormData) {
+export function extractEditDiaryFormData(formData: FormData): EditDiaryFormData {
   const imageFiles = getImageFiles(formData);
   assertSupportedImages(imageFiles);
 

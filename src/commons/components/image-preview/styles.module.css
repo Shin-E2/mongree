@@ -13,6 +13,10 @@
   background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
 }
 
+.previewImage {
+  object-fit: cover;
+}
+
 .scrollContainer {
   overflow-x: auto;
 }

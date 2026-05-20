@@ -22,10 +22,10 @@ export default function TagField({ tags, setValue }: TagFieldProps) {
 
   const addTags = (rawValue: string) => {
     const nextTags = normalizeDiaryTags([...tags, rawValue]);
-    if (nextTags.length === tags.length) return;
-
-    updateTags(nextTags);
     setTagInput("");
+
+    if (nextTags.length === tags.length) return;
+    updateTags(nextTags);
   };
 
   const handleTagKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {

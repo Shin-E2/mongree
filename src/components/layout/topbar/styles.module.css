@@ -1,7 +1,6 @@
 ﻿.headerContainer {
   @apply fixed top-3 h-14 border;
   z-index: 70;
-  /* 모바일 좌우 여백 12px */
   left: 0.75rem;
   right: 0.75rem;
   border-color: color-mix(in oklch, var(--scene-line) 60%, transparent);
@@ -15,7 +14,6 @@
   transition: background 480ms ease, border-color 480ms ease;
 }
 
-  /* 모바일 좌우 여백 12px */
 @media (min-width: 768px) {
   .headerContainer {
     left: calc(4.5rem + max(0px, (100vw - 4rem - 72rem) / 2));
@@ -47,7 +45,8 @@
   @apply flex shrink-0 items-center gap-2;
 }
 
-.themeToggleButton {
+.themeToggleButton,
+.communityButton {
   @apply grid h-10 w-10 place-items-center rounded-full border;
   border-color: color-mix(in oklch, var(--mongree-line) 70%, transparent);
   color: var(--mongree-text-muted);
@@ -58,17 +57,20 @@
     color 160ms ease;
 }
 
-.themeToggleButton:hover {
+.themeToggleButton:hover,
+.communityButton:hover {
   background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
   color: var(--mongree-text);
   transform: translateY(-1px);
 }
 
-.themeToggleButton:active {
+.themeToggleButton:active,
+.communityButton:active {
   transform: translateY(0) scale(0.98);
 }
 
 .themeToggleButton:focus-visible,
+.communityButton:focus-visible,
 .diaryWriteButton:focus-visible {
   outline: 2px solid color-mix(in oklch, var(--scene-accent) 70%, var(--mongree-primary));
   outline-offset: 3px;
@@ -116,3 +118,9 @@
 .diaryWriteButtonText {
   @apply hidden md:inline;
 }
+
+@media (min-width: 768px) {
+  .communityButton {
+    display: none;
+  }
+} 

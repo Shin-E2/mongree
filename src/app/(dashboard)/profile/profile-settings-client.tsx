@@ -6,6 +6,7 @@ import {
   type ChangeEvent,
   type FormEvent,
   useEffect,
+  useMemo,
   useRef,
   useState,
   useTransition,
@@ -15,8 +16,12 @@ import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image
 import {
   deleteAllProfileComments,
   deleteProfileComment,
+  deleteProfileDiaries,
+  makePublicDiariesPrivate,
   updateProfile,
   type ProfileCommentItem,
+  type ProfileDiaryDeleteScope,
+  type ProfileDiaryItem,
   type ProfilePageData,
 } from "./action";
 import styles from "./styles.module.css";
@@ -24,11 +29,23 @@ import styles from "./styles.module.css";
 interface ProfileSettingsClientProps {
   profile: NonNullable<ProfilePageData["profile"]>;
   comments: ProfileCommentItem[];
+  diaries: ProfileDiaryItem[];
+  summary: ProfilePageData["summary"];
 }
+
+type DiaryView = "all" | "private" | "public";
+
+const diaryViewLabels: Record<DiaryView, string> = {
+  all: "전체",
+  private: "개인 일기",
+  public: "공개 일기",
+};
 
 export default function ProfileSettingsClient({
   profile,
   comments,
+  diaries,
+  summary,
 }: ProfileSettingsClientProps) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -38,7 +55,14 @@ export default function ProfileSettingsClient({
   );
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
+  const [diaryView, setDiaryView] = useState<DiaryView>("all");
   const [isPending, startTransition] = useTransition();
+
+  const filteredDiaries = useMemo(() => {
+    if (diaryView === "private") return diaries.filter((diary) => diary.isPrivate);
+    if (diaryView === "public") return diaries.filter((diary) => !diary.isPrivate);
+    return diaries;
+  }, [diaries, diaryView]);
 
   useEffect(() => {
     if (!message) return;
@@ -89,9 +113,7 @@ export default function ProfileSettingsClient({
     startTransition(async () => {
       const formData = new FormData();
       formData.append("nickname", nickname);
-      if (selectedFile) {
-        formData.append("profileImage", selectedFile);
-      }
+      if (selectedFile) formData.append("profileImage", selectedFile);
 
       const result = await updateProfile(formData);
       setMessage(result.success ? "프로필이 저장되었습니다." : result.error ?? "");
@@ -116,12 +138,43 @@ export default function ProfileSettingsClient({
 
   const handleDeleteAllComments = () => {
     if (comments.length === 0) return;
-    if (!window.confirm("내가 쓴 댓글을 모두 삭제하시겠습니까?")) return;
+    if (!window.confirm("내 댓글을 모두 삭제하시겠습니까?")) return;
 
     startTransition(async () => {
       const result = await deleteAllProfileComments();
+      setMessage(result.success ? "댓글을 모두 삭제했습니다." : result.error ?? "");
+      if (result.success) router.refresh();
+    });
+  };
+
+  const handleDeleteDiaries = (scope: ProfileDiaryDeleteScope) => {
+    const label =
+      scope === "private" ? "비공개 일기" : scope === "public" ? "공개 일기" : "모든 일기";
+
+    if (!window.confirm(`${label}를 삭제하시겠습니까? 이 작업은 되돌릴 수 없습니다.`)) {
+      return;
+    }
+
+    startTransition(async () => {
+      const result = await deleteProfileDiaries(scope);
       setMessage(
-        result.success ? "내 댓글을 모두 삭제했습니다." : result.error ?? ""
+        result.success
+          ? `${result.count ?? 0}개의 일기를 삭제했습니다.`
+          : result.error ?? ""
+      );
+      if (result.success) router.refresh();
+    });
+  };
+
+  const handleMakePublicPrivate = () => {
+    if (!window.confirm("공개 일기를 모두 비공개로 전환하시겠습니까?")) return;
+
+    startTransition(async () => {
+      const result = await makePublicDiariesPrivate();
+      setMessage(
+        result.success
+          ? `${result.count ?? 0}개의 공개 일기를 비공개로 바꿨습니다.`
+          : result.error ?? ""
       );
       if (result.success) router.refresh();
     });
@@ -197,9 +250,7 @@ export default function ProfileSettingsClient({
               onChange={(event) => setNickname(event.target.value)}
               placeholder="닉네임을 입력하세요"
             />
-            <span className={styles.fieldHint}>
-              {nickname.length}/20 · 2글자 이상
-            </span>
+            <span className={styles.fieldHint}>{nickname.length}/20, 2글자 이상</span>
           </label>
 
           <button
@@ -210,6 +261,99 @@ export default function ProfileSettingsClient({
             {isPending ? "저장 중..." : "프로필 저장"}
           </button>
         </form>
+      </section>
+
+      <section className={styles.panel}>
+        <div className={styles.panelHeader}>
+          <div>
+            <h2 className={styles.panelTitle}>내 일기 관리</h2>
+            <p className={styles.panelDescription}>
+              개인 일기와 공개 일기를 따로 확인하고 정리합니다.
+            </p>
+          </div>
+        </div>
+
+        <div className={styles.diaryManageSummary}>
+          <span>전체 {summary.diaryCount}</span>
+          <span>개인 {summary.privateDiaryCount}</span>
+          <span>공개 {summary.publicDiaryCount}</span>
+        </div>
+
+        <div className={styles.segmentedControl}>
+          {(Object.keys(diaryViewLabels) as DiaryView[]).map((view) => (
+            <button
+              key={view}
+              type="button"
+              className={`${styles.segmentButton} ${
+                diaryView === view ? styles.segmentButtonActive : ""
+              }`}
+              onClick={() => setDiaryView(view)}
+            >
+              {diaryViewLabels[view]}
+            </button>
+          ))}
+        </div>
+
+        <div className={styles.dangerActionGrid}>
+          <button
+            type="button"
+            className={styles.secondaryButton}
+            onClick={handleMakePublicPrivate}
+            disabled={isPending || summary.publicDiaryCount === 0}
+          >
+            공개 일기 비공개 전환
+          </button>
+          <button
+            type="button"
+            className={styles.dangerTextButton}
+            onClick={() => handleDeleteDiaries("private")}
+            disabled={isPending || summary.privateDiaryCount === 0}
+          >
+            비공개 일기 삭제
+          </button>
+          <button
+            type="button"
+            className={styles.dangerTextButton}
+            onClick={() => handleDeleteDiaries("public")}
+            disabled={isPending || summary.publicDiaryCount === 0}
+          >
+            공개 일기 삭제
+          </button>
+          <button
+            type="button"
+            className={styles.dangerTextButton}
+            onClick={() => handleDeleteDiaries("all")}
+            disabled={isPending || summary.diaryCount === 0}
+          >
+            모든 일기 삭제
+          </button>
+        </div>
+
+        <div className={styles.diaryList}>
+          {filteredDiaries.length > 0 ? (
+            filteredDiaries.map((diary) => (
+              <article key={diary.id} className={styles.diaryManageCard}>
+                <div>
+                  <p className={styles.commentDiaryTitle}>{diary.title}</p>
+                  <p className={styles.commentMeta}>
+                    {diary.isPrivate ? "개인 일기" : "공개 일기"}
+                  </p>
+                </div>
+                <p className={styles.commentContent}>{diary.content}</p>
+                <Link href={`/diary/${diary.id}`} className={styles.commentLink}>
+                  일기에서 보기
+                </Link>
+              </article>
+            ))
+          ) : (
+            <div className={styles.emptyState}>
+              <p className={styles.emptyTitle}>표시할 일기가 없습니다</p>
+              <p className={styles.emptyDescription}>
+                선택한 범위에 맞는 기록이 없습니다.
+              </p>
+            </div>
+          )}
+        </div>
       </section>
 
       <section className={styles.panel}>
@@ -226,7 +370,8 @@ export default function ProfileSettingsClient({
           <div>
             <p className={styles.billingTitle}>Mongree Plus</p>
             <p className={styles.billingDescription}>
-              Stripe Checkout으로 구독을 시작합니다. 결제 환경이 준비되지 않은 경우 안내 메시지를 표시합니다.
+              Stripe Checkout으로 구독을 시작합니다. 결제 환경이 준비되지
+              않았다면 안내 메시지가 표시됩니다.
             </p>
           </div>
           <button
@@ -245,7 +390,7 @@ export default function ProfileSettingsClient({
           <div>
             <h2 className={styles.panelTitle}>내 댓글</h2>
             <p className={styles.panelDescription}>
-              최근 댓글을 모아보고 정리할 수 있습니다
+              최근 댓글을 모아보고 정리합니다.
             </p>
           </div>
           <button
@@ -293,7 +438,7 @@ export default function ProfileSettingsClient({
             <div className={styles.emptyState}>
               <p className={styles.emptyTitle}>작성한 댓글이 없습니다</p>
               <p className={styles.emptyDescription}>
-                공개 일기에 마음을 남기면 이곳에서 한 번에 볼 수 있습니다.
+                공개 일기에 마음을 남기면 이곳에서 확인할 수 있습니다.
               </p>
             </div>
           )}

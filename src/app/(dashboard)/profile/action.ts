@@ -5,6 +5,8 @@ import {
   uploadImageServer,
 } from "@/commons/utils/upload-images";
 import {
+  revalidateDiaryDeleted,
+  revalidateDiaryUpdated,
   revalidateProfileComments,
   revalidateProfileUpdated,
 } from "@/commons/utils/cache-revalidation";
@@ -20,6 +22,14 @@ export interface ProfileCommentItem {
   isReply: boolean;
 }
 
+export interface ProfileDiaryItem {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: string;
+  isPrivate: boolean;
+}
+
 export interface ProfilePageData {
   profile: {
     id: string;
@@ -31,8 +41,10 @@ export interface ProfilePageData {
     diaryCount: number;
     commentCount: number;
     publicDiaryCount: number;
+    privateDiaryCount: number;
   };
   comments: ProfileCommentItem[];
+  diaries: ProfileDiaryItem[];
 }
 
 interface ProfileCommentRow {
@@ -47,6 +59,16 @@ interface ProfileCommentRow {
     deleted_at: string | null;
   } | null;
 }
+
+interface ProfileDiaryRow {
+  id: string;
+  title: string;
+  content: string;
+  created_at: string | null;
+  is_private: boolean;
+}
+
+export type ProfileDiaryDeleteScope = "private" | "public" | "all";
 
 const PROFILE_IMAGE_MAX_SIZE = 3 * 1024 * 1024;
 const PROFILE_IMAGE_ALLOWED_TYPES = ["image/jpeg", "image/png"];
@@ -72,8 +94,10 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
       diaryCount: 0,
       commentCount: 0,
       publicDiaryCount: 0,
+      privateDiaryCount: 0,
     },
     comments: [],
+    diaries: [],
   };
 
   const user = await getCurrentProfile();
@@ -85,6 +109,7 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
     { count: publicDiaryCount },
     { count: commentCount },
     { data: comments, error: commentsError },
+    { data: diaries, error: diariesError },
   ] = await Promise.all([
     supabase
       .from("diaries")
@@ -123,11 +148,18 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
       .order("created_at", { ascending: false })
       .limit(30)
       .returns<ProfileCommentRow[]>(),
+    supabase
+      .from("diaries")
+      .select("id, title, content, created_at, is_private")
+      .eq("user_id", user.id)
+      .is("deleted_at", null)
+      .order("created_at", { ascending: false })
+      .limit(60)
+      .returns<ProfileDiaryRow[]>(),
   ]);
 
-  if (commentsError) {
-    console.error("프로필 댓글 조회 실패:", commentsError);
-  }
+  if (commentsError) console.error("프로필 댓글 조회 실패:", commentsError);
+  if (diariesError) console.error("프로필 일기 조회 실패:", diariesError);
 
   return {
     profile: {
@@ -140,6 +172,10 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
       diaryCount: diaryCount ?? 0,
       commentCount: commentCount ?? 0,
       publicDiaryCount: publicDiaryCount ?? 0,
+      privateDiaryCount: Math.max(
+        0,
+        (diaryCount ?? 0) - (publicDiaryCount ?? 0)
+      ),
     },
     comments: (comments ?? [])
       .filter((comment) => comment.diaries?.deleted_at === null)
@@ -151,6 +187,13 @@ export async function getProfilePageData(): Promise<ProfilePageData> {
         diaryTitle: comment.diaries?.title ?? "삭제된 일기",
         isReply: Boolean(comment.parent_id),
       })),
+    diaries: (diaries ?? []).map((diary) => ({
+      id: diary.id,
+      title: diary.title,
+      content: diary.content,
+      createdAt: diary.created_at ?? new Date().toISOString(),
+      isPrivate: diary.is_private,
+    })),
   };
 }
 
@@ -200,16 +243,13 @@ export async function updateProfile(formData: FormData) {
       })
       .eq("id", user.id);
 
-    if (error) {
-      throw new Error(error.message);
-    }
+    if (error) throw new Error(error.message);
 
     if (nextProfileImage !== user.profile_image) {
       await deletePreviousProfileImage(user.profile_image);
     }
 
     revalidateProfileUpdated(user.id);
-
     return { success: true };
   } catch (error) {
     if (nextProfileImage && nextProfileImage !== user.profile_image) {
@@ -286,4 +326,99 @@ export async function deleteAllProfileComments() {
   ];
   revalidateProfileComments(diaryIds);
   return { success: true };
+}
+
+export async function deleteProfileDiaries(scope: ProfileDiaryDeleteScope) {
+  const user = await getCurrentProfile();
+  if (!user) return { success: false, error: "로그인이 필요합니다." };
+
+  const supabase = await createClient();
+  let selectQuery = supabase
+    .from("diaries")
+    .select("id, is_private")
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
+
+  if (scope === "private") selectQuery = selectQuery.eq("is_private", true);
+  if (scope === "public") selectQuery = selectQuery.eq("is_private", false);
+
+  const { data: diaries, error: selectError } = await selectQuery;
+  if (selectError) {
+    console.error("프로필 일기 삭제 대상 조회 실패:", selectError);
+    return { success: false, error: "삭제할 일기를 불러오지 못했습니다." };
+  }
+
+  if (!diaries || diaries.length === 0) {
+    return { success: false, error: "삭제할 일기가 없습니다." };
+  }
+
+  let updateQuery = supabase
+    .from("diaries")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("user_id", user.id)
+    .is("deleted_at", null);
+
+  if (scope === "private") updateQuery = updateQuery.eq("is_private", true);
+  if (scope === "public") updateQuery = updateQuery.eq("is_private", false);
+
+  const { error } = await updateQuery;
+  if (error) {
+    console.error("프로필 일기 삭제 실패:", error);
+    return { success: false, error: "일기 삭제에 실패했습니다." };
+  }
+
+  diaries.forEach((diary) => {
+    revalidateDiaryDeleted({
+      userId: user.id,
+      diaryId: diary.id,
+      wasPrivate: Boolean(diary.is_private),
+    });
+  });
+  revalidateProfileUpdated(user.id);
+  return { success: true, count: diaries.length };
+}
+
+export async function makePublicDiariesPrivate() {
+  const user = await getCurrentProfile();
+  if (!user) return { success: false, error: "로그인이 필요합니다." };
+
+  const supabase = await createClient();
+  const { data: diaries, error: selectError } = await supabase
+    .from("diaries")
+    .select("id")
+    .eq("user_id", user.id)
+    .eq("is_private", false)
+    .is("deleted_at", null);
+
+  if (selectError) {
+    console.error("공개 일기 조회 실패:", selectError);
+    return { success: false, error: "공개 일기를 불러오지 못했습니다." };
+  }
+
+  if (!diaries || diaries.length === 0) {
+    return { success: false, error: "전환할 공개 일기가 없습니다." };
+  }
+
+  const { error } = await supabase
+    .from("diaries")
+    .update({ is_private: true, updated_at: new Date().toISOString() })
+    .eq("user_id", user.id)
+    .eq("is_private", false)
+    .is("deleted_at", null);
+
+  if (error) {
+    console.error("공개 일기 비공개 전환 실패:", error);
+    return { success: false, error: "공개 일기를 비공개로 바꾸지 못했습니다." };
+  }
+
+  diaries.forEach((diary) => {
+    revalidateDiaryUpdated({
+      userId: user.id,
+      diaryId: diary.id,
+      isPrivate: true,
+      wasPrivate: false,
+    });
+  });
+  revalidateProfileUpdated(user.id);
+  return { success: true, count: diaries.length };
 }

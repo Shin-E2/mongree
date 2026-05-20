@@ -33,8 +33,8 @@ export default async function ProfilePage() {
               {profileData.profile.nickname}님의 기록을 정리해보세요
             </h2>
             <p className={styles.heroDescription}>
-              프로필 정보는 공개 일기와 댓글에 함께 표시됩니다. 내가 남긴
-              댓글도 이곳에서 한 번에 확인하고 정리할 수 있습니다.
+              프로필 정보, 개인 일기, 공개 일기, 댓글을 한곳에서 확인하고
+              필요한 기록만 정리할 수 있습니다.
             </p>
           </div>
         </section>
@@ -66,6 +66,8 @@ export default async function ProfilePage() {
         <ProfileSettingsClient
           profile={profileData.profile}
           comments={profileData.comments}
+          diaries={profileData.diaries}
+          summary={profileData.summary}
         />
       </div>
     </div>

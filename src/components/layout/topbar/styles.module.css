@@ -1,5 +1,6 @@
 ﻿.headerContainer {
-  @apply fixed top-3 z-40 h-14 border;
+  @apply fixed top-3 h-14 border;
+  z-index: 70;
   /* 모바일 좌우 여백 12px */
   left: 0.75rem;
   right: 0.75rem;

@@ -23,6 +23,17 @@ interface DiaryImagePayload {
   file_size: number | null;
 }
 
+interface CreateDiaryWithoutRpcParams {
+  supabase: Awaited<ReturnType<typeof createClient>>;
+  userId: string;
+  title: string;
+  content: string;
+  isPrivate: boolean;
+  emotionIds: string[];
+  tagNames: string[];
+  images: DiaryImagePayload[];
+}
+
 function extractFormData(formData: FormData) {
   const imageFiles = formData
     .getAll("images")
@@ -53,6 +64,114 @@ function extractFormData(formData: FormData) {
       .filter(Boolean),
     imageFiles,
   };
+}
+
+function isMissingCreateDiaryRpc(error: { message?: string } | null) {
+  const message = error?.message ?? "";
+  return (
+    message.includes("Could not find the function") &&
+    message.includes("create_diary_transaction")
+  );
+}
+
+async function createDiaryWithoutRpc({
+  supabase,
+  userId,
+  title,
+  content,
+  isPrivate,
+  emotionIds,
+  tagNames,
+  images,
+}: CreateDiaryWithoutRpcParams) {
+  let diaryId: string | null = null;
+
+  try {
+    const { data: diary, error: diaryError } = await supabase
+      .from("diaries")
+      .insert({
+        user_id: userId,
+        title,
+        content,
+        is_private: isPrivate,
+      })
+      .select("id")
+      .single();
+
+    if (diaryError || !diary) {
+      throw new Error(diaryError?.message ?? "일기 생성 응답이 비어 있습니다.");
+    }
+
+    diaryId = diary.id;
+    const createdDiaryId = diary.id;
+
+    if (emotionIds.length > 0) {
+      const { error: emotionError } = await supabase
+        .from("diary_emotions")
+        .insert(
+          emotionIds.map((emotionId) => ({
+            diary_id: createdDiaryId,
+            emotion_id: emotionId,
+          }))
+        );
+
+      if (emotionError) throw new Error(emotionError.message);
+    }
+
+    if (tagNames.length > 0) {
+      const tagIds = await Promise.all(
+        tagNames.map(async (tagName) => {
+          const { data: tagId, error: tagError } = await supabase.rpc(
+            "get_or_create_tag_id",
+            { tag_name: tagName }
+          );
+
+          if (tagError || !tagId) {
+            throw new Error(tagError?.message ?? "태그 생성 응답이 비어 있습니다.");
+          }
+
+          return tagId;
+        })
+      );
+
+      const { error: tagLinkError } = await supabase
+        .from("diary_tags")
+        .insert(
+          tagIds.map((tagId) => ({
+            diary_id: createdDiaryId,
+            tag_id: tagId,
+          }))
+        );
+
+      if (tagLinkError) throw new Error(tagLinkError.message);
+    }
+
+    if (images.length > 0) {
+      const { error: imageError } = await supabase.from("diary_images").insert(
+        images.map((image) => ({
+          diary_id: createdDiaryId,
+          image_url: image.image_url,
+          sort_order: image.sort_order,
+          file_name: image.file_name,
+          mime_type: image.mime_type,
+          file_size: image.file_size,
+        }))
+      );
+
+      if (imageError) throw new Error(imageError.message);
+    }
+
+    return createdDiaryId;
+  } catch (error) {
+    if (diaryId) {
+      await supabase
+        .from("diaries")
+        .update({ deleted_at: new Date().toISOString() })
+        .eq("id", diaryId)
+        .eq("user_id", userId);
+    }
+    throw error;
+  }
 }
 
 export async function createDiary(formData: FormData) {
@@ -108,22 +227,35 @@ export async function createDiary(formData: FormData) {
       }
     );
 
-    if (error || !diaryId) {
-      if (uploadedImageUrls.length > 0) {
-        await deleteImagesFromS3(uploadedImageUrls);
-      }
-      throw new Error(
-        `일기 생성 실패: ${error?.message ?? "RPC 응답이 비어 있습니다."}`
-      );
+    const resolvedDiaryId =
+      error && isMissingCreateDiaryRpc(error)
+        ? await createDiaryWithoutRpc({
+            supabase,
+            userId: user.id,
+            title: validationResult.data.title,
+            content: validationResult.data.content,
+            isPrivate: validationResult.data.isPrivate,
+            emotionIds: validationResult.data.emotions,
+            tagNames: validationResult.data.tags,
+            images,
+          })
+        : diaryId;
+
+    if (error && !isMissingCreateDiaryRpc(error)) {
+      throw new Error(`일기 생성 실패: ${error.message}`);
+    }
+
+    if (!resolvedDiaryId) {
+      throw new Error("일기 생성 실패: RPC 응답이 비어 있습니다.");
     }
 
     revalidateDiaryCreated({
       userId: user.id,
-      diaryId,
+      diaryId: resolvedDiaryId,
       isPrivate: validationResult.data.isPrivate,
     });
 
-    return { success: true, diary: { id: diaryId } };
+    return { success: true, diary: { id: resolvedDiaryId } };
   } catch (error) {
     if (uploadedImageUrls.length > 0) {
       await deleteImagesFromS3(uploadedImageUrls);

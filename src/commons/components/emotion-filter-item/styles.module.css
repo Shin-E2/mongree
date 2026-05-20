@@ -1,7 +1,52 @@
+.button {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 0.5rem;
+  border: 1px solid color-mix(in oklch, var(--emotion-color) 22%, var(--mongree-line));
+  border-radius: 0.8rem;
+  background: color-mix(in oklch, var(--mongree-surface-raised) 90%, var(--scene-bg));
+  color: var(--emotion-text-color);
+  padding: 0.5rem 0.65rem;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease;
+}
+
+.button:hover {
+  border-color: color-mix(in oklch, var(--emotion-color) 50%, var(--mongree-line));
+  background: color-mix(in oklch, var(--emotion-soft-color) 72%, var(--mongree-surface));
+  transform: translateY(-1px);
+}
+
+.selected {
+  border-color: color-mix(in oklch, var(--emotion-color) 78%, var(--mongree-line));
+  background: color-mix(in oklch, var(--emotion-soft-color) 86%, var(--mongree-surface-raised));
+  box-shadow: 0 0 0 2px color-mix(in oklch, var(--emotion-color) 22%, transparent);
+}
+
+.imageWrap {
+  display: grid;
+  height: 1.65rem;
+  width: 1.65rem;
+  flex-shrink: 0;
+  place-items: center;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--emotion-soft-color) 92%, transparent);
+}
+
 .image {
-  @apply w-5 h-5 mr-2;
+  height: 1.15rem;
+  width: 1.15rem;
 }
 
 .labelText {
-  @apply text-sm;
-}
+  min-width: 0;
+  overflow: hidden;
+  font-size: 0.86rem;
+  font-weight: 750;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+} 

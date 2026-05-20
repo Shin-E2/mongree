@@ -55,6 +55,62 @@
   font-weight: 700;
 }
 
+.imageHeader {
+  @apply flex items-center justify-between;
+}
+
+.imageCount {
+  @apply text-sm font-medium;
+  color: var(--mongree-text-muted);
+}
+
+.imageGrid {
+  @apply grid grid-cols-2 gap-3 sm:grid-cols-3;
+}
+
+.imageItem,
+.imageAddButton {
+  @apply relative aspect-square overflow-hidden rounded-lg;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
+}
+
+.previewImage {
+  @apply h-full w-full object-cover;
+}
+
+.imageDeleteButton {
+  @apply absolute right-2 top-2 flex h-8 w-8 items-center justify-center rounded-full text-white transition-colors;
+  background: color-mix(in oklch, var(--mongree-text) 62%, transparent);
+}
+
+.imageDeleteButton:hover {
+  @apply bg-red-500;
+}
+
+.imageDeleteIcon {
+  @apply h-4 w-4;
+}
+
+.imageAddButton {
+  @apply flex cursor-pointer flex-col items-center justify-center gap-2 border-dashed text-sm font-semibold transition-colors;
+  color: var(--mongree-text-muted);
+}
+
+.imageAddButton:hover {
+  border-color: color-mix(in oklch, var(--mongree-primary) 42%, var(--mongree-line));
+  background: color-mix(in oklch, var(--mongree-primary) 9%, var(--mongree-surface-soft));
+  color: var(--mongree-primary-strong);
+}
+
+.imageAddIcon {
+  @apply h-6 w-6;
+}
+
+.fileInput {
+  @apply sr-only;
+}
+
 .tagInputBox {
   display: flex;
   min-height: 3rem;

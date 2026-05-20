@@ -15,8 +15,10 @@ import {
 import { isMissingCreateDiaryRpc } from "@/lib/diary/create-diary-rpc";
 import type { Json } from "@/lib/supabase.types";
 
+type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
+
 interface CreateDiaryWithoutRpcParams {
-  supabase: Awaited<ReturnType<typeof createClient>>;
+  supabase: SupabaseClient;
   userId: string;
   title: string;
   content: string;
@@ -24,6 +26,119 @@ interface CreateDiaryWithoutRpcParams {
   emotionIds: string[];
   tagNames: string[];
   images: DiaryImagePayload[];
+}
+
+async function insertDiaryRow(
+  supabase: SupabaseClient,
+  userId: string,
+  title: string,
+  content: string,
+  isPrivate: boolean
+) {
+  const { data: diary, error } = await supabase
+    .from("diaries")
+    .insert({
+      user_id: userId,
+      title,
+      content,
+      is_private: isPrivate,
+    })
+    .select("id")
+    .single();
+
+  if (error || !diary) {
+    throw new Error(error?.message ?? "일기 생성 응답이 비어 있습니다.");
+  }
+
+  return diary.id;
+}
+
+async function linkDiaryEmotions(
+  supabase: SupabaseClient,
+  diaryId: string,
+  emotionIds: string[]
+) {
+  if (emotionIds.length === 0) return;
+
+  const { error } = await supabase.from("diary_emotions").insert(
+    emotionIds.map((emotionId) => ({
+      diary_id: diaryId,
+      emotion_id: emotionId,
+    }))
+  );
+
+  if (error) throw new Error(error.message);
+}
+
+async function getOrCreateTagIds(
+  supabase: SupabaseClient,
+  tagNames: string[]
+) {
+  return Promise.all(
+    tagNames.map(async (tagName) => {
+      const { data: tagId, error } = await supabase.rpc(
+        "get_or_create_tag_id",
+        { tag_name: tagName }
+      );
+
+      if (error || !tagId) {
+        throw new Error(error?.message ?? "태그 생성 응답이 비어 있습니다.");
+      }
+
+      return tagId;
+    })
+  );
+}
+
+async function linkDiaryTags(
+  supabase: SupabaseClient,
+  diaryId: string,
+  tagNames: string[]
+) {
+  if (tagNames.length === 0) return;
+
+  const tagIds = await getOrCreateTagIds(supabase, tagNames);
+  const { error } = await supabase.from("diary_tags").insert(
+    tagIds.map((tagId) => ({
+      diary_id: diaryId,
+      tag_id: tagId,
+    }))
+  );
+
+  if (error) throw new Error(error.message);
+}
+
+async function insertDiaryImages(
+  supabase: SupabaseClient,
+  diaryId: string,
+  images: DiaryImagePayload[]
+) {
+  if (images.length === 0) return;
+
+  const { error } = await supabase.from("diary_images").insert(
+    images.map((image) => ({
+      diary_id: diaryId,
+      image_url: image.image_url,
+      sort_order: image.sort_order,
+      file_name: image.file_name,
+      mime_type: image.mime_type,
+      file_size: image.file_size,
+    }))
+  );
+
+  if (error) throw new Error(error.message);
+}
+
+async function rollbackCreatedDiary(
+  supabase: SupabaseClient,
+  diaryId: string,
+  userId: string
+) {
+  await supabase
+    .from("diaries")
+    .update({ deleted_at: new Date().toISOString() })
+    .eq("id", diaryId)
+    .eq("user_id", userId);
 }
 
 async function createDiaryWithoutRpc({
@@ -39,88 +154,15 @@ async function createDiaryWithoutRpc({
   let diaryId: string | null = null;
 
   try {
-    const { data: diary, error: diaryError } = await supabase
-      .from("diaries")
-      .insert({
-        user_id: userId,
-        title,
-        content,
-        is_private: isPrivate,
-      })
-      .select("id")
-      .single();
+    diaryId = await insertDiaryRow(supabase, userId, title, content, isPrivate);
+    await linkDiaryEmotions(supabase, diaryId, emotionIds);
+    await linkDiaryTags(supabase, diaryId, tagNames);
+    await insertDiaryImages(supabase, diaryId, images);
 
-    if (diaryError || !diary) {
-      throw new Error(diaryError?.message ?? "일기 생성 응답이 비어 있습니다.");
-    }
-
-    diaryId = diary.id;
-    const createdDiaryId = diary.id;
-
-    if (emotionIds.length > 0) {
-      const { error: emotionError } = await supabase
-        .from("diary_emotions")
-        .insert(
-          emotionIds.map((emotionId) => ({
-            diary_id: createdDiaryId,
-            emotion_id: emotionId,
-          }))
-        );
-
-      if (emotionError) throw new Error(emotionError.message);
-    }
-
-    if (tagNames.length > 0) {
-      const tagIds = await Promise.all(
-        tagNames.map(async (tagName) => {
-          const { data: tagId, error: tagError } = await supabase.rpc(
-            "get_or_create_tag_id",
-            { tag_name: tagName }
-          );
-
-          if (tagError || !tagId) {
-            throw new Error(tagError?.message ?? "태그 생성 응답이 비어 있습니다.");
-          }
-
-          return tagId;
-        })
-      );
-
-      const { error: tagLinkError } = await supabase
-        .from("diary_tags")
-        .insert(
-          tagIds.map((tagId) => ({
-            diary_id: createdDiaryId,
-            tag_id: tagId,
-          }))
-        );
-
-      if (tagLinkError) throw new Error(tagLinkError.message);
-    }
-
-    if (images.length > 0) {
-      const { error: imageError } = await supabase.from("diary_images").insert(
-        images.map((image) => ({
-          diary_id: createdDiaryId,
-          image_url: image.image_url,
-          sort_order: image.sort_order,
-          file_name: image.file_name,
-          mime_type: image.mime_type,
-          file_size: image.file_size,
-        }))
-      );
-
-      if (imageError) throw new Error(imageError.message);
-    }
-
-    return createdDiaryId;
+    return diaryId;
   } catch (error) {
     if (diaryId) {
-      await supabase
-        .from("diaries")
-        .update({ deleted_at: new Date().toISOString() })
-        .eq("id", diaryId)
-        .eq("user_id", userId);
+      await rollbackCreatedDiary(supabase, diaryId, userId);
     }
     throw error;
   }

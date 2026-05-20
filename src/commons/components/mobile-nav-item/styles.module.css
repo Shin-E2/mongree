@@ -41,11 +41,35 @@
 }
 
 .nav_label {
-  @apply max-w-full truncate text-[0.68rem] font-medium leading-none;
+  @apply max-w-full truncate text-[0.62rem] font-medium leading-none;
+}
+
+.nav_item_home .nav_label {
+  display: none;
 }
 
 .nav_item_home.nav_item_active .nav_icon_home {
   background:
     radial-gradient(circle at 35% 25%, color-mix(in oklch, var(--scene-object) 48%, transparent), transparent 58%),
     var(--mongree-primary-strong);
+}
+
+@media (max-width: 380px) {
+  .nav_item {
+    padding-inline: 0.1rem;
+  }
+
+  .nav_icon {
+    height: 1.15rem;
+    width: 1.15rem;
+  }
+
+  .nav_icon_home {
+    height: 3.25rem;
+    width: 3.25rem;
+  }
+
+  .nav_label {
+    font-size: 0.56rem;
+  }
 }

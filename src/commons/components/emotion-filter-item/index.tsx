@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { getEmotionCssVars } from "@/commons/constants/emotions";
 import { IEmotionFilterItemProps } from "./types";
 import styles from "./styles.module.css";
 
@@ -11,19 +12,19 @@ export default function EmotionFilterItem({
     <button
       key={emotion.id}
       onClick={() => onClick(emotion.id)}
-      className={`flex items-center px-3 py-2 rounded-lg transition-colors ${
-        isSelected
-          ? `${emotion.bgColor} ${emotion.textColor}`
-          : "hover:bg-gray-50"
-      }`}
+      className={`${styles.button} ${isSelected ? styles.selected : ""}`}
+      style={getEmotionCssVars(emotion)}
+      type="button"
     >
-      <Image
-        src={emotion.image}
-        alt={emotion.label}
-        width={100}
-        height={100}
-        className={styles.image}
-      />
+      <span className={styles.imageWrap} aria-hidden="true">
+        <Image
+          src={emotion.image}
+          alt=""
+          width={20}
+          height={20}
+          className={styles.image}
+        />
+      </span>
       <span className={styles.labelText}>{emotion.label}</span>
     </button>
   );

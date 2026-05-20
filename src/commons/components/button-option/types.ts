@@ -1,3 +1,5 @@
+import type { Emotion } from "@/mock/emotions";
+
 export interface IButtonOptionBaseProps {
   icon?: React.ReactNode;
   title: string;
@@ -19,13 +21,6 @@ export interface IButtonOptionCommonProps extends IButtonOptionBaseProps {}
 
 export interface IButtonOptionEmotionProps
   extends Omit<IButtonOptionCommonProps, "title"> {
-  emotion: {
-    id: string;
-    label: string;
-    image: string;
-    bgColor: string;
-    borderColor: string;
-    textColor: string;
-  };
+  emotion: Emotion;
   isSelected: boolean;
 }

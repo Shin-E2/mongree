@@ -1,15 +1,8 @@
 ﻿"use server";
 
-import {
-  deleteImagesFromS3,
-  uploadMultipleImages,
-} from "@/commons/utils/upload-images";
+import { deleteImagesFromS3 } from "@/commons/utils/upload-images";
 import { createClient } from "@/lib/supabase-server";
-import {
-  DIARY_IMAGE_ACCEPTED_TYPES,
-  DIARY_IMAGE_MAX_COUNT,
-  DiaryNewFormSchema,
-} from "@/components/home/(dashboard)/diary/new/form.schema";
+import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { getCurrentProfile } from "@/lib/get-user";
 import { formatZodError } from "@/commons/utils/errorFormatters";
 import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
@@ -35,23 +28,10 @@ interface CreateDiaryWithoutRpcParams {
 }
 
 function extractFormData(formData: FormData) {
-  const imageFiles = formData
-    .getAll("images")
-    .filter((file): file is File => file instanceof File && file.size > 0);
-
-  const invalidImage = imageFiles.find(
-    (file) => !DIARY_IMAGE_ACCEPTED_TYPES.includes(file.type)
-  );
-
-  if (invalidImage) {
-    throw new Error("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
-  }
-
-  if (imageFiles.length > DIARY_IMAGE_MAX_COUNT) {
-    throw new Error(
-      `이미지는 최대 ${DIARY_IMAGE_MAX_COUNT}개까지 등록할 수 있습니다.`
-    );
-  }
+  const imageUrls = formData
+    .getAll("imageUrls")
+    .map((url) => String(url))
+    .filter(Boolean);
 
   return {
     title: String(formData.get("title") ?? ""),
@@ -62,7 +42,7 @@ function extractFormData(formData: FormData) {
       .split(",")
       .map((tag) => tag.trim())
       .filter(Boolean),
-    imageFiles,
+    imageUrls,
   };
 }
 
@@ -185,10 +165,7 @@ export async function createDiary(formData: FormData) {
     }
 
     const extractedData = extractFormData(formData);
-
-    if (extractedData.imageFiles.length > 0) {
-      uploadedImageUrls = await uploadMultipleImages(extractedData.imageFiles);
-    }
+    uploadedImageUrls = extractedData.imageUrls;
 
     const validationResult = await DiaryNewFormSchema.safeParseAsync({
       ...extractedData,
@@ -196,10 +173,6 @@ export async function createDiary(formData: FormData) {
     });
 
     if (!validationResult.success) {
-      if (uploadedImageUrls.length > 0) {
-        await deleteImagesFromS3(uploadedImageUrls);
-      }
-
       return {
         success: false,
         error: "입력값을 다시 확인해주세요.",
@@ -210,9 +183,9 @@ export async function createDiary(formData: FormData) {
     const images: DiaryImagePayload[] = uploadedImageUrls.map((url, index) => ({
       image_url: url,
       sort_order: index + 1,
-      file_name: extractedData.imageFiles[index]?.name || `image_${index + 1}`,
-      mime_type: extractedData.imageFiles[index]?.type || "image/jpeg",
-      file_size: extractedData.imageFiles[index]?.size || null,
+      file_name: `diary_image_${index + 1}.jpg`,
+      mime_type: "image/jpeg",
+      file_size: null,
     }));
 
     const { data: diaryId, error } = await supabase.rpc(

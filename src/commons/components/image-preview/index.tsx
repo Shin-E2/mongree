@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { ImageIcon } from "lucide-react";
 import { memo, useCallback } from "react";
 import { type FieldValues, type Path } from "react-hook-form";
 import { ButtonIconDelete } from "../button-icon";
@@ -15,70 +14,19 @@ import styles from "./styles.module.css";
 
 function ImagePreviewBase<T extends FieldValues>({
   cssprop,
-  multiple = false,
-  maxImages = 1,
   className,
 }: IImagePreviewBaseProps<T>) {
-  const {
-    preview,
-    images,
-    handleDeleteImage,
-    register,
-    handleFileChange,
-  } = useImagePreview({ multiple, maxImages });
+  const { preview, handleDeleteImage, register, handleFileChange } =
+    useImagePreview();
 
   const memoizedHandleDeleteImage = useCallback(
-    (index?: number) => (event: React.MouseEvent) => {
+    (event: React.MouseEvent) => {
       event.stopPropagation();
       event.preventDefault();
-      handleDeleteImage(index)(event);
+      handleDeleteImage()(event);
     },
     [handleDeleteImage]
   );
-
-  if (multiple) {
-    return (
-      <div className={styles.scrollContainer}>
-        <div className={styles.imageGrid}>
-          {images.length < maxImages && (
-            <>
-              <label htmlFor="photo" className={styles.addPhotoLabel}>
-                <ImageIcon className={styles.addPhotoIcon} />
-                <span className={styles.addPhotoText}>사진 추가</span>
-              </label>
-
-              <InputStandardSFull
-                id="photo"
-                name={"images" as Path<T>}
-                register={register}
-                type="file"
-                onChange={handleFileChange}
-                multiple
-              />
-            </>
-          )}
-
-          {images.map((image, index) => (
-            <div key={index} className={`${styles.imageItemWrapper} group`}>
-              <div className={styles.imageItemThumbnailContainer}>
-                <Image
-                  src={image.previewURL}
-                  alt={`Preview ${index + 1}`}
-                  width={150}
-                  height={150}
-                  className={styles.imageItemThumbnail}
-                />
-              </div>
-              <ButtonIconDelete
-                onClick={memoizedHandleDeleteImage(index)}
-                className={styles.deleteButtonOverlay}
-              />
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
 
   return (
     <>
@@ -87,9 +35,9 @@ function ImagePreviewBase<T extends FieldValues>({
           htmlFor="photo"
           className={`${cssprop} ${styles.common} ${className || ""}`}
         >
-          <Image src={preview} alt="Preview" layout="fill" objectFit="cover" />
+          <Image src={preview} alt="Preview" fill className={styles.previewImage} />
           <ButtonIconDelete
-            onClick={memoizedHandleDeleteImage()}
+            onClick={memoizedHandleDeleteImage}
             className={styles.singleImageDeleteButton}
           />
         </label>

@@ -1,12 +1,26 @@
 .headerContainer {
-  @apply flex w-full flex-col gap-3 sm:flex-row sm:items-center;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .filterButton {
-  @apply flex h-[46px] w-full items-center justify-between rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 ease-out;
-  border-color: color-mix(in oklch, var(--mongree-line) 74%, transparent);
+  display: flex;
+  height: 46px;
+  min-width: 46px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 74%, transparent);
+  border-radius: 0.9rem;
   background: color-mix(in oklch, var(--mongree-surface-raised) 94%, transparent);
   color: var(--mongree-text);
+  padding: 0 0.75rem;
+  font-size: 0.875rem;
+  font-weight: 750;
+  transition: all 150ms ease-out;
 }
 
 .filterButton:hover {
@@ -15,17 +29,36 @@
   transform: translateY(-1px);
 }
 
+.sortIcon {
+  height: 1.15rem;
+  width: 1.15rem;
+}
+
+.filterText,
 .chevronIcon {
-  @apply w-4 h-4 ml-2 transition-transform;
+  display: none;
+}
+
+.chevronIcon {
+  height: 1rem;
+  width: 1rem;
+  margin-left: 0.35rem;
+  transition: transform 150ms ease-out;
 }
 
 .dropdownContent {
-  @apply flex flex-col;
+  display: flex;
+  flex-direction: column;
 }
 
 .dropdownButton {
-  @apply rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors duration-150;
+  border-radius: 0.7rem;
   color: var(--mongree-text);
+  padding: 0.55rem 0.75rem;
+  text-align: left;
+  font-size: 0.875rem;
+  font-weight: 750;
+  transition: background-color 150ms ease-out;
 }
 
 .dropdownButton:hover {
@@ -33,14 +66,49 @@
 }
 
 .filterDropdownWrapper {
-  @apply relative w-full sm:w-40;
+  position: relative;
+  width: auto;
+  z-index: 50;
+}
+
+.sortPanel {
+  right: 0;
+  width: 8.5rem;
+  z-index: 70;
 }
 
 .loadingText {
-  @apply text-sm;
+  font-size: 0.875rem;
   color: var(--mongree-text-muted);
 }
 
 .errorText {
-  @apply rounded-lg bg-red-50 px-4 py-3 text-sm font-medium text-red-500;
+  border-radius: 0.75rem;
+  background: color-mix(in oklch, var(--mongree-danger) 10%, transparent);
+  color: var(--mongree-danger);
+  padding: 0.75rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 700;
 }
+
+@media (min-width: 640px) {
+  .headerContainer {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
+
+  .filterButton {
+    min-width: 8.5rem;
+    justify-content: space-between;
+    padding-inline: 1rem;
+  }
+
+  .sortIcon {
+    margin-right: 0.5rem;
+  }
+
+  .filterText,
+  .chevronIcon {
+    display: inline-flex;
+  }
+} 

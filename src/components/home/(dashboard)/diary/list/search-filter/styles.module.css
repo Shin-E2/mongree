@@ -1,7 +1,21 @@
 .container {
-  @apply flex w-full flex-col gap-3 sm:flex-row sm:items-center;
+  display: grid;
+  width: 100%;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.5rem;
 }
 
 .searchBarWrapper {
-  @apply relative w-full sm:flex-1;
+  position: relative;
+  min-width: 0;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+  }
 }

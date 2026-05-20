@@ -8,7 +8,7 @@ import type {
 } from "@/app/(dashboard)/community/types";
 import CommunityDiaryList from "../diary-list";
 import { FilterDropdown } from "@/commons/components/filter-dropdown";
-import { ChevronDown } from "lucide-react";
+import { ArrowDownWideNarrow, ChevronDown } from "lucide-react";
 import { getPublicDiaries } from "@/app/(dashboard)/community/action";
 import styles from "./styles.module.css";
 
@@ -64,8 +64,11 @@ export default function CommunityDiarySection({
         />
         <FilterDropdown
           trigger={
-            <button className={styles.filterButton}>
-              {sortBy === "latest" ? "최신순" : "인기순"}
+            <button className={styles.filterButton} type="button" aria-label="정렬 선택">
+              <ArrowDownWideNarrow className={styles.sortIcon} />
+              <span className={styles.filterText}>
+                {sortBy === "latest" ? "최신순" : "인기순"}
+              </span>
               <ChevronDown className={styles.chevronIcon} />
             </button>
           }
@@ -74,18 +77,21 @@ export default function CommunityDiarySection({
               <button
                 className={styles.dropdownButton}
                 onClick={() => setSortBy("latest")}
+                type="button"
               >
                 최신순
               </button>
               <button
                 className={styles.dropdownButton}
                 onClick={() => setSortBy("popular")}
+                type="button"
               >
                 인기순
               </button>
             </div>
           }
           className={styles.filterDropdownWrapper}
+          panelClassName={styles.sortPanel}
         />
       </div>
       {errorMessage && <p className={styles.errorText}>{errorMessage}</p>}

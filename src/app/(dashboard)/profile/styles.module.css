@@ -41,6 +41,7 @@
   font-size: 1.5rem;
   font-weight: 800;
   line-height: 1.18;
+  overflow-wrap: anywhere;
 }
 
 .heroDescription {
@@ -49,38 +50,47 @@
   color: var(--mongree-text-muted);
   font-size: 0.925rem;
   line-height: 1.75;
+  overflow-wrap: anywhere;
 }
 
 .summaryGrid {
   display: grid;
-  gap: 1rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
 }
 
 .summaryCard {
   display: flex;
-  min-height: 8rem;
+  min-height: 6.25rem;
+  min-width: 0;
   flex-direction: column;
-  padding: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.45rem;
+  text-align: center;
 }
 
 .summaryIcon {
-  margin-bottom: 1rem;
-  height: 1.25rem;
-  width: 1.25rem;
+  margin-bottom: 0.55rem;
+  height: 1.1rem;
+  width: 1.1rem;
   color: var(--scene-accent);
 }
 
 .summaryValue {
   color: var(--mongree-text);
-  font-size: 1.875rem;
+  font-size: clamp(1.25rem, 6vw, 1.875rem);
   font-weight: 800;
+  line-height: 1.05;
 }
 
 .summaryLabel {
   margin-top: 0.25rem;
   color: var(--mongree-text-muted);
-  font-size: 0.875rem;
-  font-weight: 600;
+  font-size: clamp(0.66rem, 2.5vw, 0.875rem);
+  font-weight: 700;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
 }
 
 .interactiveGrid {
@@ -406,7 +416,20 @@
 
 @media (min-width: 640px) {
   .summaryGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .summaryCard {
+    min-height: 8rem;
+    align-items: flex-start;
+    padding: 1.25rem;
+    text-align: left;
+  }
+
+  .summaryIcon {
+    margin-bottom: 1rem;
+    height: 1.25rem;
+    width: 1.25rem;
   }
 
   .dangerActionGrid {
@@ -443,6 +466,20 @@
 @media (max-width: 640px) {
   .avatarEditor {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
+    text-align: center;
   }
-}
+
+  .avatarActions {
+    align-items: center;
+  }
+
+  .fieldGroup {
+    align-items: center;
+    text-align: center;
+  }
+
+  .textInput {
+    text-align: center;
+  }
+} 

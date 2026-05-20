@@ -9,6 +9,7 @@ import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
 import {
   buildDiaryImagePayloads,
   extractCreateDiaryFormData,
+  type CreateDiaryFormData,
   type DiaryImagePayload,
 } from "@/lib/diary/create-diary-form";
 import type { Json } from "@/lib/supabase.types";
@@ -142,7 +143,7 @@ export async function createDiary(formData: FormData) {
       return { success: false, error: "로그인이 필요합니다." };
     }
 
-    const extractedData = extractCreateDiaryFormData(formData);
+    const extractedData: CreateDiaryFormData = extractCreateDiaryFormData(formData);
     uploadedImageUrls = extractedData.imageUrls;
 
     const validationResult = await DiaryNewFormSchema.safeParseAsync({

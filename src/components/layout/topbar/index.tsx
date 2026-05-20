@@ -1,6 +1,6 @@
 "use client";
 
-import { CloudRain, Moon, Plus, Snowflake, Sun } from "lucide-react";
+import { BookOpen, CloudRain, Moon, Plus, Snowflake, Sun } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 import { URL } from "@/commons/constants/global-url";
@@ -63,6 +63,14 @@ export default function TopBar() {
               onAnimationEnd={() => setSpinning(false)}
             />
           </button>
+          <Link
+            href={URL().COMMUNITY}
+            className={styles.communityButton}
+            aria-label="공개 일기 보기"
+            title="공개 일기"
+          >
+            <BookOpen className={styles.iconBase} />
+          </Link>
           <Link href={URL().DIARY_NEW} className={styles.diaryWriteButton}>
             <Plus className={styles.plusIcon} />
             <span className={styles.diaryWriteButtonText}>일기 작성</span>

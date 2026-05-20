@@ -14,6 +14,7 @@ import { revalidateDiaryUpdated } from "@/commons/utils/cache-revalidation";
 import {
   buildEditDiaryImagePayloads,
   extractEditDiaryFormData,
+  type EditDiaryFormData,
   type EditDiaryImagePayload,
 } from "@/lib/diary/edit-diary-form";
 import type { Json } from "@/lib/supabase.types";
@@ -129,7 +130,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
     return { success: false, error: "로그인이 필요합니다." };
   }
 
-  let parsedData: ReturnType<typeof extractEditDiaryFormData>;
+  let parsedData: EditDiaryFormData;
   try {
     parsedData = extractEditDiaryFormData(formData);
   } catch (error) {

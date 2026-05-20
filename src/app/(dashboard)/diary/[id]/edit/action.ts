@@ -71,6 +71,16 @@ async function cleanupUploadedImages(uploadedImageUrls: string[]) {
   await deleteImagesFromS3(uploadedImageUrls);
 }
 
+async function cleanupRemovedImages(removedImageUrls: string[]) {
+  if (removedImageUrls.length === 0) return;
+
+  try {
+    await deleteImagesFromS3(removedImageUrls);
+  } catch (error) {
+    console.error("삭제된 이미지 파일 정리 실패:", error);
+  }
+}
+
 export async function getDiaryEditData(
   diaryId: string
 ): Promise<DiaryEditData | null> {
@@ -207,15 +217,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   }
 
   const result = data[0] as UpdateDiaryRpcResult;
-  const removedImageUrls = getRemovedImageUrls(result);
-
-  if (removedImageUrls.length > 0) {
-    try {
-      await deleteImagesFromS3(removedImageUrls);
-    } catch (error) {
-      console.error("삭제된 이미지 파일 정리 실패:", error);
-    }
-  }
+  await cleanupRemovedImages(getRemovedImageUrls(result));
 
   revalidateDiaryUpdated({
     userId: user.id,

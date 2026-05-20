@@ -8,7 +8,6 @@ import { ButtonIconDelete } from "../button-icon";
 import { InputStandardSFull } from "../input";
 import type {
   IImagePreviewBaseProps,
-  IImagePreviewByDiaryNewProps,
   IImagePreviewByProfileProps,
 } from "./types";
 import useImagePreview from "./hook";
@@ -114,20 +113,6 @@ export const ImagePreviewByProfile = <T extends FieldValues>({
   ...rest
 }: IImagePreviewByProfileProps<T>) => {
   return <MemoizedImagePreviewBase {...rest} cssprop={styles.profile} />;
-};
-
-export const ImagePreviewByDiaryNew = <T extends FieldValues>({
-  className,
-  ...rest
-}: IImagePreviewByDiaryNewProps<T>) => {
-  return (
-    <MemoizedImagePreviewBase
-      {...rest}
-      cssprop={className ?? ""}
-      multiple
-      maxImages={3}
-    />
-  );
 };
 
 export default MemoizedImagePreviewBase;

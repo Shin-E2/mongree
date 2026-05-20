@@ -86,10 +86,39 @@ test("profile images allow existing OAuth and uploaded image hosts", () => {
 
   assert.match(config, /hostname:\s*"\*\*\.googleusercontent\.com"/);
   assert.match(config, /hostname:\s*"avatars\.githubusercontent\.com"/);
+  assert.match(config, /hostname:\s*"\*\*\.kakaocdn\.net"/);
+  assert.match(config, /protocol:\s*"http"[\s\S]*hostname:\s*"\*\*\.kakaocdn\.net"/);
   assert.match(config, /hostname:\s*"phinf\.pstatic\.net"/);
   assert.match(config, /hostname:\s*"\*\*\.supabase\.co"/);
   assert.match(config, /pathname:\s*"\/storage\/v1\/object\/public\/\*\*"/);
   assert.match(config, /hostname:\s*"\*\*\.s3\.ap-northeast-2\.amazonaws\.com"/);
+  assert.doesNotMatch(config, /pathname:\s*"\/users\/\*\*"/);
+  assert.match(config, /pathname:\s*"\/\*\*"/);
+});
+
+test("dashboard topbar stays functional without duplicating page headers", () => {
+  const topbar = read("src/components/layout/topbar/index.tsx");
+
+  assert.doesNotMatch(topbar, /usePageTitle/);
+  assert.doesNotMatch(topbar, /Search/);
+  assert.doesNotMatch(topbar, /aria-label="일기 검색 열기"/);
+  assert.doesNotMatch(topbar, /<strong className=\{styles\.pageTitle\}/);
+  assert.match(topbar, /Mongree/);
+});
+
+test("search inputs and community controls keep icons readable in current styling", () => {
+  const input = read("src/commons/components/input/index.tsx");
+  const inputStyles = read("src/commons/components/input/styles.module.css");
+  const communityStyles = read(
+    "src/components/home/(dashboard)/community/diary-section/styles.module.css"
+  );
+
+  assert.match(input, /styles\.withLeftIcon/);
+  assert.match(inputStyles, /\.withLeftIcon/);
+  assert.match(inputStyles, /\.search\.withLeftIcon/);
+  assert.match(inputStyles, /padding-left:\s*3rem/);
+  assert.doesNotMatch(communityStyles, /bg-white|text-gray-|border-gray-|hover:bg-gray-/);
+  assert.match(communityStyles, /var\(--mongree-surface/);
 });
 
 test("core dashboard pages use Mongree scene tokens instead of legacy white SaaS styling", () => {
@@ -171,7 +200,7 @@ test("dashboard mobile shell reserves space for fixed navigation and companion",
   assert.match(sidebarStyles, /pointer-events:\s*auto/);
   assert.match(
     read("src/components/layout/sidebar/navigation/mobile-navigation/styles.module.css"),
-    /var\(--scene-nav-bg\)\s*98%/
+    /background:\s*var\(--scene-nav-bg\)/
   );
   assert.match(characterStyles, /display:\s*none/);
   assert.match(characterStyles, /min-width:\s*640px/);

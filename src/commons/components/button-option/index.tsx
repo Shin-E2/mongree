@@ -9,6 +9,7 @@ import type {
 import Link from "next/link";
 import { ImageThumbnail } from "@/commons/components/image-thumbnail";
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
+import { getEmotionCssVars } from "@/commons/constants/emotions";
 
 // 아이콘과 제목이 붙어있는 버튼 컴포넌트
 export default function ButtonOptionBase({
@@ -109,22 +110,26 @@ export const ButtonOptionEmotion = ({
   }`;
 
   return (
-    <ButtonOptionBase
+    <button
       {...rest}
-      cssprop={dynamicClassName}
+      className={`${styles.common} ${dynamicClassName}`}
       onClick={onClick}
-      icon={
+      style={getEmotionCssVars(emotion)}
+      aria-pressed={isSelected}
+    >
+      <span className={styles.emotionImageWrap} aria-hidden="true">
         <Image
           src={emotion.image}
-          alt={emotion.label}
-          width={16}
-          height={16}
+          alt=""
+          width={36}
+          height={36}
           className={styles.emotionImage}
           priority
         />
-      }
-      title={emotion.label}
-      titleColor={styles.emotionLabel}
-    />
+      </span>
+      <span className={styles.emotionTextBox}>
+        <span className={styles.emotionLabel}>{emotion.label}</span>
+      </span>
+    </button>
   );
 };

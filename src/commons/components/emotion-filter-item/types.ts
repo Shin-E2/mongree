@@ -1,13 +1,7 @@
-export interface IEmotion {
-  id: string;
-  label: string;
-  image: string;
-  bgColor: string;
-  textColor: string;
-}
+import type { Emotion } from "@/mock/emotions";
 
 export interface IEmotionFilterItemProps {
-  emotion: IEmotion;
+  emotion: Emotion;
   onClick: (id: string) => void;
   isSelected: boolean;
 }

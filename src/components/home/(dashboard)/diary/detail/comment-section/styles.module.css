@@ -3,16 +3,17 @@
   border-radius: var(--mongree-radius-lg);
   background:
     radial-gradient(circle at 96% 0%, color-mix(in oklch, var(--scene-accent) 10%, transparent) 0 4rem, transparent 4.2rem),
-    color-mix(in oklch, var(--mongree-surface-raised) 86%, var(--scene-bg));
+    color-mix(in oklch, var(--mongree-surface-raised) 92%, var(--scene-bg));
   box-shadow: var(--mongree-shadow-soft);
-  padding: 1.25rem;
+  padding: clamp(1rem, 3vw, 1.25rem);
 }
 
 .title {
-  margin-bottom: 1rem;
+  margin-bottom: 0.8rem;
   color: var(--mongree-text);
-  font-size: 1rem;
+  font-size: clamp(0.92rem, 2.8vw, 1rem);
   font-weight: 800;
+  overflow-wrap: anywhere;
 }
 
 .commentCountText {
@@ -22,6 +23,6 @@
 
 @media (min-width: 768px) {
   .container {
-    padding: 1.5rem;
+    padding: 1.35rem;
   }
 }

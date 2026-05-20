@@ -66,6 +66,35 @@ interface UpdateDiaryRpcResult {
 const getRemovedImageUrls = (result: UpdateDiaryRpcResult) =>
   result.removed_image_urls ?? [];
 
+const getDiaryEditEmotions = (row: DiaryEditRow) =>
+  row.diary_emotions?.map((item) => item.emotion_id) ?? [];
+
+const getDiaryEditTags = (row: DiaryEditRow) =>
+  row.diary_tags
+    ?.map((item) => item.tags?.name)
+    .filter((tag): tag is string => Boolean(tag)) ?? [];
+
+const getDiaryEditImages = (row: DiaryEditRow): DiaryEditImage[] =>
+  row.diary_images
+    ?.sort((a, b) => a.sort_order - b.sort_order)
+    .map((image) => ({
+      id: image.id,
+      url: image.image_url,
+      sortOrder: image.sort_order,
+    })) ?? [];
+
+function mapDiaryEditRow(row: DiaryEditRow): DiaryEditData {
+  return {
+    id: row.id,
+    title: row.title,
+    content: row.content,
+    isPrivate: row.is_private ?? true,
+    emotions: getDiaryEditEmotions(row),
+    tags: getDiaryEditTags(row),
+    images: getDiaryEditImages(row),
+  };
+}
+
 async function cleanupUploadedImages(uploadedImageUrls: string[]) {
   if (uploadedImageUrls.length === 0) return;
   await deleteImagesFromS3(uploadedImageUrls);
@@ -121,25 +150,7 @@ export async function getDiaryEditData(
     return null;
   }
 
-  return {
-    id: data.id,
-    title: data.title,
-    content: data.content,
-    isPrivate: data.is_private ?? true,
-    emotions: data.diary_emotions?.map((item) => item.emotion_id) ?? [],
-    tags:
-      data.diary_tags
-        ?.map((item) => item.tags?.name)
-        .filter((tag): tag is string => Boolean(tag)) ?? [],
-    images:
-      data.diary_images
-        ?.sort((a, b) => a.sort_order - b.sort_order)
-        .map((image) => ({
-          id: image.id,
-          url: image.image_url,
-          sortOrder: image.sort_order,
-        })) ?? [],
-  };
+  return mapDiaryEditRow(data);
 }
 
 export async function updateDiary(diaryId: string, formData: FormData) {

@@ -4,23 +4,7 @@ import type { ReactNode } from "react";
 import type { useImageUpload } from "@/commons/hooks/use-image-upload";
 
 type ImageState = ReturnType<typeof useImageUpload>;
-
-type ImageUploadFieldStyles = Record<
-  | "fieldGroup"
-  | "imageHeader"
-  | "label"
-  | "imageCount"
-  | "imageGrid"
-  | "imageItem"
-  | "previewImage"
-  | "imageDeleteButton"
-  | "imageDeleteIcon"
-  | "imageAddButton"
-  | "imageAddIcon"
-  | "fileInput"
-  | "errorText",
-  string
->;
+type ImageUploadFieldStyles = Record<string, string>;
 
 interface ImageUploadFieldProps {
   imageState: ImageState;

@@ -1,10 +1,10 @@
 "use client";
 
-import { ImagePreviewByDiaryNew } from "@/commons/components/image-preview";
 import { useFormContext } from "react-hook-form";
 import DiaryNewStepWriteDiaryEmotionTags from "./emotion-tags";
 import TitleField from "./title-field";
 import ContentField from "./content-field";
+import ImageField from "./image-field";
 import TagField from "./tag-field";
 import type { DiaryNewFormType } from "../form.schema";
 import styles from "./styles.module.css";
@@ -34,7 +34,7 @@ export default function DiaryNewStepWriteDiary() {
         errors={errors}
         contentLength={contentLength}
       />
-      <ImagePreviewByDiaryNew multiple maxImages={3} />
+      <ImageField />
       <TagField tags={tags} setValue={setValue} />
     </section>
   );

@@ -36,6 +36,12 @@ const nextConfig: NextConfig = {
         search: "",
       },
       {
+        protocol: "http",
+        hostname: "**.kakaocdn.net",
+        port: "",
+        pathname: "/**",
+      },
+      {
         protocol: "https",
         hostname: "**.daumcdn.net",
         port: "",
@@ -60,14 +66,14 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: uploadBucketHostname,
         port: "",
-        pathname: "/users/**",
+        pathname: "/**",
         search: "",
       },
       {
         protocol: "https",
         hostname: "**.s3.ap-northeast-2.amazonaws.com",
         port: "",
-        pathname: "/users/**",
+        pathname: "/**",
         search: "",
       },
       {

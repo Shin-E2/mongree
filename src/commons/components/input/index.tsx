@@ -45,9 +45,9 @@ export default function InputBase<T extends FieldValues>({
           className={
             type === "file"
               ? "hidden"
-              : `${cssprop} ${styles.common} ${iconLeft ? "pl-10" : "pl-3"} ${
-                  className || ""
-                }`
+              : `${cssprop} ${styles.common} ${
+                  iconLeft ? styles.withLeftIcon : styles.withoutLeftIcon
+                } ${className || ""}`
           }
           {...(register ? register(name!) : { name })}
           placeholder={placeholder}

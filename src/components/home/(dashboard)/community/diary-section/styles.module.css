@@ -3,7 +3,16 @@
 }
 
 .filterButton {
-  @apply flex items-center px-4 py-2 bg-white border rounded-lg hover:bg-gray-50 h-[46px] text-sm font-medium text-gray-700;
+  @apply flex h-[46px] items-center rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 ease-out;
+  border-color: color-mix(in oklch, var(--mongree-line) 74%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 94%, transparent);
+  color: var(--mongree-text);
+}
+
+.filterButton:hover {
+  border-color: color-mix(in oklch, var(--scene-accent) 54%, var(--mongree-line));
+  background: color-mix(in oklch, var(--scene-accent) 12%, var(--mongree-surface));
+  transform: translateY(-1px);
 }
 
 .chevronIcon {
@@ -15,7 +24,12 @@
 }
 
 .dropdownButton {
-  @apply px-3 py-2 hover:bg-gray-50 text-left text-sm;
+  @apply rounded-lg px-3 py-2 text-left text-sm font-medium transition-colors duration-150;
+  color: var(--mongree-text);
+}
+
+.dropdownButton:hover {
+  background: color-mix(in oklch, var(--scene-accent) 12%, transparent);
 }
 
 .filterDropdownWrapper {
@@ -23,7 +37,8 @@
 }
 
 .loadingText {
-  @apply text-sm text-gray-500;
+  @apply text-sm;
+  color: var(--mongree-text-muted);
 }
 
 .errorText {

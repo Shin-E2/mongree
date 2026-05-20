@@ -1,7 +1,14 @@
 .container {
-  @apply min-h-screen bg-gray-50 flex items-center justify-center;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background:
+    radial-gradient(circle at 18% 14%, color-mix(in oklch, var(--scene-accent) 18%, transparent), transparent 34%),
+    linear-gradient(180deg, var(--scene-bg-soft), var(--scene-bg));
+  padding: 3rem 0;
 }
 
 .contentWrapper {
-  @apply max-w-md w-full mx-4;
+  width: min(100% - 2rem, 28rem);
 }

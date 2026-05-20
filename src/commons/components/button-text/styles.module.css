@@ -1,17 +1,37 @@
 .common {
-  @apply rounded-md whitespace-nowrap disabled:bg-gray-400 disabled:text-white disabled:cursor-not-allowed disabled:hover:bg-gray-400;
+  white-space: nowrap;
+  border-radius: var(--mongree-radius-sm);
+  transition: background-color 150ms ease-out, color 150ms ease-out, border-color 150ms ease-out, opacity 150ms ease-out;
 }
 
 .standard__s__full {
-  @apply w-full bg-indigo-600 text-white p-1.5;
+  width: 100%;
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.5rem 0.75rem;
+  font-weight: 750;
+}
+
+.standard__s__full:hover {
+  background: var(--mongree-primary-strong);
 }
 
 .padding__m__m {
-  @apply px-3 py-2 h-9 text-white flex items-center bg-indigo-600 hover:bg-indigo-400;
+  display: flex;
+  height: 2.25rem;
+  align-items: center;
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.5rem 0.75rem;
 }
 
 .margin__left__s__s {
-  @apply px-3 py-2 h-9 bg-indigo-600 hover:bg-indigo-400 flex items-center text-white;
+  display: flex;
+  height: 2.25rem;
+  align-items: center;
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.5rem 0.75rem;
 }
 
 .logo {
@@ -22,9 +42,21 @@
 }
 
 .secondary__s__full {
-  @apply w-full bg-gray-200 text-gray-700 p-1.5 hover:bg-gray-300;
+  width: 100%;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 78%, transparent);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 82%, transparent);
+  color: var(--mongree-text);
+  padding: 0.5rem 0.75rem;
 }
 
 .commentButton {
-  @apply px-4 py-2 bg-blue-500 text-white rounded disabled:opacity-50;
+  border-radius: var(--mongree-radius-sm);
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.5rem 1rem;
+}
+
+.common:disabled {
+  cursor: not-allowed;
+  opacity: 0.52;
 }

@@ -2,30 +2,60 @@
 }
 
 .social {
-  @apply rounded-full hover:opacity-80 transition-opacity overflow-hidden h-12 w-12;
+  height: 3rem;
+  width: 3rem;
+  overflow: hidden;
+  border-radius: 999px;
+  transition: opacity 150ms ease-out, transform 150ms ease-out;
+}
+
+.social:hover {
+  opacity: 0.84;
+  transform: translateY(-1px);
 }
 
 .delete {
-  @apply absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center transition-opacity rounded-full;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mongree-text) 52%, transparent);
+  transition: opacity 150ms ease-out;
 }
 
 .delete__no__background {
-  @apply absolute right-4 top-4;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
 }
 
 .next {
-  @apply px-3 py-2 bg-indigo-600 text-white
-  rounded-lg hover:bg-indigo-700 transition-colors duration-200;
+  border-radius: var(--mongree-radius-sm);
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.5rem 0.75rem;
+  transition: background-color 150ms ease-out;
+}
+
+.next:hover {
+  background: var(--mongree-primary-strong);
 }
 
 .deleteIcon {
-  @apply w-8 h-8 text-white;
+  height: 2rem;
+  width: 2rem;
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
 }
 
 .deleteNoBackgroundIcon {
-  @apply w-5 h-5 text-gray-400;
+  height: 1.25rem;
+  width: 1.25rem;
+  color: var(--mongree-text-muted);
 }
 
 .arrowIcon {
-  @apply w-4 h-4;
+  height: 1rem;
+  width: 1rem;
 }

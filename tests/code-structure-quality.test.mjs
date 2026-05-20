@@ -68,6 +68,115 @@ test("source files do not contain Korean mojibake leftovers", () => {
   }
 });
 
+test("repository defaults to UTF-8 for Korean text files", () => {
+  const editorConfig = read(".editorconfig");
+  const gitAttributes = read(".gitattributes");
+  const vscodeSettings = JSON.parse(read(".vscode/settings.json"));
+
+  assert.match(editorConfig, /charset\s*=\s*utf-8/);
+  assert.match(gitAttributes, /\*\s+text=auto\s+eol=lf/);
+  assert.match(gitAttributes, /\*\.tsx\s+text\s+working-tree-encoding=UTF-8/);
+  assert.match(gitAttributes, /\*\.css\s+text\s+working-tree-encoding=UTF-8/);
+  assert.match(gitAttributes, /\*\.md\s+text\s+working-tree-encoding=UTF-8/);
+  assert.equal(vscodeSettings["files.encoding"], "utf8");
+});
+
+test("profile images allow existing OAuth and uploaded image hosts", () => {
+  const config = read("next.config.ts");
+
+  assert.match(config, /hostname:\s*"\*\*\.googleusercontent\.com"/);
+  assert.match(config, /hostname:\s*"avatars\.githubusercontent\.com"/);
+  assert.match(config, /hostname:\s*"phinf\.pstatic\.net"/);
+  assert.match(config, /hostname:\s*"\*\*\.supabase\.co"/);
+  assert.match(config, /pathname:\s*"\/storage\/v1\/object\/public\/\*\*"/);
+  assert.match(config, /hostname:\s*"\*\*\.s3\.ap-northeast-2\.amazonaws\.com"/);
+});
+
+test("core dashboard pages use Mongree scene tokens instead of legacy white SaaS styling", () => {
+  const files = [
+    "src/app/(dashboard)/ai-report/styles.module.css",
+    "src/app/(dashboard)/statistics/styles.module.css",
+    "src/app/(dashboard)/profile/styles.module.css",
+  ];
+  const legacyPattern =
+    /\b(bg-white|text-gray-\d+|border-gray-\d+|shadow-sm|text-indigo-\d+|bg-indigo-\d+|border-indigo-\d+|hover:bg-indigo-\d+|hover:text-indigo-\d+)\b/;
+
+  for (const file of files) {
+    const source = read(file);
+    assert.match(source, /var\(--mongree-surface/);
+    assert.match(source, /var\(--mongree-text/);
+    assert.match(source, /var\(--scene-accent/);
+    assert.doesNotMatch(source, legacyPattern, file);
+  }
+});
+
+test("auth pages and shared form controls use Mongree scene styling", () => {
+  const files = [
+    "src/components/layout/auth-page-layout/styles.module.css",
+    "src/commons/components/card/styles.module.css",
+    "src/commons/components/button-text/styles.module.css",
+    "src/components/login/form-title/styles.module.css",
+    "src/components/login/social-section/styles.module.css",
+    "src/components/login/signup-section/styles.module.css",
+    "src/app/(auth)/signup/styles.module.css",
+    "src/app/(auth)/confirm/styles.module.css",
+    "src/app/(auth)/reset-password/page.tsx",
+  ];
+  const legacyPattern =
+    /\b(bg-white|bg-gray-\d+|text-gray-\d+|border-gray-\d+|shadow-sm|text-indigo-\d+|bg-indigo-\d+|hover:bg-indigo-\d+|hover:text-indigo-\d+)\b/;
+
+  for (const file of files) {
+    const source = read(file);
+    assert.match(source, /mongree|scene/, file);
+    assert.doesNotMatch(source, legacyPattern, file);
+  }
+});
+
+test("counselor pages use readable Korean copy and current Mongree styling", () => {
+  const files = [
+    "src/app/(dashboard)/counselors/page.tsx",
+    "src/app/(dashboard)/counselors/[id]/page.tsx",
+    "src/app/(dashboard)/counselors/data.ts",
+    "src/app/(dashboard)/counselors/styles.module.css",
+  ];
+  const legacyPattern =
+    /\b(bg-white|bg-gray-\d+|text-gray-\d+|border-gray-\d+|shadow-sm|text-indigo-\d+|bg-indigo-\d+|hover:bg-indigo-\d+|hover:text-indigo-\d+)\b/;
+  const mojibakePattern = /[�]|(?:鍮|踰|덊|곷|떞|쒓|媛|遺|筌|占|諛|紐|源|猷|願)/;
+
+  for (const file of files) {
+    const source = read(file);
+    assert.doesNotMatch(source, mojibakePattern, file);
+    assert.doesNotMatch(source, legacyPattern, file);
+  }
+
+  assert.match(read("src/app/(dashboard)/counselors/styles.module.css"), /var\(--mongree-surface/);
+  assert.ok(
+    !fs.existsSync(path.join(root, "src/app/(dashboard)/counselors/[id]/styles.module.css")),
+    "unused detail-only counselor styles should be removed"
+  );
+});
+
+test("dashboard mobile shell reserves space for fixed navigation and companion", () => {
+  const layoutStyles = read("src/components/layout/styles.module.css");
+  const sidebarStyles = read("src/components/layout/sidebar/styles.module.css");
+  const characterStyles = read("src/components/layout/scene-character/styles.module.css");
+
+  assert.match(layoutStyles, /--mobile-nav-reserved-height/);
+  assert.match(layoutStyles, /env\(safe-area-inset-bottom\)/);
+  assert.match(layoutStyles, /padding-bottom:\s*var\(--mobile-nav-reserved-height\)/);
+  assert.match(sidebarStyles, /--mobile-nav-reserved-height/);
+  assert.match(sidebarStyles, /bottom:\s*calc\(0\.75rem \+ env\(safe-area-inset-bottom\)\)/);
+  assert.match(sidebarStyles, /pointer-events:\s*none/);
+  assert.match(sidebarStyles, /linear-gradient\(\s*to top/);
+  assert.match(sidebarStyles, /pointer-events:\s*auto/);
+  assert.match(
+    read("src/components/layout/sidebar/navigation/mobile-navigation/styles.module.css"),
+    /var\(--scene-nav-bg\)\s*98%/
+  );
+  assert.match(characterStyles, /display:\s*none/);
+  assert.match(characterStyles, /min-width:\s*640px/);
+});
+
 test("community diary cards use the shared Mongree surface component", () => {
   const source = read("src/components/home/(dashboard)/community/diary-card/index.tsx");
   const styles = read("src/components/home/(dashboard)/community/diary-card/styles.module.css");

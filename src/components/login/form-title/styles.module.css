@@ -1,11 +1,16 @@
 .section {
-  @apply text-center mb-8;
+  margin-bottom: 2rem;
+  text-align: center;
 }
 
 .section__h1 {
-  @apply text-3xl font-bold text-gray-900;
+  color: var(--mongree-text);
+  font-size: 1.875rem;
+  font-weight: 850;
+  letter-spacing: 0;
 }
 
 .section__p {
-  @apply mt-2 text-gray-600
+  margin-top: 0.5rem;
+  color: var(--mongree-text-muted);
 }

@@ -1,5 +1,11 @@
 .common {
 }
 .standard__full__full {
-  @apply bg-white rounded-lg shadow-sm p-8;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 70%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background:
+    linear-gradient(145deg, color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent), color-mix(in oklch, var(--mongree-surface) 88%, transparent)),
+    var(--mongree-surface);
+  box-shadow: var(--mongree-shadow-float);
+  padding: 2rem;
 }

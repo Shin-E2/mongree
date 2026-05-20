@@ -1,51 +1,100 @@
 .common {
-  @apply block;
+  display: block;
 }
 
 .profile {
-  @apply relative w-32 h-32 rounded-full overflow-hidden bg-gray-100 mb-4 cursor-pointer;
+  position: relative;
+  margin-bottom: 1rem;
+  height: 8rem;
+  width: 8rem;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
 }
 
 .scrollContainer {
-  @apply overflow-x-auto;
+  overflow-x: auto;
 }
 
 .imageGrid {
-  @apply flex items-center gap-4 w-fit;
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 1rem;
 }
 
 .addPhotoLabel {
-  @apply flex-shrink-0 w-[137px] h-[137px] flex flex-col items-center justify-center border-2 border-dashed border-gray-300 rounded-lg hover:border-gray-400 transition-colors duration-200 cursor-pointer;
+  display: flex;
+  height: 137px;
+  width: 137px;
+  flex-shrink: 0;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 2px dashed color-mix(in oklch, var(--mongree-line) 82%, transparent);
+  border-radius: var(--mongree-radius-sm);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, transparent);
+  transition: border-color 150ms ease-out, background-color 150ms ease-out;
+}
+
+.addPhotoLabel:hover {
+  border-color: color-mix(in oklch, var(--scene-accent) 52%, var(--mongree-line));
+  background: color-mix(in oklch, var(--scene-accent) 8%, var(--mongree-surface-soft));
 }
 
 .addPhotoIcon {
-  @apply w-6 h-6 text-gray-400;
+  height: 1.5rem;
+  width: 1.5rem;
+  color: var(--mongree-text-muted);
 }
 
 .addPhotoText {
-  @apply text-sm text-gray-500 mt-2;
+  margin-top: 0.5rem;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
 }
 
 .imageItemWrapper {
-  @apply relative flex-shrink-0;
+  position: relative;
+  flex-shrink: 0;
 }
 
 .imageItemThumbnailContainer {
-  @apply w-[137px] h-[137px] rounded-lg overflow-hidden;
+  height: 137px;
+  width: 137px;
+  overflow: hidden;
+  border-radius: var(--mongree-radius-sm);
 }
 
 .imageItemThumbnail {
-  @apply w-full h-full object-cover;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
 }
 
 .deleteButtonOverlay {
-  @apply !top-2 !right-2 !inset-auto w-5 h-5 opacity-0 group-hover:opacity-100;
+  inset: auto 0.5rem auto auto !important;
+  top: 0.5rem !important;
+  right: 0.5rem !important;
+  height: 1.25rem;
+  width: 1.25rem;
+  opacity: 0;
+}
+
+.imageItemWrapper:hover .deleteButtonOverlay {
+  opacity: 1;
 }
 
 .singleImageGroup {
-  @apply block;
+  display: block;
 }
 
 .singleImageDeleteButton {
-  @apply invisible group-hover:visible;
+  visibility: hidden;
+}
+
+.singleImageGroup:hover .singleImageDeleteButton {
+  visibility: visible;
 }

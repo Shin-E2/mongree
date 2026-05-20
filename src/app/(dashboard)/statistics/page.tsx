@@ -8,7 +8,6 @@ import {
   NotebookPen,
   TrendingUp,
 } from "lucide-react";
-import { HeaderStandardMFull } from "@/commons/components/header";
 import { URL } from "@/commons/constants/global-url";
 import StatisticsCharts from "./charts";
 import { getEmotionStatisticsData } from "./action";
@@ -48,11 +47,6 @@ export default async function StatisticsPage({ searchParams }: StatisticsPagePro
 
   return (
     <div className={styles.pageContainer}>
-      <HeaderStandardMFull
-        title="감정 통계"
-        description="숫자와 차트로 내 감정의 반복 패턴을 직접 찾아보세요."
-      />
-
       <div className={styles.contentWrapper}>
         <div className={styles.toolbar}>
           <Link

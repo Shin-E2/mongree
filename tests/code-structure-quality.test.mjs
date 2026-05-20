@@ -99,11 +99,26 @@ test("profile images allow existing OAuth and uploaded image hosts", () => {
 test("dashboard topbar stays functional without duplicating page headers", () => {
   const topbar = read("src/components/layout/topbar/index.tsx");
 
-  assert.doesNotMatch(topbar, /usePageTitle/);
+  assert.match(topbar, /usePageTitle/);
   assert.doesNotMatch(topbar, /Search/);
   assert.doesNotMatch(topbar, /aria-label="일기 검색 열기"/);
-  assert.doesNotMatch(topbar, /<strong className=\{styles\.pageTitle\}/);
+  assert.match(topbar, /<strong className=\{styles\.pageTitle\}/);
   assert.match(topbar, /Mongree/);
+
+  const dashboardPages = [
+    "src/app/(dashboard)/profile/page.tsx",
+    "src/app/(dashboard)/diary/page.tsx",
+    "src/app/(dashboard)/community/page.tsx",
+    "src/app/(dashboard)/calendar/page.tsx",
+    "src/app/(dashboard)/statistics/page.tsx",
+    "src/app/(dashboard)/ai-report/page.tsx",
+    "src/app/(dashboard)/counselors/page.tsx",
+    "src/app/(dashboard)/counselors/[id]/page.tsx",
+  ];
+
+  for (const page of dashboardPages) {
+    assert.doesNotMatch(read(page), /HeaderStandardMFull/, page);
+  }
 });
 
 test("search inputs and community controls keep icons readable in current styling", () => {
@@ -112,6 +127,7 @@ test("search inputs and community controls keep icons readable in current stylin
   const communityStyles = read(
     "src/components/home/(dashboard)/community/diary-section/styles.module.css"
   );
+  const dropdownStyles = read("src/commons/components/filter-dropdown/styles.module.css");
 
   assert.match(input, /styles\.withLeftIcon/);
   assert.match(inputStyles, /\.withLeftIcon/);
@@ -119,6 +135,49 @@ test("search inputs and community controls keep icons readable in current stylin
   assert.match(inputStyles, /padding-left:\s*3rem/);
   assert.doesNotMatch(communityStyles, /bg-white|text-gray-|border-gray-|hover:bg-gray-/);
   assert.match(communityStyles, /var\(--mongree-surface/);
+  assert.doesNotMatch(dropdownStyles, /bg-white|shadow-lg/);
+  assert.match(dropdownStyles, /var\(--mongree-surface/);
+});
+
+test("diary and community feeds share full-width themed surfaces", () => {
+  const diaryPage = read("src/app/(dashboard)/diary/page.tsx");
+  const diaryStyles = read("src/app/(dashboard)/diary/styles.module.css");
+  const communityStyles = read("src/app/(dashboard)/community/styles.module.css");
+  const surfaceCard = read("src/commons/components/surface-card/styles.module.css");
+  const diaryList = read(
+    "src/components/home/(dashboard)/diary/list/diary-section/styles.module.css"
+  );
+  const communityList = read(
+    "src/components/home/(dashboard)/community/diary-list/styles.module.css"
+  );
+  const emotionFilter = read(
+    "src/components/home/(dashboard)/diary/list/emotion-filter/styles.module.css"
+  );
+
+  assert.doesNotMatch(diaryPage, /MongiCompanion/);
+  assert.doesNotMatch(diaryPage, /URL\(\)\.DIARY_NEW/);
+  assert.doesNotMatch(diaryStyles, /bg-gray-50|md:mx-32/);
+  assert.doesNotMatch(communityStyles, /md:mx-32/);
+  assert.match(diaryStyles, /max-w-\[72rem\]/);
+  assert.match(communityStyles, /max-w-\[72rem\]/);
+  assert.doesNotMatch(surfaceCard, /::before/);
+  assert.match(diaryList, /items-start/);
+  assert.match(communityList, /column-count:\s*3/);
+  assert.match(communityList, /break-inside:\s*avoid/);
+  assert.doesNotMatch(emotionFilter, /bg-white|text-indigo|hover:bg-gray/);
+  assert.match(emotionFilter, /var\(--mongree-surface/);
+});
+
+test("snow theme is bright and visually distinct from rain", () => {
+  const globals = read("src/app/globals.css");
+
+  assert.match(globals, /\[data-theme-scene="snow"\][\s\S]*--scene-bg:\s*oklch\(0\.94/);
+  assert.match(globals, /\[data-theme-scene="snow"\][\s\S]*--scene-surface:\s*oklch\(0\.985/);
+  assert.match(globals, /\[data-theme-scene="snow"\][\s\S]*--scene-accent:\s*oklch\(0\.76/);
+  assert.match(
+    read("src/components/theme/weather-scene.module.css"),
+    /\.scene\[data-scene="snow"\] \.sun[\s\S]*radial-gradient/
+  );
 });
 
 test("core dashboard pages use Mongree scene tokens instead of legacy white SaaS styling", () => {

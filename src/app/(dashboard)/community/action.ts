@@ -261,7 +261,6 @@ export async function getPublicDiaries({
     });
 
     if (error) {
-      console.error("Supabase public diary feed error:", error);
       if (isMissingPublicDiaryFeedRpc(error)) {
         return getPublicDiariesFallback({
           supabase,
@@ -271,6 +270,7 @@ export async function getPublicDiaries({
         });
       }
 
+      console.error("Supabase public diary feed error:", error);
       return {
         success: false,
         diaries: [],

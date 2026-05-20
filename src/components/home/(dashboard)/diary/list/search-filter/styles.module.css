@@ -1,7 +1,7 @@
 .container {
-  @apply flex flex-col sm:flex-row sm:items-center gap-4;
+  @apply flex w-full flex-col gap-3 sm:flex-row sm:items-center;
 }
 
 .searchBarWrapper {
-  @apply relative w-full;
+  @apply relative w-full sm:flex-1;
 }

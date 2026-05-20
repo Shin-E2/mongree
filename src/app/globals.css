@@ -161,21 +161,21 @@ body {
 
 /* ── Snow ── */
 [data-theme-scene="snow"] {
-  --scene-bg:             oklch(0.80 0.032 228);
-  --scene-bg-soft:        oklch(0.86 0.024 226);
-  --scene-surface:        oklch(0.88 0.020 226);
-  --scene-surface-soft:   oklch(0.84 0.022 224);
-  --scene-surface-raised: oklch(0.91 0.016 224);
-  --scene-accent:         oklch(0.55 0.09 215);
-  --scene-accent2:        oklch(0.68 0.07 218);
-  --scene-object:         oklch(0.92 0.012 228);
-  --scene-cloud:          oklch(0.96 0.010 228);
-  --scene-star:           oklch(0.82 0.08 215);
-  --scene-text:           oklch(0.22 0.032 245);
-  --scene-text-muted:     oklch(0.46 0.026 245);
-  --scene-line:           oklch(0.78 0.020 226);
-  --scene-shadow:         oklch(0.26 0.042 245);
-  --scene-nav-bg:         oklch(0.86 0.018 226);
+  --scene-bg:             oklch(0.94 0.028 220);
+  --scene-bg-soft:        oklch(0.975 0.018 215);
+  --scene-surface:        oklch(0.985 0.010 218);
+  --scene-surface-soft:   oklch(0.965 0.018 214);
+  --scene-surface-raised: oklch(0.998 0.006 210);
+  --scene-accent:         oklch(0.76 0.10 205);
+  --scene-accent2:        oklch(0.88 0.08 92);
+  --scene-object:         oklch(0.99 0.012 96);
+  --scene-cloud:          oklch(0.995 0.006 210);
+  --scene-star:           oklch(0.92 0.10 90);
+  --scene-text:           oklch(0.24 0.036 246);
+  --scene-text-muted:     oklch(0.48 0.030 245);
+  --scene-line:           oklch(0.88 0.022 215);
+  --scene-shadow:         oklch(0.24 0.034 245);
+  --scene-nav-bg:         oklch(0.985 0.010 218);
 }
 
 @layer base {

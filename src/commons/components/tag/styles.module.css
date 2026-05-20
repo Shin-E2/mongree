@@ -3,7 +3,9 @@
 }
 
 .tagItem {
-  @apply px-2 py-1 text-xs text-gray-500 flex items-center rounded-full bg-gray-100;
+  @apply flex items-center rounded-full px-2 py-1 text-xs font-medium;
+  background: color-mix(in oklch, var(--scene-accent) 10%, var(--mongree-surface-soft));
+  color: var(--mongree-text-muted);
 }
 
 .tagIcon {

@@ -22,19 +22,6 @@
     transform 160ms ease;
 }
 
-.surfaceCard::before {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 3px;
-  background: linear-gradient(
-    90deg,
-    color-mix(in oklch, var(--scene-accent) 72%, transparent),
-    color-mix(in oklch, var(--mongree-primary) 54%, transparent)
-  );
-  opacity: 0.52;
-}
-
 .interactive:hover {
   border-color: color-mix(in oklch, var(--scene-accent) 42%, var(--scene-line));
   box-shadow:

@@ -27,21 +27,19 @@
 }
 
 .pageContext {
-  @apply flex min-w-0 flex-1 items-center;
+  @apply flex min-w-0 flex-1 flex-col justify-center;
 }
 
-.brandLink {
-  @apply inline-flex items-center rounded-full px-3 py-2 text-sm font-bold tracking-normal md:text-base;
+.pageEyebrow {
+  @apply hidden text-[0.68rem] font-semibold uppercase md:block;
+  color: color-mix(in oklch, var(--scene-accent) 72%, var(--mongree-text-muted));
+  line-height: 1;
+}
+
+.pageTitle {
+  @apply block truncate text-base font-bold md:text-lg;
   color: var(--mongree-text);
-  background: color-mix(in oklch, var(--scene-accent) 10%, transparent);
-  transition:
-    background 160ms ease,
-    transform 160ms ease;
-}
-
-.brandLink:hover {
-  background: color-mix(in oklch, var(--scene-accent) 16%, transparent);
-  transform: translateY(-1px);
+  line-height: 1.15;
 }
 
 .buttonsWrapper {
@@ -69,7 +67,6 @@
   transform: translateY(0) scale(0.98);
 }
 
-.brandLink:focus-visible,
 .themeToggleButton:focus-visible,
 .diaryWriteButton:focus-visible {
   outline: 2px solid color-mix(in oklch, var(--scene-accent) 70%, var(--mongree-primary));

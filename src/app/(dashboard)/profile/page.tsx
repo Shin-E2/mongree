@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { MessageCircle, NotebookPen, Unlock } from "lucide-react";
-import { HeaderStandardMFull } from "@/commons/components/header";
 import { URL } from "@/commons/constants/global-url";
 import { getProfilePageData } from "./action";
 import ProfileSettingsClient from "./profile-settings-client";
@@ -12,10 +11,6 @@ export default async function ProfilePage() {
   if (!profileData.profile) {
     return (
       <div className={styles.pageContainer}>
-        <HeaderStandardMFull
-          title="프로필 설정"
-          description="내 정보와 활동을 관리하세요"
-        />
         <div className={styles.contentWrapper}>
           <section className={styles.emptyState}>
             <p className={styles.emptyTitle}>로그인이 필요합니다</p>
@@ -30,11 +25,6 @@ export default async function ProfilePage() {
 
   return (
     <div className={styles.pageContainer}>
-      <HeaderStandardMFull
-        title="프로필 설정"
-        description="내 정보와 활동을 한곳에서 관리하세요."
-      />
-
       <div className={styles.contentWrapper}>
         <section className={styles.heroSection}>
           <div>

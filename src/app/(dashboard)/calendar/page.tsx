@@ -2,7 +2,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight, Lock, Unlock } from "lucide-react";
 import EmotionCalendar from "@/commons/components/emotion-calendar";
-import { HeaderStandardMFull } from "@/commons/components/header";
 import { URL } from "@/commons/constants/global-url";
 import { formatToTimeAgo } from "@/lib/utils";
 import { getEmotionCalendarData } from "./action";
@@ -39,11 +38,6 @@ export default async function CalendarPage({ searchParams }: CalendarPageProps) 
 
   return (
     <div className={styles.pageContainer}>
-      <HeaderStandardMFull
-        title="감정 캘린더"
-        description="날짜별로 남긴 일기와 감정 흐름을 한눈에 확인해보세요."
-      />
-
       <div className={styles.contentWrapper}>
         <div className={styles.toolbar}>
           <Link

@@ -8,7 +8,6 @@ import {
   NotebookPen,
   Sparkles,
 } from "lucide-react";
-import { HeaderStandardMFull } from "@/commons/components/header";
 import { URL } from "@/commons/constants/global-url";
 import { formatToTimeAgo } from "@/lib/utils";
 import { getAiEmotionReportData } from "./action";
@@ -45,11 +44,6 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
 
   return (
     <div className={styles.pageContainer}>
-      <HeaderStandardMFull
-        title="AI 감정 리포트"
-        description="이번 달 일기의 감정 흐름과 반복되는 단서를 정리해보세요."
-      />
-
       <div className={styles.contentWrapper}>
         <div className={styles.toolbar}>
           <Link

@@ -8,6 +8,7 @@ import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene } from "@/components/theme/theme.types";
 import TopbarUserAvatar from "./user-avatar";
 import styles from "./styles.module.css";
+import { usePageTitle } from "./use-page-title";
 
 const THEME_SEQUENCE: MongreeThemeScene[] = ["day", "night", "rain", "snow"];
 
@@ -28,6 +29,7 @@ const THEME_ICONS = {
 export default function TopBar() {
   const { scene, setScene } = useMongreeTheme();
   const [spinning, setSpinning] = useState(false);
+  const pageTitle = usePageTitle();
   const ThemeIcon = THEME_ICONS[scene];
 
   const handleThemeToggle = () => {
@@ -42,9 +44,8 @@ export default function TopBar() {
     <header className={styles.headerContainer}>
       <div className={styles.headerContentWrapper}>
         <div className={styles.pageContext}>
-          <Link href={URL().HOME} className={styles.brandLink} aria-label="Mongree 홈">
-            Mongree
-          </Link>
+          <span className={styles.pageEyebrow}>Mongree</span>
+          <strong className={styles.pageTitle}>{pageTitle}</strong>
         </div>
 
         <div className={styles.buttonsWrapper}>

@@ -1,4 +1,3 @@
-import { HeaderStandardMFull } from "@/commons/components/header";
 import { getPublicDiaries } from "./action";
 import CommunityDiarySection from "@/components/home/(dashboard)/community/diary-section";
 import { getCurrentProfile } from "@/lib/get-user";
@@ -14,11 +13,6 @@ export default async function CommunityPage() {
 
   return (
     <div className={styles.pageContainer}>
-      {/* ?ㅻ뜑*/}
-      <HeaderStandardMFull
-        title="공개 일기"
-        description="다른 사람들의 이야기를 읽고 공감해보세요"
-      />
       <div className={styles.contentWrapper}>
         <CommunityDiarySection initialDiaries={diaries} loginUser={loginUser} />
       </div>

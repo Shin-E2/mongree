@@ -10,8 +10,3 @@ export interface IImagePreviewBaseProps<T extends FieldValues> {
 
 export interface IImagePreviewByProfileProps<T extends FieldValues>
   extends Omit<IImagePreviewBaseProps<T>, "cssprop"> {}
-
-export interface IImagePreviewByDiaryNewProps<T extends FieldValues>
-  extends Omit<IImagePreviewBaseProps<T>, "cssprop"> {
-  className?: string;
-}

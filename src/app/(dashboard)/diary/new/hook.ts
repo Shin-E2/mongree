@@ -8,9 +8,15 @@ import { createDiary } from "./action";
 import { URL } from "@/commons/constants/global-url";
 import { ModalType } from "@/commons/components/modal/types";
 import { useSmartModal } from "@/commons/hooks/use-smart-modal";
+import { uploadDiaryImage } from "@/commons/utils/client-image-upload";
 
-function createDiaryFormData(data: DiaryNewFormType): FormData {
+async function createDiaryFormData(data: DiaryNewFormType): Promise<FormData> {
   const formData = new FormData();
+  const imageUrls = await Promise.all(
+    (data.images ?? [])
+      .filter((image): image is File => image instanceof File)
+      .map((image) => uploadDiaryImage(image))
+  );
 
   formData.append("title", data.title);
   formData.append("content", data.content);
@@ -24,10 +30,8 @@ function createDiaryFormData(data: DiaryNewFormType): FormData {
     formData.append("tags", data.tags.join(","));
   }
 
-  data.images?.forEach((image) => {
-    if (image instanceof File) {
-      formData.append("images", image);
-    }
+  imageUrls.forEach((url) => {
+    formData.append("imageUrls", url);
   });
 
   return formData;
@@ -35,7 +39,7 @@ function createDiaryFormData(data: DiaryNewFormType): FormData {
 
 function isCriticalSaveError(message?: string) {
   if (!message) return false;
-  return ["네트워크", "서버", "연결", "업로드"].some((keyword) =>
+  return ["네트워크", "서버", "연결", "업로드", "이미지"].some((keyword) =>
     message.includes(keyword)
   );
 }
@@ -78,7 +82,7 @@ export default function useDiaryNewPage() {
       setIsSubmitting(true);
 
       try {
-        const result = await createDiary(createDiaryFormData(data));
+        const result = await createDiary(await createDiaryFormData(data));
 
         if (result.success && result.diary) {
           router.push(URL().DIARY_DETAIL(result.diary.id));

@@ -4,6 +4,7 @@ import SideBar from "./sidebar";
 import TopBar from "./topbar";
 import ChatBot from "./chatbot";
 import SceneCharacter from "./scene-character";
+import SceneEffects from "@/components/theme/scene-effects";
 import useLayout from "./hook";
 import styles from "./styles.module.css";
 
@@ -20,6 +21,7 @@ export default function Layout({ children }: LayoutProps) {
 
   return (
     <div className={styles.mainLayout}>
+      <SceneEffects />
       <SideBar />
       <div className={styles.contentWrapper}>
         {!hidePartialLayout && <TopBar />}

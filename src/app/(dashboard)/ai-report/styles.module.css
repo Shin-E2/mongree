@@ -139,32 +139,41 @@
 .heroMetricGrid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
+  gap: 0.5rem;
 }
 
 .metricCard {
   display: flex;
-  min-height: 8rem;
+  min-height: 6.25rem;
   min-width: 0;
   flex-direction: column;
-  justify-content: space-between;
+  align-items: center;
+  justify-content: center;
   background: color-mix(in oklch, var(--mongree-surface-soft) 78%, transparent);
-  padding: 1rem;
+  padding: 0.75rem 0.45rem;
+  text-align: center;
 }
 
 .metricIcon {
+  margin-bottom: 0.55rem;
   color: var(--scene-accent);
 }
 
 .metricValue {
-  font-size: clamp(1.45rem, 6vw, 1.875rem);
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: clamp(1.15rem, 5.5vw, 1.5rem);
+  line-height: 1.05;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
 }
 
 .metricLabel,
 .percentText {
   color: var(--mongree-text-muted);
-  font-size: clamp(0.72rem, 2.4vw, 0.8125rem);
+  font-size: clamp(0.66rem, 2.6vw, 0.875rem);
   font-weight: 700;
+  line-height: 1.25;
   overflow-wrap: anywhere;
 }
 
@@ -502,6 +511,31 @@
 }
 
 @media (min-width: 640px) {
+  .heroMetricGrid {
+    gap: 0.75rem;
+  }
+
+  .metricCard {
+    min-height: 8rem;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    text-align: left;
+  }
+
+  .metricIcon {
+    margin-bottom: 0;
+  }
+
+  .metricValue {
+    font-size: clamp(1.45rem, 6vw, 1.875rem);
+  }
+
+  .metricLabel,
+  .percentText {
+    font-size: clamp(0.72rem, 2.4vw, 0.8125rem);
+  }
+
   .insightList {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -559,10 +593,6 @@
 }
 
 @media (max-width: 640px) {
-  .heroMetricGrid {
-    grid-template-columns: 1fr;
-  }
-
   .emotionItem {
     grid-template-columns: minmax(4.8rem, 5.8rem) minmax(0, 1fr) 2.4rem;
     gap: 0.5rem;

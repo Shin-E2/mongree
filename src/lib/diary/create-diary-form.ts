@@ -21,6 +21,17 @@ const getStringList = (formData: FormData, key: string) =>
     .map((value) => String(value))
     .filter((value) => value.length > 0);
 
+const buildDiaryImagePayload = (
+  imageUrl: string,
+  index: number
+): DiaryImagePayload => ({
+  image_url: imageUrl,
+  sort_order: index + 1,
+  file_name: buildDefaultDiaryImageName(index),
+  mime_type: DEFAULT_DIARY_IMAGE_MIME_TYPE,
+  file_size: null,
+});
+
 export function extractCreateDiaryFormData(formData: FormData) {
   const imageUrls = getStringList(formData, "imageUrls");
 
@@ -35,11 +46,5 @@ export function extractCreateDiaryFormData(formData: FormData) {
 }
 
 export function buildDiaryImagePayloads(imageUrls: string[]): DiaryImagePayload[] {
-  return imageUrls.map((url, index) => ({
-    image_url: url,
-    sort_order: index + 1,
-    file_name: buildDefaultDiaryImageName(index),
-    mime_type: DEFAULT_DIARY_IMAGE_MIME_TYPE,
-    file_size: null,
-  }));
+  return imageUrls.map(buildDiaryImagePayload);
 }

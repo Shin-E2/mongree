@@ -3,9 +3,10 @@
 import { DEFAULT_PROFILE_IMAGE } from "@/commons/constants/default-profile-image";
 import { useState, useCallback } from "react";
 import { useFormContext } from "react-hook-form";
-import { DIARY_IMAGE_ACCEPTED_TYPES } from "@/components/home/(dashboard)/diary/new/form.schema";
 
-export default function useImagePreview() {
+const PROFILE_IMAGE_ACCEPTED_TYPES = ["image/jpeg", "image/png"];
+
+export default function useProfileImagePreview() {
   const [preview, setPreview] = useState(DEFAULT_PROFILE_IMAGE);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const { setValue, register } = useFormContext();
@@ -18,7 +19,7 @@ export default function useImagePreview() {
       if (files.length === 0) return;
 
       const file = files[0];
-      if (!DIARY_IMAGE_ACCEPTED_TYPES.includes(file.type)) {
+      if (!PROFILE_IMAGE_ACCEPTED_TYPES.includes(file.type)) {
         alert("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
         return;
       }

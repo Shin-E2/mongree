@@ -8,6 +8,15 @@ export interface DiaryImagePayload {
   file_size: number | null;
 }
 
+export interface CreateDiaryFormData {
+  title: string;
+  content: string;
+  isPrivate: boolean;
+  emotions: string[];
+  tags: string[];
+  imageUrls: string[];
+}
+
 const DEFAULT_DIARY_IMAGE_MIME_TYPE = "image/jpeg";
 const buildDefaultDiaryImageName = (index: number) =>
   `diary_image_${index + 1}.jpg`;
@@ -32,7 +41,9 @@ const buildDiaryImagePayload = (
   file_size: null,
 });
 
-export function extractCreateDiaryFormData(formData: FormData) {
+export function extractCreateDiaryFormData(
+  formData: FormData
+): CreateDiaryFormData {
   const imageUrls = getStringList(formData, "imageUrls");
 
   return {

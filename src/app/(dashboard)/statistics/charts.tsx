@@ -1,5 +1,6 @@
 "use client";
 
+import type { CSSProperties } from "react";
 import {
   Area,
   AreaChart,
@@ -36,7 +37,8 @@ const tooltipStyle = {
   border: "1px solid oklch(0.86 0.025 245)",
   borderRadius: 16,
   background: "oklch(0.985 0.01 245)",
-  boxShadow: "0 18px 42px color-mix(in oklch, oklch(0.24 0.035 245) 12%, transparent)",
+  boxShadow:
+    "0 18px 42px color-mix(in oklch, oklch(0.24 0.035 245) 12%, transparent)",
   color: "oklch(0.28 0.035 245)",
 };
 
@@ -53,7 +55,10 @@ export default function StatisticsCharts({
 }: StatisticsChartsProps) {
   const topEmotions = emotions.slice(0, 5);
   const dominantEmotion = emotions[0];
-  const totalEmotionCount = emotions.reduce((sum, emotion) => sum + emotion.count, 0);
+  const totalEmotionCount = emotions.reduce(
+    (sum, emotion) => sum + emotion.count,
+    0
+  );
 
   return (
     <>
@@ -68,11 +73,22 @@ export default function StatisticsCharts({
         </div>
         <div className={styles.chartBox}>
           <ResponsiveContainer width="100%" height="100%">
-            <AreaChart data={trend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <AreaChart
+              data={trend}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
               <defs>
                 <linearGradient id="moodGradient" x1="0" x2="0" y1="0" y2="1">
-                  <stop offset="5%" stopColor={CHART_ACCENT_COLOR} stopOpacity={0.24} />
-                  <stop offset="95%" stopColor={CHART_ACCENT_SOFT} stopOpacity={0.02} />
+                  <stop
+                    offset="5%"
+                    stopColor={CHART_ACCENT_COLOR}
+                    stopOpacity={0.24}
+                  />
+                  <stop
+                    offset="95%"
+                    stopColor={CHART_ACCENT_SOFT}
+                    stopOpacity={0.02}
+                  />
                 </linearGradient>
               </defs>
               <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
@@ -143,11 +159,24 @@ export default function StatisticsCharts({
                   <Label
                     position="center"
                     content={() => (
-                      <text x="50%" y="50%" textAnchor="middle" dominantBaseline="middle">
-                        <tspan x="50%" dy="-0.3em" className={styles.pieCenterValue}>
+                      <text
+                        x="50%"
+                        y="50%"
+                        textAnchor="middle"
+                        dominantBaseline="middle"
+                      >
+                        <tspan
+                          x="50%"
+                          dy="-0.3em"
+                          className={styles.pieCenterValue}
+                        >
                           {totalEmotionCount}
                         </tspan>
-                        <tspan x="50%" dy="1.5em" className={styles.pieCenterLabel}>
+                        <tspan
+                          x="50%"
+                          dy="1.5em"
+                          className={styles.pieCenterLabel}
+                        >
                           감정 기록
                         </tspan>
                       </text>
@@ -167,10 +196,12 @@ export default function StatisticsCharts({
                   "--emotion-color": getEmotionColor(dominantEmotion.id),
                   "--emotion-soft-color": getEmotionSoftColor(dominantEmotion.id),
                   "--emotion-text-color": getEmotionTextColor(dominantEmotion.id),
-                } as React.CSSProperties}
+                } as CSSProperties}
               >
                 <span className={styles.dominantLabel}>대표 감정</span>
-                <strong className={styles.dominantValue}>{dominantEmotion.label}</strong>
+                <strong className={styles.dominantValue}>
+                  {dominantEmotion.label}
+                </strong>
                 <span className={styles.dominantDescription}>
                   전체 감정 기록 중 {dominantEmotion.percentage}%
                 </span>
@@ -181,7 +212,9 @@ export default function StatisticsCharts({
                 <div key={emotion.id} className={styles.legendItem}>
                   <span
                     className={styles.legendDot}
-                    style={{ backgroundColor: getEmotionColor(emotion.id, index) }}
+                    style={{
+                      backgroundColor: getEmotionColor(emotion.id, index),
+                    }}
                   />
                   <span className={styles.legendLabel}>{emotion.label}</span>
                   <span className={styles.legendTrack}>
@@ -216,7 +249,10 @@ export default function StatisticsCharts({
         </div>
         <div className={styles.chartBox}>
           <ResponsiveContainer width="100%" height="100%">
-            <BarChart data={weekdayPattern} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+            <BarChart
+              data={weekdayPattern}
+              margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
+            >
               <CartesianGrid stroke={CHART_GRID_COLOR} vertical={false} />
               <XAxis
                 dataKey="weekday"
@@ -238,7 +274,9 @@ export default function StatisticsCharts({
                   name={emotion.label}
                   stackId="emotion"
                   fill={getEmotionColor(emotion.id, index)}
-                  radius={index === topEmotions.length - 1 ? [8, 8, 0, 0] : [0, 0, 0, 0]}
+                  radius={
+                    index === topEmotions.length - 1 ? [8, 8, 0, 0] : [0, 0, 0, 0]
+                  }
                 />
               ))}
             </BarChart>

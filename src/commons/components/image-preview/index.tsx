@@ -9,7 +9,7 @@ import type {
   IImagePreviewBaseProps,
   IImagePreviewByProfileProps,
 } from "./types";
-import useImagePreview from "./hook";
+import useProfileImagePreview from "./hook";
 import styles from "./styles.module.css";
 
 function ProfileImagePreviewBase<T extends FieldValues>({
@@ -17,7 +17,7 @@ function ProfileImagePreviewBase<T extends FieldValues>({
   className,
 }: IImagePreviewBaseProps<T>) {
   const { preview, handleDeleteImage, register, handleFileChange } =
-    useImagePreview();
+    useProfileImagePreview();
 
   const memoizedHandleDeleteImage = useCallback(
     (event: React.MouseEvent) => {

@@ -161,23 +161,32 @@
   gap: 1rem;
 }
 
+.summaryGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
 .summaryCard {
   display: flex;
-  min-height: 9rem;
+  min-height: 6.25rem;
   min-width: 0;
   flex-direction: column;
-  padding: 1.25rem;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 0.45rem;
+  text-align: center;
 }
 
 .summaryIcon {
-  margin-bottom: 1rem;
+  margin-bottom: 0.55rem;
   color: var(--scene-accent);
 }
 
 .summaryValue {
   display: -webkit-box;
   overflow: hidden;
-  font-size: clamp(1.2rem, 4vw, 1.5rem);
+  font-size: clamp(1.15rem, 5.5vw, 1.5rem);
+  line-height: 1.05;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 1;
 }
@@ -185,9 +194,12 @@
 .summaryLabel {
   margin-top: 0.25rem;
   font-weight: 700;
+  font-size: clamp(0.66rem, 2.6vw, 0.875rem);
+  line-height: 1.25;
 }
 
 .summaryHint {
+  display: none;
   margin-top: auto;
   padding-top: 1rem;
   font-size: 0.75rem;
@@ -413,7 +425,23 @@
 
 @media (min-width: 640px) {
   .summaryGrid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .summaryCard {
+    min-height: 9rem;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding: 1.25rem;
+    text-align: left;
+  }
+
+  .summaryIcon {
+    margin-bottom: 1rem;
+  }
+
+  .summaryHint {
+    display: block;
   }
 
   .distributionLayout {

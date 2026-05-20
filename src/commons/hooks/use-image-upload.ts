@@ -2,14 +2,16 @@
 
 import { useState, useRef, useEffect, useCallback } from "react";
 import type { DiaryEditImage } from "@/app/(dashboard)/diary/[id]/edit/action";
+import { validateDiaryImages } from "@/lib/diary/image-validation";
+import {
+  DIARY_IMAGE_ACCEPTED_TYPES,
+  DIARY_IMAGE_MAX_COUNT,
+} from "@/components/home/(dashboard)/diary/new/form.schema";
 
 interface NewImagePreview {
   file: File;
   previewUrl: string;
 }
-
-const MAX_IMAGE_COUNT = 3;
-const ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 
 interface UseImageUploadProps {
   initialImages?: DiaryEditImage[];
@@ -61,16 +63,15 @@ export function useImageUpload({ initialImages = [] }: UseImageUploadProps = {})
 
       if (files.length === 0) return;
 
-      if (imageCount + files.length > MAX_IMAGE_COUNT) {
-        setImageError(`이미지는 최대 ${MAX_IMAGE_COUNT}개까지 등록할 수 있습니다.`);
-        return;
-      }
+      const validationError = validateDiaryImages({
+        files,
+        currentCount: imageCount,
+        maxCount: DIARY_IMAGE_MAX_COUNT,
+        acceptedTypes: DIARY_IMAGE_ACCEPTED_TYPES,
+      });
 
-      const hasUnsupportedType = files.some(
-        (file) => !ACCEPTED_TYPES.includes(file.type)
-      );
-      if (hasUnsupportedType) {
-        setImageError("이미지는 JPG 또는 PNG 파일만 등록할 수 있습니다.");
+      if (validationError) {
+        setImageError(validationError);
         return;
       }
 
@@ -92,7 +93,7 @@ export function useImageUpload({ initialImages = [] }: UseImageUploadProps = {})
     newImages,
     imageCount,
     imageError,
-    maxCount: MAX_IMAGE_COUNT,
+    maxCount: DIARY_IMAGE_MAX_COUNT,
     handleRemoveExisting,
     handleRemoveNew,
     handleImageChange,

@@ -1,7 +1,9 @@
+const splitTagText = (tagText: string) => tagText.replaceAll(",", " ").split(" ");
+
 export function normalizeDiaryTags(rawTags: string | string[]): string[] {
   const tagNames = Array.isArray(rawTags)
-    ? rawTags
-    : rawTags.replaceAll(",", " ").split(" ");
+    ? rawTags.flatMap(splitTagText)
+    : splitTagText(rawTags);
 
   return Array.from(
     new Set(

@@ -1,19 +1,23 @@
 import Image from "next/image";
+import { ArrowLeft, ArrowRight, X } from "lucide-react";
 import styles from "./styles.module.css";
 import type {
   IButtonIconBaseProps,
   IButtonIconCommonProps,
   IButtonIconSocialProps,
 } from "./types";
-import { ArrowLeft, ArrowRight, X } from "lucide-react";
 
-// 아이콘 버튼
+const SOCIAL_LABELS: Record<IButtonIconSocialProps["provider"], string> = {
+  google: "Google 로그인",
+  kakao: "Kakao 로그인",
+};
+
 export const ButtonIconBase = ({
   cssprop,
   icon,
   onClick,
-  className,
-  type,
+  className = "",
+  type = "button",
   disabled,
   title,
 }: IButtonIconBaseProps) => {
@@ -24,25 +28,28 @@ export const ButtonIconBase = ({
       type={type}
       disabled={disabled}
       title={title}
+      aria-label={title}
     >
       <>{icon}</>
     </button>
   );
 };
 
-// 소셜 로그인 버튼
 export const ButtonIconSocial = ({
   provider,
   ...rest
 }: IButtonIconSocialProps) => {
+  const label = SOCIAL_LABELS[provider];
+
   return (
     <ButtonIconBase
       {...rest}
+      title={label}
       cssprop={styles.social}
       icon={
         <Image
           src={`/image/login/${provider}.svg`}
-          alt={`${provider} 로그인`}
+          alt={label}
           width={48}
           height={48}
         />
@@ -51,7 +58,6 @@ export const ButtonIconSocial = ({
   );
 };
 
-// 배경있는 삭제 버튼
 export const ButtonIconDelete = ({ ...rest }: IButtonIconCommonProps) => {
   return (
     <ButtonIconBase
@@ -62,7 +68,6 @@ export const ButtonIconDelete = ({ ...rest }: IButtonIconCommonProps) => {
   );
 };
 
-// 배경 없는 삭제 버튼
 export const ButtonIconDeleteNoBackground = ({
   ...rest
 }: IButtonIconCommonProps) => {
@@ -75,7 +80,6 @@ export const ButtonIconDeleteNoBackground = ({
   );
 };
 
-// 다음 버튼
 export const ButtonIconNext = ({ ...rest }: IButtonIconCommonProps) => {
   return (
     <ButtonIconBase
@@ -86,7 +90,6 @@ export const ButtonIconNext = ({ ...rest }: IButtonIconCommonProps) => {
   );
 };
 
-// 이전 버튼
 export const ButtonIconPrev = ({ ...rest }: IButtonIconCommonProps) => {
   return (
     <ButtonIconBase

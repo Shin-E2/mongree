@@ -1,3 +1,22 @@
 .listContainer {
-  @apply mb-6 grid grid-cols-1 items-start gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3;
+  column-count: 1;
+  column-gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.listContainer > * {
+  margin-bottom: 1rem;
+  break-inside: avoid;
+}
+
+@media (min-width: 768px) {
+  .listContainer {
+    column-count: 2;
+  }
+}
+
+@media (min-width: 1280px) {
+  .listContainer {
+    column-count: 3;
+  }
 }

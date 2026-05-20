@@ -1,7 +1,19 @@
 .mainContainer {
-  @apply flex-1 bg-gray-50 min-h-screen;
+  min-height: 100%;
 }
 
 .contentArea {
-  @apply px-4 md:px-8 pt-20 pb-24;
+  margin-inline: auto;
+  display: grid;
+  max-width: 58rem;
+  gap: 1rem;
+  padding: 1.25rem 1rem 6rem;
+}
+
+@media (min-width: 768px) {
+  .contentArea {
+    gap: 1.25rem;
+    padding-inline: 2rem;
+    padding-bottom: 5rem;
+  }
 }

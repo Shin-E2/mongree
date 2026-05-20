@@ -13,8 +13,7 @@ export default function DiaryContentDisplay({
   emotionsForBadgeList,
 }: DiaryContentDisplayProps) {
   return (
-    <div className={styles.container}>
-      {/* 작성자 및 감정 섹션 */}
+    <article className={styles.container}>
       <div className={styles.authorEmotionSection}>
         <div className={styles.profileHeaderWrapper}>
           <UserProfileHeader
@@ -26,12 +25,15 @@ export default function DiaryContentDisplay({
                 : "날짜 정보 없음"
             }
           />
-          {!(diary.is_private ?? false) && (
-            <span className={styles.publicBadge}>공개</span>
-          )}
+          <span
+            className={
+              diary.is_private ? styles.privateBadge : styles.publicBadge
+            }
+          >
+            {diary.is_private ? "비공개" : "공개"}
+          </span>
         </div>
 
-        {/* 감정 뱃지 */}
         {diary.diaryEmotion && diary.diaryEmotion.length > 0 && (
           <EmotionBadgeList
             emotions={emotionsForBadgeList}
@@ -39,11 +41,9 @@ export default function DiaryContentDisplay({
           />
         )}
 
-        {/* 제목 */}
         <h1 className={styles.title}>{diary.title}</h1>
       </div>
 
-      {/* 이미지 섹션 */}
       {diary.images && diary.images.length > 0 && (
         <div className={styles.imageSection}>
           <ImageThumbnailList
@@ -55,19 +55,17 @@ export default function DiaryContentDisplay({
         </div>
       )}
 
-      {/* 본문 섹션 */}
       <div className={styles.contentSection}>
         <div className={styles.proseWrapper}>
           <div className={styles.diaryContent}>{diary.content}</div>
         </div>
 
-        {/* 태그 섹션 */}
         {diary.tags && diary.tags.length > 0 && (
           <div className={styles.tagSection}>
             <TagList tags={diary.tags} />
           </div>
         )}
       </div>
-    </div>
+    </article>
   );
 }

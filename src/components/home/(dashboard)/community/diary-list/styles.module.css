@@ -1,6 +1,7 @@
 .diaryListGrid {
   column-count: 1;
   column-gap: 1rem;
+  column-fill: balance;
 }
 
 .diaryListGrid > * {
@@ -21,13 +22,27 @@
 }
 
 .emptyState {
-  @apply flex min-h-64 flex-col items-center justify-center rounded-lg border border-dashed border-gray-200 bg-white px-6 py-12 text-center;
+  display: flex;
+  min-height: 16rem;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed color-mix(in oklch, var(--mongree-line) 72%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 58%, transparent);
+  padding: 3rem 1.5rem;
+  text-align: center;
 }
 
 .emptyTitle {
-  @apply text-base font-semibold text-gray-800;
+  color: var(--mongree-text);
+  font-size: 1rem;
+  font-weight: 800;
 }
 
 .emptyDescription {
-  @apply mt-2 text-sm text-gray-500;
+  margin-top: 0.5rem;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.7;
 }

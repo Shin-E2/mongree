@@ -1,15 +1,23 @@
 .container {
-  @apply px-4 md:px-6 py-4 bg-gray-50 border-t;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 68%, transparent);
+  border-radius: var(--mongree-radius-lg);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, var(--scene-bg));
+  box-shadow: var(--mongree-shadow-soft);
+  padding: 1rem;
 }
 
 .contentWrapper {
-  @apply flex items-center justify-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
 }
 
 .heartIconEmpathized {
-  @apply fill-current text-indigo-700;
+  color: var(--mongree-primary-strong);
+  fill: currentColor;
 }
 
 .heartIconDefault {
-  @apply text-gray-700;
+  color: var(--mongree-text-muted);
 }

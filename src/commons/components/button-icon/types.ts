@@ -11,7 +11,6 @@ export interface IButtonIconBaseProps {
 export interface IButtonIconCommonProps
   extends Omit<IButtonIconBaseProps, "cssprop"> {}
 
-// 소셜 로그인
 export interface IButtonIconSocialProps
   extends Omit<IButtonIconBaseProps, "cssprop"> {
   provider: "google" | "kakao";

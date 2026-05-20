@@ -161,7 +161,8 @@ test("diary and community feeds share full-width themed surfaces", () => {
   assert.match(diaryStyles, /max-w-\[72rem\]/);
   assert.match(communityStyles, /max-w-\[72rem\]/);
   assert.doesNotMatch(surfaceCard, /::before/);
-  assert.match(diaryList, /items-start/);
+  assert.match(diaryList, /column-count:\s*3/);
+  assert.match(diaryList, /break-inside:\s*avoid/);
   assert.match(communityList, /column-count:\s*3/);
   assert.match(communityList, /break-inside:\s*avoid/);
   assert.doesNotMatch(emotionFilter, /bg-white|text-indigo|hover:bg-gray/);

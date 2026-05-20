@@ -1,6 +1,10 @@
-import { type Emotion } from "@/mock/emotions";
+export type EmotionBadgeItem = {
+  id: string;
+  label: string;
+  image: string | null;
+};
 
 export interface EmotionBadgeProps {
-  emotion: Emotion & { bgColor: string }; // Emotion 타입과 bgColor 포함
+  emotion: EmotionBadgeItem;
   className?: string;
-} 
+}

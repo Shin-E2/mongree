@@ -10,6 +10,7 @@ import { URL } from "@/commons/constants/global-url";
 import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
 import { EMOTIONS } from "@/mock/emotions";
 import { Heart, MessageCircle } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import usePublicDiaryCard from "./hook";
@@ -40,6 +41,7 @@ export default function CommunityDiaryCard({
       textColor: emotionStyle?.textColor || "text-gray-800",
     };
   });
+  const firstImage = diary.images?.[0];
 
   return (
     <SurfaceCard className={styles.articleContainer}>
@@ -63,6 +65,21 @@ export default function CommunityDiaryCard({
             />
           )}
         </div>
+
+        {firstImage && (
+          <div className={styles.imageFrame}>
+            <Image
+              src={firstImage.image_url}
+              alt={`${diary.title} 이미지`}
+              fill
+              sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+              className={styles.diaryImage}
+            />
+            {diary.images && diary.images.length > 1 && (
+              <span className={styles.imageCount}>+{diary.images.length - 1}</span>
+            )}
+          </div>
+        )}
 
         <div className={styles.contentSection}>
           <div className={styles.titleWrapper}>

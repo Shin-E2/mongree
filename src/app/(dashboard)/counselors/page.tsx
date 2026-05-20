@@ -1,4 +1,3 @@
-import { HeaderStandardMFull } from "@/commons/components/header";
 import {
   ArrowRight,
   CalendarClock,
@@ -12,11 +11,6 @@ import styles from "./styles.module.css";
 export default function CounselorListPage() {
   return (
     <div className={styles.mainContainer}>
-      <HeaderStandardMFull
-        title="상담사 찾기"
-        description="지금의 감정 흐름에 맞는 상담사를 고르고 가능한 상담 시간을 확인하세요."
-      />
-
       <div className={styles.contentWrapper}>
         <section className={styles.summaryBand} aria-label="상담 안내">
           <div className={styles.summaryItem}>

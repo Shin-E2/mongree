@@ -1,18 +1,46 @@
-.articleContainer {
-  @apply h-full;
-}
+.articleContainer {}
 
 .detailLink {
   @apply flex flex-1 flex-col text-inherit no-underline;
 }
 
 .headerSection {
-  @apply flex items-center justify-between gap-3 px-4 pb-3 pt-5;
-  border-bottom: 1px solid color-mix(in oklch, var(--scene-line) 54%, transparent);
+  @apply flex items-center justify-between gap-3 px-4 pb-3 pt-4;
+  border-bottom: 1px solid color-mix(in oklch, var(--scene-line) 48%, transparent);
 }
 
 .emotionBadgeListWrapper {
   @apply flex shrink-0 items-center;
+}
+
+.imageFrame {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border-bottom: 1px solid color-mix(in oklch, var(--scene-line) 48%, transparent);
+  background: color-mix(in oklch, var(--scene-accent) 8%, var(--mongree-surface-soft));
+}
+
+.diaryImage {
+  object-fit: cover;
+  transition: transform 300ms ease-out;
+}
+
+.articleContainer:hover .diaryImage {
+  transform: scale(1.04);
+}
+
+.imageCount {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--mongree-text) 54%, transparent);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  padding: 0.25rem 0.55rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  backdrop-filter: blur(8px);
 }
 
 .contentSection {
@@ -24,8 +52,13 @@
 }
 
 .title {
-  @apply line-clamp-1 text-base font-semibold;
+  @apply line-clamp-2 text-base font-extrabold;
   color: var(--mongree-text);
+  letter-spacing: 0;
+}
+
+.articleContainer:hover .title {
+  color: var(--mongree-primary-strong);
 }
 
 .description {
@@ -40,8 +73,8 @@
 
 .footerSection {
   @apply flex items-center justify-between px-4 py-3;
-  border-top: 1px solid color-mix(in oklch, var(--scene-line) 54%, transparent);
-  background: color-mix(in oklch, var(--scene-object) 8%, transparent);
+  border-top: 1px solid color-mix(in oklch, var(--scene-line) 48%, transparent);
+  background: color-mix(in oklch, var(--scene-accent) 6%, transparent);
 }
 
 .interactionButtonsWrapper {

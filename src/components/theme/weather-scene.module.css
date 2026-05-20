@@ -241,6 +241,43 @@
 .scene[data-scene="snow"] .cloudOne { opacity: 0.90; }
 .scene[data-scene="snow"] .cloudTwo { opacity: 0.60; }
 .scene[data-scene="snow"] .snowWrap { opacity: 1; }
+.scene[data-scene="snow"] .sun {
+  top: 13%;
+  right: 6%;
+  width: 92px;
+  height: 92px;
+  opacity: 1;
+  background:
+    radial-gradient(circle at 36% 30%, white 0 15px, transparent 16px),
+    radial-gradient(circle at 50% 62%, white 0 36px, transparent 37px);
+  box-shadow:
+    0 16px 30px color-mix(in oklch, var(--scene-shadow) 10%, transparent),
+    0 0 0 14px color-mix(in oklch, white 42%, transparent);
+}
+
+.scene[data-scene="snow"] .sun::before,
+.scene[data-scene="snow"] .sun::after {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+}
+
+.scene[data-scene="snow"] .sun::before {
+  left: 39px;
+  top: 28px;
+  width: 6px;
+  height: 6px;
+  background: var(--scene-text);
+  box-shadow: 16px 0 0 var(--scene-text);
+}
+
+.scene[data-scene="snow"] .sun::after {
+  left: 43px;
+  top: 43px;
+  width: 16px;
+  height: 8px;
+  border-bottom: 2px solid color-mix(in oklch, var(--scene-accent) 70%, var(--scene-text));
+}
 
 /* 움직임 감소 설정 존중 */
 @media (prefers-reduced-motion: reduce) {

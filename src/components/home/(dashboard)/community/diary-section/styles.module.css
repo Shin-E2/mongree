@@ -1,9 +1,9 @@
 .headerContainer {
-  @apply flex flex-col sm:flex-row sm:items-center gap-4;
+  @apply flex w-full flex-col gap-3 sm:flex-row sm:items-center;
 }
 
 .filterButton {
-  @apply flex h-[46px] items-center rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 ease-out;
+  @apply flex h-[46px] w-full items-center justify-between rounded-xl border px-4 py-2 text-sm font-semibold transition-all duration-150 ease-out;
   border-color: color-mix(in oklch, var(--mongree-line) 74%, transparent);
   background: color-mix(in oklch, var(--mongree-surface-raised) 94%, transparent);
   color: var(--mongree-text);
@@ -33,7 +33,7 @@
 }
 
 .filterDropdownWrapper {
-  @apply relative w-40;
+  @apply relative w-full sm:w-40;
 }
 
 .loadingText {

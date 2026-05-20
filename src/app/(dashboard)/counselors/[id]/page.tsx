@@ -1,4 +1,3 @@
-import { HeaderStandardMFull } from "@/commons/components/header";
 import {
   ArrowLeft,
   CalendarClock,
@@ -30,11 +29,6 @@ export default async function CounselorDetailPage({ params }: Props) {
 
   return (
     <div className={styles.mainContainer}>
-      <HeaderStandardMFull
-        title={`${counselor.name} 상담사`}
-        description={counselor.title}
-      />
-
       <div className={styles.detailWrapper}>
         <Link className={styles.backLink} href="/counselors">
           <ArrowLeft className={styles.linkIcon} aria-hidden="true" />

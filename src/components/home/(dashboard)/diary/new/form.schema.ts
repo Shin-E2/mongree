@@ -6,6 +6,7 @@ const emotionIds = EMOTIONS.map((emotion) => emotion.id);
 export const DIARY_TITLE_MAX_LENGTH = 80;
 export const DIARY_CONTENT_MAX_LENGTH = 10000;
 export const DIARY_IMAGE_MAX_COUNT = 3;
+export const DIARY_EMOTION_MAX_COUNT = 3;
 export const DIARY_IMAGE_ACCEPTED_TYPES = ["image/jpeg", "image/png"];
 
 const normalizeTags = (tags: string[]) =>
@@ -15,7 +16,11 @@ export const DiaryNewFormSchema = z.object({
   isPrivate: z.boolean().default(true),
   emotions: z
     .array(z.enum(emotionIds as [string, ...string[]]))
-    .min(1, "감정을 하나 이상 선택해주세요."),
+    .min(1, "감정을 하나 이상 선택해주세요.")
+    .max(
+      DIARY_EMOTION_MAX_COUNT,
+      `감정은 최대 ${DIARY_EMOTION_MAX_COUNT}개까지 선택할 수 있습니다.`
+    ),
   title: z
     .string()
     .trim()

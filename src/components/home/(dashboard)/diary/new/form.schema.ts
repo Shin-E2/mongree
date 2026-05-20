@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeDiaryTags } from "@/lib/diary/tag-normalizer";
 import { EMOTIONS } from "@/mock/emotions";
 
 const emotionIds = EMOTIONS.map((emotion) => emotion.id);
@@ -8,9 +9,6 @@ export const DIARY_CONTENT_MAX_LENGTH = 10000;
 export const DIARY_IMAGE_MAX_COUNT = 3;
 export const DIARY_EMOTION_MAX_COUNT = 3;
 export const DIARY_IMAGE_ACCEPTED_TYPES = ["image/jpeg", "image/png"];
-
-const normalizeTags = (tags: string[]) =>
-  Array.from(new Set(tags.map((tag) => tag.trim()).filter(Boolean)));
 
 export const DiaryNewFormSchema = z.object({
   isPrivate: z.boolean().default(true),
@@ -39,10 +37,8 @@ export const DiaryNewFormSchema = z.object({
     ),
   tags: z
     .union([
-      z.string().transform((value) =>
-        value ? normalizeTags(value.split(",")) : []
-      ),
-      z.array(z.string()).transform(normalizeTags),
+      z.string().transform(normalizeDiaryTags),
+      z.array(z.string()).transform(normalizeDiaryTags),
     ])
     .optional()
     .default([]),

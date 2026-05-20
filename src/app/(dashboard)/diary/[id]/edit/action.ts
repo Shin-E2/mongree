@@ -63,6 +63,9 @@ interface UpdateDiaryRpcResult {
   is_private: boolean | null;
 }
 
+const getRemovedImageUrls = (result: UpdateDiaryRpcResult) =>
+  result.removed_image_urls ?? [];
+
 async function cleanupUploadedImages(uploadedImageUrls: string[]) {
   if (uploadedImageUrls.length === 0) return;
   await deleteImagesFromS3(uploadedImageUrls);
@@ -204,7 +207,7 @@ export async function updateDiary(diaryId: string, formData: FormData) {
   }
 
   const result = data[0] as UpdateDiaryRpcResult;
-  const removedImageUrls = result.removed_image_urls ?? [];
+  const removedImageUrls = getRemovedImageUrls(result);
 
   if (removedImageUrls.length > 0) {
     try {

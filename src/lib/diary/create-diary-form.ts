@@ -8,6 +8,10 @@ export interface DiaryImagePayload {
   file_size: number | null;
 }
 
+const DEFAULT_DIARY_IMAGE_MIME_TYPE = "image/jpeg";
+const buildDefaultDiaryImageName = (index: number) =>
+  `diary_image_${index + 1}.jpg`;
+
 const getStringValue = (formData: FormData, key: string) =>
   String(formData.get(key) ?? "");
 
@@ -34,8 +38,8 @@ export function buildDiaryImagePayloads(imageUrls: string[]): DiaryImagePayload[
   return imageUrls.map((url, index) => ({
     image_url: url,
     sort_order: index + 1,
-    file_name: `diary_image_${index + 1}.jpg`,
-    mime_type: "image/jpeg",
+    file_name: buildDefaultDiaryImageName(index),
+    mime_type: DEFAULT_DIARY_IMAGE_MIME_TYPE,
     file_size: null,
   }));
 }

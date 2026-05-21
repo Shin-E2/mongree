@@ -15,11 +15,17 @@ test("login page renders credential form", async ({ page }) => {
   await expect(page.locator('button[type="submit"]').first()).toBeVisible();
 });
 
-test("protected diary route does not expose private content anonymously", async ({
+test("protected diary route redirects anonymous users to login", async ({
   page,
 }) => {
   await page.goto("/diary");
+  await expect(page).toHaveURL(/\/login/);
+});
 
-  await expect(page.locator("body")).toBeVisible();
-  await expect(page).not.toHaveURL(/\/diary\/[^/]+$/);
+test("direct diary URL access redirects anonymous users to login", async ({
+  page,
+}) => {
+  await page.goto("/diary/00000000-0000-0000-0000-000000000000");
+  const url = page.url();
+  expect(url).toMatch(/\/login|\/diary$/);
 });

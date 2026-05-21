@@ -166,13 +166,13 @@ function MongiBody({ scene, emotion }: { scene: MongreeThemeScene; emotion: Mong
   );
 }
 
-function SnowScene({ emotion }: { emotion: MongiEmotion | null }) {
+function SnowScene() {
   return (
     <svg
       viewBox="0 0 220 160"
       className={styles.mongiSvgSnow}
       role="img"
-      aria-label="눈 오는 날의 몽이"
+      aria-label={LABEL["snow"]}
       focusable="false"
     >
       <ellipse cx="170" cy="155" rx="28" ry="6" fill="rgba(100,140,180,0.2)" />
@@ -242,7 +242,7 @@ export default function MongiCharacter({ scene, emotion, variant, onTap }: Props
       aria-label={onTap ? "몽이를 탭하세요" : undefined}
     >
       {isSnowIdle ? (
-        <SnowScene emotion={emotion} />
+        <SnowScene />
       ) : (
         <MongiBody scene={scene} emotion={emotion} />
       )}

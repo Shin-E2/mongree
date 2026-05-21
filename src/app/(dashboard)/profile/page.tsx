@@ -2,6 +2,7 @@ import Link from "next/link";
 import { MessageCircle, NotebookPen, Unlock } from "lucide-react";
 import { URL } from "@/commons/constants/global-url";
 import { getProfilePageData } from "./action";
+import MongiInventoryClient from "./mongi-inventory-client";
 import ProfileSettingsClient from "./profile-settings-client";
 import styles from "./styles.module.css";
 
@@ -69,6 +70,7 @@ export default async function ProfilePage() {
           diaries={profileData.diaries}
           summary={profileData.summary}
         />
+        <MongiInventoryClient />
       </div>
     </div>
   );

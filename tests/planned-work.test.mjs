@@ -316,7 +316,8 @@ test("character assets use premium 3D cues instead of flat placeholders", () => 
   const component = read("src/components/layout/scene-character/index.tsx");
 
   assert.match(component, /맑은 날 Mongree 캐릭터/);
-  assert.match(component, /프로필 보기/);
+  assert.match(component, /몽이 꾸미기/);
+  assert.match(component, /URL\(\)\.MONGI/);
 
   for (const asset of ["day", "night", "rain", "snow"]) {
     const source = read(`public/characters/${asset}.svg`);

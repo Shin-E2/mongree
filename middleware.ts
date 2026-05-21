@@ -9,6 +9,7 @@ const protectedRoutes = [
   "/statistics",
   "/community",
   "/ai-report",
+  "/mongi",
   "/profile",
 ];
 

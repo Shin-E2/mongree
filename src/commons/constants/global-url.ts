@@ -20,6 +20,9 @@ export const URL = () => ({
   // 마이 페이지
   PROFILE: `/profile`,
 
+  // 몽이 꾸미기
+  MONGI: `/mongi`,
+
   CALENDAR: `/calendar`,
 
   STATISTICS: `/statistics`,

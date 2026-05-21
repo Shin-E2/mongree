@@ -22,14 +22,14 @@ export async function getCurrentProfile() {
     .from("profiles")
     .select("id, nickname, profile_image, created_at, updated_at, is_profile_complete")
     .eq("id", user.id)
-    .single();
+    .maybeSingle();
 
-  if (profileError && profileError.code !== "PGRST116") {
-    console.error("프로필 조회 오류:", profileError);
+  if (profileError) {
+    console.error("[get-user] 프로필 조회 오류:", profileError.code, profileError.message);
     return null;
   }
 
-  return profile ?? null;
+  return profile;
 }
 
 export const getUser = getCurrentProfile;

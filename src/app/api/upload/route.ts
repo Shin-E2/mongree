@@ -4,10 +4,10 @@ import { randomUUID } from "node:crypto";
 import { NextResponse } from "next/server";
 import { s3Client } from "@/lib/aws/s3-client";
 import { getCurrentProfile } from "@/lib/get-user";
+import { FILE_CONSTRAINTS } from "@/commons/constants/validation";
 
 const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME!;
 const BUCKET_REGION = process.env.AWS_REGION!;
-const MAX_UPLOAD_BYTES = 2 * 1024 * 1024;
 const ALLOWED_IMAGE_TYPES = new Map([
   ["image/jpeg", "jpg"],
   ["image/png", "png"],
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
       typeof fileSize !== "number" ||
       !Number.isFinite(fileSize) ||
       fileSize <= 0 ||
-      fileSize > MAX_UPLOAD_BYTES
+      fileSize > FILE_CONSTRAINTS.DIARY_IMAGE_MAX_BYTES
     ) {
       return NextResponse.json(
         { success: false, error: "이미지는 2MB 이하로 줄인 뒤 업로드해야 합니다." },
@@ -65,7 +65,7 @@ export async function POST(request: Request) {
     });
 
     const presignedUrl = await getSignedUrl(s3Client, command, {
-      expiresIn: 300,
+      expiresIn: FILE_CONSTRAINTS.PRESIGNED_URL_EXPIRES_SECONDS,
     });
 
     const finalUrl = `https://${BUCKET_NAME}.s3.${BUCKET_REGION}.amazonaws.com/${key}`;
@@ -75,7 +75,7 @@ export async function POST(request: Request) {
       url: presignedUrl,
       key,
       finalUrl,
-      maxSize: MAX_UPLOAD_BYTES,
+      maxSize: FILE_CONSTRAINTS.DIARY_IMAGE_MAX_BYTES,
     });
   } catch (error) {
     const message =

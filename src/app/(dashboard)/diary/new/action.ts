@@ -163,6 +163,11 @@ export async function createDiary(formData: FormData) {
     });
 
     if (!validationResult.success) {
+      if (uploadedImageUrls.length > 0) {
+        await deleteImagesFromS3(uploadedImageUrls).catch((e) =>
+          console.error("[diary/new] 검증 실패 후 이미지 정리 오류:", e)
+        );
+      }
       return {
         success: false,
         error: "입력값을 다시 확인해주세요.",

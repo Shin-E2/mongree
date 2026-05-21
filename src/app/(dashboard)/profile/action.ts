@@ -12,6 +12,7 @@ import {
 } from "@/commons/utils/cache-revalidation";
 import { getCurrentProfile } from "@/lib/get-user";
 import { createClient } from "@/lib/supabase-server";
+import { FILE_CONSTRAINTS } from "@/commons/constants/validation";
 
 export interface ProfileCommentItem {
   id: string;
@@ -70,8 +71,8 @@ interface ProfileDiaryRow {
 
 export type ProfileDiaryDeleteScope = "private" | "public" | "all";
 
-const PROFILE_IMAGE_MAX_SIZE = 3 * 1024 * 1024;
-const PROFILE_IMAGE_ALLOWED_TYPES = ["image/jpeg", "image/png"];
+const PROFILE_IMAGE_MAX_SIZE = FILE_CONSTRAINTS.PROFILE_IMAGE_MAX_BYTES;
+const PROFILE_IMAGE_ALLOWED_TYPES = FILE_CONSTRAINTS.PROFILE_ALLOWED_TYPES;
 
 function isValidImageFile(file: File | string | null): file is File {
   return file instanceof File && file.size > 0;

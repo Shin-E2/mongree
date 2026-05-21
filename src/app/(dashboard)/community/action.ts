@@ -255,7 +255,7 @@ export async function getPublicDiaries({
     const { data, error } = await supabase.rpc("get_public_diary_feed", {
       p_limit: ITEMS_PER_PAGE,
       p_offset: skip,
-      p_search: keyword ? escapePostgrestLikePattern(keyword) : null,
+      p_search: keyword ? escapePostgrestLikePattern(keyword) : undefined,
       p_emotion_ids: emotionIds,
       p_sort_by: sortBy,
     });

@@ -9,8 +9,8 @@ interface RawComment {
   parent_id: string | null;
   user_id: string;
   diary_id: string;
-  created_at: string | null;
-  updated_at: string | null;
+  created_at: string;
+  updated_at: string;
   deleted_at: string | null;
   profiles: { id: string; nickname: string; profile_image: string | null } | null;
   comment_likes: Tables<"comment_likes">[];
@@ -21,8 +21,8 @@ interface FormattedComment extends Omit<RawComment, "replies"> {
   parentId: string | null;
   userId: string;
   diaryId: string;
-  createdAt: string | null;
-  updatedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
   user: RawComment["profiles"];
   likes: Tables<"comment_likes">[];
   replies: FormattedComment[];

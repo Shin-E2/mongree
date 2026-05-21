@@ -4,3 +4,5 @@ export interface MongreeThemeContextValue {
   scene: MongreeThemeScene;
   setScene: (scene: MongreeThemeScene) => void;
 }
+
+export type MongiEmotion = "happy" | "excited" | "calm" | "sad" | "tired";

@@ -120,12 +120,12 @@ function ScarfAccessory() {
   );
 }
 
-function MongiBody({ scene, emotion, bounce }: { scene: MongreeThemeScene; emotion: MongiEmotion | null; bounce: boolean }) {
+function MongiBody({ scene, emotion }: { scene: MongreeThemeScene; emotion: MongiEmotion | null }) {
   const isNight = scene === "night";
   return (
     <svg
       viewBox="0 0 120 155"
-      className={`${styles.mongiSvgCat} ${bounce ? styles.mongiBounce : ""}`}
+      className={styles.mongiSvgCat}
       role="img"
       aria-label={LABEL[scene]}
       focusable="false"
@@ -166,11 +166,11 @@ function MongiBody({ scene, emotion, bounce }: { scene: MongreeThemeScene; emoti
   );
 }
 
-function SnowScene({ emotion, bounce }: { emotion: MongiEmotion | null; bounce: boolean }) {
+function SnowScene({ emotion }: { emotion: MongiEmotion | null }) {
   return (
     <svg
       viewBox="0 0 220 160"
-      className={`${styles.mongiSvgSnow} ${bounce ? styles.mongiBounce : ""}`}
+      className={styles.mongiSvgSnow}
       role="img"
       aria-label="눈 오는 날의 몽이"
       focusable="false"
@@ -234,7 +234,7 @@ export default function MongiCharacter({ scene, emotion, variant, onTap }: Props
 
   return (
     <div
-      className={`${styles.mongiWrap} ${isBig ? styles.mongiWrapBig : ""} ${variant === "idle" ? styles.mongiFloat : ""}`}
+      className={`${styles.mongiWrap} ${isBig ? styles.mongiWrapBig : ""} ${variant === "idle" ? styles.mongiFloat : ""} ${isBounce ? styles.mongiBounce : ""}`}
       onClick={onTap}
       onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") onTap?.(); }}
       role={onTap ? "button" : undefined}
@@ -242,9 +242,9 @@ export default function MongiCharacter({ scene, emotion, variant, onTap }: Props
       aria-label={onTap ? "몽이를 탭하세요" : undefined}
     >
       {isSnowIdle ? (
-        <SnowScene emotion={emotion} bounce={isBounce} />
+        <SnowScene emotion={emotion} />
       ) : (
-        <MongiBody scene={scene} emotion={emotion} bounce={isBounce} />
+        <MongiBody scene={scene} emotion={emotion} />
       )}
     </div>
   );

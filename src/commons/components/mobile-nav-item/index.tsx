@@ -18,7 +18,7 @@ export default function MobileNavItem({
   }`;
 
   return (
-    <Link href={path} className={dynamicClassName}>
+    <Link href={path} className={dynamicClassName} aria-current={isActive ? "page" : undefined}>
       <Icon className={iconClassName} />
       <span className={styles.nav_label}>{label}</span>
     </Link>

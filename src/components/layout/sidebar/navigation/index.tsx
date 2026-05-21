@@ -18,6 +18,7 @@ export default function SidebarNavigation() {
             href={item.path}
             className={`${styles.navItem} ${isActive ? styles.navItemActive : ""}`}
             aria-label={item.label}
+            aria-current={isActive ? "page" : undefined}
           >
             <item.icon className={styles.navIcon} />
             <span className={styles.tooltip}>{item.label}</span>

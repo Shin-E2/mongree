@@ -162,3 +162,13 @@
   border-top: 0.12rem solid color-mix(in oklch, var(--mongree-text) 44%, transparent);
   bottom: 26%;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  .character,
+  .eyeLeft,
+  .eyeRight,
+  .accessory {
+    animation: none !important;
+    transition: none !important;
+  }
+}

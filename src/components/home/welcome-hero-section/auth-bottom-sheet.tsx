@@ -1,6 +1,6 @@
-// src/components/home/welcome-hero-section/auth-bottom-sheet.tsx
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import styles from "./styles.module.css";
 
@@ -9,6 +9,46 @@ interface Props {
 }
 
 export default function AuthBottomSheet({ onClose }: Props) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const previousFocus = document.activeElement as HTMLElement | null;
+    panelRef.current?.focus();
+
+    function handleKeyDown(e: KeyboardEvent) {
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key === "Tab") {
+        const panel = panelRef.current;
+        if (!panel) return;
+        const focusable = panel.querySelectorAll<HTMLElement>(
+          'a[href], button, [tabindex]:not([tabindex="-1"])'
+        );
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (e.shiftKey) {
+          if (document.activeElement === first) {
+            e.preventDefault();
+            last?.focus();
+          }
+        } else {
+          if (document.activeElement === last) {
+            e.preventDefault();
+            first?.focus();
+          }
+        }
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+      previousFocus?.focus();
+    };
+  }, [onClose]);
+
   return (
     <>
       <div
@@ -17,10 +57,12 @@ export default function AuthBottomSheet({ onClose }: Props) {
         aria-hidden="true"
       />
       <div
+        ref={panelRef}
         className={styles.sheetPanel}
         role="dialog"
         aria-modal="true"
         aria-label="시작하기"
+        tabIndex={-1}
       >
         <div className={styles.sheetHandle} aria-hidden="true" />
         <svg viewBox="0 0 56 56" width="48" height="48" className={styles.sheetMongi} aria-hidden="true" focusable="false">

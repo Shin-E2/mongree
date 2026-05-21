@@ -93,6 +93,68 @@
   overflow-wrap: anywhere;
 }
 
+.inventoryPanel {
+  overflow: hidden;
+}
+
+.inventoryIcon {
+  width: 1.35rem;
+  height: 1.35rem;
+  color: var(--scene-accent);
+}
+
+.inventoryGrid {
+  display: grid;
+  gap: 0.875rem;
+}
+
+.inventoryItem {
+  display: grid;
+  gap: 1rem;
+  align-items: center;
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 66%, transparent);
+  border-radius: var(--mongree-radius-md);
+  background: color-mix(in oklch, var(--mongree-surface-soft) 72%, var(--mongree-surface-raised));
+  padding: 1rem;
+}
+
+.inventoryItemEquipped {
+  border-color: color-mix(in oklch, var(--scene-accent) 42%, var(--mongree-line));
+  background: color-mix(in oklch, var(--scene-accent) 12%, var(--mongree-surface-raised));
+}
+
+.inventorySlot {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 999px;
+  background: color-mix(in oklch, var(--scene-accent) 14%, transparent);
+  padding: 0.25rem 0.625rem;
+  color: var(--mongree-primary-strong);
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+
+.inventoryName {
+  margin-top: 0.625rem;
+  color: var(--mongree-text);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.inventoryDescription {
+  margin-top: 0.35rem;
+  color: var(--mongree-text-muted);
+  font-size: 0.875rem;
+  line-height: 1.65;
+}
+
+.inventoryMessage {
+  margin-top: 0.875rem;
+  color: var(--mongree-primary-strong);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+
 .interactiveGrid {
   display: grid;
   gap: 1.5rem;
@@ -482,4 +544,4 @@
   .textInput {
     text-align: center;
   }
-} 
+}

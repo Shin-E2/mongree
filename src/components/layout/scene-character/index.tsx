@@ -26,9 +26,9 @@ export default function SceneCharacter() {
 
   return (
     <Link
-      href={URL().PROFILE}
+      href={URL().MONGI}
       className={styles.wrapper}
-      aria-label="프로필 보기"
+      aria-label="몽이 꾸미기"
     >
       <Image
         src={CHARACTER_IMAGES[scene]}

@@ -45,12 +45,12 @@ export default function MongiFigure({ className }: MongiFigureProps) {
         strokeWidth="8"
         opacity="0.55"
       />
-      <circle cx="75" cy="78" r="5" fill="#4b5563" />
-      <circle cx="110" cy="78" r="5" fill="#4b5563" />
+      <circle cx="75" cy="78" r="5" fill="var(--mongi-eye)" />
+      <circle cx="110" cy="78" r="5" fill="var(--mongi-eye)" />
       <path
         d="M84 94c6 5 16 5 22 0"
         fill="none"
-        stroke="#6b7280"
+        stroke="var(--mongi-mouth)"
         strokeLinecap="round"
         strokeWidth="4"
       />
@@ -58,7 +58,7 @@ export default function MongiFigure({ className }: MongiFigureProps) {
         className={styles.cheek}
         d="M55 91c7-5 15-5 20 0"
         fill="none"
-        stroke="#f0a5a5"
+        stroke="var(--mongi-cheek)"
         strokeLinecap="round"
         strokeWidth="4"
         opacity="0.55"
@@ -67,13 +67,13 @@ export default function MongiFigure({ className }: MongiFigureProps) {
         className={styles.cheek}
         d="M118 91c7-5 15-5 20 0"
         fill="none"
-        stroke="#f0a5a5"
+        stroke="var(--mongi-cheek)"
         strokeLinecap="round"
         strokeWidth="4"
         opacity="0.55"
       />
-      <circle className={styles.spark} cx="135" cy="38" r="4" fill="#f6c76f" />
-      <circle className={styles.spark} cx="45" cy="42" r="3" fill="#9cc5ff" />
+      <circle className={styles.spark} cx="135" cy="38" r="4" fill="var(--mongi-spark-warm)" />
+      <circle className={styles.spark} cx="45" cy="42" r="3" fill="var(--mongi-spark-cool)" />
     </svg>
   );
 }

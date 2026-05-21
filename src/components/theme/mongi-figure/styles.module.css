@@ -2,6 +2,11 @@
   width: min(132px, 100%);
   height: auto;
   filter: drop-shadow(0 18px 28px rgba(148, 120, 92, 0.2));
+  --mongi-eye: #4b5563;
+  --mongi-mouth: #6b7280;
+  --mongi-cheek: #f0a5a5;
+  --mongi-spark-warm: #f6c76f;
+  --mongi-spark-cool: #9cc5ff;
 }
 
 .body {

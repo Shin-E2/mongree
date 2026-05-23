@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cron/inactivity-reminder",
+      "schedule": "0 9 * * *"
+    }
+  ]
+}

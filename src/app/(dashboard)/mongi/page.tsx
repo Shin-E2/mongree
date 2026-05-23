@@ -1,9 +1,19 @@
+"use client";
+
+import { useCallback, useState } from "react";
 import Link from "next/link";
-import MongiFigure from "@/components/theme/mongi-figure";
+import { MongiStage } from "@/components/mongi/mongi-stage";
+import type { MongiState } from "@/components/mongi/mongi-stage";
 import MongiInventoryClient from "../profile/mongi-inventory-client";
 import styles from "./styles.module.css";
 
 export default function MongiPage() {
+  const [mongiState, setMongiState] = useState<MongiState>("idle");
+
+  const handleEquipped = useCallback(() => {
+    setMongiState("equip");
+  }, []);
+
   return (
     <div className={styles.pageContainer}>
       <section className={styles.heroSection}>
@@ -19,11 +29,15 @@ export default function MongiPage() {
           </Link>
         </div>
         <div className={styles.figureStage} aria-hidden="true">
-          <MongiFigure className={styles.figure} />
+          <MongiStage
+            state={mongiState}
+            onStateEnd={() => setMongiState("idle")}
+            size={200}
+          />
         </div>
       </section>
 
-      <MongiInventoryClient />
+      <MongiInventoryClient onEquipped={handleEquipped} />
     </div>
   );
 }

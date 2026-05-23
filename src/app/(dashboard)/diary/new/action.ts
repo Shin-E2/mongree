@@ -7,6 +7,9 @@ import { getCurrentProfile } from "@/lib/get-user";
 import { formatZodError } from "@/commons/utils/errorFormatters";
 import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
 import { awardMongiDiaryReward } from "@/lib/mongi/reward";
+import { sendEmail } from "@/lib/email/resend";
+import { firstDiaryEmailHtml } from "@/lib/email/templates/first-diary";
+import { getCurrentAuthUser } from "@/lib/get-user";
 import {
   buildDiaryImagePayloads,
   extractCreateDiaryFormData,
@@ -218,10 +221,26 @@ export async function createDiary(formData: FormData) {
       isPrivate: validationResult.data.isPrivate,
     });
 
-    const reward = await awardMongiDiaryReward(supabase, user.id).catch((e) => {
-      console.error("[diary/new] mongi reward 오류:", e);
-      return null;
-    });
+    const [reward, { count: diaryCount }, authUser] = await Promise.all([
+      awardMongiDiaryReward(supabase, user.id).catch((e) => {
+        console.error("[diary/new] mongi reward 오류:", e);
+        return null;
+      }),
+      supabase
+        .from("diaries")
+        .select("*", { count: "exact", head: true })
+        .eq("user_id", user.id)
+        .is("deleted_at", null),
+      getCurrentAuthUser(),
+    ]);
+
+    if (diaryCount === 1 && authUser?.email) {
+      sendEmail({
+        to: authUser.email,
+        subject: "첫 일기를 남겼어요!",
+        html: firstDiaryEmailHtml(user.nickname ?? "몽이 친구"),
+      }).catch((e) => console.error("[diary/new] 첫 일기 이메일 오류:", e));
+    }
 
     return {
       success: true,

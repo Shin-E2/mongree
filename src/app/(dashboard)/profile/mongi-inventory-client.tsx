@@ -20,7 +20,11 @@ const slotLabels: Record<string, string> = {
   body: "몸",
 };
 
-export default function MongiInventoryClient() {
+interface MongiInventoryClientProps {
+  onEquipped?: () => void;
+}
+
+export default function MongiInventoryClient({ onEquipped }: MongiInventoryClientProps = {}) {
   const [items, setItems] = useState<InventoryItem[]>([]);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
@@ -75,6 +79,7 @@ export default function MongiInventoryClient() {
         }))
       );
       setMessage("몽이 아이템을 장착했습니다.");
+      onEquipped?.();
     });
   };
 

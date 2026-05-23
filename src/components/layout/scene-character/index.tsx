@@ -1,28 +1,26 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
-import { URL } from "@/commons/constants/global-url";
+import { useEffect, useState } from "react";
+import { MongiStage } from "@/components/mongi/mongi-stage";
+import type { MongiState } from "@/components/mongi/mongi-stage";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
-import type { MongreeThemeScene } from "@/components/theme/theme.types";
+import { URL } from "@/commons/constants/global-url";
 import styles from "./styles.module.css";
-
-const CHARACTER_IMAGES: Record<MongreeThemeScene, string> = {
-  day: "/characters/day.svg",
-  night: "/characters/night.svg",
-  rain: "/characters/rain.svg",
-  snow: "/characters/snow.svg",
-};
-
-const CHARACTER_ALTS: Record<MongreeThemeScene, string> = {
-  day: "맑은 날 Mongree 캐릭터",
-  night: "밤하늘의 Mongree 캐릭터",
-  rain: "비 오는 날의 Mongree 캐릭터",
-  snow: "눈 오는 날의 Mongree 캐릭터",
-};
 
 export default function SceneCharacter() {
   const { scene } = useMongreeTheme();
+  const [mongiState, setMongiState] = useState<MongiState>("idle");
+  const isSleepy = scene === "night";
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setMongiState(isSleepy ? "sleepy" : "greeting");
+      const reset = setTimeout(() => setMongiState(isSleepy ? "sleepy" : "idle"), 2000);
+      return () => clearTimeout(reset);
+    }, 600);
+    return () => clearTimeout(timer);
+  }, [isSleepy]);
 
   return (
     <Link
@@ -30,14 +28,11 @@ export default function SceneCharacter() {
       className={styles.wrapper}
       aria-label="몽이 꾸미기"
     >
-      <Image
-        src={CHARACTER_IMAGES[scene]}
-        alt={CHARACTER_ALTS[scene]}
-        width={80}
-        height={80}
-        className={styles.image}
-        priority={false}
-        unoptimized
+      <MongiStage
+        state={mongiState}
+        onStateEnd={() => setMongiState(isSleepy ? "sleepy" : "idle")}
+        size={80}
+        className={styles.stage}
       />
     </Link>
   );

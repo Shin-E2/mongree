@@ -5,29 +5,8 @@
   );
 }
 
-.image {
-  @apply h-20 w-20;
-  animation: idle 2.8s ease-in-out infinite;
-  transition: transform 200ms ease;
-}
-
-.wrapper:hover .image {
-  transform: scale(1.08);
-}
-
-.wrapper:active .image {
-  transform: scale(0.96);
-}
-
-@keyframes idle {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-
-  50% {
-    transform: translateY(-5px);
-  }
+.stage {
+  cursor: pointer;
 }
 
 @media (max-width: 767px) {
@@ -43,17 +22,4 @@
     display: block;
   }
 
-  .image {
-    @apply h-16 w-16;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .image {
-    animation: none;
-  }
-
-  .image {
-    transition: none;
-  }
 }

@@ -4,6 +4,10 @@
   display: flex;
   align-items: flex-end;
   justify-content: center;
+  /* clay/felt 배경 독립 drop-shadow — 어떤 씬에서도 캐릭터가 잘 보이도록 */
+  filter:
+    drop-shadow(0 24px 44px oklch(0.48 0.11 58 / 0.28))
+    drop-shadow(0 8px 18px oklch(0.48 0.11 58 / 0.16));
 }
 
 .img {
@@ -57,9 +61,9 @@
 
 @keyframes mongiIdle {
   0%, 100% { transform: translateY(0px) scale(1.00); }
-  30%       { transform: translateY(-5px) scale(1.015); }
-  50%       { transform: translateY(-9px) scale(1.02); }
-  70%       { transform: translateY(-5px) scale(1.015); }
+  30%       { transform: translateY(-10px) scale(1.018); }
+  50%       { transform: translateY(-20px) scale(1.030); }
+  70%       { transform: translateY(-10px) scale(1.018); }
 }
 
 @keyframes mongiSleepyFloat {

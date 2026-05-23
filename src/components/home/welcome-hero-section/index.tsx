@@ -21,11 +21,16 @@ export default function WelcomeHeroSection() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<LandingStep>(1);
   const [selectedEmotion, setSelectedEmotion] = useState<MongiEmotion | null>(null);
+  const [charSize, setCharSize] = useState(220);
   const cycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
+    const update = () => setCharSize(Math.min(Math.round(window.innerWidth * 0.58), 300));
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
   }, []);
 
   useEffect(() => {
@@ -127,7 +132,7 @@ export default function WelcomeHeroSection() {
               <MongiStage
                 state={mongiState}
                 onStateEnd={() => {}}
-                size={160}
+                size={charSize}
               />
             </div>
 

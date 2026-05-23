@@ -1,6 +1,7 @@
 "use client";
 
 import { useTransition } from "react";
+import { usePostHog } from "posthog-js/react";
 import styles from "./styles.module.css";
 
 interface BillingSectionProps {
@@ -9,8 +10,10 @@ interface BillingSectionProps {
 
 export function BillingSection({ onMessage }: BillingSectionProps) {
   const [isPending, startTransition] = useTransition();
+  const posthog = usePostHog();
 
   const handleCheckout = () => {
+    posthog?.capture("checkout_clicked", { plan: "pro" });
     startTransition(async () => {
       const response = await fetch("/api/billing/checkout", { method: "POST" });
       const result = (await response.json().catch(() => ({}))) as {

@@ -2,6 +2,8 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import type { Database } from "@/lib/supabase.types";
 
+const REQUEST_ID_HEADER = "x-request-id";
+
 const protectedRoutes = [
   "/home",
   "/diary",
@@ -14,9 +16,18 @@ const protectedRoutes = [
 ];
 
 export async function middleware(request: NextRequest) {
+  const requestId = request.headers.get(REQUEST_ID_HEADER) ?? crypto.randomUUID();
+
   let response = NextResponse.next({
-    request,
+    request: {
+      headers: (() => {
+        const h = new Headers(request.headers);
+        h.set(REQUEST_ID_HEADER, requestId);
+        return h;
+      })(),
+    },
   });
+  response.headers.set(REQUEST_ID_HEADER, requestId);
 
   const supabase = createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

@@ -13,6 +13,7 @@ import { formatToTimeAgo } from "@/lib/utils";
 import { getAiEmotionReportData } from "./action";
 import { GenerateReportButton } from "./generate-report-button";
 import { ReportActions } from "./report-actions";
+import { ReportViewTracker } from "./report-view-tracker";
 import styles from "./styles.module.css";
 
 interface AiReportPageProps {
@@ -44,6 +45,10 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
 
   return (
     <div className={styles.pageContainer}>
+      <ReportViewTracker
+        month={reportData.reportStatus.month}
+        hasSavedReport={reportData.reportStatus.saved}
+      />
       <div className={styles.contentWrapper}>
         <div className={styles.toolbar}>
           <Link

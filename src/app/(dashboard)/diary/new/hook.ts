@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { usePostHog } from "posthog-js/react";
 import { DIARY_NEW_STEPS } from "../../../../components/home/(dashboard)/diary/new/constants";
 import type { DiaryNewFormType } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { createDiary } from "./action";
@@ -55,6 +56,7 @@ export default function useDiaryNewPage() {
   const [rewardToast, setRewardToast] = useState<{ diaryId: string; reward: RewardInfo | null } | null>(null);
   const { modalState, showModal, closeModal } = useSmartModal();
   const router = useRouter();
+  const posthog = usePostHog();
 
   const currentStepData = useMemo(
     () => DIARY_NEW_STEPS[currentStep],
@@ -91,6 +93,10 @@ export default function useDiaryNewPage() {
         const result = await createDiary(await createDiaryFormData(data));
 
         if (result.success && result.diary) {
+          posthog?.capture("diary_created", {
+            diary_id: result.diary.id,
+            has_reward: Boolean(result.reward),
+          });
           setRewardToast({ diaryId: result.diary.id, reward: result.reward ?? null });
           return;
         }

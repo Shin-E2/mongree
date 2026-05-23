@@ -2,6 +2,7 @@
 
 import { Cloud, Lock, Sparkles } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
+import { usePostHog } from "posthog-js/react";
 import { MongiStage, type MongiState } from "@/components/mongi/mongi-stage";
 import styles from "./styles.module.css";
 
@@ -20,6 +21,7 @@ interface ShopItem {
 
 const slotLabels: Record<string, string> = {
   head: "머리",
+  face: "얼굴",
   neck: "목",
   body: "몸",
 };
@@ -34,6 +36,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [mongiState, setMongiState] = useState<MongiState>("idle");
+  const posthog = usePostHog();
 
   const ownedItems = items.filter((item) => item.owned);
   const shopItems = items.filter((item) => !item.owned && item.pricePoints > 0);
@@ -84,6 +87,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
         current.map((item) => ({ ...item, equipped: item.id === payload.equippedItemId }))
       );
       setMongiState("equip");
+      posthog?.capture("mongi_item_equipped", { item_id: payload.equippedItemId });
       setMessage("몽이 아이템을 장착했습니다.");
       onEquipped?.();
     });

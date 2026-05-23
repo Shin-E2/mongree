@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene, MongiEmotion } from "@/components/theme/theme.types";
-import MongiCharacter from "./mongi-character";
+import { MongiStage } from "@/components/mongi/mongi-stage";
 import EmotionCloud from "./emotion-cloud";
 import DiaryFloat from "./diary-float";
 import AuthBottomSheet from "./auth-bottom-sheet";
@@ -83,11 +83,11 @@ export default function WelcomeHeroSection() {
     setStep(1);
   }, []);
 
-  const mongiVariant = (() => {
-    if (step === 1) return "idle" as const;
-    if (step === 2) return "bounce" as const;
-    if (step === 3) return "big" as const;
-    return "react" as const;
+  const mongiState = (() => {
+    if (step === 2) return "greeting" as const;
+    if (step === 3) return "listening" as const;
+    if (step === 4) return "react_happy" as const;
+    return "idle" as const;
   })();
 
   return (
@@ -116,12 +116,20 @@ export default function WelcomeHeroSection() {
               </div>
             )}
 
-            <MongiCharacter
-              scene={SCENES[sceneIdx]}
-              emotion={selectedEmotion}
-              variant={mongiVariant}
-              onTap={step === 1 ? handleMongiTap : undefined}
-            />
+            <div
+              role={step === 1 ? "button" : undefined}
+              tabIndex={step === 1 ? 0 : undefined}
+              aria-label={step === 1 ? "몽이를 탭하세요" : undefined}
+              onClick={step === 1 ? handleMongiTap : undefined}
+              onKeyDown={step === 1 ? (e) => { if (e.key === "Enter" || e.key === " ") handleMongiTap(); } : undefined}
+              style={{ cursor: step === 1 ? "pointer" : undefined, display: "inline-block" }}
+            >
+              <MongiStage
+                state={mongiState}
+                onStateEnd={() => {}}
+                size={160}
+              />
+            </div>
 
             {step === 1 && (
               <p className={styles.tapHint} aria-hidden="true">탭해 보세요 🐾</p>

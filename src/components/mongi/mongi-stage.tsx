@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import MongiFigure, { type MongiExpression, type MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import { useMongiRive, type MongiTriggerName } from "./use-mongi-rive";
+import { useMongiLottie } from "./use-mongi-lottie";
 import styles from "./mongi-stage.module.css";
 
 export type MongiState =
@@ -81,6 +82,7 @@ export function MongiStage({
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { riveAvailable, canvasRef, fireTrigger, setInput } = useMongiRive();
+  const { lottieAvailable, containerRef: lottieContainerRef, playState: lottiePlay } = useMongiLottie();
 
   useEffect(() => {
     setCurrentState(state);
@@ -88,6 +90,8 @@ export function MongiStage({
     if (riveAvailable) {
       const trigger = STATE_TO_RIVE_TRIGGER[state];
       if (trigger) fireTrigger(trigger);
+    } else if (lottieAvailable) {
+      lottiePlay(state);
     }
 
     if (TRANSIENT_STATES.includes(state)) {
@@ -101,7 +105,7 @@ export function MongiStage({
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [state, onStateEnd, riveAvailable, fireTrigger]);
+  }, [state, onStateEnd, riveAvailable, fireTrigger, lottieAvailable, lottiePlay]);
 
   useEffect(() => {
     if (!riveAvailable) return;
@@ -137,9 +141,11 @@ export function MongiStage({
   const effectiveState = isHovered && currentState === "idle" ? "greeting" : currentState;
   const expression = stateToExpression(currentState, isHovered);
 
+  const useNativeFallback = !riveAvailable && !lottieAvailable;
+
   return (
     <div
-      className={`${styles.stage} ${!riveAvailable ? styles[`state_${effectiveState}`] : ""} ${className ?? ""}`}
+      className={`${styles.stage} ${useNativeFallback ? styles[`state_${effectiveState}`] : ""} ${className ?? ""}`}
       style={{ "--mongi-size": `${size}px` } as React.CSSProperties}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -149,6 +155,12 @@ export function MongiStage({
         <canvas
           ref={canvasRef}
           className={styles.riveCanvas}
+          style={{ width: size, height: size }}
+        />
+      ) : lottieAvailable ? (
+        <div
+          ref={lottieContainerRef}
+          className={styles.lottieContainer}
           style={{ width: size, height: size }}
         />
       ) : (

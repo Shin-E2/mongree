@@ -31,6 +31,12 @@
   display: block;
 }
 
+/* Lottie container */
+.lottieContainer {
+  display: block;
+  overflow: visible;
+}
+
 /* idle: 기본 breathing (MongiFigure CSS에서 처리) */
 .state_idle .character {
   transform: translateY(0);

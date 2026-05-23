@@ -1,9 +1,9 @@
 .section {
-  @apply flex flex-col gap-3;
+  @apply flex flex-col gap-4;
 }
 
 .section_div {
-  @apply sm:grid sm:grid-cols-2 sm:gap-8 xs:flex xs:flex-col xs:gap-0.5;
+  @apply sm:grid sm:grid-cols-2 sm:gap-6 flex flex-col gap-3;
 }
 
 .section_div_div {

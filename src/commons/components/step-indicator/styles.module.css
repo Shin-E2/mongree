@@ -1,27 +1,45 @@
 .common {
-  @apply flex flex-col items-center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
 }
 
 .standard__m__m {
-  @apply w-8 h-8 rounded-full flex justify-center items-center mb-2;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: background 250ms ease, color 250ms ease, box-shadow 250ms ease;
 }
 
 .label {
-  @apply text-sm font-medium;
+  font-size: 0.72rem;
+  font-weight: 600;
+  transition: color 250ms ease;
+  white-space: nowrap;
 }
 
 .activeText {
-  @apply text-indigo-600;
+  color: var(--mongree-primary);
 }
 
 .inactiveText {
-  @apply text-gray-400;
+  color: var(--mongree-text-muted);
 }
 
 .activeCircle {
-  @apply bg-indigo-600 text-white;
+  background: var(--mongree-primary);
+  color: color-mix(in oklch, var(--mongree-surface-raised) 96%, var(--mongree-text));
+  box-shadow: 0 4px 16px color-mix(in oklch, var(--mongree-primary) 32%, transparent);
 }
 
 .inactiveCircle {
-  @apply bg-gray-200;
+  background: color-mix(in oklch, var(--mongree-surface-soft) 90%, transparent);
+  color: var(--mongree-text-muted);
+  border: 1.5px solid color-mix(in oklch, var(--mongree-line) 70%, transparent);
 }

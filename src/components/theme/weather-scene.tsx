@@ -24,23 +24,23 @@ const SHOOTS = [
   { id: 1, top: "18%", left: "44%", width: "110px", dur: "1.0s", del: "17s", sdx: "-320px", sdy: "230px" },
 ];
 
-const RAIN = Array.from({ length: 60 }, (_, i) => ({
+const RAIN = Array.from({ length: 42 }, (_, i) => ({
   id: i,
   left: `${rand(-5, 105)}%`,
-  width: `${rand(2, 3.5).toFixed(1)}px`,
-  height: `${rand(14, 34).toFixed(0)}px`,
-  dur: `${rand(0.4, 0.95).toFixed(2)}s`,
-  del: `${rand(0, 2).toFixed(2)}s`,
-  opacity: rand(0.5, 0.95).toFixed(2),
+  width: `${rand(5, 10).toFixed(1)}px`,
+  height: `${rand(22, 46).toFixed(0)}px`,
+  dur: `${rand(0.7, 1.4).toFixed(2)}s`,
+  del: `${rand(0, 2.5).toFixed(2)}s`,
+  opacity: rand(0.55, 0.90).toFixed(2),
 }));
 
-const SNOW = Array.from({ length: 48 }, (_, i) => ({
+const SNOW = Array.from({ length: 44 }, (_, i) => ({
   id: i,
   left: `${rand(-5, 105)}%`,
-  size: `${rand(4, 11).toFixed(1)}px`,
-  dur: `${rand(3.5, 7.5).toFixed(2)}s`,
-  del: `${rand(0, 4).toFixed(2)}s`,
-  opacity: rand(0.3, 0.95).toFixed(2),
+  size: `${rand(8, 22).toFixed(1)}px`,
+  dur: `${rand(4, 9).toFixed(2)}s`,
+  del: `${rand(0, 5).toFixed(2)}s`,
+  opacity: rand(0.40, 0.90).toFixed(2),
 }));
 
 export default function WeatherScene() {

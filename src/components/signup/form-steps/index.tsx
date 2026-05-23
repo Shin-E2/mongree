@@ -73,7 +73,7 @@ export default function SignupFormSteps({
         )}
 
         {submitError && (
-          <p style={{ color: "red", fontSize: "0.875rem", marginTop: "0.5rem" }}>
+          <p style={{ color: "var(--mongree-danger)", fontSize: "0.875rem", marginTop: "0.5rem" }}>
             {submitError}
           </p>
         )}

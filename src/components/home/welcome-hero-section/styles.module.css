@@ -6,8 +6,7 @@
   justify-content: center;
   min-height: 100dvh;
   overflow: hidden;
-  background: var(--scene-bg);
-  transition: background 600ms ease;
+  /* background 제거 → WeatherScene(z-index:-1)이 보이도록 */
 }
 
 .section::before {
@@ -15,16 +14,17 @@
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--scene-accent) 16%, transparent), transparent),
-    radial-gradient(ellipse 50% 40% at 50% 100%, color-mix(in oklch, var(--scene-shadow) 12%, transparent), transparent);
+    radial-gradient(ellipse 80% 55% at 50% 0%, color-mix(in oklch, var(--scene-accent) 14%, transparent), transparent),
+    radial-gradient(ellipse 60% 45% at 50% 100%, color-mix(in oklch, var(--scene-shadow) 18%, transparent), transparent);
   pointer-events: none;
+  z-index: 0;
 }
 
 /* ── 마운트 후 페이드인 ── */
 .section {
   opacity: 0;
   transform: translateY(8px);
-  transition: opacity 500ms ease, transform 500ms ease, background 600ms ease;
+  transition: opacity 500ms ease, transform 500ms ease;
 }
 
 .mounted {
@@ -94,23 +94,23 @@
 }
 
 .mongiSvgCat {
-  width: clamp(160px, 42vw, 220px);
+  width: clamp(200px, 52vw, 280px);
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 20px 36px color-mix(in oklch, var(--scene-shadow) 28%, transparent));
+  filter: drop-shadow(0 24px 44px color-mix(in oklch, var(--scene-shadow) 32%, transparent));
   transition: filter 480ms ease;
 }
 
 .mongiSvgSnow {
-  width: clamp(220px, 55vw, 300px);
+  width: clamp(260px, 66vw, 360px);
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 20px 36px color-mix(in oklch, var(--scene-shadow) 28%, transparent));
+  filter: drop-shadow(0 24px 44px color-mix(in oklch, var(--scene-shadow) 32%, transparent));
   transition: filter 480ms ease;
 }
 
 .mongiWrapBig .mongiSvgCat {
-  width: clamp(200px, 52vw, 260px);
+  width: clamp(240px, 60vw, 320px);
 }
 
 .mongiFloat {
@@ -385,8 +385,9 @@
 }
 
 @keyframes mongiFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px) scale(1); }
+  40%       { transform: translateY(-20px) scale(1.025); }
+  60%       { transform: translateY(-18px) scale(1.02); }
 }
 
 @keyframes mongiBounce {

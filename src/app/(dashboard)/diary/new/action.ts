@@ -6,6 +6,7 @@ import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form
 import { getCurrentProfile } from "@/lib/get-user";
 import { formatZodError } from "@/commons/utils/errorFormatters";
 import { revalidateDiaryCreated } from "@/commons/utils/cache-revalidation";
+import { awardMongiDiaryReward } from "@/lib/mongi/reward";
 import {
   buildDiaryImagePayloads,
   extractCreateDiaryFormData,
@@ -216,6 +217,10 @@ export async function createDiary(formData: FormData) {
       diaryId: resolvedDiaryId,
       isPrivate: validationResult.data.isPrivate,
     });
+
+    awardMongiDiaryReward(supabase, user.id).catch((e) =>
+      console.error("[diary/new] mongi reward 오류:", e)
+    );
 
     return { success: true, diary: { id: resolvedDiaryId } };
   } catch (error) {

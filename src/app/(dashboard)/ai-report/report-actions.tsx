@@ -1,6 +1,6 @@
 "use client";
 
-import { Download, Share2, Trash2 } from "lucide-react";
+import { Download, Image as ImageIcon, Share2, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 import type { AiGeneratedReport } from "@/lib/ai-report/core";
@@ -38,6 +38,12 @@ export function ReportActions({ month, monthLabel, report }: ReportActionsProps)
   const [isPending, startTransition] = useTransition();
   const [message, setMessage] = useState<string | null>(null);
   const shareText = useMemo(() => buildShareText(monthLabel, report), [monthLabel, report]);
+
+  const shareCardUrl = useMemo(() => {
+    const emotions = report.dominantEmotions.slice(0, 3).join(",");
+    const params = new URLSearchParams({ month: monthLabel, emotions });
+    return `/api/og/report?${params.toString()}`;
+  }, [monthLabel, report.dominantEmotions]);
 
   const handleCopyShare = async () => {
     setMessage(null);
@@ -90,6 +96,15 @@ export function ReportActions({ month, monthLabel, report }: ReportActionsProps)
         <Share2 className={styles.actionIcon} />
         공유 요약 복사
       </button>
+      <a
+        href={shareCardUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={styles.secondaryActionButton}
+      >
+        <ImageIcon className={styles.actionIcon} />
+        카드 이미지 열기
+      </a>
       <button type="button" className={styles.secondaryActionButton} onClick={handleExport}>
         <Download className={styles.actionIcon} />
         JSON 내보내기

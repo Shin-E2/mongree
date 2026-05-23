@@ -432,6 +432,129 @@
   50%       { opacity: 0.45; }
 }
 
+/* ── Auth 바텀 시트 ── */
+.sheetDim {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  z-index: 40;
+  animation: fadeUp 200ms ease both;
+  animation-name: sheetDimIn;
+}
+
+@keyframes sheetDimIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.sheetPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  background: var(--mongree-surface, #fff);
+  border-radius: 28px 28px 0 0;
+  padding: 12px 28px calc(28px + env(safe-area-inset-bottom));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  outline: none;
+  animation: sheetSlideUp 320ms cubic-bezier(0.22, 0.8, 0.4, 1) both;
+}
+
+@keyframes sheetSlideUp {
+  from { transform: translateY(100%); }
+  to   { transform: translateY(0); }
+}
+
+.sheetHandle {
+  width: 36px;
+  height: 4px;
+  border-radius: 2px;
+  background: color-mix(in oklch, var(--mongree-text, #222) 15%, transparent);
+  margin-bottom: 4px;
+}
+
+.sheetMongi {
+  margin-bottom: 0;
+}
+
+.sheetLogo {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--mongree-text, #1a1a2e);
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.sheetSub {
+  font-size: 0.9rem;
+  color: var(--mongree-text-muted, #666);
+  text-align: center;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.sheetBtnPrimary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 14px;
+  background: var(--scene-accent, #f59c42);
+  color: #fff;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.sheetBtnPrimary:hover {
+  opacity: 0.9;
+}
+
+.sheetBtnPrimary:active {
+  transform: scale(0.98);
+}
+
+.sheetBtnSecondary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  border-radius: 14px;
+  background: color-mix(in oklch, var(--mongree-text, #222) 8%, transparent);
+  color: var(--mongree-text, #1a1a2e);
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.sheetBtnSecondary:hover {
+  opacity: 0.8;
+}
+
+.sheetBtnSecondary:active {
+  transform: scale(0.98);
+}
+
+.sheetSkip {
+  font-size: 0.8rem;
+  color: var(--mongree-text-muted, #999);
+  text-decoration: none;
+  padding: 4px 8px;
+  transition: opacity 150ms ease;
+}
+
+.sheetSkip:hover {
+  opacity: 0.7;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .mongiFloat,
   .mongiBounce,

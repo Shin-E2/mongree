@@ -86,7 +86,7 @@ export default function AuthBottomSheet({ onClose }: Props) {
         <Link href="/login" className={styles.sheetBtnSecondary}>
           로그인
         </Link>
-        <Link href="/dashboard" className={styles.sheetSkip}>
+        <Link href="/home" className={styles.sheetSkip}>
           지금은 둘러만 볼게요
         </Link>
       </div>

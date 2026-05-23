@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import { getCurrentProfile } from "@/lib/get-user";
 import {
@@ -12,8 +13,9 @@ import {
   type AiReportDiaryForGeneration,
   type StoredAiReportRow,
 } from "@/lib/ai-report/core";
-import { checkAiReportAccess } from "@/lib/ai-report/access";
+import { checkAiReportAccess, isAiEnabled, isEmailInBeta } from "@/lib/ai-report/access";
 import { createClient } from "@/lib/supabase-server";
+import { getCurrentAuthUser } from "@/lib/get-user";
 
 export const dynamic = "force-dynamic";
 
@@ -150,7 +152,13 @@ export async function POST(request: Request) {
   }
 
   const diaries = data ?? [];
-  const openAiReport = await buildOpenAiReport(month, diaries).catch(() => null);
+
+  const authUser = await getCurrentAuthUser();
+  const userEmail = authUser?.email ?? "";
+  const canUseOpenAi = isAiEnabled() && isEmailInBeta(userEmail);
+  const openAiReport = canUseOpenAi
+    ? await buildOpenAiReport(month, diaries).catch(() => null)
+    : null;
   const generatedReport = openAiReport
     ? ({ month, ...openAiReport, source: "openai" } satisfies AiReport)
     : buildLocalReport(month, diaries);
@@ -179,6 +187,20 @@ export async function POST(request: Request) {
       isPro,
     },
   });
+
+  if (generatedReport.source === "openai") {
+    const { count: dailyCount } = await supabase
+      .from("usage_events")
+      .select("id", { count: "exact", head: true })
+      .eq("event_type", "ai_report.generated")
+      .gte("created_at", new Date(new Date().setHours(0, 0, 0, 0)).toISOString());
+
+    Sentry.captureEvent({
+      message: "openai_daily_report_usage",
+      level: "info",
+      extra: { dailyCount, month, source: "openai" },
+    });
+  }
 
   return NextResponse.json(generatedReport);
 }

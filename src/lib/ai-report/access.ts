@@ -3,6 +3,16 @@ import { AI_FREE_MONTHLY_LIMIT, AI_PAID_MONTHLY_LIMIT, getMonthRange } from "./c
 
 type SupabaseClient = Awaited<ReturnType<typeof createClient>>;
 
+export function isAiEnabled(): boolean {
+  return process.env.AI_REPORTS_ENABLED === "true";
+}
+
+export function isEmailInBeta(email: string): boolean {
+  const betaList = process.env.AI_BETA_EMAILS;
+  if (!betaList) return true;
+  return betaList.split(",").map((e) => e.trim().toLowerCase()).includes(email.toLowerCase());
+}
+
 export async function hasActiveSubscription(supabase: SupabaseClient, userId: string): Promise<boolean> {
   const { data } = await supabase
     .from("subscriptions")

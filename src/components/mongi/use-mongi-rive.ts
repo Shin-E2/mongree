@@ -41,6 +41,8 @@ export function useMongiRive(): UseMongiRiveReturn {
     let cancelled = false;
 
     async function init() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
       const exists = await checkRiveAssetExists();
       if (!exists || cancelled) return;
 

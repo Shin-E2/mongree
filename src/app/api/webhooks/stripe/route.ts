@@ -137,6 +137,21 @@ export async function POST(request: Request) {
       webhookSecret
     );
 
+    const supabaseAdmin = createAdminClient();
+    const { error: idempotencyError } = await supabaseAdmin
+      .from("usage_events")
+      .insert({
+        user_id: null,
+        event_type: "stripe_webhook",
+        source: "stripe",
+        stripe_event_id: event.id,
+        metadata: { type: event.type },
+      });
+
+    if (idempotencyError?.code === "23505") {
+      return NextResponse.json({ received: true, type: event.type });
+    }
+
     if (handledEvents.has(event.type)) {
       await handleStripeEvent(event);
     }

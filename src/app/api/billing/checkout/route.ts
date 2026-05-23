@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getCurrentProfile } from "@/lib/get-user";
+import { getCurrentAuthUser, getCurrentProfile } from "@/lib/get-user";
 import { getStripeClient } from "@/lib/stripe";
 import { getSiteUrl } from "@/commons/utils/site-url";
 import { createClient } from "@/lib/supabase-server";
@@ -7,9 +7,12 @@ import { createClient } from "@/lib/supabase-server";
 export const dynamic = "force-dynamic";
 
 export async function POST() {
-  const user = await getCurrentProfile();
+  const [user, authUser] = await Promise.all([
+    getCurrentProfile(),
+    getCurrentAuthUser(),
+  ]);
 
-  if (!user) {
+  if (!user || !authUser) {
     return NextResponse.json(
       { error: "로그인이 필요합니다." },
       { status: 401 }
@@ -32,6 +35,7 @@ export async function POST() {
     line_items: [{ price: priceId, quantity: 1 }],
     success_url: `${siteUrl}/profile?checkout=success`,
     cancel_url: `${siteUrl}/profile?checkout=cancelled`,
+    customer_email: authUser.email,
     metadata: {
       userId: user.id,
     },

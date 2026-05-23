@@ -1,30 +1,87 @@
+/* ── 전체 화면 섹션 ── */
 .section {
-  @apply min-h-screen bg-gradient-to-b from-indigo-50 to-white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100dvh;
+  overflow: hidden;
+  background: var(--scene-bg);
+  transition: background 600ms ease;
 }
 
-.container {
-  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+.section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 70% 50% at 50% 0%, color-mix(in oklch, var(--scene-accent) 16%, transparent), transparent),
+    radial-gradient(ellipse 50% 40% at 50% 100%, color-mix(in oklch, var(--scene-shadow) 12%, transparent), transparent);
+  pointer-events: none;
 }
 
-.content {
-  @apply flex flex-col items-center pt-20 pb-16;
+/* ── 마운트 후 페이드인 ── */
+.section {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 500ms ease, transform 500ms ease, background 600ms ease;
 }
 
-.title {
-  @apply text-4xl font-bold text-gray-900 sm:text-6xl;
+.mounted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── 내부 레이아웃 ── */
+.inner {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 100dvh;
+  padding: 3rem 1.5rem env(safe-area-inset-bottom);
+  gap: 2rem;
+}
+
+/* ── 헤드라인 블록 ── */
+.textBlock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  animation: fadeUp 500ms ease both;
+}
+
+.headline {
+  font-size: clamp(2.6rem, 10vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--mongree-text);
   text-align: center;
 }
 
-.description {
-  @apply mt-6 text-lg text-gray-600;
+.sub {
+  font-size: clamp(0.95rem, 3vw, 1.1rem);
+  font-weight: 500;
+  color: var(--mongree-text-muted);
   text-align: center;
+  line-height: 1.5;
 }
 
-.buttonWrapper {
-  @apply mt-8;
+/* ── 캐릭터 래퍼 ── */
+.characterWrap {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* ── 신규: 몽이 캐릭터 래퍼 ── */
+/* ── 몽이 캐릭터 SVG (MongiCharacter 내부에서 사용) ── */
 .mongiWrap {
   display: flex;
   align-items: flex-end;
@@ -37,23 +94,23 @@
 }
 
 .mongiSvgCat {
-  width: clamp(140px, 40vw, 190px);
+  width: clamp(160px, 42vw, 220px);
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 16px 28px color-mix(in oklch, var(--scene-shadow) 20%, transparent));
+  filter: drop-shadow(0 20px 36px color-mix(in oklch, var(--scene-shadow) 28%, transparent));
   transition: filter 480ms ease;
 }
 
 .mongiSvgSnow {
-  width: clamp(200px, 55vw, 280px);
+  width: clamp(220px, 55vw, 300px);
   height: auto;
   overflow: visible;
-  filter: drop-shadow(0 16px 28px color-mix(in oklch, var(--scene-shadow) 20%, transparent));
+  filter: drop-shadow(0 20px 36px color-mix(in oklch, var(--scene-shadow) 28%, transparent));
   transition: filter 480ms ease;
 }
 
 .mongiWrapBig .mongiSvgCat {
-  width: clamp(180px, 50vw, 240px);
+  width: clamp(200px, 52vw, 260px);
 }
 
 .mongiFloat {
@@ -64,7 +121,74 @@
   animation: mongiBounce 500ms ease both;
 }
 
-/* ── 신규: 감정 구름 ── */
+/* ── 탭 힌트 ── */
+.tapHint {
+  font-size: 0.875rem;
+  font-weight: 650;
+  color: var(--scene-accent);
+  letter-spacing: 0.01em;
+  animation: hintFadeIn 500ms ease 1800ms both, hintPulse 2s ease-in-out 2400ms infinite;
+}
+
+/* ── 말풍선 ── */
+.speechBubble {
+  position: absolute;
+  top: -56px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 60%, transparent);
+  border-radius: 20px;
+  padding: 10px 18px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--mongree-text);
+  box-shadow: 0 6px 24px color-mix(in oklch, var(--scene-shadow) 14%, transparent);
+  white-space: nowrap;
+  animation: phraseReveal 300ms ease both;
+  z-index: 10;
+}
+
+.speechBubble::after {
+  content: "";
+  position: absolute;
+  bottom: -9px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 9px solid color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent);
+}
+
+/* ── 씬 점 네비게이터 ── */
+.dots {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  animation: fadeUp 600ms ease 400ms both;
+}
+
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: color-mix(in oklch, var(--scene-accent) 30%, var(--mongree-line));
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  transition: background 200ms ease, transform 200ms ease, width 200ms ease;
+}
+
+.dotActive {
+  width: 20px;
+  border-radius: 3px;
+  background: var(--scene-accent);
+  transform: none;
+}
+
+/* ── 감정 구름 ── */
 .emotionCloudWrap {
   position: relative;
   display: flex;
@@ -76,33 +200,36 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.9);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
   margin-bottom: 4px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 8px color-mix(in oklch, var(--scene-shadow) 12%, transparent);
 }
 
 .thoughtDot2 {
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.85);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
   margin-bottom: 4px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  box-shadow: 0 2px 6px color-mix(in oklch, var(--scene-shadow) 8%, transparent);
 }
 
 .emotionCloud {
-  background: rgba(255, 255, 255, 0.96);
+  background: color-mix(in oklch, var(--mongree-surface-raised) 96%, transparent);
+  border: 1px solid color-mix(in oklch, var(--mongree-line) 56%, transparent);
   border-radius: 24px;
   padding: 16px 18px 18px;
-  box-shadow: 0 6px 28px rgba(0,0,0,0.13);
+  box-shadow: 0 8px 32px color-mix(in oklch, var(--scene-shadow) 18%, transparent);
   animation: cloudAppear 350ms ease both;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 
 .emotionCloudLabel {
   text-align: center;
   font-size: 0.75rem;
   font-weight: 700;
-  color: #9a7a5a;
+  color: var(--mongree-text-muted);
   margin: 0 0 12px;
 }
 
@@ -139,11 +266,11 @@
 .emotionBtnLabel {
   font-size: 0.6rem;
   font-weight: 600;
-  color: #9a7a5a;
+  color: var(--mongree-text-muted);
   white-space: nowrap;
 }
 
-/* ── 신규: 다이어리 ── */
+/* ── 일기 float ── */
 .diaryFloatOuter {
   position: relative;
   display: flex;
@@ -198,21 +325,21 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #fbbf24;
+  background: var(--scene-accent);
   pointer-events: none;
   animation: sparkFloat 3s ease-in-out infinite;
 }
 
-.diarySparkle[data-i="0"] { top: -20px; left: 10px;   animation-delay: 0s;   }
-.diarySparkle[data-i="1"] { top: -10px; right: 8px;   animation-delay: 0.5s; }
-.diarySparkle[data-i="2"] { top: 20px;  left: -14px;  animation-delay: 1s;   }
-.diarySparkle[data-i="3"] { top: 10px;  right: -12px; animation-delay: 1.5s; }
-.diarySparkle[data-i="4"] { bottom: 10px; left: 14px; animation-delay: 2s;   }
+.diarySparkle[data-i="0"] { top: -20px;   left: 10px;    animation-delay: 0s;   }
+.diarySparkle[data-i="1"] { top: -10px;   right: 8px;    animation-delay: 0.5s; }
+.diarySparkle[data-i="2"] { top: 20px;    left: -14px;   animation-delay: 1s;   }
+.diarySparkle[data-i="3"] { top: 10px;    right: -12px;  animation-delay: 1.5s; }
+.diarySparkle[data-i="4"] { bottom: 10px; left: 14px;    animation-delay: 2s;   }
 
 .diaryBook {
-  width: 68px;
-  height: 88px;
-  border-radius: 12px;
+  width: 72px;
+  height: 92px;
+  border-radius: 14px;
   border: 2.5px solid;
   display: flex;
   flex-direction: column;
@@ -220,12 +347,13 @@
   justify-content: center;
   gap: 6px;
   cursor: pointer;
-  transition: transform 150ms ease;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  transition: transform 150ms ease, box-shadow 150ms ease;
+  box-shadow: 0 8px 28px color-mix(in oklch, var(--scene-shadow) 18%, transparent);
 }
 
 .diaryBook:hover {
-  transform: scale(1.05);
+  transform: scale(1.06);
+  box-shadow: 0 12px 36px color-mix(in oklch, var(--scene-shadow) 24%, transparent);
 }
 
 .diaryBook:active {
@@ -250,160 +378,20 @@
   animation: hintPulse 1.5s ease-in-out infinite;
 }
 
-/* ── 신규: 바텀 시트 ── */
-.sheetDim {
-  position: fixed;
-  inset: 0;
-  background: rgba(20, 14, 6, 0.38);
-  backdrop-filter: blur(4px);
-  -webkit-backdrop-filter: blur(4px);
-  z-index: 100;
-  animation: dimIn 300ms ease both;
+/* ── 키프레임 ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 
-.sheetPanel {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: #fff8f0;
-  border-radius: 28px 28px 0 0;
-  padding: 16px 24px 40px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  z-index: 101;
-  animation: sheetSlideUp 400ms cubic-bezier(0.22, 0.8, 0.4, 1) both;
-  box-shadow: 0 -8px 40px rgba(0,0,0,0.12);
-  max-width: 480px;
-  margin: 0 auto;
-  outline: none;
+@keyframes mongiFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
 }
 
-.sheetHandle {
-  width: 40px;
-  height: 4px;
-  border-radius: 2px;
-  background: #e8c89a;
-  margin-bottom: 4px;
-}
-
-.sheetMongi {
-  margin-top: 4px;
-}
-
-.sheetLogo {
-  font-size: 1.1rem;
-  font-weight: 800;
-  color: #c67c2a;
-  letter-spacing: -0.03em;
-  margin: 0;
-}
-
-.sheetSub {
-  font-size: 0.8rem;
-  color: #9a7a5a;
-  text-align: center;
-  line-height: 1.6;
-  margin: 0;
-}
-
-.sheetBtnPrimary {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: var(--mongree-primary);
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 700;
-  border-radius: 14px;
-  text-align: center;
-  text-decoration: none;
-  transition: background 200ms ease, transform 150ms ease;
-}
-
-.sheetBtnPrimary:hover {
-  background: var(--mongree-primary-strong);
-  transform: translateY(-1px);
-}
-
-.sheetBtnSecondary {
-  display: block;
-  width: 100%;
-  padding: 13px;
-  background: #f5e8d8;
-  color: #9a7a5a;
-  font-size: 0.95rem;
-  font-weight: 600;
-  border-radius: 14px;
-  text-align: center;
-  text-decoration: none;
-  transition: background 200ms ease;
-}
-
-.sheetBtnSecondary:hover {
-  background: #edd8c0;
-}
-
-.sheetSkip {
-  font-size: 0.75rem;
-  color: #b8a090;
-  text-decoration: underline;
-  padding: 4px 0;
-}
-
-/* ── 신규: 힌트 텍스트 ── */
-.tapHint {
-  font-size: 0.8rem;
-  font-weight: 600;
-  color: var(--scene-accent);
-  margin-top: 8px;
-  animation: hintFadeIn 500ms ease 2000ms both, hintPulse 2s ease-in-out 2500ms infinite;
-}
-
-/* ── 말풍선 (step 2) ── */
-.speechBubble {
-  position: absolute;
-  top: -52px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #fff;
-  border-radius: 18px;
-  padding: 9px 16px;
-  font-size: 0.85rem;
-  font-weight: 700;
-  color: #3d3340;
-  box-shadow: 0 3px 16px rgba(0,0,0,0.12);
-  white-space: nowrap;
-  animation: phraseReveal 300ms ease both;
-  z-index: 10;
-}
-
-.speechBubble::after {
-  content: '';
-  position: absolute;
-  bottom: -9px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 0; height: 0;
-  border-left: 8px solid transparent;
-  border-right: 8px solid transparent;
-  border-top: 9px solid #fff;
-}
-
-/* ── characterWrap ── */
-.characterWrap {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* ── 신규 키프레임 ── */
 @keyframes mongiBounce {
   0%   { transform: translateY(0) scale(1); }
-  30%  { transform: translateY(-22px) scale(1.08); }
+  30%  { transform: translateY(-24px) scale(1.09); }
   55%  { transform: translateY(-12px) scale(1.04) rotate(-2deg); }
   75%  { transform: translateY(-4px) scale(1.01) rotate(1deg); }
   100% { transform: translateY(0) scale(1); }
@@ -434,16 +422,6 @@
   50%       { transform: translateY(-12px) scale(1.2); opacity: 0.3; }
 }
 
-@keyframes sheetSlideUp {
-  from { transform: translateY(100%); }
-  to   { transform: translateY(0); }
-}
-
-@keyframes dimIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
 @keyframes hintFadeIn {
   from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
@@ -454,7 +432,6 @@
   50%       { opacity: 0.45; }
 }
 
-/* ── 움직임 감소: 신규 애니메이션도 비활성화 ── */
 @media (prefers-reduced-motion: reduce) {
   .mongiFloat,
   .mongiBounce,
@@ -465,8 +442,9 @@
   .diaryRing2,
   .diarySparkle,
   .tapHint,
-  .sheetPanel,
-  .sheetDim {
+  .mounted {
     animation: none;
+    opacity: 1;
+    transform: none;
   }
 }

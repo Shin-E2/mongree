@@ -1,8 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Share2 } from "lucide-react";
+import { NotebookPen, Share2 } from "lucide-react";
 import { MongiStage } from "@/components/mongi/mongi-stage";
 import type { MongiState } from "@/components/mongi/mongi-stage";
 import MongiInventoryClient from "../profile/mongi-inventory-client";
@@ -16,16 +16,39 @@ interface MongiProfile {
   nickname: string | null;
 }
 
+function xpForNextLevel(level: number) {
+  return level * 100;
+}
+
+function greetingByStreak(streak: number, nickname: string | null): string {
+  const name = nickname ?? "주인님";
+  if (streak === 0) return `${name}, 오늘 첫 일기를 써볼까요?`;
+  if (streak === 1) return "어제도 왔군요. 오늘도 이야기해줘요.";
+  if (streak < 7) return `${streak}일째 함께하고 있어요.`;
+  if (streak < 30) return `${streak}일 연속! 정말 대단해요.`;
+  return `${streak}일째 함께해줘서 고마워요.`;
+}
+
 export default function MongiPage() {
   const [mongiState, setMongiState] = useState<MongiState>("idle");
   const [profile, setProfile] = useState<MongiProfile | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+  const tapCooldown = useRef(false);
 
   useEffect(() => {
     fetch("/api/mongi/profile")
       .then((r) => r.json())
       .then((data: MongiProfile) => setProfile(data))
       .catch(() => {});
+  }, []);
+
+  const handleTap = useCallback(() => {
+    if (tapCooldown.current) return;
+    tapCooldown.current = true;
+    setMongiState("greeting");
+    setTimeout(() => {
+      tapCooldown.current = false;
+    }, 600);
   }, []);
 
   const handleEquipped = useCallback(() => {
@@ -55,54 +78,72 @@ export default function MongiPage() {
     }
   };
 
+  const xpMax = xpForNextLevel(profile?.level ?? 1);
+  const xpCurrent = profile?.experience ?? 0;
+  const xpPercent = Math.min(100, Math.round((xpCurrent / xpMax) * 100));
+  const greeting = greetingByStreak(profile?.streakDays ?? 0, profile?.nickname ?? null);
+
   return (
     <div className={styles.pageContainer}>
-      <section className={styles.heroSection}>
-        <div className={styles.heroCopy}>
-          <span className={styles.badge}>몽이 꾸미기</span>
-          <h1 className={styles.heroTitle}>오늘의 몽이를 골라주세요</h1>
-          <p className={styles.heroDescription}>
-            일기를 쓰며 모은 아이템으로 몽이의 분위기를 바꿉니다. 아직은 기본
-            아이템부터 시작하고, 이후 보상과 이벤트로 확장합니다.
-          </p>
-
-          {profile && (
-            <div className={styles.statRow}>
-              <span className={styles.statBadge}>Lv.{profile.level}</span>
-              {profile.streakDays >= 1 && (
-                <span className={styles.statBadge}>{profile.streakDays}일 연속</span>
-              )}
-              <span className={styles.statBadge}>☁ {profile.cloudPoints.toLocaleString()}</span>
-            </div>
-          )}
-
-          <div className={styles.actionRow}>
-            <Link href="/home" className={styles.secondaryLink}>
-              홈으로 돌아가기
-            </Link>
-            <button
-              type="button"
-              className={styles.shareButton}
-              onClick={handleShare}
-              disabled={!profile}
-            >
-              <Share2 size={14} aria-hidden="true" />
-              몽이 공유
-            </button>
+      <section className={styles.characterCard}>
+        <div className={styles.levelBar}>
+          <span className={styles.levelLabel}>Lv.{profile?.level ?? 1}</span>
+          <div className={styles.xpTrack} role="progressbar" aria-valuenow={xpPercent} aria-valuemin={0} aria-valuemax={100} aria-label={`경험치 ${xpPercent}%`}>
+            <div className={styles.xpFill} style={{ width: `${xpPercent}%` }} />
           </div>
-          {shareMessage && (
-            <p role="status" className={styles.shareMessage}>{shareMessage}</p>
-          )}
+          <span className={styles.xpText}>{xpCurrent}/{xpMax}</span>
         </div>
-        <div className={styles.figureStage} aria-hidden="true">
+
+        <button
+          type="button"
+          className={styles.characterTap}
+          onClick={handleTap}
+          aria-label="몽이를 눌러보세요"
+        >
           <MongiStage
             state={mongiState}
             onStateEnd={() => setMongiState("idle")}
-            size={200}
+            size={240}
             level={profile?.level}
             streakDays={profile?.streakDays}
           />
+        </button>
+
+        <p className={styles.greeting}>{greeting}</p>
+
+        <div className={styles.statsRow}>
+          {(profile?.streakDays ?? 0) >= 1 && (
+            <span className={styles.statChip}>
+              <span className={styles.statIcon} aria-hidden="true">🔥</span>
+              {profile?.streakDays}일 연속
+            </span>
+          )}
+          <span className={styles.statChip}>
+            <span className={styles.statIcon} aria-hidden="true">☁</span>
+            {(profile?.cloudPoints ?? 0).toLocaleString()} 포인트
+          </span>
         </div>
+
+        <div className={styles.actionsRow}>
+          <Link href="/diary/new" className={styles.primaryAction}>
+            <NotebookPen size={15} aria-hidden="true" />
+            오늘 일기 쓰기
+          </Link>
+          <button
+            type="button"
+            className={styles.shareAction}
+            onClick={handleShare}
+            disabled={!profile}
+            aria-label="몽이 카드 공유"
+          >
+            <Share2 size={14} aria-hidden="true" />
+            공유
+          </button>
+        </div>
+
+        {shareMessage && (
+          <p role="status" className={styles.shareMessage}>{shareMessage}</p>
+        )}
       </section>
 
       <MongiInventoryClient onEquipped={handleEquipped} />

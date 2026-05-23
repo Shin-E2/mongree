@@ -8,6 +8,7 @@ import { FormDiaryNew } from "@/commons/components/form";
 import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SmartModal } from "@/commons/components/modal";
+import { DiaryRewardToast } from "@/components/mongi/diary-reward-toast";
 import styles from "./styles.module.css";
 
 function DiaryNewPage() {
@@ -22,6 +23,8 @@ function DiaryNewPage() {
     DiaryNewStepComponent,
     onSubmit,
     closeModal,
+    rewardToast,
+    handleRewardToastClose,
   } = useDiaryNewPage();
 
   return (
@@ -66,6 +69,14 @@ function DiaryNewPage() {
       </FormDiaryNew>
 
       <SmartModal {...modalState} onClose={closeModal} />
+
+      {rewardToast && (
+        <DiaryRewardToast
+          xpGained={rewardToast.reward?.xpGained}
+          streakDays={rewardToast.reward?.streakDays}
+          onClose={handleRewardToastClose}
+        />
+      )}
     </>
   );
 }

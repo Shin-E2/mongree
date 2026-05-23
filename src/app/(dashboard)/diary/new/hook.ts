@@ -44,9 +44,15 @@ function isCriticalSaveError(message?: string) {
   );
 }
 
+interface RewardInfo {
+  xpGained: number;
+  streakDays: number;
+}
+
 export default function useDiaryNewPage() {
   const [currentStep, setCurrentStep] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rewardToast, setRewardToast] = useState<{ diaryId: string; reward: RewardInfo | null } | null>(null);
   const { modalState, showModal, closeModal } = useSmartModal();
   const router = useRouter();
 
@@ -85,8 +91,7 @@ export default function useDiaryNewPage() {
         const result = await createDiary(await createDiaryFormData(data));
 
         if (result.success && result.diary) {
-          router.push(URL().DIARY_DETAIL(result.diary.id));
-          router.refresh();
+          setRewardToast({ diaryId: result.diary.id, reward: result.reward ?? null });
           return;
         }
 
@@ -121,7 +126,7 @@ export default function useDiaryNewPage() {
         setIsSubmitting(false);
       }
     },
-    [closeModal, isSubmitting, router, showModal]
+    [closeModal, isSubmitting, showModal]
   );
 
   const onSubmit = useCallback(
@@ -130,6 +135,14 @@ export default function useDiaryNewPage() {
     },
     [submitDiary]
   );
+
+  const handleRewardToastClose = useCallback(() => {
+    if (!rewardToast) return;
+    const id = rewardToast.diaryId;
+    setRewardToast(null);
+    router.push(URL().DIARY_DETAIL(id));
+    router.refresh();
+  }, [rewardToast, router]);
 
   return {
     currentStep,
@@ -142,5 +155,7 @@ export default function useDiaryNewPage() {
     DiaryNewStepComponent,
     onSubmit,
     closeModal,
+    rewardToast,
+    handleRewardToastClose,
   };
 }

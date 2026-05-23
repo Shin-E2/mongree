@@ -11,6 +11,8 @@ import {
 } from "@/commons/utils/upload-images";
 import { getSiteUrl } from "@/commons/utils/site-url";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEmail } from "@/lib/email/resend";
+import { welcomeEmailHtml } from "@/lib/email/templates/welcome";
 
 export async function signup(data: SignupFormType) {
   try {
@@ -74,6 +76,14 @@ export async function signup(data: SignupFormType) {
           message: `프로필 이미지 저장 중 오류가 발생했습니다: ${profileUpdateError.message}`,
         };
       }
+    }
+
+    if (authData.user?.email) {
+      sendEmail({
+        to: authData.user.email,
+        subject: "몽리에 오신 것을 환영합니다",
+        html: welcomeEmailHtml(result.data.nickname),
+      }).catch((e) => console.error("[signup] 웰컴 이메일 오류:", e));
     }
 
     return {

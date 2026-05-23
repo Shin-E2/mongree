@@ -1,0 +1,68 @@
+.overlay {
+  position: fixed;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  animation: slideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  background: var(--mongree-surface, oklch(0.985 0.012 86));
+  border-radius: var(--mongree-radius-lg, 24px);
+  box-shadow: 0 8px 32px oklch(0.3 0.05 260 / 0.18), 0 2px 8px oklch(0.3 0.05 260 / 0.1);
+  border: 1px solid oklch(0.92 0.025 86);
+  min-width: 260px;
+  max-width: 340px;
+}
+
+.message {
+  flex: 1;
+  min-width: 0;
+}
+
+.title {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--mongree-text, oklch(0.28 0.03 255));
+  margin: 0 0 0.25rem;
+}
+
+.sub {
+  font-size: 0.8125rem;
+  color: var(--mongree-text-muted, oklch(0.52 0.025 255));
+  margin: 0;
+}
+
+.closeBtn {
+  font-size: 0.75rem;
+  color: var(--mongree-text-muted, oklch(0.52 0.025 255));
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+  white-space: nowrap;
+  transition: background 0.15s;
+}
+
+.closeBtn:hover {
+  background: oklch(0.93 0.02 86);
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateX(-50%) translateY(16px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .overlay {
+    animation: none;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}

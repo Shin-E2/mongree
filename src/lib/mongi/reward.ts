@@ -30,10 +30,16 @@ function isConsecutiveDay(lastDate: string | null, today: string): boolean {
   return diffMs >= 86400000 && diffMs < 172800000;
 }
 
+export interface DiaryRewardResult {
+  xpGained: number;
+  streakDays: number;
+  alreadyRewarded: boolean;
+}
+
 export async function awardMongiDiaryReward(
   supabase: SupabaseClient,
   userId: string
-): Promise<void> {
+): Promise<DiaryRewardResult> {
   const today = getLocalDateKey(new Date());
 
   const { data: existing } = await supabase
@@ -43,7 +49,9 @@ export async function awardMongiDiaryReward(
     .maybeSingle()
     .returns<Pick<MongiProfileRow, "experience" | "level" | "streak_days" | "last_rewarded_diary_date"> | null>();
 
-  if (existing?.last_rewarded_diary_date === today) return;
+  if (existing?.last_rewarded_diary_date === today) {
+    return { xpGained: 0, streakDays: existing.streak_days ?? 1, alreadyRewarded: true };
+  }
 
   const currentXp = existing?.experience ?? 0;
   const currentStreak = existing?.streak_days ?? 0;
@@ -67,4 +75,6 @@ export async function awardMongiDiaryReward(
     },
     { onConflict: "user_id" }
   );
+
+  return { xpGained: XP_PER_DIARY + streakBonus, streakDays: streak, alreadyRewarded: false };
 }

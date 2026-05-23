@@ -218,11 +218,16 @@ export async function createDiary(formData: FormData) {
       isPrivate: validationResult.data.isPrivate,
     });
 
-    awardMongiDiaryReward(supabase, user.id).catch((e) =>
-      console.error("[diary/new] mongi reward 오류:", e)
-    );
+    const reward = await awardMongiDiaryReward(supabase, user.id).catch((e) => {
+      console.error("[diary/new] mongi reward 오류:", e);
+      return null;
+    });
 
-    return { success: true, diary: { id: resolvedDiaryId } };
+    return {
+      success: true,
+      diary: { id: resolvedDiaryId },
+      reward: reward && !reward.alreadyRewarded ? { xpGained: reward.xpGained, streakDays: reward.streakDays } : null,
+    };
   } catch (error) {
     if (uploadedImageUrls.length > 0) {
       await deleteImagesFromS3(uploadedImageUrls);

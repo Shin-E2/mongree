@@ -1,0 +1,198 @@
+.stage {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--mongi-size, 120px);
+  height: var(--mongi-size, 120px);
+  cursor: pointer;
+}
+
+.character {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.2s ease;
+}
+
+.figure {
+  width: 100%;
+  height: auto;
+}
+
+/* idle: 기본 breathing (MongiFigure CSS에서 처리) */
+.state_idle .character {
+  transform: translateY(0);
+}
+
+/* greeting / hover: 살짝 위로 + 스케일 */
+.state_greeting .character {
+  animation: mongiGreet 0.5s ease forwards;
+}
+
+/* listening: 살짝 기울기 */
+.state_listening .character {
+  animation: mongiListen 2.4s ease-in-out infinite;
+}
+
+/* react_happy: 위로 튀기 */
+.state_react_happy .character {
+  animation: mongiBounceHappy 0.6s ease forwards;
+}
+
+/* react_soft: 부드럽게 가라앉음 */
+.state_react_soft .character {
+  animation: mongiSoftComfort 0.8s ease forwards;
+}
+
+/* reward: 점프 + 스파클 */
+.state_reward .character {
+  animation: mongiReward 0.7s ease forwards;
+}
+
+/* celebrate: 3회 점프 */
+.state_celebrate .character {
+  animation: mongiCelebrate 1.2s ease forwards;
+}
+
+/* sleepy: 느리게 내려앉음 */
+.state_sleepy .character {
+  animation: mongiSleep 3s ease-in-out infinite;
+}
+
+/* equip: 빠른 스핀 */
+.state_equip .character {
+  animation: mongiEquip 0.5s ease forwards;
+}
+
+/* XP burst */
+.xpBurst {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: xpRise 1.8s ease forwards;
+  pointer-events: none;
+}
+
+.xpLabel {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--mongree-primary, oklch(0.74 0.14 72));
+  white-space: nowrap;
+}
+
+.streakLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: oklch(0.68 0.12 50);
+  background: oklch(0.97 0.05 86);
+  padding: 2px 8px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+/* confetti */
+.confetti {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.confettiPiece {
+  position: absolute;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--mongree-primary, oklch(0.74 0.14 72));
+  animation: confettiFall 1.2s ease forwards;
+}
+
+.confettiPiece:nth-child(1) { left: 20%; top: 10%; background: oklch(0.78 0.16 70); animation-delay: 0s; }
+.confettiPiece:nth-child(2) { left: 50%; top: 5%; background: oklch(0.72 0.12 220); animation-delay: 0.1s; }
+.confettiPiece:nth-child(3) { left: 80%; top: 10%; background: oklch(0.80 0.14 140); animation-delay: 0.05s; }
+.confettiPiece:nth-child(4) { left: 30%; top: 15%; background: oklch(0.75 0.18 30); animation-delay: 0.15s; }
+.confettiPiece:nth-child(5) { left: 60%; top: 8%; background: oklch(0.77 0.12 280); animation-delay: 0.08s; }
+.confettiPiece:nth-child(6) { left: 70%; top: 20%; background: oklch(0.82 0.10 100); animation-delay: 0.2s; }
+
+@keyframes mongiGreet {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(-10px) scale(1.08); }
+  70% { transform: translateY(-6px) scale(1.05); }
+  100% { transform: translateY(-4px) scale(1.04); }
+}
+
+@keyframes mongiListen {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  30% { transform: translateY(-2px) rotate(-2deg); }
+  60% { transform: translateY(-2px) rotate(2deg); }
+}
+
+@keyframes mongiBounceHappy {
+  0% { transform: translateY(0) scale(1); }
+  25% { transform: translateY(-14px) scale(1.1); }
+  50% { transform: translateY(-6px) scale(1.05); }
+  75% { transform: translateY(-10px) scale(1.08); }
+  100% { transform: translateY(-4px) scale(1.04); }
+}
+
+@keyframes mongiSoftComfort {
+  0% { transform: translateY(0) scale(1); }
+  40% { transform: translateY(4px) scale(0.97); }
+  100% { transform: translateY(2px) scale(0.98); }
+}
+
+@keyframes mongiReward {
+  0% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-16px) scale(1.12); }
+  55% { transform: translateY(-8px) scale(1.06); }
+  75% { transform: translateY(-12px) scale(1.10); }
+  100% { transform: translateY(-6px) scale(1.05); }
+}
+
+@keyframes mongiCelebrate {
+  0% { transform: translateY(0) scale(1); }
+  20% { transform: translateY(-18px) scale(1.12); }
+  35% { transform: translateY(0) scale(0.96); }
+  55% { transform: translateY(-14px) scale(1.10); }
+  70% { transform: translateY(0) scale(0.97); }
+  85% { transform: translateY(-10px) scale(1.08); }
+  100% { transform: translateY(-4px) scale(1.04); }
+}
+
+@keyframes mongiSleep {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(3px) scale(0.98); }
+}
+
+@keyframes mongiEquip {
+  0% { transform: scale(1) rotate(0deg); }
+  40% { transform: scale(1.15) rotate(8deg); }
+  70% { transform: scale(1.1) rotate(-4deg); }
+  100% { transform: scale(1.05) rotate(0deg); }
+}
+
+@keyframes xpRise {
+  0% { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  20% { opacity: 1; transform: translateX(-50%) translateY(0); }
+  70% { opacity: 1; transform: translateX(-50%) translateY(-8px); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-20px); }
+}
+
+@keyframes confettiFall {
+  0% { opacity: 1; transform: translateY(0) scale(1); }
+  100% { opacity: 0; transform: translateY(50px) scale(0.5) rotate(180deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .character,
+  .xpBurst,
+  .confettiPiece {
+    animation: none !important;
+    transition: none !important;
+  }
+}

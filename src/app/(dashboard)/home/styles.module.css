@@ -85,6 +85,10 @@
     inset 0 1px 0 color-mix(in oklch, var(--scene-object) 20%, transparent);
 }
 
+.mongiOrb {
+  @apply mx-auto flex items-center justify-center;
+}
+
 .skyOrb {
   @apply mx-auto flex items-center justify-center;
   width: min(12rem, 52vw);

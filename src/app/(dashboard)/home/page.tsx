@@ -3,9 +3,9 @@ import HomeEmotionStats from "@/components/home/(sidebar)/emotion-stats";
 import HomeEmotionalCalendar from "@/components/home/(sidebar)/emotional-calendar";
 import HomePopularDiaryCard from "@/components/home/(sidebar)/popular-diary-card";
 import HomeRecentDiary from "@/components/home/(sidebar)/recent-diary";
-import Image from "next/image";
 import Link from "next/link";
 import { getHomeDashboardData } from "./action";
+import { MongiWidget } from "./mongi-widget";
 import styles from "./styles.module.css";
 
 export default async function HomePage() {
@@ -32,34 +32,10 @@ export default async function HomePage() {
             </Link>
           </div>
         </div>
-        <div className={styles.heroWidget}>
-          <div className={styles.skyOrb} aria-hidden="true">
-            {primaryEmotion ? (
-              <Image
-                src={primaryEmotion.image}
-                alt=""
-                width={80}
-                height={80}
-                className={styles.skyOrbImage}
-                priority
-              />
-            ) : (
-              <span className={styles.skyFace}>몽</span>
-            )}
-          </div>
-          <div className={styles.heroMetricRow}>
-            <div>
-              <span className={styles.metricLabel}>이번 달 대표 감정</span>
-              <strong className={styles.metricValue}>
-                {primaryEmotion?.label ?? "아직 없어요"}
-              </strong>
-            </div>
-            <div>
-              <span className={styles.metricLabel}>최근 기록</span>
-              <strong className={styles.metricValue}>{diaryCount}개</strong>
-            </div>
-          </div>
-        </div>
+        <MongiWidget
+          primaryEmotionLabel={primaryEmotion?.label}
+          diaryCount={diaryCount}
+        />
       </section>
 
       <div className={styles.gridContainer}>

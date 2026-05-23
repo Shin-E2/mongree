@@ -19,6 +19,11 @@
   height: auto;
 }
 
+/* Rive canvas */
+.riveCanvas {
+  display: block;
+}
+
 /* idle: 기본 breathing (MongiFigure CSS에서 처리) */
 .state_idle .character {
   transform: translateY(0);

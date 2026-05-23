@@ -1,64 +1,50 @@
 .figure {
-  width: min(132px, 100%);
+  width: min(140px, 100%);
   height: auto;
-  filter: drop-shadow(0 18px 28px rgba(148, 120, 92, 0.2));
-  --mongi-eye: #4b5563;
-  --mongi-mouth: #6b7280;
-  --mongi-cheek: #f0a5a5;
-  --mongi-spark-warm: #f6c76f;
-  --mongi-spark-cool: #9cc5ff;
+  filter: drop-shadow(0 16px 28px rgba(140, 100, 70, 0.18));
 }
 
-.body {
-  transform-origin: 94px 84px;
+.head {
+  transform-origin: 90px 88px;
   animation: mongiBreath 3.8s ease-in-out infinite;
 }
 
-.cheek {
-  animation: mongiCalm 4.8s ease-in-out infinite;
+.body {
+  transform-origin: 90px 162px;
+  animation: mongiBreath 3.8s ease-in-out infinite;
+  animation-delay: 0.1s;
 }
 
-.spark {
-  transform-origin: center;
-  animation: mongiSpark 3.2s ease-in-out infinite;
+.tail {
+  transform-origin: 120px 160px;
+  animation: mongiTailSwing 4.2s ease-in-out infinite;
+}
+
+.blush {
+  animation: mongiBlushPulse 4s ease-in-out infinite;
 }
 
 @keyframes mongiBreath {
-  0%,
-  100% {
-    transform: translateY(0) scale(1);
-  }
-  50% {
-    transform: translateY(-2px) scale(1.015);
-  }
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-3px) scale(1.012); }
 }
 
-@keyframes mongiCalm {
-  0%,
-  100% {
-    opacity: 0.42;
-  }
-  50% {
-    opacity: 0.7;
-  }
+@keyframes mongiTailSwing {
+  0%, 100% { transform: rotate(0deg); }
+  35% { transform: rotate(4deg); }
+  65% { transform: rotate(-3deg); }
 }
 
-@keyframes mongiSpark {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.18);
-  }
+@keyframes mongiBlushPulse {
+  0%, 100% { opacity: 0.38; }
+  50% { opacity: 0.55; }
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .head,
   .body,
-  .cheek,
-  .spark {
+  .tail,
+  .blush {
     animation: none;
   }
 }

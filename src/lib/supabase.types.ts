@@ -415,6 +415,8 @@ export type Database = {
           id: string
           is_default: boolean
           name: string
+          price_points: number
+          requires_pro: boolean
           slot: string
           sort_order: number
         }
@@ -425,6 +427,8 @@ export type Database = {
           id: string
           is_default?: boolean
           name: string
+          price_points?: number
+          requires_pro?: boolean
           slot: string
           sort_order?: number
         }
@@ -435,6 +439,8 @@ export type Database = {
           id?: string
           is_default?: boolean
           name?: string
+          price_points?: number
+          requires_pro?: boolean
           slot?: string
           sort_order?: number
         }
@@ -442,6 +448,7 @@ export type Database = {
       }
       mongi_profiles: {
         Row: {
+          cloud_points: number
           created_at: string
           equipped_item_id: string | null
           experience: number
@@ -452,6 +459,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          cloud_points?: number
           created_at?: string
           equipped_item_id?: string | null
           experience?: number
@@ -462,6 +470,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          cloud_points?: number
           created_at?: string
           equipped_item_id?: string | null
           experience?: number
@@ -780,6 +789,10 @@ export type Database = {
           removed_image_urls: string[]
           was_private: boolean
         }[]
+      }
+      purchase_mongi_item: {
+        Args: { p_user_id: string; p_item_id: string }
+        Returns: Json
       }
     }
     Enums: {

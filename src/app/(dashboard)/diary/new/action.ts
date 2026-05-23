@@ -245,7 +245,7 @@ export async function createDiary(formData: FormData) {
     return {
       success: true,
       diary: { id: resolvedDiaryId },
-      reward: reward && !reward.alreadyRewarded ? { xpGained: reward.xpGained, streakDays: reward.streakDays } : null,
+      reward: reward && !reward.alreadyRewarded ? { xpGained: reward.xpGained, streakDays: reward.streakDays, cloudPointsGained: reward.cloudPointsGained } : null,
     };
   } catch (error) {
     if (uploadedImageUrls.length > 0) {

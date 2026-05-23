@@ -33,6 +33,7 @@ function isConsecutiveDay(lastDate: string | null, today: string): boolean {
 export interface DiaryRewardResult {
   xpGained: number;
   streakDays: number;
+  cloudPointsGained: number;
   alreadyRewarded: boolean;
 }
 
@@ -44,37 +45,47 @@ export async function awardMongiDiaryReward(
 
   const { data: existing } = await supabase
     .from("mongi_profiles")
-    .select("experience, level, streak_days, last_rewarded_diary_date")
+    .select("experience, level, streak_days, last_rewarded_diary_date, cloud_points")
     .eq("user_id", userId)
     .maybeSingle()
-    .returns<Pick<MongiProfileRow, "experience" | "level" | "streak_days" | "last_rewarded_diary_date"> | null>();
+    .returns<Pick<MongiProfileRow, "experience" | "level" | "streak_days" | "last_rewarded_diary_date" | "cloud_points"> | null>();
 
   if (existing?.last_rewarded_diary_date === today) {
-    return { xpGained: 0, streakDays: existing.streak_days ?? 1, alreadyRewarded: true };
+    return { xpGained: 0, streakDays: existing.streak_days ?? 1, cloudPointsGained: 0, alreadyRewarded: true };
   }
 
   const currentXp = existing?.experience ?? 0;
   const currentStreak = existing?.streak_days ?? 0;
+  const currentPoints = existing?.cloud_points ?? 0;
 
   const streak = isConsecutiveDay(existing?.last_rewarded_diary_date ?? null, today)
     ? currentStreak + 1
     : 1;
 
   const streakBonus = streak >= 3 ? XP_STREAK_BONUS : 0;
-  const newXp = currentXp + XP_PER_DIARY + streakBonus;
+  const xpGained = XP_PER_DIARY + streakBonus;
+  const newXp = currentXp + xpGained;
   const newLevel = xpToLevel(newXp);
 
-  await supabase.from("mongi_profiles").upsert(
-    {
+  if (existing) {
+    await supabase.from("mongi_profiles").update({
+      experience: newXp,
+      level: newLevel,
+      streak_days: streak,
+      last_rewarded_diary_date: today,
+      cloud_points: currentPoints + xpGained,
+      updated_at: new Date().toISOString(),
+    }).eq("user_id", userId);
+  } else {
+    await supabase.from("mongi_profiles").insert({
       user_id: userId,
       experience: newXp,
       level: newLevel,
       streak_days: streak,
       last_rewarded_diary_date: today,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "user_id" }
-  );
+      cloud_points: xpGained,
+    });
+  }
 
-  return { xpGained: XP_PER_DIARY + streakBonus, streakDays: streak, alreadyRewarded: false };
+  return { xpGained, streakDays: streak, cloudPointsGained: xpGained, alreadyRewarded: false };
 }

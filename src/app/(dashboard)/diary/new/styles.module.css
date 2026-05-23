@@ -39,6 +39,10 @@
     4.2rem 0.1rem 0 -0.7rem color-mix(in oklch, var(--scene-cloud) 86%, transparent);
 }
 
+.mongiCompact {
+  @apply relative z-10 mb-3;
+}
+
 .eyebrow {
   @apply relative z-10 text-sm font-semibold;
   color: var(--mongree-primary-strong);

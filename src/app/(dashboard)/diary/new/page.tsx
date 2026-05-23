@@ -9,6 +9,7 @@ import { DiaryNewFormSchema } from "@/components/home/(dashboard)/diary/new/form
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SmartModal } from "@/commons/components/modal";
 import { DiaryRewardToast } from "@/components/mongi/diary-reward-toast";
+import { MongiStage } from "@/components/mongi/mongi-stage";
 import styles from "./styles.module.css";
 
 function DiaryNewPage() {
@@ -39,6 +40,11 @@ function DiaryNewPage() {
 
           <main className={styles.container}>
             <section className={styles.introPanel}>
+              <MongiStage
+                state={currentStep === 1 ? "listening" : "idle"}
+                size={72}
+                className={styles.mongiCompact}
+              />
               <span className={styles.eyebrow}>오늘의 기록</span>
               <h1 className={styles.title}>
                 지금 마음에 가까운 감정을 골라주세요

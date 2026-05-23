@@ -108,6 +108,11 @@ export function MongiStage({
 
   useEffect(() => {
     if (!riveAvailable) return;
+    setInput({ type: "bool", name: "isWriting", value: state === "listening" });
+  }, [state, riveAvailable, setInput]);
+
+  useEffect(() => {
+    if (!riveAvailable) return;
     const hour = new Date().getHours();
     setInput({ type: "bool", name: "isNight", value: hour >= 21 || hour < 6 });
   }, [riveAvailable, setInput]);

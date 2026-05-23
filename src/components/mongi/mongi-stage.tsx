@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import MongiFigure, { type MongiExpression, type MongiEquippedSlots } from "@/components/theme/mongi-figure";
-import { useMongiRive, type MongiTriggerName } from "./use-mongi-rive";
 import { useMongiLottie } from "./use-mongi-lottie";
 import styles from "./mongi-stage.module.css";
 
@@ -48,15 +47,6 @@ const STATE_DURATION: Partial<Record<MongiState, number>> = {
   equip: 1600,
 };
 
-const STATE_TO_RIVE_TRIGGER: Partial<Record<MongiState, MongiTriggerName>> = {
-  greeting: "greet",
-  react_happy: "reactHappy",
-  react_soft: "reactSoft",
-  reward: "reward",
-  celebrate: "celebrate",
-  equip: "equipItem",
-};
-
 function stateToExpression(state: MongiState, hovered: boolean): MongiExpression {
   const s = hovered && state === "idle" ? "greeting" : state;
   if (s === "sleepy") return "sleepy";
@@ -73,25 +63,19 @@ export function MongiStage({
   showXpBurst = false,
   xpGained,
   streakDays,
-  level,
-  emotionTone,
   equippedSlots,
 }: MongiStageProps) {
   const [currentState, setCurrentState] = useState<MongiState>(state);
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { riveAvailable, canvasRef, fireTrigger, setInput } = useMongiRive();
-  const { lottieAvailable, containerRef: lottieContainerRef, playState: lottiePlay } = useMongiLottie();
+  const { lottieAvailable, containerRef, playState } = useMongiLottie();
 
   useEffect(() => {
     setCurrentState(state);
 
-    if (riveAvailable) {
-      const trigger = STATE_TO_RIVE_TRIGGER[state];
-      if (trigger) fireTrigger(trigger);
-    } else if (lottieAvailable) {
-      lottiePlay(state);
+    if (lottieAvailable) {
+      playState(state);
     }
 
     if (TRANSIENT_STATES.includes(state)) {
@@ -105,61 +89,22 @@ export function MongiStage({
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [state, onStateEnd, riveAvailable, fireTrigger, lottieAvailable, lottiePlay]);
-
-  useEffect(() => {
-    if (!riveAvailable) return;
-    setInput({ type: "bool", name: "isHovered", value: isHovered });
-  }, [isHovered, riveAvailable, setInput]);
-
-  useEffect(() => {
-    if (!riveAvailable) return;
-    setInput({ type: "bool", name: "isWriting", value: state === "listening" });
-  }, [state, riveAvailable, setInput]);
-
-  useEffect(() => {
-    if (!riveAvailable) return;
-    const hour = new Date().getHours();
-    setInput({ type: "bool", name: "isNight", value: hour >= 21 || hour < 6 });
-  }, [riveAvailable, setInput]);
-
-  useEffect(() => {
-    if (!riveAvailable || level == null) return;
-    setInput({ type: "number", name: "level", value: level });
-  }, [level, riveAvailable, setInput]);
-
-  useEffect(() => {
-    if (!riveAvailable || emotionTone == null) return;
-    setInput({ type: "number", name: "emotionTone", value: emotionTone });
-  }, [emotionTone, riveAvailable, setInput]);
-
-  useEffect(() => {
-    if (!riveAvailable || streakDays == null) return;
-    setInput({ type: "number", name: "streakDays", value: streakDays });
-  }, [streakDays, riveAvailable, setInput]);
+  }, [state, onStateEnd, lottieAvailable, playState]);
 
   const effectiveState = isHovered && currentState === "idle" ? "greeting" : currentState;
   const expression = stateToExpression(currentState, isHovered);
 
-  const useNativeFallback = !riveAvailable && !lottieAvailable;
-
   return (
     <div
-      className={`${styles.stage} ${useNativeFallback ? styles[`state_${effectiveState}`] : ""} ${className ?? ""}`}
+      className={`${styles.stage} ${!lottieAvailable ? styles[`state_${effectiveState}`] : ""} ${className ?? ""}`}
       style={{ "--mongi-size": `${size}px` } as React.CSSProperties}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-hidden="true"
     >
-      {riveAvailable ? (
-        <canvas
-          ref={canvasRef}
-          className={styles.riveCanvas}
-          style={{ width: size, height: size }}
-        />
-      ) : lottieAvailable ? (
+      {lottieAvailable ? (
         <div
-          ref={lottieContainerRef}
+          ref={containerRef}
           className={styles.lottieContainer}
           style={{ width: size, height: size }}
         />

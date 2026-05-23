@@ -11,6 +11,25 @@
   transition: background 480ms ease, border-color 480ms ease;
 }
 
+.legalLinks {
+  @apply mt-auto flex flex-col items-center gap-1 pb-3;
+}
+
+.legalLink {
+  @apply w-full text-center;
+  font-size: 0.58rem;
+  line-height: 1.6;
+  color: var(--mongree-text-muted);
+  opacity: 0.55;
+  writing-mode: horizontal-tb;
+  transition: opacity 120ms ease-out;
+}
+
+.legalLink:hover {
+  opacity: 1;
+  color: var(--mongree-primary-strong);
+}
+
 .mobile_nav {
   @apply fixed left-0 right-0 z-50 block px-3 pb-3 pt-10 md:hidden;
   --mobile-nav-reserved-height: calc(7rem + env(safe-area-inset-bottom));

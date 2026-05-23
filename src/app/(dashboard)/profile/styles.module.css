@@ -97,6 +97,12 @@
   overflow: hidden;
 }
 
+.mongiPreview {
+  display: flex;
+  justify-content: center;
+  padding: 0.75rem 0;
+}
+
 .inventoryIcon {
   width: 1.35rem;
   height: 1.35rem;

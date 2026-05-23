@@ -31,7 +31,7 @@ export interface StoredAiReportRow {
 }
 
 export const AI_FREE_MONTHLY_LIMIT = 1;
-export const AI_PAID_MONTHLY_LIMIT = 20;
+export const AI_PAID_MONTHLY_LIMIT = 5;
 export const monthPattern = /^\d{4}-\d{2}$/;
 
 export const reportSchema = {

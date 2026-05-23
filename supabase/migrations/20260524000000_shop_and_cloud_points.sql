@@ -13,7 +13,10 @@ values
   ('mongi_bow_tie', '나비 넥타이', '작고 귀여운 나비 넥타이예요.', 'neck', '/items/mongi/bow-tie.svg', false, 70, 80, false),
   ('mongi_bell_collar', '방울 목걸이', '흔들리면 작은 소리가 나는 방울 목걸이예요.', 'neck', '/items/mongi/bell-collar.svg', false, 80, 100, false),
   ('mongi_heart_badge', '하트 배지', '몽이의 감정을 표현하는 하트 배지예요.', 'body', '/items/mongi/heart-badge.svg', false, 90, 60, false),
-  ('mongi_rainbow_cape', '무지개 망토', '색색의 무지개 망토예요. Pro 전용.', 'body', '/items/mongi/rainbow-cape.svg', false, 100, 120, true)
+  ('mongi_rainbow_cape', '무지개 망토', '색색의 무지개 망토예요. Pro 전용.', 'body', '/items/mongi/rainbow-cape.svg', false, 100, 120, true),
+  ('mongi_glasses', '동그란 안경', '작고 동그란 안경이에요.', 'face', '/items/mongi/glasses.svg', false, 110, 70, false),
+  ('mongi_scarf', '줄무늬 목도리', '따뜻한 줄무늬 목도리예요.', 'neck', '/items/mongi/scarf.svg', false, 120, 90, false),
+  ('mongi_star_clip', '별 머리핀', '반짝이는 별 모양 머리핀이에요.', 'head', '/items/mongi/star-clip.svg', false, 130, 60, false)
 on conflict (id) do update
 set
   name = excluded.name,

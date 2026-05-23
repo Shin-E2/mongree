@@ -2,6 +2,7 @@
 
 import { Cloud, Lock, Sparkles } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
+import { MongiStage, type MongiState } from "@/components/mongi/mongi-stage";
 import styles from "./styles.module.css";
 
 interface ShopItem {
@@ -32,6 +33,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
   const [cloudPoints, setCloudPoints] = useState(0);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [mongiState, setMongiState] = useState<MongiState>("idle");
 
   const ownedItems = items.filter((item) => item.owned);
   const shopItems = items.filter((item) => !item.owned && item.pricePoints > 0);
@@ -81,6 +83,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
       setItems((current) =>
         current.map((item) => ({ ...item, equipped: item.id === payload.equippedItemId }))
       );
+      setMongiState("equip");
       setMessage("몽이 아이템을 장착했습니다.");
       onEquipped?.();
     });
@@ -131,6 +134,14 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
           <Cloud size={14} aria-hidden="true" />
           <span>{cloudPoints.toLocaleString()}</span>
         </div>
+      </div>
+
+      <div className={styles.mongiPreview}>
+        <MongiStage
+          state={mongiState}
+          onStateEnd={() => setMongiState("idle")}
+          size={96}
+        />
       </div>
 
       {ownedItems.length > 0 && (

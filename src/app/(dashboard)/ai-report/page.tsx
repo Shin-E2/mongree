@@ -143,11 +143,23 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
 
             {reportData.generatedReport.dominantEmotions.length > 0 && (
               <div className={styles.generatedEmotionList}>
-                {reportData.generatedReport.dominantEmotions.map((emotion) => (
-                  <span key={emotion} className={styles.generatedEmotion}>
-                    {emotion}
-                  </span>
-                ))}
+                {reportData.generatedReport.dominantEmotions.map((label) => {
+                  const stat = reportData.emotionStats.find((e) => e.label === label);
+                  return (
+                    <span key={label} className={styles.generatedEmotion}>
+                      {stat?.image && (
+                        <Image
+                          src={stat.image}
+                          alt=""
+                          width={18}
+                          height={18}
+                          aria-hidden="true"
+                        />
+                      )}
+                      {label}
+                    </span>
+                  );
+                })}
               </div>
             )}
 

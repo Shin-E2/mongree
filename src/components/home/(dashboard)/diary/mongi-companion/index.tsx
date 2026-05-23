@@ -1,6 +1,6 @@
 "use client";
 
-import MongiFigure from "@/components/theme/mongi-figure";
+import { MongiStage } from "@/components/mongi/mongi-stage";
 import styles from "./styles.module.css";
 
 interface MongiCompanionProps {
@@ -11,7 +11,7 @@ export default function MongiCompanion({ onStartDiary }: MongiCompanionProps) {
   return (
     <section className={styles.wrapper} aria-labelledby="mongi-title">
       <div className={styles.characterWrap} aria-hidden="true">
-        <MongiFigure className={styles.character} />
+        <MongiStage state="idle" size={120} className={styles.character} />
       </div>
 
       <div className={styles.copy}>

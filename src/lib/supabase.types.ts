@@ -451,6 +451,10 @@ export type Database = {
           cloud_points: number
           created_at: string
           equipped_item_id: string | null
+          equipped_head_id: string | null
+          equipped_neck_id: string | null
+          equipped_body_id: string | null
+          equipped_face_id: string | null
           experience: number
           last_inactivity_email_sent: string | null
           last_rewarded_diary_date: string | null
@@ -463,6 +467,10 @@ export type Database = {
           cloud_points?: number
           created_at?: string
           equipped_item_id?: string | null
+          equipped_head_id?: string | null
+          equipped_neck_id?: string | null
+          equipped_body_id?: string | null
+          equipped_face_id?: string | null
           experience?: number
           last_inactivity_email_sent?: string | null
           last_rewarded_diary_date?: string | null
@@ -475,6 +483,10 @@ export type Database = {
           cloud_points?: number
           created_at?: string
           equipped_item_id?: string | null
+          equipped_head_id?: string | null
+          equipped_neck_id?: string | null
+          equipped_body_id?: string | null
+          equipped_face_id?: string | null
           experience?: number
           last_inactivity_email_sent?: string | null
           last_rewarded_diary_date?: string | null

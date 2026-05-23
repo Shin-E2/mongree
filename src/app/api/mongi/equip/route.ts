@@ -29,5 +29,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: result.error }, { status: 400 });
   }
 
-  return NextResponse.json({ equippedItemId: result.itemId });
+  return NextResponse.json({ equippedItemId: result.itemId, slot: result.slot });
 }

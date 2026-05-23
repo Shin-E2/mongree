@@ -13,6 +13,13 @@ export interface MongiInventoryItem {
   equipped: boolean;
 }
 
+export interface EquippedSlots {
+  head: string | null;
+  neck: string | null;
+  body: string | null;
+  face: string | null;
+}
+
 type MongiItemRow = Tables<"mongi_items">;
 type UserMongiItemRow = Tables<"user_mongi_items">;
 type MongiProfileRow = Tables<"mongi_profiles">;
@@ -58,14 +65,19 @@ export async function getMongiInventory(
         .returns<Pick<UserMongiItemRow, "item_id">[]>(),
       supabase
         .from("mongi_profiles")
-        .select("equipped_item_id")
+        .select("equipped_head_id, equipped_neck_id, equipped_body_id, equipped_face_id")
         .eq("user_id", userId)
         .maybeSingle()
-        .returns<Pick<MongiProfileRow, "equipped_item_id"> | null>(),
+        .returns<Pick<MongiProfileRow, "equipped_head_id" | "equipped_neck_id" | "equipped_body_id" | "equipped_face_id"> | null>(),
     ]);
 
   const ownedItemIds = new Set((ownedRows ?? []).map((row) => row.item_id));
-  const equippedItemId = profile?.equipped_item_id ?? null;
+  const equippedIds = new Set([
+    profile?.equipped_head_id,
+    profile?.equipped_neck_id,
+    profile?.equipped_body_id,
+    profile?.equipped_face_id,
+  ].filter(Boolean) as string[]);
 
   return (items ?? []).map((item): MongiInventoryItem => ({
     id: item.id,
@@ -74,7 +86,7 @@ export async function getMongiInventory(
     slot: item.slot,
     assetUrl: item.asset_url,
     owned: ownedItemIds.has(item.id),
-    equipped: item.id === equippedItemId,
+    equipped: equippedIds.has(item.id),
   }));
 }
 
@@ -102,9 +114,32 @@ export async function equipMongiItem({
     };
   }
 
+  const { data: itemData } = await supabase
+    .from("mongi_items")
+    .select("slot")
+    .eq("id", itemId)
+    .single()
+    .returns<Pick<MongiItemRow, "slot"> | null>();
+
+  if (!itemData) {
+    return { success: false as const, error: "아이템을 찾을 수 없습니다." };
+  }
+
+  const slotColumn = ({
+    head: "equipped_head_id",
+    neck: "equipped_neck_id",
+    body: "equipped_body_id",
+    face: "equipped_face_id",
+  } as Record<string, string>)[itemData.slot];
+
+  if (!slotColumn) {
+    return { success: false as const, error: "알 수 없는 슬롯입니다." };
+  }
+
   const { error } = await supabase.from("mongi_profiles").upsert(
     {
       user_id: userId,
+      [slotColumn]: itemId,
       equipped_item_id: itemId,
       updated_at: new Date().toISOString(),
     },
@@ -121,5 +156,6 @@ export async function equipMongiItem({
   return {
     success: true as const,
     itemId,
+    slot: itemData.slot,
   };
 }

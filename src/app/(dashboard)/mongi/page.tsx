@@ -5,6 +5,7 @@ import Link from "next/link";
 import { NotebookPen, Share2 } from "lucide-react";
 import { MongiStage } from "@/components/mongi/mongi-stage";
 import type { MongiState } from "@/components/mongi/mongi-stage";
+import type { MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import MongiInventoryClient from "../profile/mongi-inventory-client";
 import styles from "./styles.module.css";
 
@@ -14,6 +15,7 @@ interface MongiProfile {
   cloudPoints: number;
   experience: number;
   nickname: string | null;
+  equippedSlots: MongiEquippedSlots;
 }
 
 function xpForNextLevel(level: number) {
@@ -33,6 +35,10 @@ export default function MongiPage() {
   const [mongiState, setMongiState] = useState<MongiState>("idle");
   const [profile, setProfile] = useState<MongiProfile | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
+
+  // 드래그 360도 회전 상태
+  const [rotateY, setRotateY] = useState(0);
+  const dragRef = useRef<{ startX: number; startY: number } | null>(null);
   const tapCooldown = useRef(false);
 
   useEffect(() => {
@@ -42,16 +48,35 @@ export default function MongiPage() {
       .catch(() => {});
   }, []);
 
+  // ── 탭 반응 ──────────────────────────────────
   const handleTap = useCallback(() => {
     if (tapCooldown.current) return;
     tapCooldown.current = true;
     setMongiState("greeting");
     setTimeout(() => {
       tapCooldown.current = false;
-    }, 600);
+    }, 700);
   }, []);
 
-  const handleEquipped = useCallback(() => {
+  // ── 드래그 회전 ──────────────────────────────
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    dragRef.current = { startX: e.clientX, startY: e.clientY };
+    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+  }, []);
+
+  const handlePointerMove = useCallback((e: React.PointerEvent) => {
+    if (!dragRef.current) return;
+    const dx = e.clientX - dragRef.current.startX;
+    dragRef.current.startX = e.clientX;
+    setRotateY((prev) => prev + dx * 0.6);
+  }, []);
+
+  const handlePointerUp = useCallback(() => {
+    dragRef.current = null;
+  }, []);
+
+  const handleEquipped = useCallback((slots: MongiEquippedSlots) => {
+    setProfile((prev) => prev ? { ...prev, equippedSlots: slots } : prev);
     setMongiState("equip");
   }, []);
 
@@ -88,26 +113,46 @@ export default function MongiPage() {
       <section className={styles.characterCard}>
         <div className={styles.levelBar}>
           <span className={styles.levelLabel}>Lv.{profile?.level ?? 1}</span>
-          <div className={styles.xpTrack} role="progressbar" aria-valuenow={xpPercent} aria-valuemin={0} aria-valuemax={100} aria-label={`경험치 ${xpPercent}%`}>
+          <div
+            className={styles.xpTrack}
+            role="progressbar"
+            aria-valuenow={xpPercent}
+            aria-valuemin={0}
+            aria-valuemax={100}
+            aria-label={`경험치 ${xpPercent}%`}
+          >
             <div className={styles.xpFill} style={{ width: `${xpPercent}%` }} />
           </div>
           <span className={styles.xpText}>{xpCurrent}/{xpMax}</span>
         </div>
 
-        <button
-          type="button"
-          className={styles.characterTap}
+        {/* 드래그로 회전 + 탭 */}
+        <div
+          className={styles.characterStage}
+          onPointerDown={handlePointerDown}
+          onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
           onClick={handleTap}
-          aria-label="몽이를 눌러보세요"
+          role="button"
+          tabIndex={0}
+          aria-label="몽이를 드래그하거나 탭해보세요"
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleTap(); }}
         >
-          <MongiStage
-            state={mongiState}
-            onStateEnd={() => setMongiState("idle")}
-            size={240}
-            level={profile?.level}
-            streakDays={profile?.streakDays}
-          />
-        </button>
+          <div
+            className={styles.characterRotate}
+            style={{ transform: `rotateY(${rotateY}deg)` }}
+          >
+            <MongiStage
+              state={mongiState}
+              onStateEnd={() => setMongiState("idle")}
+              size={240}
+              level={profile?.level}
+              streakDays={profile?.streakDays}
+              equippedSlots={profile?.equippedSlots}
+            />
+          </div>
+        </div>
 
         <p className={styles.greeting}>{greeting}</p>
 
@@ -146,7 +191,10 @@ export default function MongiPage() {
         )}
       </section>
 
-      <MongiInventoryClient onEquipped={handleEquipped} />
+      <MongiInventoryClient
+        onEquipped={handleEquipped}
+        currentEquippedSlots={profile?.equippedSlots}
+      />
     </div>
   );
 }

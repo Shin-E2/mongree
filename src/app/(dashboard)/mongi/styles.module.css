@@ -64,22 +64,25 @@
   text-align: right;
 }
 
-/* ── 캐릭터 탭 버튼 ── */
-.characterTap {
+/* ── 캐릭터 스테이지 (드래그 회전 컨테이너) ── */
+.characterStage {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: transform 120ms ease;
+  cursor: grab;
+  touch-action: pan-y;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
+  perspective: 600px;
 }
 
-.characterTap:active {
-  transform: scale(0.96);
+.characterStage:active {
+  cursor: grabbing;
+}
+
+.characterRotate {
+  transition: transform 80ms linear;
+  transform-style: preserve-3d;
 }
 
 /* ── 인사 메시지 ── */

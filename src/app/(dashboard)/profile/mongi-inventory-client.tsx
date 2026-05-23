@@ -4,6 +4,7 @@ import { Cloud, Lock, Sparkles } from "lucide-react";
 import { useEffect, useState, useTransition } from "react";
 import { usePostHog } from "posthog-js/react";
 import { MongiStage, type MongiState } from "@/components/mongi/mongi-stage";
+import type { MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import styles from "./styles.module.css";
 
 interface ShopItem {
@@ -27,16 +28,25 @@ const slotLabels: Record<string, string> = {
 };
 
 interface MongiInventoryClientProps {
-  onEquipped?: () => void;
+  onEquipped?: (slots: MongiEquippedSlots) => void;
+  currentEquippedSlots?: MongiEquippedSlots;
 }
 
-export default function MongiInventoryClient({ onEquipped }: MongiInventoryClientProps = {}) {
+export default function MongiInventoryClient({
+  onEquipped,
+  currentEquippedSlots,
+}: MongiInventoryClientProps = {}) {
   const [items, setItems] = useState<ShopItem[]>([]);
   const [cloudPoints, setCloudPoints] = useState(0);
   const [message, setMessage] = useState("");
   const [isPending, startTransition] = useTransition();
   const [mongiState, setMongiState] = useState<MongiState>("idle");
+  const [localSlots, setLocalSlots] = useState<MongiEquippedSlots>(currentEquippedSlots ?? {});
   const posthog = usePostHog();
+
+  useEffect(() => {
+    if (currentEquippedSlots) setLocalSlots(currentEquippedSlots);
+  }, [currentEquippedSlots]);
 
   const ownedItems = items.filter((item) => item.owned);
   const shopItems = items.filter((item) => !item.owned && item.pricePoints > 0);
@@ -66,15 +76,16 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleEquip = (itemId: string) => {
+  const handleEquip = (item: ShopItem) => {
     startTransition(async () => {
       const response = await fetch("/api/mongi/equip", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ itemId }),
+        body: JSON.stringify({ itemId: item.id }),
       });
       const payload = (await response.json().catch(() => ({}))) as {
         equippedItemId?: string;
+        slot?: string;
         error?: string;
       };
 
@@ -84,12 +95,21 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
       }
 
       setItems((current) =>
-        current.map((item) => ({ ...item, equipped: item.id === payload.equippedItemId }))
+        current.map((i) => ({
+          ...i,
+          equipped: i.slot === item.slot ? i.id === payload.equippedItemId : i.equipped,
+        }))
       );
+
+      const newSlots: MongiEquippedSlots = {
+        ...localSlots,
+        [item.slot]: payload.equippedItemId,
+      };
+      setLocalSlots(newSlots);
       setMongiState("equip");
-      posthog?.capture("mongi_item_equipped", { item_id: payload.equippedItemId });
-      setMessage("몽이 아이템을 장착했습니다.");
-      onEquipped?.();
+      posthog?.capture("mongi_item_equipped", { item_id: payload.equippedItemId, slot: item.slot });
+      setMessage(`${item.name}을(를) 장착했습니다.`);
+      onEquipped?.(newSlots);
     });
   };
 
@@ -145,6 +165,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
           state={mongiState}
           onStateEnd={() => setMongiState("idle")}
           size={96}
+          equippedSlots={localSlots}
         />
       </div>
 
@@ -167,7 +188,7 @@ export default function MongiInventoryClient({ onEquipped }: MongiInventoryClien
                 <button
                   type="button"
                   className={item.equipped ? styles.secondaryButton : styles.primaryButton}
-                  onClick={() => handleEquip(item.id)}
+                  onClick={() => handleEquip(item)}
                   disabled={isPending || item.equipped}
                 >
                   {item.equipped ? "장착됨" : isPending ? "처리 중" : "장착"}

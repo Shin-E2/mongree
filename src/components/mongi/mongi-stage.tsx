@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MongiFigure, { type MongiExpression } from "@/components/theme/mongi-figure";
+import MongiFigure, { type MongiExpression, type MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import { useMongiRive, type MongiTriggerName } from "./use-mongi-rive";
 import styles from "./mongi-stage.module.css";
 
@@ -26,6 +26,7 @@ interface MongiStageProps {
   streakDays?: number;
   level?: number;
   emotionTone?: number;
+  equippedSlots?: MongiEquippedSlots;
 }
 
 const TRANSIENT_STATES: MongiState[] = [
@@ -73,6 +74,7 @@ export function MongiStage({
   streakDays,
   level,
   emotionTone,
+  equippedSlots,
 }: MongiStageProps) {
   const [currentState, setCurrentState] = useState<MongiState>(state);
   const [isHovered, setIsHovered] = useState(false);
@@ -151,7 +153,7 @@ export function MongiStage({
         />
       ) : (
         <div className={styles.character}>
-          <MongiFigure className={styles.figure} expression={expression} />
+          <MongiFigure className={styles.figure} expression={expression} equippedSlots={equippedSlots} />
         </div>
       )}
 

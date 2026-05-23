@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import { MongiCharacterPng } from "./mongi-character-png";
+import { useMongiLottie } from "./use-mongi-lottie";
 import styles from "./mongi-stage.module.css";
 
 export type MongiState =
@@ -39,12 +40,12 @@ const TRANSIENT_STATES: MongiState[] = [
 ];
 
 const STATE_DURATION: Partial<Record<MongiState, number>> = {
-  greeting: 2000,
+  greeting:    2000,
   react_happy: 1800,
-  react_soft: 2000,
-  reward: 2400,
-  celebrate: 3000,
-  equip: 1600,
+  react_soft:  2000,
+  reward:      2400,
+  celebrate:   3000,
+  equip:       1600,
 };
 
 export function MongiStage({
@@ -55,26 +56,47 @@ export function MongiStage({
   showXpBurst = false,
   xpGained,
   streakDays,
+  equippedSlots,
 }: MongiStageProps) {
   const [currentState, setCurrentState] = useState<MongiState>(state);
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const { lottieAvailable, containerRef, playState } = useMongiLottie();
+
   useEffect(() => {
     setCurrentState(state);
 
-    if (TRANSIENT_STATES.includes(state)) {
-      const duration = STATE_DURATION[state] ?? 2000;
-      timeoutRef.current = setTimeout(() => {
+    if (lottieAvailable) {
+      const isTransient = TRANSIENT_STATES.includes(state);
+      playState(state, isTransient ? () => {
         setCurrentState("idle");
         onStateEnd?.();
-      }, duration);
+        playState("idle");
+      } : undefined);
+      // setTimeout 폴백은 Lottie complete 이벤트가 없을 때를 대비
+      if (isTransient) {
+        const duration = STATE_DURATION[state] ?? 2000;
+        timeoutRef.current = setTimeout(() => {
+          setCurrentState("idle");
+          onStateEnd?.();
+        }, duration + 300);
+      }
+    } else {
+      // Lottie 없을 때 CSS 애니메이션 폴백
+      if (TRANSIENT_STATES.includes(state)) {
+        const duration = STATE_DURATION[state] ?? 2000;
+        timeoutRef.current = setTimeout(() => {
+          setCurrentState("idle");
+          onStateEnd?.();
+        }, duration);
+      }
     }
 
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [state, onStateEnd]);
+  }, [state, onStateEnd, lottieAvailable, playState]);
 
   return (
     <div
@@ -84,11 +106,19 @@ export function MongiStage({
       onMouseLeave={() => setIsHovered(false)}
       aria-hidden="true"
     >
-      <MongiCharacterPng
-        state={currentState}
-        size={size}
-        hovered={isHovered}
-      />
+      {lottieAvailable ? (
+        <div
+          ref={containerRef}
+          className={styles.lottieContainer}
+          style={{ width: size, height: size }}
+        />
+      ) : (
+        <MongiCharacterPng
+          state={currentState}
+          size={size}
+          hovered={isHovered}
+        />
+      )}
 
       {currentState === "reward" && showXpBurst && (
         <div className={styles.xpBurst} role="status" aria-live="polite">

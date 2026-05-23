@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import MongiFigure, { type MongiExpression, type MongiEquippedSlots } from "@/components/theme/mongi-figure";
-import { useMongiLottie } from "./use-mongi-lottie";
+import type { MongiEquippedSlots } from "@/components/theme/mongi-figure";
+import { MongiCharacterPng } from "./mongi-character-png";
 import styles from "./mongi-stage.module.css";
 
 export type MongiState =
@@ -26,7 +26,7 @@ interface MongiStageProps {
   streakDays?: number;
   level?: number;
   emotionTone?: number;
-  equippedSlots?: MongiEquippedSlots;
+  equippedSlots?: MongiEquippedSlots | null;
 }
 
 const TRANSIENT_STATES: MongiState[] = [
@@ -47,14 +47,6 @@ const STATE_DURATION: Partial<Record<MongiState, number>> = {
   equip: 1600,
 };
 
-function stateToExpression(state: MongiState, hovered: boolean): MongiExpression {
-  const s = hovered && state === "idle" ? "greeting" : state;
-  if (s === "sleepy") return "sleepy";
-  if (s === "react_soft" || s === "listening") return "soft";
-  if (s === "celebrate" || s === "reward" || s === "react_happy") return "excited";
-  return "happy";
-}
-
 export function MongiStage({
   state = "idle",
   onStateEnd,
@@ -63,20 +55,13 @@ export function MongiStage({
   showXpBurst = false,
   xpGained,
   streakDays,
-  equippedSlots,
 }: MongiStageProps) {
   const [currentState, setCurrentState] = useState<MongiState>(state);
   const [isHovered, setIsHovered] = useState(false);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const { lottieAvailable, containerRef, playState } = useMongiLottie();
-
   useEffect(() => {
     setCurrentState(state);
-
-    if (lottieAvailable) {
-      playState(state);
-    }
 
     if (TRANSIENT_STATES.includes(state)) {
       const duration = STATE_DURATION[state] ?? 2000;
@@ -89,30 +74,21 @@ export function MongiStage({
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [state, onStateEnd, lottieAvailable, playState]);
-
-  const effectiveState = isHovered && currentState === "idle" ? "greeting" : currentState;
-  const expression = stateToExpression(currentState, isHovered);
+  }, [state, onStateEnd]);
 
   return (
     <div
-      className={`${styles.stage} ${!lottieAvailable ? styles[`state_${effectiveState}`] : ""} ${className ?? ""}`}
+      className={`${styles.stage} ${className ?? ""}`}
       style={{ "--mongi-size": `${size}px` } as React.CSSProperties}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       aria-hidden="true"
     >
-      {lottieAvailable ? (
-        <div
-          ref={containerRef}
-          className={styles.lottieContainer}
-          style={{ width: size, height: size }}
-        />
-      ) : (
-        <div className={styles.character}>
-          <MongiFigure className={styles.figure} expression={expression} equippedSlots={equippedSlots} />
-        </div>
-      )}
+      <MongiCharacterPng
+        state={currentState}
+        size={size}
+        hovered={isHovered}
+      />
 
       {currentState === "reward" && showXpBurst && (
         <div className={styles.xpBurst} role="status" aria-live="polite">

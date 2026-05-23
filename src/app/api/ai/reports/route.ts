@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentProfile } from "@/lib/get-user";
 import {
-  AI_FREE_MONTHLY_LIMIT,
-  AI_PAID_MONTHLY_LIMIT,
   buildLocalReport,
   buildOpenAiReport,
   currentMonth,
@@ -14,6 +12,7 @@ import {
   type AiReportDiaryForGeneration,
   type StoredAiReportRow,
 } from "@/lib/ai-report/core";
+import { checkAiReportAccess } from "@/lib/ai-report/access";
 import { createClient } from "@/lib/supabase-server";
 
 export const dynamic = "force-dynamic";
@@ -32,44 +31,6 @@ async function getStoredReport(
     .returns<StoredAiReportRow>();
 }
 
-async function hasActiveSubscription(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  userId: string
-) {
-  const { data } = await supabase
-    .from("subscriptions")
-    .select("status, current_period_end")
-    .eq("user_id", userId)
-    .maybeSingle();
-
-  if (!data?.current_period_end) return false;
-
-  return (
-    ["active", "trialing"].includes(data.status) &&
-    new Date(data.current_period_end).getTime() > Date.now()
-  );
-}
-
-async function getMonthlyAiUsage(
-  supabase: Awaited<ReturnType<typeof createClient>>,
-  userId: string,
-  month: string
-) {
-  const { start, end } = getMonthRange(month);
-  const { count, error } = await supabase
-    .from("usage_events")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", userId)
-    .eq("event_type", "ai_report.generated")
-    .gte("created_at", start)
-    .lt("created_at", end);
-
-  if (error) {
-    throw new Error(`AI 사용량을 확인하지 못했습니다: ${error.message}`);
-  }
-
-  return count ?? 0;
-}
 
 export async function GET(request: Request) {
   const user = await getCurrentProfile();
@@ -150,11 +111,9 @@ export async function POST(request: Request) {
     });
   }
 
-  const paid = await hasActiveSubscription(supabase, user.id);
-  const monthlyLimit = paid ? AI_PAID_MONTHLY_LIMIT : AI_FREE_MONTHLY_LIMIT;
-  const usageCount = await getMonthlyAiUsage(supabase, user.id, month);
+  const { canGenerate, isPro } = await checkAiReportAccess(supabase, user.id, month);
 
-  if (usageCount >= monthlyLimit) {
+  if (!canGenerate) {
     return NextResponse.json(
       { error: "이번 달 AI 리포트 생성 한도를 모두 사용했습니다." },
       { status: 429 }
@@ -217,8 +176,7 @@ export async function POST(request: Request) {
     metadata: {
       month,
       source: generatedReport.source,
-      paid,
-      limit: monthlyLimit,
+      isPro,
     },
   });
 

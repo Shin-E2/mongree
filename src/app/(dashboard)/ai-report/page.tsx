@@ -123,6 +123,8 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
                 <GenerateReportButton
                   month={reportData.reportStatus.month}
                   hasSavedReport={reportData.reportStatus.saved}
+                  canGenerate={reportData.reportStatus.canGenerate}
+                  isPro={reportData.reportStatus.isPro}
                 />
                 {reportData.reportStatus.saved && (
                   <ReportActions

@@ -8,6 +8,7 @@ import {
   type AiGeneratedReport,
   type StoredAiReportRow,
 } from "@/lib/ai-report/core";
+import { checkAiReportAccess } from "@/lib/ai-report/access";
 import { createClient } from "@/lib/supabase-server";
 
 export interface AiReportEmotionStat {
@@ -50,6 +51,8 @@ export interface AiEmotionReportData {
   reportStatus: {
     saved: boolean;
     month: string;
+    canGenerate: boolean;
+    isPro: boolean;
   };
 }
 
@@ -239,6 +242,8 @@ export async function getAiEmotionReportData({
     reportStatus: {
       saved: false,
       month: monthDate.slice(0, 7),
+      canGenerate: false,
+      isPro: false,
     },
   };
 
@@ -363,6 +368,8 @@ export async function getAiEmotionReportData({
         insights,
       });
 
+  const access = await checkAiReportAccess(supabase, user.id, reportMonth);
+
   return {
     monthDate,
     monthLabel,
@@ -382,6 +389,8 @@ export async function getAiEmotionReportData({
     reportStatus: {
       saved: Boolean(savedReport),
       month: reportMonth,
+      canGenerate: !savedReport && access.canGenerate,
+      isPro: access.isPro,
     },
   };
 }

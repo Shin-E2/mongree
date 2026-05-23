@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene, MongiEmotion } from "@/components/theme/theme.types";
-import { MongiStage } from "@/components/mongi/mongi-stage";
+import MongiCharacter from "./mongi-character";
 import EmotionCloud from "./emotion-cloud";
 import DiaryFloat from "./diary-float";
 import AuthBottomSheet from "./auth-bottom-sheet";
@@ -21,16 +21,11 @@ export default function WelcomeHeroSection() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<LandingStep>(1);
   const [selectedEmotion, setSelectedEmotion] = useState<MongiEmotion | null>(null);
-  const [charSize, setCharSize] = useState(270);
   const cycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    const update = () => setCharSize(Math.min(Math.round(window.innerWidth * 0.72), 340));
-    update();
-    window.addEventListener("resize", update);
-    return () => window.removeEventListener("resize", update);
   }, []);
 
   useEffect(() => {
@@ -88,11 +83,19 @@ export default function WelcomeHeroSection() {
     setStep(1);
   }, []);
 
-  const mongiState = (() => {
-    if (step === 2) return "greeting" as const;
-    if (step === 3) return "listening" as const;
-    if (step === 4) return "react_happy" as const;
+  const currentScene = SCENES[sceneIdx];
+
+  const mongiVariant = (() => {
+    if (step === 2) return "bounce" as const;
+    if (step === 4) return "react"  as const;
     return "idle" as const;
+  })();
+
+  const mongiEmotion: MongiEmotion | null = (() => {
+    if (step === 2) return "excited";
+    if (step === 3) return "calm";
+    if (step === 4 && selectedEmotion) return selectedEmotion;
+    return null;
   })();
 
   return (
@@ -121,20 +124,12 @@ export default function WelcomeHeroSection() {
               </div>
             )}
 
-            <div
-              role={step === 1 ? "button" : undefined}
-              tabIndex={step === 1 ? 0 : undefined}
-              aria-label={step === 1 ? "몽이를 탭하세요" : undefined}
-              onClick={step === 1 ? handleMongiTap : undefined}
-              onKeyDown={step === 1 ? (e) => { if (e.key === "Enter" || e.key === " ") handleMongiTap(); } : undefined}
-              style={{ cursor: step === 1 ? "pointer" : undefined, display: "inline-block" }}
-            >
-              <MongiStage
-                state={mongiState}
-                onStateEnd={() => {}}
-                size={charSize}
-              />
-            </div>
+            <MongiCharacter
+              scene={currentScene}
+              emotion={mongiEmotion}
+              variant={mongiVariant}
+              onTap={step === 1 ? handleMongiTap : undefined}
+            />
 
             {step === 1 && (
               <p className={styles.tapHint} aria-hidden="true">탭해 보세요 🐾</p>

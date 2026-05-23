@@ -94,7 +94,7 @@
 }
 
 .mongiSvgCat {
-  width: clamp(200px, 52vw, 280px);
+  width: clamp(240px, 68vw, 340px);
   height: auto;
   overflow: visible;
   filter: drop-shadow(0 24px 44px color-mix(in oklch, var(--scene-shadow) 32%, transparent));
@@ -110,7 +110,7 @@
 }
 
 .mongiWrapBig .mongiSvgCat {
-  width: clamp(240px, 60vw, 320px);
+  width: clamp(270px, 75vw, 380px);
 }
 
 .mongiFloat {
@@ -201,7 +201,7 @@
   height: 10px;
   border-radius: 50%;
   background: color-mix(in oklch, var(--mongree-surface-raised) 92%, transparent);
-  margin-bottom: 4px;
+  margin-top: 5px;
   box-shadow: 0 2px 8px color-mix(in oklch, var(--scene-shadow) 12%, transparent);
 }
 
@@ -210,7 +210,7 @@
   height: 7px;
   border-radius: 50%;
   background: color-mix(in oklch, var(--mongree-surface-raised) 88%, transparent);
-  margin-bottom: 4px;
+  margin-top: 4px;
   box-shadow: 0 2px 6px color-mix(in oklch, var(--scene-shadow) 8%, transparent);
 }
 
@@ -248,19 +248,23 @@
   border: none;
   padding: 0;
   cursor: pointer;
-  transition: transform 200ms ease;
+  filter: drop-shadow(0 3px 8px oklch(0.65 0.12 58 / 0.14));
+  transition: transform 200ms ease, filter 200ms ease;
 }
 
 .emotionBtn:hover {
-  transform: scale(1.1);
+  transform: scale(1.12);
+  filter: drop-shadow(0 5px 14px oklch(0.65 0.12 58 / 0.28));
 }
 
 .emotionBtnActive {
   transform: scale(1.18);
+  filter: drop-shadow(0 6px 18px oklch(0.74 0.14 72 / 0.45));
 }
 
 .emotionBtnActive:hover {
-  transform: scale(1.18);
+  transform: scale(1.20);
+  filter: drop-shadow(0 8px 22px oklch(0.74 0.14 72 / 0.50));
 }
 
 .emotionBtnLabel {
@@ -376,6 +380,82 @@
   font-weight: 700;
   color: var(--scene-accent);
   animation: hintPulse 1.5s ease-in-out infinite;
+}
+
+/* ── 몽이 SVG 개별 파트 애니메이션 ── */
+
+/* 귀 - transform-box: fill-box 로 귀 자체 바운딩박스 기준 회전 */
+.leftEarGroup {
+  transform-box: fill-box;
+  transform-origin: 50% 100%; /* 귀 아랫부분(머리와 연결) 기준 */
+  animation: leftEarWiggle 4.2s ease-in-out infinite;
+}
+
+.rightEarGroup {
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  animation: rightEarWiggle 4.2s ease-in-out 1.4s infinite;
+}
+
+/* 팔 - 몸통 연결부 기준 회전 */
+.leftArmGroup {
+  transform-box: fill-box;
+  transform-origin: 100% 50%; /* 오른쪽 끝(몸통 쪽) */
+  animation: armSway 3.4s ease-in-out infinite;
+}
+
+.rightArmGroup {
+  transform-box: fill-box;
+  transform-origin: 0% 50%; /* 왼쪽 끝(몸통 쪽) */
+  animation: armSway 3.4s ease-in-out 1.7s infinite reverse;
+}
+
+/* 꼬리 */
+.tailGroup {
+  transform-box: fill-box;
+  transform-origin: 0% 90%;
+  animation: tailWag 2.8s ease-in-out infinite;
+}
+
+/* 눈 - 깜빡임 */
+.eyesGroup {
+  transform-box: fill-box;
+  transform-origin: 50% 50%;
+  animation: eyeBlink 4.8s ease-in-out 2.2s infinite;
+}
+
+@keyframes leftEarWiggle {
+  0%, 72%, 100% { transform: rotate(0deg); }
+  76%  { transform: rotate(-9deg); }
+  81%  { transform: rotate(5deg); }
+  86%  { transform: rotate(-4deg); }
+  91%  { transform: rotate(2deg); }
+  96%  { transform: rotate(-1deg); }
+}
+
+@keyframes rightEarWiggle {
+  0%, 72%, 100% { transform: rotate(0deg); }
+  76%  { transform: rotate(9deg); }
+  81%  { transform: rotate(-5deg); }
+  86%  { transform: rotate(4deg); }
+  91%  { transform: rotate(-2deg); }
+  96%  { transform: rotate(1deg); }
+}
+
+@keyframes armSway {
+  0%, 100% { transform: rotate(0deg); }
+  50%       { transform: rotate(-11deg); }
+}
+
+@keyframes tailWag {
+  0%, 100% { transform: rotate(0deg); }
+  30%       { transform: rotate(15deg); }
+  65%       { transform: rotate(-8deg); }
+}
+
+@keyframes eyeBlink {
+  0%, 88%, 93%, 100% { transform: scaleY(1); }
+  90%, 91%            { transform: scaleY(0.08); }
 }
 
 /* ── 키프레임 ── */
@@ -559,6 +639,12 @@
 @media (prefers-reduced-motion: reduce) {
   .mongiFloat,
   .mongiBounce,
+  .leftEarGroup,
+  .rightEarGroup,
+  .leftArmGroup,
+  .rightArmGroup,
+  .tailGroup,
+  .eyesGroup,
   .emotionCloud,
   .diaryFloatOuter,
   .diaryGlowOrb,
@@ -567,8 +653,8 @@
   .diarySparkle,
   .tapHint,
   .mounted {
-    animation: none;
+    animation: none !important;
     opacity: 1;
-    transform: none;
+    transform: none !important;
   }
 }

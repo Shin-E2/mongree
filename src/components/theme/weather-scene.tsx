@@ -20,18 +20,19 @@ const STARS = Array.from({ length: 55 }, (_, i) => ({
 }));
 
 const SHOOTS = [
-  { id: 0, top: "8%",  left: "72%", width: "180px", dur: "1.3s", del: "7s",  sdx: "-520px", sdy: "380px" },
-  { id: 1, top: "18%", left: "44%", width: "110px", dur: "1.0s", del: "17s", sdx: "-320px", sdy: "230px" },
+  { id: 0, top: "6%",  left: "74%", width: "200px", dur: "9s",  del: "2s",  sdx: "-560px", sdy: "420px" },
+  { id: 1, top: "14%", left: "48%", width: "155px", dur: "13s", del: "9s",  sdx: "-390px", sdy: "280px" },
+  { id: 2, top: "4%",  left: "62%", width: "130px", dur: "11s", del: "18s", sdx: "-340px", sdy: "260px" },
 ];
 
-const RAIN = Array.from({ length: 42 }, (_, i) => ({
+const RAIN = Array.from({ length: 58 }, (_, i) => ({
   id: i,
   left: `${rand(-5, 105)}%`,
-  width: `${rand(5, 10).toFixed(1)}px`,
-  height: `${rand(22, 46).toFixed(0)}px`,
-  dur: `${rand(0.7, 1.4).toFixed(2)}s`,
+  width: `${rand(1.5, 3.0).toFixed(1)}px`,
+  height: `${rand(16, 34).toFixed(0)}px`,
+  dur: `${rand(0.65, 1.2).toFixed(2)}s`,
   del: `${rand(0, 2.5).toFixed(2)}s`,
-  opacity: rand(0.55, 0.90).toFixed(2),
+  opacity: rand(0.50, 0.85).toFixed(2),
 }));
 
 const SNOW = Array.from({ length: 44 }, (_, i) => ({

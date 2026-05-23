@@ -6,7 +6,7 @@
   overflow: hidden;
   pointer-events: none;
   background: linear-gradient(160deg, var(--scene-bg) 0%, var(--scene-bg-soft) 100%);
-  transition: background 600ms ease;
+  transition: background 1400ms ease;
 }
 
 /* ── 태양 (clay/felt 스타일) ── */
@@ -28,7 +28,7 @@
     0 0 0 40px color-mix(in oklch, var(--scene-accent) 6%, transparent),
     0 20px 52px color-mix(in oklch, var(--scene-shadow) 24%, transparent);
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 1200ms ease;
 }
 
 /* ── 달 (clay/felt 스타일) ── */
@@ -50,7 +50,7 @@
     0 0 64px color-mix(in oklch, oklch(0.91 0.16 90) 18%, transparent),
     0 16px 40px color-mix(in oklch, var(--scene-shadow) 22%, transparent);
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 1200ms ease;
 }
 
 .moon::after {
@@ -74,7 +74,7 @@
   position: absolute;
   border-radius: 999px;
   opacity: 0;
-  transition: opacity 600ms ease;
+  transition: opacity 1000ms ease;
 }
 
 .cloudOne::before,
@@ -198,7 +198,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 800ms ease;
+  transition: opacity 1400ms ease;
 }
 
 /* ── 별 (clay/felt 스타일 - 따뜻한 글로우 orb) ── */
@@ -218,30 +218,51 @@
   50%       { opacity: var(--op2, 0.2); transform: scale(0.65); }
 }
 
-/* ── 별똥별 ── */
+/* ── 별똥별 (현실적: 짧고 빠른 섬광 후 긴 휴지) ── */
 .shootingStar {
   position: absolute;
-  height: 2px;
+  height: 1.5px;
   border-radius: 999px;
+  /* 오른쪽(선두) 밝음 → 왼쪽(꼬리) 점차 투명 */
   background: linear-gradient(
-    90deg,
+    to right,
     transparent 0%,
-    color-mix(in oklch, oklch(0.88 0.12 85) 60%, transparent) 55%,
-    oklch(0.98 0.04 85) 100%
+    oklch(0.88 0.10 85 / 0.10) 28%,
+    oklch(0.92 0.08 85 / 0.55) 62%,
+    oklch(0.97 0.05 85 / 0.90) 88%,
+    white 100%
   );
+  filter: blur(0.4px);
   opacity: 0;
-  animation: shoot var(--sdur, 1.4s) ease-in var(--sdel, 7s) infinite;
   transform-origin: right center;
-  transform: rotate(-36deg);
+  transform: rotate(-42deg);
+  /* sdur = 전체 사이클(9-13s), 처음 6%만 실제 스트리크 (~0.5s) */
+  animation: shoot var(--sdur, 9s) linear var(--sdel, 2s) infinite;
+}
+
+/* 선두 글로우 포인트 */
+.shootingStar::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: radial-gradient(circle, white 0%, oklch(0.96 0.08 85) 55%, transparent 100%);
+  box-shadow:
+    0 0 5px 2px oklch(0.96 0.08 85 / 0.85),
+    0 0 12px 5px oklch(0.88 0.12 85 / 0.40);
 }
 
 @keyframes shoot {
-  0%   { opacity: 0;   transform: rotate(-36deg) translate(0, 0); }
-  8%   { opacity: 0; }
-  12%  { opacity: 1; }
-  55%  { opacity: 1; }
-  80%  { opacity: 0.3; }
-  100% { opacity: 0;   transform: rotate(-36deg) translate(var(--sdx, -400px), var(--sdy, 280px)); }
+  /* 전체 사이클의 ~6%만 이동 (9s × 6% = 0.54s 스트리크) */
+  0%    { opacity: 0;   transform: rotate(-42deg) translate(0, 0); }
+  1%    { opacity: 0.95; }
+  6%    { opacity: 0;   transform: rotate(-42deg) translate(var(--sdx, -500px), var(--sdy, 370px)); }
+  6.5%  { opacity: 0;   transform: rotate(-42deg) translate(0, 0); }
+  100%  { opacity: 0;   transform: rotate(-42deg) translate(0, 0); }
 }
 
 /* ── 비 컨테이너 ── */
@@ -249,7 +270,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 900ms ease;
 }
 
 /* ── 빗방울 (clay/felt 스타일 - 물방울 형태) ── */
@@ -281,7 +302,7 @@
   position: absolute;
   inset: 0;
   opacity: 0;
-  transition: opacity 500ms ease;
+  transition: opacity 900ms ease;
 }
 
 /* ── 눈송이 (clay/felt 스타일 - 포슬포슬한 구 형태) ── */
@@ -330,44 +351,6 @@
 .scene[data-scene="snow"] .cloudOne { opacity: 0.92; }
 .scene[data-scene="snow"] .cloudTwo { opacity: 0.64; }
 .scene[data-scene="snow"] .snowWrap { opacity: 1; }
-.scene[data-scene="snow"] .sun {
-  top: 13%;
-  right: 6%;
-  width: 96px;
-  height: 96px;
-  opacity: 1;
-  background:
-    radial-gradient(circle at 36% 30%, white 0 16px, transparent 17px),
-    radial-gradient(circle at 50% 62%, white 0 38px, transparent 39px);
-  box-shadow:
-    0 18px 36px color-mix(in oklch, var(--scene-shadow) 12%, transparent),
-    0 0 0 18px color-mix(in oklch, white 38%, transparent),
-    0 0 0 36px color-mix(in oklch, white 14%, transparent);
-}
-
-.scene[data-scene="snow"] .sun::before,
-.scene[data-scene="snow"] .sun::after {
-  content: "";
-  position: absolute;
-  border-radius: 999px;
-}
-
-.scene[data-scene="snow"] .sun::before {
-  left: 40px;
-  top: 30px;
-  width: 6px;
-  height: 6px;
-  background: var(--scene-text);
-  box-shadow: 16px 0 0 var(--scene-text);
-}
-
-.scene[data-scene="snow"] .sun::after {
-  left: 44px;
-  top: 46px;
-  width: 16px;
-  height: 8px;
-  border-bottom: 2px solid color-mix(in oklch, var(--scene-accent) 70%, var(--scene-text));
-}
 
 /* 움직임 감소 설정 존중 */
 @media (prefers-reduced-motion: reduce) {

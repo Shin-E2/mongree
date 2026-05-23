@@ -12,7 +12,7 @@ import styles from "./styles.module.css";
 type LandingStep = 1 | 2 | 3 | 4 | 5;
 
 const SCENES: MongreeThemeScene[] = ["day", "rain", "snow", "night"];
-const SCENE_CYCLE_MS = 4200;
+const SCENE_CYCLE_MS = 7000;
 const BUBBLE_VISIBLE_MS = 1200;
 
 export default function WelcomeHeroSection() {
@@ -21,13 +21,13 @@ export default function WelcomeHeroSection() {
   const [mounted, setMounted] = useState(false);
   const [step, setStep] = useState<LandingStep>(1);
   const [selectedEmotion, setSelectedEmotion] = useState<MongiEmotion | null>(null);
-  const [charSize, setCharSize] = useState(220);
+  const [charSize, setCharSize] = useState(270);
   const cycleRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const bounceTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     setMounted(true);
-    const update = () => setCharSize(Math.min(Math.round(window.innerWidth * 0.58), 300));
+    const update = () => setCharSize(Math.min(Math.round(window.innerWidth * 0.72), 340));
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);

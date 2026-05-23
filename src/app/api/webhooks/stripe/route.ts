@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import Stripe from "stripe";
 import { getStripeClient } from "@/lib/stripe";
 import { createAdminClient } from "@/lib/supabase/admin";
+import { sendEmail } from "@/lib/email/resend";
+import { trialEndingEmailHtml } from "@/lib/email/templates/trial-ending";
 
 export const dynamic = "force-dynamic";
 
@@ -10,6 +12,7 @@ const handledEvents = new Set([
   "customer.subscription.created",
   "customer.subscription.updated",
   "customer.subscription.deleted",
+  "customer.subscription.trial_will_end",
   "invoice.payment_failed",
 ]);
 
@@ -106,6 +109,42 @@ async function handleStripeEvent(event: Stripe.Event) {
       customerId,
       subscription,
     });
+  }
+
+  if (event.type === "customer.subscription.trial_will_end") {
+    const subscription = event.data.object as Stripe.Subscription;
+    const userId = subscription.metadata?.userId;
+    if (!userId) return;
+
+    const supabase = createAdminClient();
+    const { data: profile } = await supabase
+      .from("profiles")
+      .select("username, email:id")
+      .eq("id", userId)
+      .maybeSingle();
+
+    if (!profile) return;
+
+    const { data: authUser } = await supabase.auth.admin.getUserById(userId);
+    const email = authUser?.user?.email;
+    if (!email) return;
+
+    const trialEnd = subscription.trial_end
+      ? new Date(subscription.trial_end * 1000).toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        })
+      : "곧";
+
+    sendEmail({
+      to: email,
+      subject: "[Mongree] Pro 체험 기간이 2일 후 종료됩니다",
+      html: trialEndingEmailHtml({
+        nickname: profile.username ?? "사용자",
+        trialEndDate: trialEnd,
+      }),
+    }).catch(() => {});
   }
 }
 

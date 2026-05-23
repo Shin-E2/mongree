@@ -452,6 +452,7 @@ export type Database = {
           created_at: string
           equipped_item_id: string | null
           experience: number
+          last_inactivity_email_sent: string | null
           last_rewarded_diary_date: string | null
           level: number
           streak_days: number
@@ -463,6 +464,7 @@ export type Database = {
           created_at?: string
           equipped_item_id?: string | null
           experience?: number
+          last_inactivity_email_sent?: string | null
           last_rewarded_diary_date?: string | null
           level?: number
           streak_days?: number
@@ -474,6 +476,7 @@ export type Database = {
           created_at?: string
           equipped_item_id?: string | null
           experience?: number
+          last_inactivity_email_sent?: string | null
           last_rewarded_diary_date?: string | null
           level?: number
           streak_days?: number

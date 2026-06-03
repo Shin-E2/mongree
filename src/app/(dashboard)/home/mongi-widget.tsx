@@ -30,7 +30,7 @@ export function MongiWidget({ primaryEmotionLabel, diaryCount }: MongiWidgetProp
         <MongiStage
           state={mongiState}
           onStateEnd={() => setMongiState(isSleepy ? "sleepy" : "idle")}
-          size={100}
+          size={160}
         />
       </div>
       <div className={styles.heroMetricRow}>

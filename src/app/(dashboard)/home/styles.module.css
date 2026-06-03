@@ -73,7 +73,7 @@
 }
 
 .heroWidget {
-  @apply flex flex-col justify-between gap-4 p-5 sm:p-6;
+  @apply flex flex-col gap-4 p-5 sm:p-6;
   min-height: 16.5rem;
   border: 1px solid color-mix(in oklch, var(--mongree-line) 84%, transparent);
   border-radius: var(--mongree-radius-lg);
@@ -86,7 +86,8 @@
 }
 
 .mongiOrb {
-  @apply mx-auto flex items-center justify-center;
+  @apply flex flex-1 items-center justify-center;
+  padding: 0.5rem 0;
 }
 
 .skyOrb {

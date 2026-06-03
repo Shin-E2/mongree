@@ -10,6 +10,15 @@ const nextConfig: NextConfig = {
       bodySizeLimit: "6mb",
     },
   },
+  webpack: (config, { isServer }) => {
+    if (isServer) {
+      config.externals = [
+        ...(Array.isArray(config.externals) ? config.externals : [config.externals].filter(Boolean)),
+        "@prisma/instrumentation",
+      ];
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       {

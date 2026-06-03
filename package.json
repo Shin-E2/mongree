@@ -19,7 +19,7 @@
     "@hookform/resolvers": "^3.10.0",
     "@sentry/nextjs": "^10.53.1",
     "@supabase/ssr": "^0.6.1",
-    "@supabase/supabase-js": "^2.49.8",
+    "@supabase/supabase-js": "2.50.0",
     "lodash": "^4.17.21",
     "lottie-web": "^5.13.0",
     "lucide-react": "^0.469.0",
@@ -29,11 +29,14 @@
     "react-dom": "19.0.1",
     "react-hook-form": "^7.54.2",
     "react-is": "^19.2.5",
-    "recharts": "^3.8.1",
+    "recharts": "2.13.0",
     "resend": "^6.12.3",
     "stripe": "^22.1.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
+  },
+  "resolutions": {
+    "d3-shape": "2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",

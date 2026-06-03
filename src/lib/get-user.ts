@@ -12,7 +12,16 @@ export async function getCurrentAuthUser() {
   return user;
 }
 
-export async function getCurrentProfile() {
+export interface UserProfile {
+  id: string;
+  nickname: string;
+  profile_image: string | null;
+  created_at: string;
+  updated_at: string;
+  is_profile_complete: boolean;
+}
+
+export async function getCurrentProfile(): Promise<UserProfile | null> {
   const supabase = await createClient();
   const user = await getCurrentAuthUser();
 
@@ -29,7 +38,7 @@ export async function getCurrentProfile() {
     return null;
   }
 
-  return profile;
+  return profile as UserProfile | null;
 }
 
 export const getUser = getCurrentProfile;

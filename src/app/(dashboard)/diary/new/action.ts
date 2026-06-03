@@ -78,12 +78,11 @@ async function linkDiaryTags(
   if (tagNames.length === 0) return;
 
   const tagIds = await getOrCreateTagIds(supabase, tagNames);
-  const { error } = await supabase.from("diary_tags").insert(
-    tagIds.map((tagId) => ({
-      diary_id: diaryId,
-      tag_id: tagId,
-    }))
-  );
+  const tagInserts = tagIds.map((tagId) => ({
+    diary_id: diaryId,
+    tag_id: tagId,
+  }));
+  const { error } = await supabase.from("diary_tags").insert(tagInserts);
 
   if (error) throw new Error(error.message);
 }
@@ -95,16 +94,15 @@ async function insertDiaryImages(
 ) {
   if (images.length === 0) return;
 
-  const { error } = await supabase.from("diary_images").insert(
-    images.map((image) => ({
-      diary_id: diaryId,
-      image_url: image.image_url,
-      sort_order: image.sort_order,
-      file_name: image.file_name,
-      mime_type: image.mime_type,
-      file_size: image.file_size,
-    }))
-  );
+  const imageInserts = images.map((image) => ({
+    diary_id: diaryId,
+    image_url: image.image_url,
+    sort_order: image.sort_order,
+    file_name: image.file_name,
+    mime_type: image.mime_type,
+    file_size: image.file_size,
+  }));
+  const { error } = await supabase.from("diary_images").insert(imageInserts);
 
   if (error) throw new Error(error.message);
 }
@@ -135,9 +133,9 @@ async function createDiaryWithoutRpc({
 
   try {
     diaryId = await insertDiaryRow(supabase, userId, title, content, isPrivate);
-    await linkDiaryEmotions(supabase, diaryId, emotionIds);
-    await linkDiaryTags(supabase, diaryId, tagNames);
-    await insertDiaryImages(supabase, diaryId, images);
+    await linkDiaryEmotions(supabase, diaryId!, emotionIds);
+    await linkDiaryTags(supabase, diaryId!, tagNames);
+    await insertDiaryImages(supabase, diaryId!, images);
 
     return diaryId;
   } catch (error) {

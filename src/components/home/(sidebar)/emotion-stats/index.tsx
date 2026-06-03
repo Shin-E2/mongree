@@ -12,14 +12,15 @@ export default function HomeEmotionStats({ stats }: HomeEmotionStatsProps) {
       <h3 className={styles.title}>이번 달 감정 분포</h3>
       <div className={styles.listContainer}>
         {stats.length > 0 ? (
-          stats.map((stat) => (
+          stats.map((stat, index) => (
             <HomeEmotionStatItem
               key={stat.id}
               emotion={stat.image}
+              emotionId={stat.id}
               label={stat.label}
               percentage={stat.percentage}
               count={stat.count}
-              color="blue"
+              rank={index + 1}
             />
           ))
         ) : (

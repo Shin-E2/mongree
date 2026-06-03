@@ -6,6 +6,7 @@ import { useState } from "react";
 import { URL } from "@/commons/constants/global-url";
 import { useMongreeTheme } from "@/components/theme/theme-provider";
 import type { MongreeThemeScene } from "@/components/theme/theme.types";
+import BgmToggle from "@/components/audio/bgm-toggle";
 import TopbarUserAvatar from "./user-avatar";
 import styles from "./styles.module.css";
 import { usePageTitle } from "./use-page-title";
@@ -63,6 +64,7 @@ export default function TopBar() {
               onAnimationEnd={() => setSpinning(false)}
             />
           </button>
+          <BgmToggle />
           <Link
             href={URL().COMMUNITY}
             className={styles.communityButton}

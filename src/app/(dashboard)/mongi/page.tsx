@@ -82,21 +82,40 @@ export default function MongiPage() {
 
   const handleShare = async () => {
     if (!profile) return;
+    const hour = new Date().getHours();
+    const expression = hour < 7 || hour >= 23 ? "sleepy" : "happy";
     const params = new URLSearchParams({
       nickname: profile.nickname ?? "몽이",
       level: String(profile.level),
       streak: String(profile.streakDays),
+      expression,
     });
     const url = `${window.location.origin}/api/og/mongi?${params.toString()}`;
 
     try {
-      if (navigator.share) {
-        await navigator.share({ title: `${profile.nickname ?? ""}의 몽이`, url });
-      } else {
-        await navigator.clipboard.writeText(url);
-        setShareMessage("카드 링크를 복사했습니다.");
-        setTimeout(() => setShareMessage(null), 2500);
+      const response = await fetch(url);
+      if (!response.ok) throw new Error("카드 생성 실패");
+      const blob = await response.blob();
+      const file = new File([blob], "my-mongi.png", { type: "image/png" });
+
+      // 이미지 파일 직접 공유 지원 시 (주로 모바일) → 인스타 등으로 바로
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: `${profile.nickname ?? "나"}의 몽이`,
+        });
+        return;
       }
+
+      // 아니면 PNG로 저장 (스냅샷 다운로드)
+      const objectUrl = URL.createObjectURL(blob);
+      const anchor = document.createElement("a");
+      anchor.href = objectUrl;
+      anchor.download = "my-mongi.png";
+      anchor.click();
+      URL.revokeObjectURL(objectUrl);
+      setShareMessage("몽이 스냅샷을 저장했습니다.");
+      setTimeout(() => setShareMessage(null), 2500);
     } catch {
       setShareMessage("공유에 실패했습니다.");
       setTimeout(() => setShareMessage(null), 2500);

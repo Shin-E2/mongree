@@ -14,7 +14,7 @@ export interface AiGeneratedReport {
   dominantEmotions: string[];
   gentleInsight: string;
   recommendations: string[];
-  source: "openai" | "local";
+  source: "openai" | "gemini" | "local";
 }
 
 export interface AiReport extends AiGeneratedReport {
@@ -47,6 +47,29 @@ export const reportSchema = {
     recommendations: {
       type: "array",
       items: { type: "string" },
+    },
+  },
+  required: ["summary", "dominantEmotions", "gentleInsight", "recommendations"],
+};
+
+// Gemini responseSchema (additionalProperties 미지원이라 별도 정의)
+export const geminiReportSchema = {
+  type: "object",
+  properties: {
+    summary: { type: "string", description: "이번 달 감정 흐름 요약 2~3문장" },
+    dominantEmotions: {
+      type: "array",
+      items: { type: "string" },
+      description: "가장 자주 나타난 감정 라벨 최대 3개",
+    },
+    gentleInsight: {
+      type: "string",
+      description: "부드럽게 돌아볼 인사이트 1~2문장",
+    },
+    recommendations: {
+      type: "array",
+      items: { type: "string" },
+      description: "다음 기록을 위한 제안 2~3개",
     },
   },
   required: ["summary", "dominantEmotions", "gentleInsight", "recommendations"],
@@ -106,7 +129,12 @@ export function serializeStoredReport(row: StoredAiReportRow): AiReport {
     dominantEmotions: row.dominant_emotions ?? [],
     gentleInsight: row.gentle_insight,
     recommendations: row.recommendations ?? [],
-    source: row.source === "openai" ? "openai" : "local",
+    source:
+      row.source === "openai"
+        ? "openai"
+        : row.source === "gemini"
+          ? "gemini"
+          : "local",
   };
 }
 
@@ -222,4 +250,74 @@ export async function buildOpenAiReport(
   if (!outputText) return null;
 
   return JSON.parse(outputText) as Omit<AiReport, "month" | "source">;
+}
+
+export async function buildGeminiReport(
+  month: string,
+  diaries: AiReportDiaryForGeneration[]
+) {
+  const apiKey = process.env.GEMINI_API_KEY;
+  if (!apiKey || diaries.length === 0) return null;
+
+  const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
+  const systemText =
+    "너는 감정 일기 월간 리포트를 작성하는 한국어 제품 분석가다. 진단이나 치료 표현을 피하고, 사용자가 자신의 패턴을 부드럽게 돌아볼 수 있도록 짧고 구체적으로 쓴다. 반드시 JSON 스키마에 맞춰 응답한다.";
+  const userText = JSON.stringify({
+    month,
+    diaries: diaries.map((diary) => ({
+      title: diary.title,
+      content: diary.content.slice(0, 700),
+      createdAt: diary.created_at,
+      emotions:
+        diary.diary_emotions
+          ?.map((item) => item.emotions?.label)
+          .filter(Boolean) ?? [],
+    })),
+  });
+
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`,
+    {
+      method: "POST",
+      headers: {
+        "x-goog-api-key": apiKey,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        system_instruction: { parts: [{ text: systemText }] },
+        contents: [{ parts: [{ text: userText }] }],
+        generationConfig: {
+          responseFormat: {
+            text: {
+              mimeType: "application/json",
+              schema: geminiReportSchema,
+            },
+          },
+        },
+      }),
+    }
+  );
+
+  if (!response.ok) return null;
+
+  const payload = await response.json();
+  const text: string | undefined = payload?.candidates?.[0]?.content?.parts
+    ?.map((part: { text?: string }) => part.text)
+    .filter(Boolean)
+    .join("");
+
+  if (!text) return null;
+
+  // responseFormat 미적용 모델 대비 마크다운 코드펜스 방어
+  const cleaned = text
+    .trim()
+    .replace(/^```(?:json)?\s*/i, "")
+    .replace(/```$/, "")
+    .trim();
+
+  try {
+    return JSON.parse(cleaned) as Omit<AiReport, "month" | "source">;
+  } catch {
+    return null;
+  }
 }

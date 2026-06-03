@@ -2,6 +2,7 @@ import * as Sentry from "@sentry/nextjs";
 import { NextResponse } from "next/server";
 import { getCurrentProfile } from "@/lib/get-user";
 import {
+  buildGeminiReport,
   buildLocalReport,
   buildOpenAiReport,
   currentMonth,
@@ -155,13 +156,24 @@ export async function POST(request: Request) {
 
   const authUser = await getCurrentAuthUser();
   const userEmail = authUser?.email ?? "";
-  const canUseOpenAi = isAiEnabled() && isEmailInBeta(userEmail);
-  const openAiReport = canUseOpenAi
-    ? await buildOpenAiReport(month, diaries).catch(() => null)
-    : null;
-  const generatedReport = openAiReport
-    ? ({ month, ...openAiReport, source: "openai" } satisfies AiReport)
-    : buildLocalReport(month, diaries);
+  const aiAllowed = isAiEnabled() && isEmailInBeta(userEmail);
+
+  // Gemini(기존 키) 우선 → OpenAI → 규칙 기반 fallback
+  let aiReport: AiReport | null = null;
+  if (aiAllowed) {
+    const gemini = await buildGeminiReport(month, diaries).catch(() => null);
+    if (gemini) {
+      aiReport = { month, ...gemini, source: "gemini" } satisfies AiReport;
+    } else {
+      const openAiReport = await buildOpenAiReport(month, diaries).catch(
+        () => null
+      );
+      if (openAiReport) {
+        aiReport = { month, ...openAiReport, source: "openai" } satisfies AiReport;
+      }
+    }
+  }
+  const generatedReport = aiReport ?? buildLocalReport(month, diaries);
 
   await supabase.from("ai_reports").upsert(
     {

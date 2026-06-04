@@ -52,29 +52,6 @@ export const reportSchema = {
   required: ["summary", "dominantEmotions", "gentleInsight", "recommendations"],
 };
 
-// Gemini responseSchema (additionalProperties 미지원이라 별도 정의)
-export const geminiReportSchema = {
-  type: "object",
-  properties: {
-    summary: { type: "string", description: "이번 달 감정 흐름 요약 2~3문장" },
-    dominantEmotions: {
-      type: "array",
-      items: { type: "string" },
-      description: "가장 자주 나타난 감정 라벨 최대 3개",
-    },
-    gentleInsight: {
-      type: "string",
-      description: "부드럽게 돌아볼 인사이트 1~2문장",
-    },
-    recommendations: {
-      type: "array",
-      items: { type: "string" },
-      description: "다음 기록을 위한 제안 2~3개",
-    },
-  },
-  required: ["summary", "dominantEmotions", "gentleInsight", "recommendations"],
-};
-
 export function currentMonth() {
   return new Date().toISOString().slice(0, 7);
 }
@@ -261,7 +238,7 @@ export async function buildGeminiReport(
 
   const model = process.env.GEMINI_MODEL ?? "gemini-2.5-flash";
   const systemText =
-    "너는 감정 일기 월간 리포트를 작성하는 한국어 제품 분석가다. 진단이나 치료 표현을 피하고, 사용자가 자신의 패턴을 부드럽게 돌아볼 수 있도록 짧고 구체적으로 쓴다. 반드시 JSON 스키마에 맞춰 응답한다.";
+    '너는 감정 일기 월간 리포트를 작성하는 한국어 제품 분석가다. 진단이나 치료 표현을 피하고, 사용자가 자신의 패턴을 부드럽게 돌아볼 수 있도록 짧고 구체적으로 쓴다. 반드시 아래 JSON 객체 하나만 출력한다(마크다운/설명 금지): {"summary": "2~3문장 요약", "dominantEmotions": ["감정 라벨 최대 3개"], "gentleInsight": "1~2문장 인사이트", "recommendations": ["다음 기록 제안 2~3개"]}';
   const userText = JSON.stringify({
     month,
     diaries: diaries.map((diary) => ({
@@ -287,12 +264,8 @@ export async function buildGeminiReport(
         system_instruction: { parts: [{ text: systemText }] },
         contents: [{ parts: [{ text: userText }] }],
         generationConfig: {
-          responseFormat: {
-            text: {
-              mimeType: "application/json",
-              schema: geminiReportSchema,
-            },
-          },
+          responseMimeType: "application/json",
+          temperature: 0.7,
         },
       }),
     }

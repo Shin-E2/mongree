@@ -131,13 +131,14 @@ export default async function AiReportPage({ searchParams }: AiReportPageProps) 
                   canGenerate={reportData.reportStatus.canGenerate}
                   isPro={reportData.reportStatus.isPro}
                 />
-                {reportData.reportStatus.saved && (
-                  <ReportActions
-                    month={reportData.reportStatus.month}
-                    monthLabel={reportData.monthLabel}
-                    report={reportData.generatedReport}
-                  />
-                )}
+                {reportData.reportStatus.saved &&
+                  reportData.diaryCount > 0 && (
+                    <ReportActions
+                      month={reportData.reportStatus.month}
+                      monthLabel={reportData.monthLabel}
+                      report={reportData.generatedReport}
+                    />
+                  )}
               </div>
             </div>
 

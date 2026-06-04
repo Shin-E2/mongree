@@ -230,9 +230,11 @@
 }
 
 .reportControlRow {
-  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
   gap: 0.85rem;
-  align-items: start;
 }
 
 .generateControl {
@@ -268,6 +270,7 @@
   color: var(--mongree-primary-strong);
   font-size: 0.8rem;
   font-weight: 700;
+  white-space: nowrap;
 }
 
 .consentLabel {
@@ -605,11 +608,6 @@
 
   .recommendationList {
     grid-column: 1 / -1;
-  }
-
-  .reportControlRow {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: end;
   }
 }
 

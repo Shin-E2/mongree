@@ -1,10 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { NotebookPen, Share2 } from "lucide-react";
-import { MongiStage } from "@/components/mongi/mongi-stage";
-import type { MongiState } from "@/components/mongi/mongi-stage";
+import Mongi3D from "@/components/mongi/mongi-3d";
 import type { MongiEquippedSlots } from "@/components/theme/mongi-figure";
 import MongiInventoryClient from "../profile/mongi-inventory-client";
 import styles from "./styles.module.css";
@@ -32,14 +31,8 @@ function greetingByStreak(streak: number, nickname: string | null): string {
 }
 
 export default function MongiPage() {
-  const [mongiState, setMongiState] = useState<MongiState>("idle");
   const [profile, setProfile] = useState<MongiProfile | null>(null);
   const [shareMessage, setShareMessage] = useState<string | null>(null);
-
-  // 드래그 360도 회전 상태
-  const [rotateY, setRotateY] = useState(0);
-  const dragRef = useRef<{ startX: number; startY: number } | null>(null);
-  const tapCooldown = useRef(false);
 
   useEffect(() => {
     fetch("/api/mongi/profile")
@@ -48,36 +41,8 @@ export default function MongiPage() {
       .catch(() => {});
   }, []);
 
-  // ── 탭 반응 ──────────────────────────────────
-  const handleTap = useCallback(() => {
-    if (tapCooldown.current) return;
-    tapCooldown.current = true;
-    setMongiState("greeting");
-    setTimeout(() => {
-      tapCooldown.current = false;
-    }, 700);
-  }, []);
-
-  // ── 드래그 회전 ──────────────────────────────
-  const handlePointerDown = useCallback((e: React.PointerEvent) => {
-    dragRef.current = { startX: e.clientX, startY: e.clientY };
-    (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
-  }, []);
-
-  const handlePointerMove = useCallback((e: React.PointerEvent) => {
-    if (!dragRef.current) return;
-    const dx = e.clientX - dragRef.current.startX;
-    dragRef.current.startX = e.clientX;
-    setRotateY((prev) => prev + dx * 0.6);
-  }, []);
-
-  const handlePointerUp = useCallback(() => {
-    dragRef.current = null;
-  }, []);
-
   const handleEquipped = useCallback((slots: MongiEquippedSlots) => {
-    setProfile((prev) => prev ? { ...prev, equippedSlots: slots } : prev);
-    setMongiState("equip");
+    setProfile((prev) => (prev ? { ...prev, equippedSlots: slots } : prev));
   }, []);
 
   const handleShare = async () => {
@@ -145,32 +110,9 @@ export default function MongiPage() {
           <span className={styles.xpText}>{xpCurrent}/{xpMax}</span>
         </div>
 
-        {/* 드래그로 회전 + 탭 */}
-        <div
-          className={styles.characterStage}
-          onPointerDown={handlePointerDown}
-          onPointerMove={handlePointerMove}
-          onPointerUp={handlePointerUp}
-          onPointerCancel={handlePointerUp}
-          onClick={handleTap}
-          role="button"
-          tabIndex={0}
-          aria-label="몽이를 드래그하거나 탭해보세요"
-          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") handleTap(); }}
-        >
-          <div
-            className={styles.characterRotate}
-            style={{ transform: `rotateY(${rotateY}deg)` }}
-          >
-            <MongiStage
-              state={mongiState}
-              onStateEnd={() => setMongiState("idle")}
-              size={240}
-              level={profile?.level}
-              streakDays={profile?.streakDays}
-              equippedSlots={profile?.equippedSlots}
-            />
-          </div>
+        {/* 드래그로 360도 회전 + 탭하면 좋아함 */}
+        <div className={styles.characterStage}>
+          <Mongi3D />
         </div>
 
         <p className={styles.greeting}>{greeting}</p>

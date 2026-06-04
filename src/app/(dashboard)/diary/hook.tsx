@@ -1,12 +1,12 @@
 import { useInfiniteScroll } from "@/commons/hooks/use-infinite-scroll";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { getDiaries } from "./action";
 import { useRouter } from "next/navigation";
 import type { Diary } from "./types";
 
-export default function useDiaryList() {
+export default function useDiaryList(initialDiaries: Diary[] = []) {
   const router = useRouter();
-  const [diaries, setDiaries] = useState<Diary[]>([]);
+  const [diaries, setDiaries] = useState<Diary[]>(initialDiaries);
   const [isLoading, setIsLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [page, setPage] = useState(1);
@@ -67,7 +67,13 @@ export default function useDiaryList() {
   });
 
   // 검색어와 필터가 바뀌면 첫 페이지부터 다시 조회
+  // 초기 마운트는 SSR로 받은 initialDiaries를 그대로 사용하고 재조회를 건너뛴다.
+  const isInitialMount = useRef(true);
   useEffect(() => {
+    if (isInitialMount.current) {
+      isInitialMount.current = false;
+      return;
+    }
     const timer = setTimeout(() => {
       setPage(1);
       loadDiaries(1, true);

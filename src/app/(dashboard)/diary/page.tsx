@@ -1,36 +1,20 @@
-"use client";
+import { getDiaries } from "./action";
+import { getCurrentProfile } from "@/lib/get-user";
+import DiaryListClient from "./diary-list-client";
 
-import DiaryListDiarySection from "@/components/home/(dashboard)/diary/list/diary-section";
-import DiaryListSearchFilter from "@/components/home/(dashboard)/diary/list/search-filter";
-import useDiaryList from "./hook";
-import styles from "./styles.module.css";
+export const dynamic = "force-dynamic";
 
-export default function DiaryListPage() {
-  const {
-    setSearchTerm,
-    selectedEmotions,
-    handleEmotionToggle,
-    diaries,
-    router,
-    observerRef,
-    isLoading,
-  } = useDiaryList();
+export default async function DiaryListPage() {
+  // 공개일기와 동일하게 초기 목록과 본인 프로필을 서버에서 미리 받아 전달한다.
+  const [diaryResult, user] = await Promise.all([
+    getDiaries({ page: 1 }),
+    getCurrentProfile(),
+  ]);
 
   return (
-    <div className={styles.mainContainer}>
-      <div className={styles.contentWrapper}>
-        <DiaryListSearchFilter
-          setSearchTerm={setSearchTerm}
-          selectedEmotions={selectedEmotions}
-          handleEmotionToggle={handleEmotionToggle}
-        />
-
-        <DiaryListDiarySection diaries={diaries} router={router} />
-
-        <div ref={observerRef} className={styles.observerDiv}>
-          {isLoading && <div className={styles.loadingSpinner} />}
-        </div>
-      </div>
-    </div>
+    <DiaryListClient
+      initialDiaries={diaryResult.success ? diaryResult.diaries : []}
+      user={user}
+    />
   );
 }

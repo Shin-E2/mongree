@@ -6,15 +6,18 @@ import styles from "./styles.module.css";
 import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
 import { EMOTION_STYLES } from "@/commons/constants/emotion-styles";
 import type { Diary } from "@/app/(dashboard)/diary/types";
+import type { UserProfile } from "@/lib/get-user";
 
 interface DiaryListDiaryCardProps {
   diary: Diary;
   router: AppRouterInstance;
+  user: UserProfile | null;
   onClick: () => void;
 }
 
 export function DiaryListDiaryCard({
   diary,
+  user,
   onClick,
 }: DiaryListDiaryCardProps) {
   const emotionsForBadgeList = (diary.diaryEmotion ?? []).map(({ emotion }) => {
@@ -37,7 +40,7 @@ export function DiaryListDiaryCard({
       ariaLabel="일기 상세 보기"
       onClick={onClick}
       profile={{
-        profileImage: null,
+        profileImage: user?.profile_image ?? null,
         displayName: diary.isPrivate ? "비공개 일기" : "공개 일기",
         createdAt: diary.createdAt
           ? new Date(diary.createdAt).toISOString()

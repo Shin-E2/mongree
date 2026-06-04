@@ -29,14 +29,11 @@
     "react-dom": "19.0.1",
     "react-hook-form": "^7.54.2",
     "react-is": "^19.2.5",
-    "recharts": "2.13.0",
+    "recharts": "^3.8.1",
     "resend": "^6.12.3",
     "stripe": "^22.1.1",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.24.1"
-  },
-  "resolutions": {
-    "d3-shape": "2.1.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
